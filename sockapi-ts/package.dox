@@ -33,6 +33,7 @@
 - @ref sockopts
 - @ref tcp
 - @ref timestamps
+- @ref tools
 - @ref udp
 - @ref usecases
 
