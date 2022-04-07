@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- Copyright (C) 2022 OKTET Labs Ltd. All rights reserved. -->
+<test name="tools" type="package">
+  <objective>Necessary tools testing</objective>
+  <notes/>
+  <iter result="PASSED">
+    <notes/>
+    <test name="prologue" type="script">
+      <objective/>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ssh_client" type="script">
+    <objective>
+        Check that SSH client can connect to the SSH server (sshd)
+        using `true` comand.
+    </objective>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="server"/>
+        <notes/>
+      </iter>
+    </test>
+  </iter>
+</test>

@@ -1,0 +1,19 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* Copyright (C) 2022 OKTET Labs Ltd. All rights reserved. */
+/**
+
+@defgroup tools Tools testing
+
+@ingroup sockapi
+@{
+
+Test suite to verify functioning of tools and utilities.
+
+@par Tests:
+
+-# @ref tools-prologue
+-# @ref tools-ssh_client
+
+@}tools
+
+*/

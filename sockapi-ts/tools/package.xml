@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- Copyright (C) 2022 OKTET Labs Ltd. All rights reserved. -->
+<package version="1.0">
+
+    <description>Tools testing</description>
+
+    <author mailto="Pavel.Liulchak@oktetlabs.ru"/>
+
+    <session>
+        <prologue>
+            <script name="prologue"/>
+            <arg name="env" ref="env.iut_only"/>
+        </prologue>
+
+        <run>
+            <script name="ssh_client"/>
+            <arg name="env">
+               <value ref="env.two_nets.iut_first"/>
+            </arg>
+            <arg name="server">
+               <value>tst1</value>
+               <value>tst2</value>
+            </arg>
+        </run>
+    </session>
+</package>

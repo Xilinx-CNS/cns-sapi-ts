@@ -111,6 +111,9 @@
       <xi:include href="trc-sockapi-ts-checksum.xml" parse="xml"
                   xmlns:xi="http://www.w3.org/2003/XInclude"/>
 
+      <xi:include href="trc-sockapi-ts-tools.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
     </iter>
   </test>
 </trc_db>

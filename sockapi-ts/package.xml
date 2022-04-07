@@ -1088,7 +1088,11 @@ Sending and receiving functions
         </run>    
         <run>
             <package name="tcp"/>
-        </run>   
+        </run>
+
+        <run>
+            <package name="tools"/>
+        </run>
 
         <run>
             <package name="multicast"/>

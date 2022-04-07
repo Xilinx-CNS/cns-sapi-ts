@@ -3438,6 +3438,13 @@ groups:
     - test: ts_msg_onepkt
       summary: Retrieve TCP RX timestamps with ONLOAD_MSG_ONEPKT flag
 
+  - group: tools
+    summary: Test suite to verify functioning of tools and utilities
+    objective: ''
+    tests:
+    - test: ssh_client
+      summary: Check OpenSSH connection establishing
+
   - group: udp
     summary: UDP connections and round-trip
     objective: ''
