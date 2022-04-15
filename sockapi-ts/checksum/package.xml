@@ -44,6 +44,21 @@
                         <value>RST</value>
                     </arg>
                 </run>
+                <run>
+                    <script name="tcp_bad_csum_conn"/>
+                    <arg name="check_ack" type="boolean" list="">
+                        <!-- check_ack=FALSE,check_data=FALSE is senseless -->
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="check_data" type="boolean" list="">
+                        <!-- check_ack=FALSE,check_data=FALSE is senseless -->
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                    </arg>
+                </run>
             </session>
         </run>
 

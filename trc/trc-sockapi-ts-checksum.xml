@@ -234,5 +234,49 @@
         </results>
       </iter>
     </test>
+    <test name="tcp_bad_csum_conn" type="script">
+      <objective>Send ACK segment with invalid checksum and check that IUT ignores it</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="check_ack">TRUE</arg>
+        <arg name="check_data">TRUE</arg>
+        <arg name="csum_val"/>
+        <arg name="env"/>
+        <arg name="protocol"/>
+        <notes/>
+        <results tags="af_xdp" key="11837">
+          <result value="FAILED">
+            <verdict>Socket 'iut_s' is not expected to be readable, but it is</verdict>
+            <verdict>IUT sent segment which is not a retransmit</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_ack"/>
+        <arg name="check_data">FALSE</arg>
+        <arg name="csum_val"/>
+        <arg name="env"/>
+        <arg name="protocol"/>
+        <notes/>
+        <results tags="af_xdp" key="11837">
+          <result value="FAILED">
+            <verdict>IUT does not retransmit data after receiving ACK with invalid checksum</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_ack">FALSE</arg>
+        <arg name="check_data"/>
+        <arg name="csum_val"/>
+        <arg name="env"/>
+        <arg name="protocol"/>
+        <notes/>
+        <results tags="af_xdp" key="11837">
+          <result value="FAILED">
+            <verdict>Socket 'iut_s' is not expected to be readable, but it is</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
   </iter>
 </test>
