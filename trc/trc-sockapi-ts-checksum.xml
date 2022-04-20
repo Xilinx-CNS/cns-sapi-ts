@@ -206,5 +206,33 @@
         </results>
       </iter>
     </test>
+    <test name="tcp_bad_csum_close" type="script">
+      <objective>Send FIN, RST segments with invalid checksum and check that IUT ignores it</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="csum_val"/>
+        <arg name="env"/>
+        <arg name="protocol"/>
+        <arg name="segment">RST</arg>
+        <notes/>
+        <results tags="af_xdp" key="11837">
+          <result value="FAILED">
+            <verdict>recv() on IUT was unblocked unexpectedly after receiving RST with invalid checksum</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="csum_val"/>
+        <arg name="env"/>
+        <arg name="protocol"/>
+        <arg name="segment">FIN</arg>
+        <notes/>
+        <results tags="af_xdp" key="11837">
+          <result value="FAILED">
+            <verdict>recv() on IUT was unblocked unexpectedly after receiving FIN with invalid checksum</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
   </iter>
 </test>

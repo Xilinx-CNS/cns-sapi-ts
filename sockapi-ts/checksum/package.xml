@@ -35,6 +35,15 @@
                         <value reqs="TCP_ACTIVE">SYNACK</value>
                     </arg>
                 </run>
+                <run>
+                    <script name="tcp_bad_csum_close">
+                        <req id="TCP_ACTIVE"/>
+                    </script>
+                    <arg name="segment">
+                        <value>FIN</value>
+                        <value>RST</value>
+                    </arg>
+                </run>
             </session>
         </run>
 

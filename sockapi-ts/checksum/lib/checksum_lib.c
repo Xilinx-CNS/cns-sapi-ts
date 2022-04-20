@@ -42,8 +42,34 @@ sockts_tcpflags2str(uint8_t flags)
         case TCP_RST_FLAG:
             return "RST";
 
+        case TCP_FIN_FLAG:
+            return "FIN";
+
         default:
             return "[undefined]";
+    }
+}
+
+/* See description in checksum_lib.h */
+uint8_t
+sockts_tcpseg2flags(sockts_tcp_segment segment)
+{
+    switch (segment)
+    {
+        case SOCKTS_TCP_SYN:
+            return TCP_SYN_FLAG;
+
+        case SOCKTS_TCP_SYNACK:
+            return TCP_SYN_FLAG | TCP_ACK_FLAG;
+
+        case SOCKTS_TCP_FIN:
+            return TCP_FIN_FLAG;
+
+        case SOCKTS_TCP_RST:
+            return TCP_RST_FLAG;
+
+        default:
+            return 0;
     }
 }
 

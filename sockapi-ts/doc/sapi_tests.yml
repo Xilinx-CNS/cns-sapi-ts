@@ -787,39 +787,7 @@ groups:
 
     - test: tcp_bad_csum_close
       summary: Sending TCP segments with bad checksum while closing a connection
-      objective: Send FIN, RST segments with invalid checksum and check that IUT ignores it
-      params:
-      - param: env
-        description: Testing environment
-        values:
-        - "@ref arg_types_env_peer2peer"
-      - param: segment
-        description: What segment to send with invalid checksum
-        values:
-        - FIN
-        - RST
-      - param: header
-        description: Protocol header to corrupt checksum in
-        values:
-        - ip
-        - tcp
-      - param: csum_val
-        description: Value to set as a checksum
-        values:
-        - bad
-        - zero
-      steps:
-      - Establish TCP connection between IUT socket and CSAP socket emulation on Tester
-      - Call non-blocking @b recv() RPC on IUT
-      - Send TCP segment with invalid checksum from CSAP according to parameters
-      - Check that @b recv() is still blocked
-      - Send the same TCP segment with valid checksum
-      - Check that @b recv() is unblocked
-      - If @p segment is @c RST:
-        - Check that @b recv() fails with @c ECONNRESET
-      - If @p segment is @c FIN:
-        - Check that @b recv() return zero
-      - Check that connection is fully closed
+      ref: checksum-tcp_bad_csum_close
 
     - test: bad_udp_csum
       summary: Receiving packets with bad or zero UDP layer checksum
