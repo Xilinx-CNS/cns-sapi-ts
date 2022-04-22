@@ -9,6 +9,7 @@ checksum_test_deps = test_deps
 checksum_test_deps += libchecksum_dep
 
 tests = [
+    'bad_udp_csum',
     'tcp_bad_csum_open',
 ]
 

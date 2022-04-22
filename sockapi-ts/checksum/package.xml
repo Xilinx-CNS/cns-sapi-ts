@@ -37,6 +37,59 @@
                 </run>
             </session>
         </run>
+
+        <run>
+            <script name="bad_udp_csum" track_conf="nohistory">
+                <req id="IF_DOWN_UP"/>
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_tst"/>
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+            </arg>
+            <arg name="checksum">
+                <value>correct</value>
+                <value>zero</value>
+                <value reqs="NO_OOL1509_NDEBUG">bad</value>
+            </arg>
+            <!-- AF_XDP doesn't support big MTU value. ST-2188 -->
+            <arg name="mtu_size">
+                <value>-1</value>
+                <value reqs="NO_VLAN,JUMBO_FRAME">7000</value>
+            </arg>
+            <arg name="fragmented">
+                <value>FALSE</value>
+            </arg>
+        </run>
+        <run>
+            <script name="bad_udp_csum" track_conf="nohistory">
+                <req id="BAD_CSUM_JUMBO"/>
+                <req id="IF_DOWN_UP"/>
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_tst"/>
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+            </arg>
+            <arg name="checksum">
+                <value>correct</value>
+                <value>zero</value>
+                <value>bad</value>
+            </arg>
+            <!-- AF_XDP doesn't support big MTU value. ST-2188 -->
+            <arg name="mtu_size">
+                <value>-1</value>
+                <value reqs="NO_VLAN,JUMBO_FRAME">2500</value>
+                <value reqs="NO_VLAN,JUMBO_FRAME">4500</value>
+            </arg>
+            <arg name="fragmented">
+                <value reqs="RECV_IP_FRAG">TRUE</value>
+            </arg>
+        </run>
     </session>
 
 </package>

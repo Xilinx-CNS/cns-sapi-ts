@@ -5,7 +5,7 @@
  * UDP tests
  */
 
-/** @page udp-bad_udp_csum Receiving packets with bad or zero UDP layer checksum
+/** @page checksum-bad_udp_csum Receiving packets with bad or zero UDP layer checksum
  *
  * @objective Check that socket receives packets with correct or zero
  *            checksum and drops packets with bad checksum.
@@ -31,7 +31,7 @@
  * @author Yurij Plotnikov <Yurij.Plotnikov@oktetlabs.ru>
  */
 
-#define TE_TEST_NAME  "udp/bad_udp_csum"
+#define TE_TEST_NAME  "checksum/bad_udp_csum"
 
 #include "sockapi-test.h"
 

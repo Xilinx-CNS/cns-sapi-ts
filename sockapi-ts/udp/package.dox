@@ -17,7 +17,6 @@ UDP tunneling is tested here as well.
 -# @ref udp-round_trip_1
 -# @ref udp-round_trip_2
 -# @ref udp-udp_checksum
--# @ref udp-bad_udp_csum
 -# @ref udp-recv_connect
 -# @ref udp-udp_fork_distrib
 -# @ref udp-udp_send_flow

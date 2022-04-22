@@ -16,6 +16,7 @@ incorrect checksum.
 @par Tests:
 
 -# @ref checksum-tcp_bad_csum_open
+-# @ref checksum-bad_udp_csum
 
 @}
 

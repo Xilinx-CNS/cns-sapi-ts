@@ -821,6 +821,10 @@ groups:
         - Check that @b recv() return zero
       - Check that connection is fully closed
 
+    - test: bad_udp_csum
+      summary: Receiving packets with bad or zero UDP layer checksum
+      ref: checksum-bad_udp_csum
+
   - group: bnbvalue
     summary: Bad and boundary values
     objective: ''
@@ -3504,9 +3508,6 @@ groups:
     summary: UDP connections and round-trip
     objective: ''
     tests:
-    - test: bad_udp_csum
-      summary: Receiving packets with bad or zero UDP layer checksum
-
     - test: recv_connect
       summary: Connect UDP socket with non-empty recv queue
 
