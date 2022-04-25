@@ -97,7 +97,19 @@
         <arg name="checksum">bad</arg>
         <arg name="env">VAR.env.peer2peer</arg>
         <arg name="fragmented">FALSE</arg>
-        <arg name="mtu_size"/>
+        <arg name="mtu_size">-1</arg>
+        <notes/>
+        <results tags="v5&amp;af_xdp" key="11837">
+          <result value="FAILED">
+            <verdict>IUT socket is readable but it should not be</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="checksum">bad</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="fragmented"/>
+        <arg name="mtu_size">7000</arg>
         <notes/>
       </iter>
       <iter result="PASSED">
