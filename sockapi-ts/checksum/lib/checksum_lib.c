@@ -88,17 +88,7 @@ sockts_set_tcp_csum(asn_value *tmpl, sockts_csum_val csum)
     return 0;
 }
 
-/**
- * Given a traffic TCP template, set checksum field in @p proto header with
- * the @p csum value.
- *
- * @param tmpl  TCP traffic template
- * @param proto Protocol header to corrupt its checksum (supported RPC_IPPROTO_IP
- *              and RPC_IPPROTO_TCP)
- * @param csum  What value to set as a checksum
- *
- * @return Status code
- */
+/* See description in checksum_lib.h */
 te_errno
 sockts_set_hdr_csum(asn_value *tmpl, rpc_socket_proto proto,
                     sockts_csum_val csum)
