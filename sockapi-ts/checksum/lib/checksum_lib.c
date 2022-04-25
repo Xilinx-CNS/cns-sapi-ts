@@ -90,6 +90,29 @@ sockts_set_tcp_csum(asn_value *tmpl, sockts_csum_val csum)
 
 /* See description in checksum_lib.h */
 te_errno
+sockts_set_udp_csum(asn_value *tmpl, sockts_csum_val csum)
+{
+    switch (csum)
+    {
+        case SOCKTS_CSUM_ZERO:
+            return tapi_ndn_tmpl_set_udp_cksum(tmpl,
+                                               TE_IP4_UPPER_LAYER_CSUM_ZERO,
+                                               TAPI_NDN_INNER_L4);
+
+        case SOCKTS_CSUM_BAD:
+            return tapi_ndn_tmpl_set_udp_cksum(tmpl,
+                                               TE_IP4_UPPER_LAYER_CSUM_BAD,
+                                               TAPI_NDN_INNER_L4);
+
+        default:
+            break;
+    }
+
+    return 0;
+}
+
+/* See description in checksum_lib.h */
+te_errno
 sockts_set_hdr_csum(asn_value *tmpl, rpc_socket_proto proto,
                     sockts_csum_val csum)
 {
@@ -100,6 +123,9 @@ sockts_set_hdr_csum(asn_value *tmpl, rpc_socket_proto proto,
 
         case RPC_IPPROTO_TCP:
             return sockts_set_tcp_csum(tmpl, csum);
+
+        case RPC_IPPROTO_UDP:
+            return sockts_set_udp_csum(tmpl, csum);
 
         default:
             return TE_RC(TE_TAPI, TE_EPROTONOSUPPORT);

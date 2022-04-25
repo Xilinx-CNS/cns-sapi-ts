@@ -81,12 +81,23 @@ te_errno sockts_set_ip_csum(asn_value *tmpl, sockts_csum_val csum);
 te_errno sockts_set_tcp_csum(asn_value *tmpl, sockts_csum_val csum);
 
 /**
+ * Given a traffic UDP template, set its UDP header checksum according
+ * to @p csum value.
+ *
+ * @param tmpl  The traffic template
+ * @param csum  The checksum value
+ *
+ * @return Status code
+ */
+te_errno sockts_set_udp_csum(asn_value *tmpl, sockts_csum_val csum);
+
+/**
  * Given a traffic TCP template, set checksum field in @p proto header with
  * the @p csum value.
  *
  * @param tmpl  TCP traffic template
- * @param proto Protocol header to corrupt its checksum (supported RPC_IPPROTO_IP
- *              and RPC_IPPROTO_TCP)
+ * @param proto Protocol header to corrupt its checksum (supported protocols are
+ *              RPC_IPPROTO_IP, RPC_IPPROTO_TCP and RPC_IPPROTO_UDP)
  * @param csum  What value to set as a checksum
  *
  * @return Status code
