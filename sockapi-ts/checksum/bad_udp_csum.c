@@ -45,6 +45,7 @@
 #include "tapi_udp.h"
 #include "tapi_cfg_base.h"
 #include "ndn.h"
+#include "checksum_lib.h"
 
 #define IP_HDR_LEN        20      /**< IPv4 header length */
 #define IP6_HDR_LEN       40      /**< IPv6 header length */
@@ -167,8 +168,7 @@ main(int argc, char *argv[])
 
     te_bool fragmented = FALSE;
 
-    const char  *checksum;
-    int          csum_val;
+    sockts_csum_val checksum;
 
     rpc_socket_domain domain;
     te_bool           readable = FALSE;
@@ -190,24 +190,11 @@ main(int argc, char *argv[])
     TEST_GET_IF(tst_if);
     TEST_GET_INT_PARAM(mtu_size);
     TEST_GET_BOOL_PARAM(fragmented);
-    TEST_GET_STRING_PARAM(checksum);
+    SOCKTS_GET_CSUM_VAL(checksum);
 
     domain = rpc_socket_domain_by_addr(iut_addr);
     if ((domain != RPC_PF_INET) && (domain != RPC_PF_INET6))
         TEST_FAIL("Invalid socket domain");
-
-#define GET_CSUM_VAL(type_) \
-    domain == RPC_PF_INET ? TE_IP4_UPPER_LAYER_CSUM_##type_ : \
-                            TE_IP6_UPPER_LAYER_CSUM_##type_
-
-    if (strcmp(checksum, "correct") == 0)
-        csum_val = GET_CSUM_VAL(CORRECT);
-    else if (strcmp(checksum, "bad") == 0)
-        csum_val = GET_CSUM_VAL(BAD);
-    else if (strcmp(checksum, "zero") == 0)
-        csum_val = GET_CSUM_VAL(ZERO);
-    else
-        TEST_FAIL("Incorrect value of 'checksum' parameter");
 
     TEST_STEP("Set MTU on @p iut_if to @p mtu_size if it is positive, "
               "otherwise save the current MTU value in @p mtu_size.");
@@ -270,9 +257,7 @@ main(int argc, char *argv[])
                                       SIN(iut_addr)->sin_port,
                                       &csap));
 
-        CHECK_RC(te_string_append(
-                      &str, "{ pdus { udp: { checksum plain: %d}, "
-                      "ip4:{}, eth:{} } }", csum_val));
+        CHECK_RC(te_string_append(&str, "{ pdus { udp:{}, ip4:{}, eth:{} } }"));
     }
     else
     {
@@ -290,15 +275,14 @@ main(int argc, char *argv[])
                                       SIN6(iut_addr)->sin6_port,
                                       &csap));
 
-        CHECK_RC(te_string_append(
-                    &str, "{ pdus { udp: { checksum plain: %d}, "
-                    "ip6:{}, eth:{} } }", csum_val));
+        CHECK_RC(te_string_append(&str, "{ pdus { udp:{}, ip6:{}, eth:{} } }"));
     }
 
     CHECK_RC(asn_parse_value_text(str.ptr, ndn_traffic_template,
                                   &pkt, &num));
     CHECK_RC(asn_write_value_field(pkt, snd_buf, dgram_len,
                                    "payload.#bytes"));
+    CHECK_RC(sockts_set_hdr_csum(pkt, RPC_IPPROTO_UDP, checksum));
 
     if (fragmented)
     {
@@ -319,8 +303,8 @@ main(int argc, char *argv[])
               "readable. Otherwise check that it is readable and sent "
               "data can be received.");
 
-    if (strcmp(checksum, "bad") == 0 ||
-        (domain == RPC_PF_INET6 && strcmp(checksum, "zero") == 0))
+    if (checksum == SOCKTS_CSUM_BAD ||
+        (domain == RPC_PF_INET6 && checksum == SOCKTS_CSUM_ZERO))
     {
         exp_readable = FALSE;
     }
