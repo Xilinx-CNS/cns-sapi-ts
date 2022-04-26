@@ -56,7 +56,7 @@
             </arg>
             <!-- AF_XDP doesn't support big MTU value. ST-2188 -->
             <arg name="mtu_size">
-                <value>-1</value>
+                <value reqs="V5_SANITY">-1</value>
                 <value reqs="NO_VLAN,JUMBO_FRAME">7000</value>
             </arg>
             <arg name="fragmented">
@@ -82,7 +82,7 @@
             </arg>
             <!-- AF_XDP doesn't support big MTU value. ST-2188 -->
             <arg name="mtu_size">
-                <value>-1</value>
+                <value reqs="V5_SANITY">-1</value>
                 <value reqs="NO_VLAN,JUMBO_FRAME">2500</value>
                 <value reqs="NO_VLAN,JUMBO_FRAME">4500</value>
             </arg>
