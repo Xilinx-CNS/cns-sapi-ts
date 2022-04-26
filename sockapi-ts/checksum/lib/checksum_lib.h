@@ -41,7 +41,6 @@ typedef enum sockts_csum_val {
 
 /** List of checksum values to pass as test argument. */
 #define SOCKTS_CSUM_VAL_TYPES \
-    {"correct", SOCKTS_CSUM_UNSPEC}, \
     {"zero", SOCKTS_CSUM_ZERO }, \
     {"bad", SOCKTS_CSUM_BAD}
 

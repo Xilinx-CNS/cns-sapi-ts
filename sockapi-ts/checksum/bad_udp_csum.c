@@ -16,7 +16,6 @@
  *                      - @ref arg_types_env_peer2peer_ipv6
  *                      - @ref arg_types_env_peer2peer_tst_ipv6
  * @param checksum      UDP checksum description:
- *                      - @c correct
  *                      - @c bad
  *                      - @c zero
  * @param mtu_size      IUT MTU value:
@@ -303,15 +302,10 @@ main(int argc, char *argv[])
               "readable. Otherwise check that it is readable and sent "
               "data can be received.");
 
-    if (checksum == SOCKTS_CSUM_BAD ||
-        (domain == RPC_PF_INET6 && checksum == SOCKTS_CSUM_ZERO))
-    {
-        exp_readable = FALSE;
-    }
-    else
-    {
+    if (domain == RPC_PF_INET && checksum == SOCKTS_CSUM_ZERO)
         exp_readable = TRUE;
-    }
+    else
+        exp_readable = FALSE;
 
     RPC_GET_READABILITY(readable, pco_iut, iut_s, 0);
     if (exp_readable && !readable)

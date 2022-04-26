@@ -50,7 +50,6 @@
                 <value ref="env.peer2peer_tst_ipv6"/>
             </arg>
             <arg name="checksum">
-                <value>correct</value>
                 <value>zero</value>
                 <value reqs="NO_OOL1509_NDEBUG">bad</value>
             </arg>
@@ -75,11 +74,7 @@
                 <value ref="env.peer2peer_ipv6"/>
                 <value ref="env.peer2peer_tst_ipv6"/>
             </arg>
-            <arg name="checksum">
-                <value>correct</value>
-                <value>zero</value>
-                <value>bad</value>
-            </arg>
+            <arg name="checksum" type="checksum_val_type"/>
             <!-- AF_XDP doesn't support big MTU value. ST-2188 -->
             <arg name="mtu_size">
                 <value reqs="V5_SANITY">-1</value>

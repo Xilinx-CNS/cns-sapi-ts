@@ -120,13 +120,6 @@
         <notes/>
       </iter>
       <iter result="PASSED">
-        <arg name="checksum">correct</arg>
-        <arg name="env"/>
-        <arg name="fragmented"/>
-        <arg name="mtu_size"/>
-        <notes/>
-      </iter>
-      <iter result="PASSED">
         <arg name="checksum">zero</arg>
         <arg name="env"/>
         <arg name="fragmented"/>
