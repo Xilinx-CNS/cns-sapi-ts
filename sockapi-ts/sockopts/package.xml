@@ -1813,6 +1813,7 @@
             <script name="tcp_user_timeout" track_conf="silent">
                 <req id="TCP_USER_TIMEOUT"/>
                 <req id="SOCK_STREAM"/>
+                <req id="NO_REUSE_STACK"/>
             </script>
             <arg name="env">
                 <value ref="env.peer2peer_gw"/>
