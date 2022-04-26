@@ -1814,6 +1814,7 @@
                 <req id="TCP_USER_TIMEOUT"/>
                 <req id="SOCK_STREAM"/>
                 <req id="NO_REUSE_STACK"/>
+                <req id="RPC_RESTART"/>
             </script>
             <arg name="env">
                 <value ref="env.peer2peer_gw"/>
