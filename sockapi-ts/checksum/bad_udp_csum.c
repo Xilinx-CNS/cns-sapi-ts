@@ -18,6 +18,9 @@
  * @param checksum      UDP checksum description:
  *                      - @c bad
  *                      - @c zero
+ * @param protocol      Protocol header to corrupt checksum in:
+ *                      - IPPROTO_IP
+ *                      - IPPROTO_UDP
  * @param mtu_size      IUT MTU value:
  *                      - @c -1 (do not change the current value)
  *                      - @c 2500
@@ -168,6 +171,7 @@ main(int argc, char *argv[])
     te_bool fragmented = FALSE;
 
     sockts_csum_val checksum;
+    rpc_socket_proto protocol;
 
     rpc_socket_domain domain;
     te_bool           readable = FALSE;
@@ -190,10 +194,15 @@ main(int argc, char *argv[])
     TEST_GET_INT_PARAM(mtu_size);
     TEST_GET_BOOL_PARAM(fragmented);
     SOCKTS_GET_CSUM_VAL(checksum);
+    TEST_GET_PROTOCOL(protocol);
 
     domain = rpc_socket_domain_by_addr(iut_addr);
     if ((domain != RPC_PF_INET) && (domain != RPC_PF_INET6))
         TEST_FAIL("Invalid socket domain");
+
+    /* IPv6 header checksum corrupting will be added later. See bug 11964 */
+    if (domain == RPC_PF_INET6 && protocol == RPC_IPPROTO_IP)
+        TEST_SKIP("IPv6 header checksum corrupting is not supported yet");
 
     TEST_STEP("Set MTU on @p iut_if to @p mtu_size if it is positive, "
               "otherwise save the current MTU value in @p mtu_size.");
@@ -281,7 +290,7 @@ main(int argc, char *argv[])
                                   &pkt, &num));
     CHECK_RC(asn_write_value_field(pkt, snd_buf, dgram_len,
                                    "payload.#bytes"));
-    CHECK_RC(sockts_set_hdr_csum(pkt, RPC_IPPROTO_UDP, checksum));
+    CHECK_RC(sockts_set_hdr_csum(pkt, protocol, checksum));
 
     if (fragmented)
     {
@@ -302,10 +311,15 @@ main(int argc, char *argv[])
               "readable. Otherwise check that it is readable and sent "
               "data can be received.");
 
-    if (domain == RPC_PF_INET && checksum == SOCKTS_CSUM_ZERO)
+    if (domain == RPC_PF_INET && checksum == SOCKTS_CSUM_ZERO &&
+        protocol == RPC_IPPROTO_UDP)
+    {
         exp_readable = TRUE;
+    }
     else
+    {
         exp_readable = FALSE;
+    }
 
     RPC_GET_READABILITY(readable, pco_iut, iut_s, 0);
     if (exp_readable && !readable)

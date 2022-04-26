@@ -53,6 +53,10 @@
                 <value>zero</value>
                 <value reqs="NO_OOL1509_NDEBUG">bad</value>
             </arg>
+            <arg name="protocol">
+                <value>IPPROTO_IP</value>
+                <value>IPPROTO_UDP</value>
+            </arg>
             <!-- AF_XDP doesn't support big MTU value. ST-2188 -->
             <arg name="mtu_size">
                 <value reqs="V5_SANITY">-1</value>
@@ -75,6 +79,10 @@
                 <value ref="env.peer2peer_tst_ipv6"/>
             </arg>
             <arg name="checksum" type="checksum_val_type"/>
+            <arg name="protocol">
+                <value>IPPROTO_IP</value>
+                <value>IPPROTO_UDP</value>
+            </arg>
             <!-- AF_XDP doesn't support big MTU value. ST-2188 -->
             <arg name="mtu_size">
                 <value reqs="V5_SANITY">-1</value>

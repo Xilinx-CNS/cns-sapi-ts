@@ -42,6 +42,7 @@
         <arg name="env">VAR.env.peer2peer</arg>
         <arg name="fragmented">TRUE</arg>
         <arg name="mtu_size"/>
+        <arg name="protocol"/>
         <notes/>
         <results tags="v5">
           <result value="FAILED" key="ON-12870">
@@ -56,6 +57,7 @@
         <arg name="env">VAR.env.peer2peer_ipv6</arg>
         <arg name="fragmented">TRUE</arg>
         <arg name="mtu_size"/>
+        <arg name="protocol"/>
         <notes/>
         <results tags="v5">
           <result value="FAILED" key="ON-12870">
@@ -70,6 +72,7 @@
         <arg name="env">VAR.env.peer2peer_tst</arg>
         <arg name="fragmented"/>
         <arg name="mtu_size"/>
+        <arg name="protocol"/>
         <notes/>
         <results tags="v5&amp;laddr_all" key="ON-12870">
           <result value="FAILED">
@@ -84,6 +87,7 @@
         <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
         <arg name="fragmented"/>
         <arg name="mtu_size"/>
+        <arg name="protocol"/>
         <notes/>
         <results tags="v5&amp;laddr_all" key="ON-12870">
           <result value="FAILED">
@@ -94,10 +98,67 @@
         </results>
       </iter>
       <iter result="PASSED">
-        <arg name="checksum">bad</arg>
+        <arg name="checksum">zero</arg>
         <arg name="env">VAR.env.peer2peer</arg>
         <arg name="fragmented">FALSE</arg>
         <arg name="mtu_size">-1</arg>
+        <arg name="protocol">IPPROTO_UDP</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="checksum">bad</arg>
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="fragmented">FALSE</arg>
+        <arg name="mtu_size"/>
+        <arg name="protocol"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="checksum">zero</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="fragmented">TRUE</arg>
+        <arg name="mtu_size"/>
+        <arg name="protocol"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="checksum"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="fragmented"/>
+        <arg name="mtu_size">7000</arg>
+        <arg name="protocol"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="checksum">zero</arg>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="fragmented"/>
+        <arg name="mtu_size"/>
+        <arg name="protocol"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="checksum">zero</arg>
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="fragmented"/>
+        <arg name="mtu_size"/>
+        <arg name="protocol"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="checksum">zero</arg>
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="fragmented"/>
+        <arg name="mtu_size"/>
+        <arg name="protocol"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="checksum">zero</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="fragmented">FALSE</arg>
+        <arg name="mtu_size">-1</arg>
+        <arg name="protocol">IPPROTO_IP</arg>
         <notes/>
         <results tags="v5&amp;af_xdp" key="11837">
           <result value="FAILED">
@@ -108,23 +169,15 @@
       <iter result="PASSED">
         <arg name="checksum">bad</arg>
         <arg name="env">VAR.env.peer2peer</arg>
-        <arg name="fragmented"/>
-        <arg name="mtu_size">7000</arg>
-        <notes/>
-      </iter>
-      <iter result="PASSED">
-        <arg name="checksum">bad</arg>
-        <arg name="env">VAR.env.peer2peer_ipv6</arg>
         <arg name="fragmented">FALSE</arg>
-        <arg name="mtu_size"/>
+        <arg name="mtu_size">-1</arg>
+        <arg name="protocol"/>
         <notes/>
-      </iter>
-      <iter result="PASSED">
-        <arg name="checksum">zero</arg>
-        <arg name="env"/>
-        <arg name="fragmented"/>
-        <arg name="mtu_size"/>
-        <notes/>
+        <results tags="v5&amp;af_xdp" key="11837">
+          <result value="FAILED">
+            <verdict>IUT socket is readable but it should not be</verdict>
+          </result>
+        </results>
       </iter>
     </test>
   </iter>
