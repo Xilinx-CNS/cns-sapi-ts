@@ -7,7 +7,7 @@ pushd "$(dirname "$(which "$0")")" >/dev/null
 RUNDIR="$(pwd -P)"
 popd >/dev/null
 
-[ "$(basename $RUNDIR)" = "scripts" ] && RUNDIR="${RUNDIR}/.."
+[ "$(basename $RUNDIR)" = "scripts" ] && RUNDIR="$(realpath "${RUNDIR}/..")"
 [ -e "${RUNDIR}/scripts/guess.sh" ] && source "${RUNDIR}/scripts/guess.sh"
 
 . ${SF_TS_CONFDIR}/scripts/lib.run
