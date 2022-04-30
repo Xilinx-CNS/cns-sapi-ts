@@ -139,14 +139,15 @@ DISTRIBUTE_GROUP_DOC   = NO
 
 TAB_SIZE               = 8
 
-# This tag can be used to specify a number of aliases that acts 
-# as commands in the documentation. An alias has the form "name=value". 
-# For example adding "sideeffect=\par Side Effects:\n" will allow you to 
-# put the command \sideeffect (or @sideeffect) in the documentation, which 
-# will result in a user-defined paragraph with heading "Side Effects:". 
-# You can put \n's in the value part of an alias to insert newlines.
+# This tag can be used to specify a number of aliases that acts
+# as commands in the documentation. An alias has the form "name=value".
+# For example adding "sideeffect=\par Side Effects:^^" will allow you to
+# put the command \sideeffect (or @sideeffect) in the documentation, which
+# will result in a user-defined paragraph with heading "Side Effects:".
+# Use "^^" instead of "\n" to insert new line in the value part of an
+# alias.
 
-ALIASES                = "copyright=@par Copiright Notice:\n" \
+ALIASES                = "copyright=@par Copyright Notice:^^" \
                          revs_start=<table><tr><td><b>Date</b></td><td><b>Revision</b></td><td><b>Author</b></td><td><b>Changes</b></td> \
                          rev_date=</tr><tr><td> \
                          rev_revision=</td><td> \
@@ -173,11 +174,11 @@ ALIASES                = "copyright=@par Copiright Notice:\n" \
                          tag_name=</tr><tr><td> \
                          tag_descr=</td><td> \
                          tags_end=</td></tr></table> \
-                         "objective=@par Objective:\n" \
-                         "sideeffect=@par Side Effects:\n" \
+                         "objective=@par Objective:^^" \
+                         "sideeffect=@par Side Effects:^^" \
                          "type=@par Test type: " \
                          "requirement=@par Requirement: " \
-                         "reference=@par Reference:\n" \
+                         "reference=@par Reference:^^" \
                          "exception_handler=@par Exception handler: " \
                          "keepalive=@par Keep-alive: " \
                          "prologue=@par Prologue: " \
