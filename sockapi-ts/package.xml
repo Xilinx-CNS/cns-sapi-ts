@@ -1014,6 +1014,19 @@ Sending and receiving functions
 	    <value>none</value>
         </enum>
 
+        <enum name="tcp_states">
+            <value reqs="TCP_ESTABLISHED">TCP_ESTABLISHED</value>
+            <value reqs="TCP_SYN_SENT">TCP_SYN_SENT</value>
+            <value reqs="TCP_SYN_RECV">TCP_SYN_RECV</value>
+            <value reqs="TCP_FIN_WAIT1">TCP_FIN_WAIT1</value>
+            <value reqs="TCP_FIN_WAIT2">TCP_FIN_WAIT2</value>
+            <value reqs="TCP_TIME_WAIT">TCP_TIME_WAIT</value>
+            <value reqs="TCP_CLOSE_WAIT">TCP_CLOSE_WAIT</value>
+            <value reqs="TCP_LAST_ACK">TCP_LAST_ACK</value>
+            <value reqs="TCP_LISTEN">TCP_LISTEN</value>
+            <value reqs="TCP_CLOSING">TCP_CLOSING</value>
+        </enum>
+
         <!--
         <exception handdown="descendants">
             <script name="exception"/>

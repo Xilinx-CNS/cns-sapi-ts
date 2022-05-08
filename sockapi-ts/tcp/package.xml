@@ -269,7 +269,7 @@
                 <value>TRUE</value>
                 <value>TRUE</value>
             </arg>
-            <arg name="tcp_state" list="">
+            <arg name="tcp_state" type="tcp_states" list="">
                 <!-- TIME_WAIT cannot be checked here since it
                      means that connection is fully terminated on
                      Tester and closing socket there will not result
@@ -316,7 +316,7 @@
             <arg name="tst_send_after">
                 <value>FALSE</value>
             </arg>
-            <arg name="tcp_state">
+            <arg name="tcp_state" type="tcp_states">
                 <value>TCP_CLOSE_WAIT</value>
                 <value>TCP_ESTABLISHED</value>
             </arg>
@@ -357,7 +357,7 @@
                 <value>TRUE</value>
                 <value>FALSE</value>
             </arg>
-            <arg name="tcp_state">
+            <arg name="tcp_state" type="tcp_states">
                 <value>TCP_ESTABLISHED</value>
                 <value>TCP_FIN_WAIT2</value>
             </arg>
@@ -392,7 +392,7 @@
             <arg name="tst_send_after">
                 <value>FALSE</value>
             </arg>
-            <arg name="tcp_state">
+            <arg name="tcp_state" type="tcp_states">
                 <value>TCP_CLOSE_WAIT</value>
                 <value>TCP_TIME_WAIT</value>
             </arg>
@@ -1081,7 +1081,7 @@
                    <value ref="env.peer2peer_two_iut_gw"/>
                    <value ref="env.peer2peer_two_iut_gw_ipv6"/>
                 </arg>
-                <arg name="tcp_state">
+                <arg name="tcp_state" type="tcp_states">
                     <value>TCP_FIN_WAIT1</value>
                     <value reqs="SO_KEEPALIVE,TCP_KEEPCNT,TCP_KEEPIDLE,TCP_KEEPINTVL">TCP_FIN_WAIT2</value>
                     <value>TCP_CLOSING</value>
@@ -1109,7 +1109,7 @@
                <value ref="env.peer2peer"/>
                <value ref="env.peer2peer_ipv6"/>
             </arg>
-            <arg name="tcp_state">
+            <arg name="tcp_state" type="tcp_states">
                 <value>TCP_FIN_WAIT1</value>
                 <value>TCP_CLOSING</value>
             </arg>
@@ -1611,7 +1611,7 @@
                             <value>exp-2^31+1</value>
                             <value>exp-random</value>
                           </arg>
-                          <arg name="tcp_state">
+                          <arg name="tcp_state" type="tcp_states">
                             <value>TCP_ESTABLISHED</value>
                             <value reqs="SO_KEEPALIVE">TCP_FIN_WAIT1</value>
                             <value>TCP_TIME_WAIT</value>
@@ -1636,7 +1636,7 @@
                             <value>exp-2^31+1</value>
                             <value>exp-random</value>
                           </arg>
-                          <arg name="tcp_state">
+                          <arg name="tcp_state" type="tcp_states">
                             <value>TCP_SYN_RECV</value>
                           </arg>
                           <arg name="opening">
@@ -1658,7 +1658,7 @@
                             <value>exp-random</value>
                           </arg>
 
-                          <arg name="tcp_state" list="">
+                          <arg name="tcp_state" type="tcp_states" list="">
                             <value>TCP_SYN_SENT</value>
                             <value>TCP_SYN_RECV</value>
                           </arg>
@@ -1735,7 +1735,7 @@
                                 <req id="TIME_CONSUMING"/>
                                 <req id="TCP_TS_ENABLED"/>
                             </script>
-                            <arg name="tcp_state">
+                            <arg name="tcp_state" type="tcp_states">
                                 <value>TCP_ESTABLISHED</value>
                                 <value>TCP_FIN_WAIT1</value>
                                 <value>TCP_FIN_WAIT2</value>
@@ -1758,7 +1758,7 @@
                                 <req id="TIME_CONSUMING"/>
                                 <req id="TCP_TS_ENABLED"/>
                             </script>
-                            <arg name="tcp_state">
+                            <arg name="tcp_state" type="tcp_states">
                                 <value>TCP_ESTABLISHED</value>
                                 <value>TCP_FIN_WAIT1</value>
                             </arg>
@@ -1781,7 +1781,7 @@
                                 <req id="TIME_CONSUMING"/>
                                 <req id="TCP_TS_ENABLED"/>
                             </script>
-                            <arg name="tcp_state">
+                            <arg name="tcp_state" type="tcp_states">
                                 <value>TCP_FIN_WAIT2</value>
                             </arg>
                             <arg name="test_data">
@@ -1802,7 +1802,7 @@
                                 <req id="TIME_CONSUMING"/>
                                 <req id="TCP_TS_ENABLED"/>
                             </script>
-                            <arg name="tcp_state">
+                            <arg name="tcp_state" type="tcp_states">
                                 <value>TCP_CLOSING</value>
                                 <value>TCP_CLOSE_WAIT</value>
                                 <value>TCP_LAST_ACK</value>
@@ -1850,7 +1850,7 @@
                                 <value>exp-2^31+1</value>
                                 <value>exp-random</value>
                               </arg>
-                              <arg name="tcp_state">
+                              <arg name="tcp_state" type="tcp_states">
                                 <value>TCP_ESTABLISHED</value>
                                 <value>TCP_CLOSE_WAIT</value>
                                 <value reqs="SO_KEEPALIVE">TCP_FIN_WAIT1</value>
@@ -1876,7 +1876,7 @@
                                 <value>exp-2^31+1</value>
                                 <value>exp-random</value>
                               </arg>
-                              <arg name="tcp_state">
+                              <arg name="tcp_state" type="tcp_states">
                                 <value>TCP_SYN_RECV</value>
                               </arg>
                               <arg name="opening">
@@ -1898,7 +1898,7 @@
                                 <value>exp-random</value>
                               </arg>
 
-                              <arg name="tcp_state" list="">
+                              <arg name="tcp_state" type="tcp_states" list="">
                                 <value>TCP_SYN_SENT</value>
                                 <value>TCP_SYN_RECV</value>
                               </arg>
@@ -2036,7 +2036,7 @@
                 <arg name="cache_socket" type="cache_socket_type">
                     <value>FALSE</value>
                 </arg>
-                <arg name="tcp_state">
+                <arg name="tcp_state" type="tcp_states">
                     <value>TCP_FIN_WAIT1</value>
                     <value reqs="SO_KEEPALIVE">TCP_FIN_WAIT2</value>
                     <value>TCP_CLOSING</value>
@@ -2099,7 +2099,7 @@
                 <arg name="cache_socket" type="cache_socket_type">
                     <value>TRUE</value>
                 </arg>
-                <arg name="tcp_state">
+                <arg name="tcp_state" type="tcp_states">
                     <value>TCP_FIN_WAIT1</value>
                     <value reqs="SO_KEEPALIVE">TCP_FIN_WAIT2</value>
                     <value>TCP_CLOSING</value>
@@ -2146,7 +2146,7 @@
                     <value>peer_unreachable</value>
                     <value>peer_rebooted</value>
                 </arg>
-                <arg name="tcp_state" list="">
+                <arg name="tcp_state" type="tcp_states" list="">
                     <value>TCP_SYN_SENT</value>
                     <value>TCP_SYN_RECV</value>
                     <value>TCP_SYN_RECV</value>
@@ -2180,7 +2180,7 @@
                     <value>peer_unreachable</value>
                     <value>peer_rebooted</value>
                 </arg>
-                <arg name="tcp_state" list="">
+                <arg name="tcp_state" type="tcp_states" list="">
                     <value reqs="SO_KEEPALIVE">TCP_ESTABLISHED</value>
                     <value reqs="SO_KEEPALIVE">TCP_ESTABLISHED</value>
                     <value>TCP_FIN_WAIT1</value>
@@ -2334,13 +2334,13 @@
 
                     <run>
                         <script name="tcp_handle_rst"/>
-                        <arg name="tcp_state">
+                        <arg name="tcp_state" type="tcp_states">
                             <value>TCP_SYN_SENT</value>
                         </arg>
                     </run>
                     <run>
                         <script name="tcp_handle_rst"/>
-                        <arg name="tcp_state">
+                        <arg name="tcp_state" type="tcp_states">
                             <value>TCP_CLOSE_WAIT</value>
                             <value>TCP_ESTABLISHED</value>
                             <value>TCP_FIN_WAIT1</value>
@@ -2379,7 +2379,7 @@
                 <arg name="tst_send_after">
                     <value>FALSE</value>
                 </arg>
-                <arg name="tcp_state">
+                <arg name="tcp_state" type="tcp_states">
                     <value>TCP_SYN_SENT</value>
                     <value reqs="SIMULTANEOUS_OPEN">TCP_SYN_RECV</value>
                     <value>TCP_LISTEN</value>
@@ -2415,7 +2415,7 @@
                 <arg name="tst_send_after">
                     <value>FALSE</value>
                 </arg>
-                <arg name="tcp_state">
+                <arg name="tcp_state" type="tcp_states">
                     <value>TCP_CLOSE_WAIT</value>
                     <value>TCP_ESTABLISHED</value>
                 </arg>
@@ -2458,7 +2458,7 @@
                     <value>TRUE</value>
                     <value>FALSE</value>
                 </arg>
-                <arg name="tcp_state">
+                <arg name="tcp_state" type="tcp_states">
                     <value>TCP_CLOSE_WAIT</value>
                     <value>TCP_ESTABLISHED</value>
                     <value>TCP_FIN_WAIT1</value>
@@ -2499,7 +2499,7 @@
                         <req id="TAPI_TCP_STATES"/>
                         <req id="PROC_SYS_NET"/>
                     </script>
-                    <arg name="tcp_state">
+                    <arg name="tcp_state" type="tcp_states">
                         <value reqs="SO_KEEPALIVE">TCP_FIN_WAIT1</value>
                         <value>TCP_CLOSING</value>
                         <value>TCP_LAST_ACK</value>
@@ -2523,7 +2523,7 @@
                         <value ref="env.peer2peer_gw"/>
                         <value ref="env.peer2peer_gw_ipv6"/>
                     </arg>
-                    <arg name="tcp_state">
+                    <arg name="tcp_state" type="tcp_states">
                         <value reqs="SO_KEEPALIVE">TCP_FIN_WAIT1</value>
                         <value>TCP_CLOSING</value>
                         <value>TCP_LAST_ACK</value>
@@ -2547,7 +2547,7 @@
                         <value ref="env.peer2peer_gw"/>
                         <value ref="env.peer2peer_gw_ipv6"/>
                     </arg>
-                    <arg name="tcp_state">
+                    <arg name="tcp_state" type="tcp_states">
                         <value>TCP_SYN_RECV</value>
                     </arg>
                     <arg name="opening">
@@ -2707,7 +2707,7 @@
                             <req id="OOL1502"/>
                             <req id="TAPI_TCP_STATES"/>
                         </script>
-                        <arg name="tcp_state">
+                        <arg name="tcp_state" type="tcp_states">
                             <value>TCP_ESTABLISHED</value>
                             <value>TCP_CLOSE_WAIT</value>
                             <value reqs="SO_KEEPALIVE,TCP_KEEPCNT,TCP_KEEPIDLE,TCP_KEEPINTVL">TCP_FIN_WAIT1</value>
@@ -2744,7 +2744,7 @@
                             <req id="OOL1502"/>
                             <req id="TAPI_TCP_STATES"/>
                         </script>
-                        <arg name="tcp_state">
+                        <arg name="tcp_state" type="tcp_states">
                             <value>TCP_ESTABLISHED</value>
                             <value>TCP_CLOSE_WAIT</value>
                             <value reqs="SO_KEEPALIVE,TCP_KEEPCNT,TCP_KEEPIDLE,TCP_KEEPINTVL">TCP_FIN_WAIT1</value>
@@ -2786,7 +2786,7 @@
                             <req id="OOL1502"/>
                             <req id="TAPI_TCP_STATES"/>
                         </script>
-                        <arg name="tcp_state" list="state_list">
+                        <arg name="tcp_state" type="tcp_states" list="state_list">
                             <value>TCP_SYN_SENT</value>
                             <value>TCP_SYN_RECV</value>
                         </arg>
@@ -2820,7 +2820,7 @@
                             <req id="OOL1502"/>
                             <req id="TAPI_TCP_STATES"/>
                         </script>
-                        <arg name="tcp_state" list="state_list">
+                        <arg name="tcp_state" type="tcp_states" list="state_list">
                             <value>TCP_SYN_SENT</value>
                             <value>TCP_SYN_RECV</value>
                         </arg>
@@ -2851,7 +2851,7 @@
                             <req id="OOL1502"/>
                             <req id="TAPI_TCP_STATES"/>
                         </script>
-                        <arg name="tcp_state">
+                        <arg name="tcp_state" type="tcp_states">
                             <value>TCP_FIN_WAIT2</value>
                             <value>TCP_TIME_WAIT</value>
                         </arg>
@@ -2886,7 +2886,7 @@
                             <req id="OOL1502"/>
                             <req id="TAPI_TCP_STATES"/>
                         </script>
-                        <arg name="tcp_state">
+                        <arg name="tcp_state" type="tcp_states">
                             <value>TCP_FIN_WAIT2</value>
                             <value>TCP_TIME_WAIT</value>
                         </arg>
@@ -2934,7 +2934,7 @@
                     <req id="TAPI_TCP_STATES"/>
                     <req id="TCP_BLIND_WINDOW"/>
                 </script>
-                <arg name="tcp_state">
+                <arg name="tcp_state" type="tcp_states">
                     <value>TCP_ESTABLISHED</value>
                     <value>TCP_CLOSE_WAIT</value>
                 </arg>
@@ -2954,7 +2954,7 @@
                     <req id="TAPI_TCP_STATES"/>
                     <req id="TCP_BLIND_WINDOW"/>
                 </script>
-                <arg name="tcp_state">
+                <arg name="tcp_state" type="tcp_states">
                     <value>TCP_FIN_WAIT1</value>
                     <value>TCP_FIN_WAIT2</value>
                     <value>TCP_CLOSING</value>
@@ -2978,7 +2978,7 @@
                     <req id="TAPI_TCP_STATES"/>
                     <req id="TCP_BLIND_WINDOW"/>
                 </script>
-                <arg name="tcp_state">
+                <arg name="tcp_state" type="tcp_states">
                     <value>TCP_ESTABLISHED</value>
                     <value>TCP_CLOSE_WAIT</value>
                 </arg>
@@ -3002,7 +3002,7 @@
                     <req id="TAPI_TCP_STATES"/>
                     <req id="TCP_BLIND_WINDOW"/>
                 </script>
-                <arg name="tcp_state">
+                <arg name="tcp_state" type="tcp_states">
                     <value>TCP_FIN_WAIT1</value>
                     <value>TCP_FIN_WAIT2</value>
                     <value>TCP_CLOSING</value>
@@ -3074,7 +3074,7 @@
               <session>
                 <arg name="env"/>
                 <arg name="sock_type"/>
-                <arg name="tcp_state">
+                <arg name="tcp_state" type="tcp_states">
                     <value>TCP_ESTABLISHED</value>
                     <value>TCP_CLOSE_WAIT</value>
                     <value>TCP_FIN_WAIT2</value>
@@ -3129,7 +3129,7 @@
               <session>
                 <arg name="env"/>
                 <arg name="sock_type"/>
-                <arg name="tcp_state">
+                <arg name="tcp_state" type="tcp_states">
                     <value>TCP_ESTABLISHED</value>
                     <value>TCP_CLOSE_WAIT</value>
                     <value>TCP_FIN_WAIT1</value>
