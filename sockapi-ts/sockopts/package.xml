@@ -1823,7 +1823,7 @@
             <arg name="func" type="send_func">
                 <value>write</value>
             </arg>
-            <arg name="tcp_state">
+            <arg name="tcp_state" type="tcp_states">
                 <value>TCP_SYN_SENT</value>
                 <value>TCP_SYN_RECV</value>
                 <value>TCP_ESTABLISHED</value>

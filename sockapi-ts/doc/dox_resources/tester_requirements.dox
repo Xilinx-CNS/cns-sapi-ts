@@ -393,13 +393,35 @@ should be fixed):
 @table_2c_first SETUID
 @table_2c_second    Tests which use setuid() function
 
-@table_2c_section Others:
+@table_2c_section TCP states:
 @table_2c_first TAPI_TCP_STATES
 @table_2c_second       Tests using tapi_tcp_states (TSA) library
                             to test TCP states. This library uses
                             TCP_INFO socket option, but it does not
                             imply setting TCP_INFO requirement since
                             only tcpi_state field is used.
+@table_2c_first TCP_ESTABLISHED
+@table_2c_second    Tests checking TCP_ESTABLISHED state via TSA library
+@table_2c_first TCP_SYN_SENT
+@table_2c_second    Tests checking TCP_SYN_SENT state via TSA library
+@table_2c_first TCP_SYN_RECV
+@table_2c_second    Tests checking TCP_SYN_RECV state via TSA library
+@table_2c_first TCP_FIN_WAIT1
+@table_2c_second    Tests checking TCP_FIN_WAIT1 state via TSA library
+@table_2c_first TCP_FIN_WAIT2
+@table_2c_second    Tests checking TCP_FIN_WAIT2 state via TSA library
+@table_2c_first TCP_TIME_WAIT
+@table_2c_second    Tests checking TCP_TIME_WAIT state via TSA library
+@table_2c_first TCP_CLOSE_WAIT
+@table_2c_second    Tests checking TCP_CLOSE_WAIT state via TSA library
+@table_2c_first TCP_LAST_ACK
+@table_2c_second    Tests checking TCP_LAST_ACK state via TSA library
+@table_2c_first TCP_LISTEN
+@table_2c_second    Tests checking TCP_LISTEN state via TSA library
+@table_2c_first TCP_CLOSING
+@table_2c_second    Tests checking TCP_CLOSING state via TSA library
+
+@table_2c_section Others:
 @table_2c_first MANY_SOCKETS
 @table_2c_second        Tests which create maximum number of sockets
 @table_2c_first BIND_BROADCAST
