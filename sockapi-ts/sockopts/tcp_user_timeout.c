@@ -150,17 +150,8 @@ wait_connection_termination(tsa_session *ss,
     int fdflags;
     rpc_tcp_state last_state;
 
-    if (tcp_state == RPC_TCP_SYN_RECV)
-    {
-        flags |= TSA_MOVE_IGNORE_ERR;
-        CHECK_RC(tsa_do_moves_str(ss, RPC_TCP_UNKNOWN, RPC_TCP_UNKNOWN, flags,
-                                  "TCP_CLOSE -> TCP_LISTEN -> TCP_SYN_RECV"));
-    }
-    else
-    {
-        CHECK_RC(tsa_do_moves_str(ss, RPC_TCP_UNKNOWN, RPC_TCP_UNKNOWN,
-                                  flags, tcp_state_rpc2str(tcp_state)));
-    }
+    CHECK_RC(tsa_do_moves_str(ss, RPC_TCP_UNKNOWN, RPC_TCP_UNKNOWN,
+                              flags, tcp_state_rpc2str(tcp_state)));
 
     CHECK_RC(tsa_break_tst_iut_conn(ss));
 
@@ -306,7 +297,8 @@ main(int argc, char *argv[])
     if (tcp_state == RPC_TCP_SYN_RECV)
     {
         tst_type = TSA_TST_GW_CSAP;
-        flags |= TSA_TST_USE_REUSEADDR | TSA_ESTABLISH_PASSIVE | TSA_MOVE_IGNORE_START_ERR;
+        flags |= TSA_TST_USE_REUSEADDR | TSA_ESTABLISH_PASSIVE |
+                 TSA_MOVE_IGNORE_ERR;
     }
 
     TEST_STEP("Prepare first TSA state instance, create TCP socket on IUT "
