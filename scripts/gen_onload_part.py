@@ -289,9 +289,7 @@ def gen_testing_part(rand, part_id, host, branch=None, parts_num_only=False,
 
     # Generate random ool params for testing
     test_ool = gen_ools(rand, "ool_params_freqs.yaml")
-    if af_xdp_strict and "af_xdp" not in test_ool:
-        # We do not use af_xdp_single on non-SFC NICs for now
-        remove_silent(test_ool, "af_xdp_single")
+    if af_xdp_strict and "af_xdp" not in test_ool and "af_xdp_single" not in test_ool:
         test_ool += ["af_xdp"]
         # We can't remove af_xdp in such case, so let's remove transparent
         # slice
