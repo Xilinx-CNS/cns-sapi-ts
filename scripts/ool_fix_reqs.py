@@ -89,16 +89,16 @@ if (("default_epoll" in ools or "default_epoll_pwait" in ools) and
 
 # AF_XDP does not hand IPv6 sockets over to the kernel stack with
 # ulhelper build in single queue mode. ON-12581.
-if "af_xdp_single" in ools and "build_ulhelper" in ools:
-    add_req("!IP6", "ON-12581: af_xdp_single + build_ulhelper")
+if "af_xdp_no_filters" in ools and "build_ulhelper" in ools:
+    add_req("!IP6", "ON-12581: af_xdp_no_filters + build_ulhelper")
 
-# af_xdp_single supports only one stack. See ST-2164.
-if "af_xdp_single" in ools and "reuse_stack" not in ools:
-    af_xdp_single_reason = "ST-2164: af_xdp_single supports only one stack"
-    add_req("!PIPE", af_xdp_single_reason)
-    add_req("!EXEC", af_xdp_single_reason)
-    add_req("!SO_LINGER", af_xdp_single_reason)
-    add_req("!ENV-LOOPBACK", af_xdp_single_reason)
+# af_xdp_no_filters supports only one stack. See ST-2164.
+if "af_xdp_no_filters" in ools and "reuse_stack" not in ools:
+    af_xdp_no_filters_reason = "ST-2164: af_xdp_no_filters supports only one stack"
+    add_req("!PIPE", af_xdp_no_filters_reason)
+    add_req("!EXEC", af_xdp_no_filters_reason)
+    add_req("!SO_LINGER", af_xdp_no_filters_reason)
+    add_req("!ENV-LOOPBACK", af_xdp_no_filters_reason)
 
 # loop4 + m32 parameter combination leads to "out of memory" problem described
 # in ON-12690.

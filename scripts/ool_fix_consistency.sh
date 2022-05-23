@@ -505,12 +505,12 @@ function af_xdp_fix()
 
         # AF_XDP is stable with reuse_pco only if reuse_stack option
         # is not presented.
-        # af_xdp_single option should be tested with reuse_stack only.
+        # af_xdp_no_filters option should be tested with reuse_stack only.
         # ON-12446.
         if ! ool_contains "reuse_stack" ; then
-            if ool_contains "af_xdp_single" ; then
+            if ool_contains "af_xdp_no_filters" ; then
                 ool_add "reuse_stack" \
-                    "$info/ON-12446: use af_xdp_single with reuse_stack only"
+                    "$info/ON-12446: use af_xdp_no_filters with reuse_stack only"
             else
                 ool_replace "no_reuse_pco" "reuse_pco" \
                     "$info: without reuse_stack, it is stable only with reuse_pco"

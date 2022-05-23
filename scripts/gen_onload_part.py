@@ -116,7 +116,7 @@ def fix_testing_parms(host, ools, reqs, sl, slice_name,
     if older_then(branch, "onload-7.1"):
         remove_silent(ools, "laddr_prefsrc")
     if older_then(branch, "onload-8.0"):
-        remove_silent(ools, "af_xdp_single", "af_xdp", "zc_af_xdp")
+        remove_silent(ools, "af_xdp_no_filters", "af_xdp", "zc_af_xdp")
 
     # Remove ipvlan and macvlan before checking netns_iut + bond
     if host in params["no_ipvlan"]:
@@ -149,7 +149,7 @@ def fix_testing_parms(host, ools, reqs, sl, slice_name,
         remove_silent(ools, "m32")
     if host in params["no_af_xdp"]:
         remove_silent(ools, "af_xdp")
-        remove_silent(ools, "af_xdp_single")
+        remove_silent(ools, "af_xdp_no_filters")
         remove_silent(ools, "zc_af_xdp")
     if host in params["no_syscall"]:
         remove_silent(ools, "syscall")
@@ -179,7 +179,7 @@ def fix_testing_parms(host, ools, reqs, sl, slice_name,
         remove_silent(ools, "safe", "scalable_active_passive",
                       "scalable_active", "scalable_passive")
         # Scalable filters are not supported with AF_XDP. ST-2231.
-        remove_silent(ools, "af_xdp_single", "af_xdp", "zc_af_xdp")
+        remove_silent(ools, "af_xdp_no_filters", "af_xdp", "zc_af_xdp")
     # sleep_spin requires epoll3
     if "epoll3" not in ools:
         remove_silent(ools, "sleep_spin")
@@ -214,7 +214,7 @@ def fix_testing_parms(host, ools, reqs, sl, slice_name,
 
     # AF_XDP is tested with reuse_pco or reuse_stack only.
     # Remove cplane_server_grace_timeout_zero for reasons described above
-    if "af_xdp" in ools or "af_xdp_single" in ools:
+    if "af_xdp" in ools or "af_xdp_no_filters" in ools:
         remove_silent(ools, "cplane_server_grace_timeout_zero")
 
     # Note: x3 testing available starting from onload-8.0 branch
@@ -289,7 +289,7 @@ def gen_testing_part(rand, part_id, host, branch=None, parts_num_only=False,
 
     # Generate random ool params for testing
     test_ool = gen_ools(rand, "ool_params_freqs.yaml")
-    if af_xdp_strict and "af_xdp" not in test_ool and "af_xdp_single" not in test_ool:
+    if af_xdp_strict and "af_xdp" not in test_ool and "af_xdp_no_filters" not in test_ool:
         test_ool += ["af_xdp"]
         # We can't remove af_xdp in such case, so let's remove transparent
         # slice
