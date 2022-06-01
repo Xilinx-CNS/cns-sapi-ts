@@ -3445,6 +3445,9 @@ groups:
     - test: ssh_client
       summary: Check OpenSSH connection establishing
 
+    - test: ssh_port_fwd_clnt
+      summary: SSH port forwarding on the client side
+
   - group: udp
     summary: UDP connections and round-trip
     objective: ''
