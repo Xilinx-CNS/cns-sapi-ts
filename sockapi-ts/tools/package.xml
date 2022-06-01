@@ -23,5 +23,36 @@
                <value>tst2</value>
             </arg>
         </run>
+
+        <run>
+            <script name="ssh_port_fwd_clnt"/>
+            <arg name="env">
+               <value ref="env.two_nets.iut_first"/>
+            </arg>
+            <arg name="tester" list="">
+               <value>tst2</value>
+               <value>tst1</value>
+               <value>tst1</value>
+               <value>tst2</value>
+               <value>tst1</value>
+               <value>tst2</value>
+            </arg>
+            <arg name="server" list="">
+               <value>tst2</value>
+               <value>tst1</value>
+               <value>iut</value>
+               <value>iut</value>
+               <value>tst2</value>
+               <value>tst1</value>
+            </arg>
+            <arg name="client" list="">
+               <value>iut</value>
+               <value>iut</value>
+               <value>tst1</value>
+               <value>tst2</value>
+               <value>tst1</value>
+               <value>tst2</value>
+            </arg>
+        </run>
     </session>
 </package>

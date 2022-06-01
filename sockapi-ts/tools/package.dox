@@ -13,6 +13,7 @@ Test suite to verify functioning of tools and utilities.
 
 -# @ref tools-prologue
 -# @ref tools-ssh_client
+-# @ref tools-ssh_port_fwd_clnt
 
 @}tools
 

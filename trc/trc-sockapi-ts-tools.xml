@@ -25,5 +25,15 @@
         <notes/>
       </iter>
     </test>
+    <test name="ssh_port_fwd_clnt" type="script">
+    <objective>Check that SSH server performs TCP forwarding properly</objective>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="tester"/>
+        <arg name="server"/>
+        <arg name="client"/>
+        <notes/>
+      </iter>
+    </test>
   </iter>
 </test>
