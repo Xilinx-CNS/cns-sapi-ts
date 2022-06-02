@@ -277,6 +277,38 @@
                 <value>4</value>
               </arg>
               <arg name="iomux" type="iomux"/>
+              <arg name="late_iomux" type="boolean">
+                <value>FALSE</value>
+              </arg>
+              <arg name="same_tst" type="boolean" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+              </arg>
+              <arg name="same_port" type="boolean" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+              </arg>
+            </run>
+
+            <run>
+              <script name="reuseport_threaded_iomux" track_conf="silent">
+                <req id="OOL1502"/>
+              </script>
+              <arg name="env">
+                <value ref="env.two_nets.iut_first"/>
+              </arg>
+              <arg name="listeners_num">
+                <value>4</value>
+              </arg>
+              <arg name="iomux" type="iomux">
+                <value>epoll</value>
+                <value>epoll_pwait</value>
+              </arg>
+              <arg name="late_iomux" type="boolean">
+                <value>TRUE</value>
+              </arg>
               <arg name="same_tst" type="boolean" list="">
                 <value>FALSE</value>
                 <value>FALSE</value>
@@ -869,6 +901,9 @@
                 <value>4</value>
               </arg>
               <arg name="iomux" type="iomux"/>
+              <arg name="late_iomux" type="boolean">
+                <value>FALSE</value>
+              </arg>
               <arg name="same_tst" type="boolean" list="">
                 <value>FALSE</value>
                 <value>FALSE</value>
