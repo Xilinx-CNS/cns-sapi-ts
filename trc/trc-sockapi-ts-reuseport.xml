@@ -421,6 +421,7 @@
         <arg name="env"/>
         <arg name="scalable_filters_enable"/>
         <arg name="iomux"/>
+        <arg name="late_iomux"/>
         <arg name="listeners_num"/>
         <arg name="same_port"/>
         <arg name="same_tst"/>

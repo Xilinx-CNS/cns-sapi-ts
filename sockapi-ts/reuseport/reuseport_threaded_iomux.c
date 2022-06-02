@@ -17,10 +17,11 @@
  * @param pco_tst2       PCO on Agt_C.
  * @param listeners_num  Listeners sockets number.
  * @param iomux          Iomux function name.
+ * @param late_iomux     Call iomux funtion after all sockets are listeners.
  * @param same_tst       Bind all sockets to the same address:port couple.
  * @param same_port      Bind all sockets to the port, address is different
  *                       if @p same_tst is @c FALSE.
- * 
+ *
  * @type Conformance.
  *
  * @par Scenario:
@@ -85,23 +86,29 @@ iomux_call_test(iomux_call_type iomux, socket_ctx *sock,
 }
 
 /**
- * Open TCP socket, set SO_REUSEPORT, bind it and call iomux() function.
+ * Open TCP socket, set SO_REUSEPORT, bind it and call listen() function.
  * 
  * @param sock      Socket context
- * @param iomux     Iomux function type
+ * @param bound     Another listener socket already bound on the sock->addr.
  */
 static void
-listen_with_iomux(socket_ctx *sock, iomux_call_type iomux)
+create_listener(socket_ctx *sock, te_bool bound)
 {
+    int rc;
+
     sock->l = rpc_socket(sock->pco_iut, rpc_socket_domain_by_addr(sock->addr),
                          RPC_SOCK_STREAM, RPC_PROTO_DEF);
     rpc_setsockopt_int(sock->pco_iut, sock->l, RPC_SO_REUSEPORT, 1);
     rpc_bind(sock->pco_iut, sock->l, sock->addr);
-    rpc_listen(sock->pco_iut, sock->l, -1);
-    rpc_fcntl(sock->pco_iut, sock->l, RPC_F_SETFL, RPC_O_NONBLOCK);
 
-    sock->pco_iut->op = RCF_RPC_CALL;
-    iomux_call_test(iomux, sock, NULL);
+    RPC_AWAIT_IUT_ERROR(sock->pco_iut);
+    rc = rpc_listen(sock->pco_iut, sock->l, -1);
+    if (rc < 0 && RPC_ERRNO(sock->pco_iut) == RPC_EADDRINUSE && bound)
+        TEST_VERDICT("Unable to bind two listener sockets on the same stack");
+    else if (rc < 0)
+        TEST_VERDICT("listen call failed with %r", RPC_ERRNO(sock->pco_iut));
+
+    rpc_fcntl(sock->pco_iut, sock->l, RPC_F_SETFL, RPC_O_NONBLOCK);
 }
 
 /**
@@ -189,6 +196,7 @@ main(int argc, char *argv[])
     const struct sockaddr  *tst2_addr = NULL;
     iomux_call_type         iomux = IC_UNKNOWN;
     int     listeners_num;
+    te_bool late_iomux;
     te_bool same_port;
     te_bool same_tst;
 
@@ -211,6 +219,7 @@ main(int argc, char *argv[])
     TEST_GET_ADDR(pco_tst2, tst2_addr);
     TEST_GET_INT_PARAM(listeners_num);
     TEST_GET_IOMUX_FUNC(iomux);
+    TEST_GET_BOOL_PARAM(late_iomux);
     TEST_GET_BOOL_PARAM(same_tst);
     TEST_GET_BOOL_PARAM(same_port);
 
@@ -241,8 +250,8 @@ main(int argc, char *argv[])
     }
 
     TEST_STEP("Create @p listeners_num listener sockets, each socket in its thread. "
-              "Bind sockets, set socket option @c SO_REUSEPORT and call blocking "
-              "iomux function.");
+              "Bind sockets, set socket option @c SO_REUSEPORT. Call blocking "
+              "iomux function if @p late_iomux is @c FALSE.");
     for (i = 0; i < listeners_num; i++)
     {
         TEST_STEP("Sockets are bound alternately to addresses @p iut_addr1 and "
@@ -259,7 +268,24 @@ main(int argc, char *argv[])
         snprintf(name, sizeof(name), "iut_handler_%d", i);
         rcf_rpc_server_thread_create(pco_iut, name, &sock[i].pco_iut);
 
-        listen_with_iomux(sock + i, iomux);
+        create_listener(sock + i, same_tst && i > 0 || i > 1);
+
+        if (!late_iomux)
+        {
+            sock[i].pco_iut->op = RCF_RPC_CALL;
+            iomux_call_test(iomux, sock + i, NULL);
+        }
+
+    }
+
+    if (late_iomux)
+    {
+        TEST_STEP("Call blocking iomux function if @p late_iomux is @c TRUE");
+        for (i = 0; i < listeners_num; i++)
+        {
+            sock[i].pco_iut->op = RCF_RPC_CALL;
+            iomux_call_test(iomux, sock + i, NULL);
+        }
     }
 
     TAPI_WAIT_NETWORK;
