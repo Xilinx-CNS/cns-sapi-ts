@@ -419,13 +419,113 @@
       <notes/>
       <iter result="PASSED">
         <arg name="env"/>
-        <arg name="scalable_filters_enable"/>
+        <arg name="scalable_filters_enable">0</arg>
         <arg name="iomux"/>
         <arg name="late_iomux"/>
         <arg name="listeners_num"/>
         <arg name="same_port"/>
         <arg name="same_tst"/>
         <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable">1</arg>
+        <arg name="iomux"/>
+        <arg name="late_iomux"/>
+        <arg name="listeners_num"/>
+        <arg name="same_port"/>
+        <arg name="same_tst"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable">2</arg>
+        <arg name="iomux">select</arg>
+        <arg name="late_iomux"/>
+        <arg name="listeners_num"/>
+        <arg name="same_port"/>
+        <arg name="same_tst"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable">2</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="late_iomux"/>
+        <arg name="listeners_num"/>
+        <arg name="same_port"/>
+        <arg name="same_tst"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable">2</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="late_iomux"/>
+        <arg name="listeners_num"/>
+        <arg name="same_port"/>
+        <arg name="same_tst"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable">2</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="late_iomux"/>
+        <arg name="listeners_num"/>
+        <arg name="same_port"/>
+        <arg name="same_tst"/>
+        <notes/>
+      </iter>
+      <iter result="FAILED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable">2</arg>
+        <arg name="iomux">epoll</arg>
+        <arg name="late_iomux">FALSE</arg>
+        <arg name="listeners_num"/>
+        <arg name="same_port"/>
+        <arg name="same_tst"/>
+        <notes/>
+        <results tags="v5" key="12054">
+          <result value="FAILED">
+            <verdict>Unable to bind two listener sockets on the same stack</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="FAILED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable">2</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="late_iomux">FALSE</arg>
+        <arg name="listeners_num"/>
+        <arg name="same_port"/>
+        <arg name="same_tst"/>
+      <notes/>
+        <results tags="v5" key="12054">
+          <result value="FAILED">
+            <verdict>Unable to bind two listener sockets on the same stack</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable">2</arg>
+        <arg name="iomux">epoll</arg>
+        <arg name="late_iomux">TRUE</arg>
+        <arg name="listeners_num"/>
+        <arg name="same_port"/>
+        <arg name="same_tst"/>
+      <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable">2</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="late_iomux">TRUE</arg>
+        <arg name="listeners_num"/>
+        <arg name="same_port"/>
+        <arg name="same_tst"/>
+      <notes/>
       </iter>
     </test>
     <test name="reuseport_rcvtimeo" type="script">
