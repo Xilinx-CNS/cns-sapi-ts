@@ -127,6 +127,7 @@ main(int argc, char *argv[])
     te_bool                 start_blocking;
     te_bool                 change_iut;
     te_bool                 is_pipe;
+    te_bool                 use_libc_old = FALSE;
     rpc_socket_type         sock_type;
 
     int                     fdflags;
@@ -256,6 +257,7 @@ main(int argc, char *argv[])
         else
             rpc_overfill_buffers(pco_iut, iut_fd, &sent);
     }
+    use_libc_old = pco_iut->use_libc;
     pco_iut->use_libc = iut_sys_call;
     sockts_check_blocking(pco_iut, pco_tst, func, is_send,
                           iut_fd, tst_fd, !start_blocking, DATA_BULK,
@@ -276,6 +278,7 @@ main(int argc, char *argv[])
     TEST_SUCCESS;
 
 cleanup:
+    pco_iut->use_libc = use_libc_old;
     CLEANUP_RPC_CLOSE(pco_tst, tst_fd);
     CLEANUP_RPC_CLOSE(pco_iut, iut_fd);
 
