@@ -538,6 +538,12 @@ function af_xdp_fix()
         # Scalable filters are not supported
         ool_remove "scalable*" "$info: scalable filters are not supported"
 
+        if ool_contains "zc_af_xdp*" && ool_contains "netns_*" ; then
+            if [[ "$iut_drv" == "sfc" ]] ; then
+                ool_remove "netns_*" \
+                    "$info/SWNETLINUX-4809/Bug 11986: disable netns on SFC NICs with zc_af_xdp"
+            fi
+        fi
     else
         # zc_af_xdp should be used only with AF_XDP
         ool_remove "zc_af_xdp" \
