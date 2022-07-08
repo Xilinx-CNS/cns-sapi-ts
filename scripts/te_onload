@@ -1,0 +1,32 @@
+#!/bin/sh
+# SPDX-License-Identifier: Apache-2.0
+# (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved.
+# This script mimics the basic behaviour of the "onload"
+# script (without any parameters).
+
+me=$(basename "$0")
+usage() {
+    echo "usage:"
+    echo "   $me <command> <command-args>"
+    exit 1
+}
+
+set_preload() {
+    if [ -n "$ONLOAD_PRELOAD" ]; then
+        LD_PRELOAD="$ONLOAD_PRELOAD"
+    else
+        echo "ONLOAD_PRELOAD is not set."
+    fi
+    export LD_PRELOAD
+}
+
+[ $# = 0 ] && usage
+
+is_exist=$(which $1 2>/dev/null)
+[ -z $is_exist ] && {
+    echo "$me: $1: command not found"
+    exit 1
+}
+
+set_preload
+exec "$@"

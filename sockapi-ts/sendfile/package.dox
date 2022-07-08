@@ -1,0 +1,66 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup sendfile Reliability of sendfile() functionality
+@ingroup sockapi
+@{
+
+Test suite on reliability of the @b sendfile() function.
+
+This suite checks:
+ - @b sendfile() API reactions on unappropriate function parameters;
+ - @b sendfile() processing of usual file-to-file operations;
+ - @b sendfile() processing of file-to-socket operations;
+ - @b sendfile() operation in non-blocking mode or with timeout.
+
+Tests carry out as one @b sendfile() operation so and some of
+@b sendfile() operations concurrently at the same time.
+
+Tests involve @b sendfile() operations with the same/different socket(s)
+from different threads/processes. Robustness against @b fork() is tested
+as well.
+
+There are two sides involved in interoperations:
+ - TESTER side;
+ - IUT side.
+
+Both sides carry out differ roles (server/client, master/slave) in
+interoperations.
+
+If it is not specified specially, files to be created for test purposes 
+have the same length (in more cases it is the test parameter).
+
+If it is not specified specially, @b sendfile() is called with:
+  - descriptor used as @a out_fd is opened for writing only;
+  - descriptor used as @a in_fd is opened for reading only;
+  - @a offset parameter value is @c 0;
+  - @a count parameter value the same as length of files created for
+    test purposes.
+
+@author Igor Vasiliev <Igor.Vasiliev@oktetlabs.ru>
+
+
+@par Tests:
+
+-# @ref sendfile-illegal_params
+-# @ref sendfile-io_descriptors
+-# @ref sendfile-offset_params
+-# @ref sendfile-file2file
+-# @ref sendfile-f2f_serial
+-# @ref sendfile-file2socket
+-# @ref sendfile-largefile2socket
+-# @ref sendfile-f2s_concurrent
+-# @ref sendfile-f2s_context
+-# @ref sendfile-f2s_nonblocking
+-# @ref sendfile-files2file_socket
+-# @ref sendfile-f2s_flooder
+-# @ref sendfile-f2s_sendfile2one
+-# @ref sendfile-f2s_flooder2one
+-# @ref sendfile-illegal_socket_states
+-# @ref sendfile-mtu_senfile
+-# @ref sendfile-f2s_sndtimeo
+-# @ref sendfrom-interrupted_signal
+
+@}
+*/

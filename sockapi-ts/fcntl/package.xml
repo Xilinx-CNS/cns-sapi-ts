@@ -1,0 +1,488 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+
+    <description>FCNTL Requests</description>
+
+    <author mailto="Mamadou.Ngom@oktetlabs.ru"/>
+
+    <req id="FCNTL" sticky="true"/>
+
+    <session>
+        <enum name="env.twothr2peer">
+            <value>{{{'pco_iut1':IUT,'pco_iut2':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+            <value reqs="ENV-TST-LINK">tester{{{'pco_iut1':IUT,'pco_iut2':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+            <value reqs="ENV-TST-LINK">tester{{{'pco_iut1':IUT,'pco_iut2':IUT},addr:'iut_addr':inet:wildcard},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+            <value>{{{'pco_iut1':IUT,'pco_iut2':IUT},{'pco_tst':IUT},addr:'iut_addr':inet:unicast}},'tst_addr'='iut_addr'</value>
+        </enum>
+
+        <run>
+            <script name="fcntl_flags_dup">
+                <req id="F_DUPFD"/>
+                <req id="DUP"/>
+                <req id="F_GETOWN"/>
+                <req id="F_SETOWN"/>
+                <req id="F_GETFL"/>
+                <req id="F_SETFL"/>
+                <req id="O_NONBLOCK"/>
+                <req id="EXEC"/>
+            </script>
+            <arg name="env" type="env.twothr2peer"/>
+            <arg name="use_dupfd_cloexec">
+                <value reqs="F_DUPFD_CLOEXEC">TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="use_getown_ex">
+                <value reqs="F_GETOWN_EX">TRUE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+        <run>
+            <script name="fcntl_flags_dup_pipe">
+                <req id="F_DUPFD"/>
+                <req id="DUP"/>
+                <req id="F_GETOWN"/>
+                <req id="F_SETOWN"/>
+                <req id="F_GETFL"/>
+                <req id="F_SETFL"/>
+                <req id="O_NONBLOCK"/>
+                <req id="EXEC"/>
+            </script>
+            <arg name="env">
+                <value>{{{'pco_iut1':IUT,'pco_iut2':IUT}}}</value>
+            </arg>
+            <arg name="use_dupfd_cloexec">
+                <value reqs="F_DUPFD_CLOEXEC">TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="use_getown_ex">
+                <value reqs="F_GETOWN_EX">TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="check_wr" type="boolean"/>
+            <arg name="data_size">
+                <value>512</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="fcntl_async_listen">
+                <req id="F_DUPFD"/>
+                <req id="DUP"/>
+                <req id="F_GETOWN"/>
+                <req id="F_SETOWN"/>
+                <req id="F_GETFL"/>
+                <req id="F_SETFL"/>
+                <req id="O_ASYNC"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+            </arg>
+            <arg name="use_fioasync">
+                <value reqs="FIOASYNC">TRUE</value>
+                <value reqs="F_SETFL">FALSE</value>
+            </arg>
+            <arg name="use_siocspgrp" list="">
+                <value reqs="SIOCSPGRP">TRUE</value>
+                <value reqs="F_SETOWN">FALSE</value>
+                <value reqs="F_SETOWN">FALSE</value>
+            </arg>
+            <arg name="use_getown_ex" list="">
+                <value>FALSE</value>
+                <value reqs="F_GETOWN_EX">TRUE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+        <run>
+            <script name="fcntl_async_udp">
+                <req id="F_DUPFD"/>
+                <req id="DUP"/>
+                <req id="F_GETOWN"/>
+                <req id="F_SETOWN"/>
+                <req id="F_GETFL"/>
+                <req id="F_SETFL"/>
+                <req id="O_ASYNC"/>
+                <req id="BUG_44486"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+            </arg>
+            <arg name="use_fioasync">
+                <value reqs="FIOASYNC">TRUE</value>
+                <value reqs="F_SETFL">FALSE</value>
+            </arg>
+            <arg name="use_siocspgrp" list="">
+                <value reqs="SIOCSPGRP">TRUE</value>
+                <value reqs="F_SETOWN">FALSE</value>
+                <value reqs="F_SETOWN">FALSE</value>
+            </arg>
+            <arg name="use_getown_ex" list="">
+                <value>FALSE</value>
+                <value reqs="F_GETOWN_EX">TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="use_wildcard" type="boolean"/>
+            <arg name="use_connect">
+                <value>before</value>
+                <value>after</value>
+                <value>no</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="fcntl_async_connect_tcp">
+                <req id="F_DUPFD"/>
+                <req id="DUP"/>
+                <req id="F_GETOWN"/>
+                <req id="F_SETOWN"/>
+                <req id="F_GETFL"/>
+                <req id="F_SETFL"/>
+                <req id="O_ASYNC"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+            </arg>
+            <arg name="use_fioasync">
+                <value reqs="FIOASYNC">TRUE</value>
+                <value reqs="F_SETFL">FALSE</value>
+            </arg>
+            <arg name="use_siocspgrp" list="">
+                <value reqs="SIOCSPGRP">TRUE</value>
+                <value reqs="F_SETOWN">FALSE</value>
+                <value reqs="F_SETOWN">FALSE</value>
+            </arg>
+            <arg name="use_getown_ex" list="">
+                <value>FALSE</value>
+                <value reqs="F_GETOWN_EX">TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="connect_before" list="connect_send_seq">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="send_data" list="connect_send_seq">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="use_wildcard" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="fcntl_getfl">
+                <req id="F_GETFL"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+            </arg>
+            <arg name="bind_iut" type="boolean"/>
+            <arg name="connect_iut" type="boolean"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+
+        <run>
+            <script name="fcntl_getfl_pipe">
+                <req id="F_GETFL"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+        </run>
+
+
+        <run>
+            <script name="setgetown">
+                <req id="F_GETOWN"/>
+                <req id="F_SETOWN"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="object" type="objtype"/>
+            <arg name="use_getown_ex">
+                <value reqs="F_GETOWN_EX">TRUE</value>
+                <value>FALSE</value>
+            </arg>
+        </run> 
+        
+        <run>
+            <script name="async_data">
+                <req id="F_DUPFD"/>
+                <req id="DUP"/>
+                <req id="F_SETOWN"/>
+                <req id="F_GETFL"/>
+                <req id="O_ASYNC"/>
+                <!-- See bug 78416 -->
+                <req id="BROKEN"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+            </arg>
+            <arg name="use_pipe">
+              <value>FALSE</value>
+            </arg>
+            <arg name="active" list="">
+              <value>TRUE</value>
+              <value>TRUE</value>
+              <value>FALSE</value>
+              <value>FALSE</value>
+              <value>FALSE</value>
+            </arg>
+            <arg name="sock_type" list="">
+              <value>SOCK_STREAM</value>
+              <value>SOCK_STREAM</value>
+              <value>SOCK_STREAM</value>
+              <value>SOCK_STREAM</value>
+              <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="read_avail" list="">
+              <value>TRUE</value>
+              <value>FALSE</value>
+              <value>TRUE</value>
+              <value>FALSE</value>
+              <value>TRUE</value>
+            </arg>
+            <arg name="use_fioasync_first">
+                <value reqs="FIOASYNC">TRUE</value>
+                <value reqs="F_SETFL">FALSE</value>
+            </arg>
+            <arg name="use_fioasync_second">
+                <value reqs="FIOASYNC">TRUE</value>
+                <value reqs="F_SETFL">FALSE</value>
+            </arg>
+            <arg name="use_siocspgrp">
+                <value reqs="SIOCSPGRP">TRUE</value>
+                <value reqs="F_SETOWN">FALSE</value>
+            </arg>
+            <arg name="sig_to_set">
+                <value>-1</value>
+                <value>0</value>
+                <value>SIGIO</value>
+                <value>SIGUSR2</value>
+            </arg>
+        </run>
+        <run>
+            <script name="async_data">
+                <req id="F_DUPFD"/>
+                <req id="DUP"/>
+                <req id="F_SETOWN"/>
+                <req id="F_GETFL"/>
+                <req id="F_SETFL"/>
+                <req id="O_ASYNC"/>
+                <!-- See bug 78416 -->
+                <req id="BROKEN"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="use_pipe">
+              <value reqs="PIPE">TRUE</value>
+            </arg>
+            <arg name="sock_type">
+              <value>-</value>
+            </arg>
+            <arg name="active">
+              <value>-</value>
+            </arg>
+            <arg name="read_avail" type="boolean"/>
+            <arg name="use_fioasync_first">
+                <value reqs="FIOASYNC">TRUE</value>
+                <value reqs="F_SETFL">FALSE</value>
+            </arg>
+            <arg name="use_fioasync_second">
+                <value reqs="FIOASYNC">TRUE</value>
+                <value reqs="F_SETFL">FALSE</value>
+            </arg>
+            <arg name="use_siocspgrp">
+                <value reqs="F_SETOWN">FALSE</value>
+            </arg>
+            <arg name="sig_to_set">
+                <value>-1</value>
+                <value>0</value>
+                <value>SIGIO</value>
+                <value>SIGUSR2</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="async_postponed">
+                <req id="F_DUPFD"/>
+                <req id="DUP"/>
+                <req id="F_SETOWN"/>
+                <req id="F_GETFL"/>
+                <req id="O_ASYNC"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+            </arg>
+            <arg name="active" list="">
+              <value>TRUE</value>
+              <value>FALSE</value>
+              <value>FALSE</value>
+            </arg>
+            <arg name="sock_type" list="">
+              <value>SOCK_STREAM</value>
+              <value>SOCK_STREAM</value>
+              <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="use_fioasync">
+                <value reqs="FIOASYNC">TRUE</value>
+                <value reqs="F_SETFL">FALSE</value>
+            </arg>
+            <arg name="use_siocspgrp">
+                <value reqs="SIOCSPGRP">TRUE</value>
+                <value reqs="F_SETOWN">FALSE</value>
+            </arg>
+            <arg name="sig_to_set">
+                <value>-1</value>
+                <value>0</value>
+                <value>SIGIO</value>
+                <value>SIGUSR2</value>
+            </arg>
+            <arg name="iomux" list="iomux_list">
+              <value reqs="SELECT,PSELECT">pselect</value>
+              <value reqs="POLL,PPOLL">ppoll</value>
+              <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+              <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+            </arg>
+            <arg name="use_epollet" list="iomux_list">
+              <value>FALSE</value>
+              <value>FALSE</value>
+              <value>FALSE</value>
+              <value>TRUE</value>
+            </arg>
+            <arg name="gen_signal_before_iomux" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="fcntl_on_accepted">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+            </arg>
+            <arg name="close_before_check" type="boolean"/>
+            <arg name="flag">
+                <value reqs="O_NONBLOCK">O_NONBLOCK</value>
+                <value reqs="F_GETFD,F_SETFD">FD_CLOEXEC</value>
+                <value reqs="O_ASYNC">O_ASYNC</value>
+            </arg>
+        </run>
+        <run>
+            <script name="fcntl_after_shutdown">
+                <req id="SOCK_STREAM"/>
+                <req id="F_SETFD"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+            </arg>
+        </run>
+
+        <run>
+            <script name="fcntl_pipe_sz">
+                <req id="F_SETPIPE_SZ"/>
+                <req id="F_GETPIPE_SZ"/>
+                <req id="PIPE"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="new_ef_pipe_size">
+                <value>0</value>
+                <value reqs="ONLOAD_ONLY">8192</value>
+                <value reqs="ONLOAD_ONLY">1000000</value>
+            </arg>
+            <arg name="fcntl_size1">
+                <value>reduce</value>
+                <value>increase</value>
+            </arg>
+            <arg name="fcntl_size2">
+                <value>reduce</value>
+                <value>increase</value>
+            </arg>
+            <arg name="check_read_end1" type="boolean"/>
+            <arg name="check_read_end2" type="boolean"/>
+            <arg name="overfill_before" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="overfill_after" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="read_before" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="read_after" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+
+        <run>
+            <script name="fcntl_pipe_sz_many">
+                <req id="F_SETPIPE_SZ"/>
+                <req id="F_GETPIPE_SZ"/>
+                <req id="PIPE"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="new_ef_pipe_size">
+                <value>0</value>
+                <value reqs="ONLOAD_ONLY">8192</value>
+                <value reqs="ONLOAD_ONLY">1000000</value>
+            </arg>
+            <arg name="diff_stacks">
+                <value reqs="ONLOAD_ONLY,NO_REUSE_STACK">TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="pipe_num">
+                <value>3</value>
+            </arg>
+        </run>
+
+    </session>
+</package>

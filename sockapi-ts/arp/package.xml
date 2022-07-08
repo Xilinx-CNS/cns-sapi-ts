@@ -1,0 +1,374 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+    
+    <description>ARP Table</description>
+    
+    <author mailto="Renata.Sayakhova@oktetlabs.ru"/>
+
+    <req id="ARP" sticky="true"/>
+
+    <session track_conf="silent">
+
+        <var name="env.arp_two_pcos_iut_tester" global="true">
+            <value>{'host1'{{'pco1_on_host1':IUT},{'pco2_on_host1':tester},addr:'host1_addr':inet:unicast,addr:'host1_hwaddr':ether:unicast,if:'host1_if'},'host2'{{'pco_on_host2':tester},addr:'host2_addr':inet:unicast,if:'host2_if',addr:'fake_hwaddr':ether:alien}}</value>
+        </var>
+
+        <var name="env.arp_two_pcos_tester_iut" global="true">
+            <value>{'host1'{{'pco1_on_host1':tester},{'pco2_on_host1':IUT},addr:'host1_addr':inet:unicast,addr:'host1_hwaddr':ether:unicast,if:'host1_if'},'host2'{{'pco_on_host2':tester},addr:'host2_addr':inet:unicast,if:'host2_if',addr:'fake_hwaddr':ether:alien}}</value>
+        </var>
+
+        <var name="env.arp_two_pcos_iut_iut" global="true">
+            <value reqs="FEW_ACCEL_PROCESSES">{'host1'{{'pco1_on_host1':IUT},{'pco2_on_host1':IUT},addr:'host1_addr':inet:unicast,addr:'host1_hwaddr':ether:unicast,if:'host1_if'},'host2'{{'pco_on_host2':tester},addr:'host2_addr':inet:unicast,if:'host2_if',addr:'fake_hwaddr':ether:alien}}</value>
+        </var>
+
+        <prologue>
+            <script name="prologue"/>
+            <arg name="env" ref="env.peer2peer_gw"/>
+        </prologue>
+
+        <run>
+            <script name="tcp_udp_reinforce" track_conf="silent">
+                <req id="TIME_CONSUMING"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+            </arg>
+            <!-- We want to monitor things for at least 120s, due to ARP
+                 constants.  3*50=150s  -->
+            <arg name="repetitions">
+                <value>50</value>
+            </arg>
+            <arg name="period">
+                <value>3</value>
+            </arg>
+            <arg name="sock_type" type="socket_udp_tcp"/>
+        </run>
+
+        <run>
+            <script name="invalid_arp_entry_timeout" track_conf="silent">
+                <req id="TIME_CONSUMING_ON_SOLARIS"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram" list="">
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="active" type="boolean"/>
+            <arg name="call_connect" type="boolean" list="">
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="invalid_arp_request">
+                <!-- See SF bug 79542 -->
+                <req id="BROKEN"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env">
+                <value>{'host1'{{'pco_iut':IUT},addr:'mcast_addr':inet:multicast,addr:'bcast_addr':inet:broadcast,addr:'host1_addr':inet:unicast,addr:'host1_hwaddr':ether:unicast,addr:'fake_hwaddr':ether:alien,if:'host1_if'},'host2'{{'pco_tst':tester},if:'host2_if'}}</value>
+            </arg>
+            <arg name="isbroad" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="arp_change">
+            </script>
+            <arg name="sock_type" type="socket_udp_tcp"/>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+            </arg>
+            <arg name="data_size">
+                <value>512</value>
+            </arg>
+            <arg name="timeout">
+                <value>300</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="incomplete_entry" track_conf="silent"/>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+            </arg>
+            <arg name="sock_type" type="socket_udp_tcp">
+                <value>tcp_active</value>
+                <value>udp</value>
+                <value>udp_notconn</value>
+            </arg>
+        </run>
+       
+        <run>
+            <script name="permanent_entry_untouched_by_reply" track_conf="silent"/>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+            </arg>
+            <arg name="sock_type" type="socket_udp_tcp"/>
+        </run>
+
+        <run>
+            <script name="permanent_entry_untouched_by_request"/>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+            </arg>
+            <arg name="sock_type" type="socket_udp_tcp"/>
+        </run>
+
+        <run>
+            <script name="arp_table_full"/>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="req_nums">
+                <value>200</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="arp_flooding"/>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+            </arg>
+            <arg name="num_of_requests">
+                <value>10</value>
+            </arg>    
+            <arg name="num_of_replies">
+                <value>10</value>
+            </arg>    
+            <arg name="is_unicast" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="gateway_addr" track_conf="silent"/>
+            <arg name="env">
+                <value ref="env.peer2peer_gw"/>
+            </arg>
+            <arg name="sock_type" type="socket_udp_tcp"/>
+        </run>
+
+        <run>
+            <script name="arp_packet_pool_empty">
+                <req id="TIME_CONSUMING_ON_SOLARIS"/>
+            </script>
+            <arg name ="env">
+                <value>'net'{'host1'{{'pco1_iut':IUT},{'pco2_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},'host2'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>    
+            </arg>
+            <arg name="conn_num">
+                <value>220</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+
+        <run>
+            <script name="different_subnets" track_conf="silent">
+                <req id="ENV-2PEERS"/>
+            </script>
+            <arg name="env" type="env.two_nets"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+
+        <run>
+            <script name="broadcast" track_conf="silent">
+                <req id="ENV-2PEERS"/>
+                <req id="SO_BROADCAST"/>
+                <!-- See SF bug 80345 -->
+                <req id="BROKEN"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_nets"/>
+             <arg name="hw_broadcast">
+                <value>FF:FF:FF:FF:FF:FF</value>
+                <value reqs="IF_LL_BCAST_ADDRESS_CONFIG">FF:FF:FF:FF:FF:00</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="common_broadcast" track_conf="silent">
+                <req id="ENV-2PEERS"/>
+                <req id="SO_BINDTODEVICE"/>
+                <req id="SO_BROADCAST"/>
+                <!-- See SF bug 80345 -->
+                <req id="BROKEN"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name ="env">
+                <value>'net1'{'host1'{{'pco_iut':IUT},addr:'iut_to_tst1_addr':inet:unicast,if:'iut_to_tst1_if'},'host2'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},'net2'{'host1'{addr:'iut_to_tst2_addr':inet:unicast,if:'iut_to_tst2_if'},'host3'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</value>    
+            </arg>
+            <arg name="hw_broadcast">
+                <value>FF:FF:FF:FF:FF:FF</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="common_broadcast" track_conf="silent">
+                <req id="ENV-2PEERS"/>
+                <req id="SO_BINDTODEVICE"/>
+                <!-- See SF bug 80345 -->
+                <req id="BROKEN"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name ="env">
+                <value reqs="ENV-2LINKS-IUT">'net1'{'host1'{{'pco_iut':IUT},addr:'iut_to_tst1_addr':inet:unicast,if:'iut_to_tst1_if'},'host2'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},'net2'{'host1'{addr:'iut_to_tst2_addr':inet:unicast,if:'iut_to_tst2_if'},'host2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</value>    
+            </arg>
+            <arg name="hw_broadcast">
+                <value reqs="IF_LL_BCAST_ADDRESS_CONFIG">FF:FF:FF:FF:FF:00</value>
+            </arg>
+        </run>
+
+        <!--
+            Bug 43603:
+            This test is disabled because new kernels (>= 3.10) remove stale
+            entries from ARP cache table only when it overheads minimum number
+            of entries.
+        <run>
+            <script name="stale_entry">
+                <req id="TIME_CONSUMING"/>
+            </script>
+            <arg name ="env">
+                <value>{'host1'{{'pco_iut':IUT},{'pco_snd':tester},addr:'host1_addr':inet:unicast,if:'host1_if'},'host2'{{'pco_rcv':tester},addr:'host2_addr':inet:unicast}}</value>
+                <value>{'host1'{{'pco_iut':IUT},addr:'host1_addr':inet:unicast,if:'host1_if'},'host2'{{'pco_rcv':tester},addr:'host2_addr':inet:unicast}},'pco_snd'='pco_iut'</value>
+            </arg>
+            <arg name="available_time">
+                <value>700</value>
+            </arg>
+        </run>
+        -->
+
+        <!--
+             This test is incorrect because ARP entry appears in any
+             case and connect() function doesn't hang on accelerated
+             sockets with new kernels (>= 3.8). So there is nothing
+             to test.
+        <run>
+            <script name="if_arp_disabled"/>
+            <arg name ="env">
+                <value>{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+        -->
+        <run>
+            <script name="if_ll_addr_1">
+                <req id="IF_LL_ADDRESS_CONFIG"/>
+                <req id="L2_TS"/>
+                <!-- Bug 45433 -->
+                <req id="BROKEN"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="local_server" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="if_ll_addr_2">
+                <req id="IF_LL_ADDRESS_CONFIG"/>
+                <req id="L2_TS"/>
+                <!-- Bug 45433 -->
+                <req id="BROKEN"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="local_server" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="new_broadcast_arp" track_conf="silent">
+                <req id="IF_LL_BCAST_ADDRESS_CONFIG"/>
+                <req id="L2_TS"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="hw_broadcast">
+                <value>FF:FF:FF:FF:FF:00</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="no_outgoing_traffic"/>
+            <arg name="env" type="env.two_nets"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+
+        <run>
+            <script name="if_scope_check">
+                <req id="ROUTE_USED_DELETE"/>
+                <!-- Bug 45694 -->
+                <req id="BROKEN"/>
+            </script>
+            <arg name="env" type="env.two_nets"/>
+        </run>
+
+        <run>
+            <script name="many_addresses"/>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+            </arg>
+            <arg name="sock_type" type="socket_udp_tcp"/>
+            <arg name="diff_subnet" type="boolean"/>
+            <arg name="addr_num">
+                <value>5</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="udp_send_unavailable_arp">
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="bind" type="boolean"/>
+            <arg name="func" type="send_func">
+                <value>send</value>
+                <value>sendto</value>
+            </arg>
+            <arg name="mtu">
+                <value>1500</value>
+                <value reqs="JUMBO_FRAME">8000</value>
+            </arg>
+            <arg name="pkt_size">
+                <value>128</value>
+                <value>7000</value>
+                <value>64000</value>
+            </arg>
+            <arg name="is_recverr" type="boolean"/>
+        </run>
+
+        <run>
+          <script name="sa_first_arp_request">
+              <!-- ST-1974: Onload does not allow to remove an ARP entry -->
+              <req id="BROKEN"/>
+          </script>
+            <arg name="env">
+                <value ref="env.two_nets.iut_first"/>
+            </arg>
+            <arg name="sock_type" type="socket_type_all">
+                <value>udp_notconn</value>
+                <value>udp</value>
+                <value>tcp_active</value>
+            </arg>
+        </run>
+
+
+    </session>
+</package>

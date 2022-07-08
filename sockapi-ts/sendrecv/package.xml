@@ -1,0 +1,1183 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+    
+    <description>Advanced usage of send/receive functions</description>
+    
+    <author mailto="Andrew.Rybchenko@oktetlabs.ru"/>
+
+    <session>
+        <run>
+            <script name="dgram_iov_recv">
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="func"  type="recv_func_with_iov_sys"/>
+        </run>
+
+        <run>
+            <script name="recv_dgram_wild">
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+              <value ref="env.two_nets.iut_first"/>
+              <value ref="env.two_nets.iut_first_ipv6"/>
+            </arg>
+            <arg name="func"  type="recv_func"/>
+        </run>
+
+        <run>
+            <script name="dgram_iov_send">
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="func" type="send_func_with_iov_sys"/>
+        </run>
+
+        <run>
+            <script name="stream_iov_send">
+                <req id="SOCK_STREAM"/>
+                <req id="V5_SANITY"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_fake"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="func" type="send_func_with_iov_sys">
+                <value>writev</value>
+                <value>sys_writev</value>
+                <value>sendmsg</value>
+                <value>sendmmsg</value>
+                <value>onload_zc_send</value>
+                <value>onload_zc_send_user_buf</value>
+            </arg>
+        </run>
+        <run>
+            <script name="stream_iov_send">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_fake"/>
+              <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="func">
+            <value reqs="ONLOAD_ONLY,SEND_FLAG,SF_ODS,SF_ODS_COMPL">od_send_iov</value>
+            <value reqs="ONLOAD_ONLY,SEND_FLAG,SF_ODS,SF_ODS_RAW">od_send_iov_raw</value>
+            <value reqs="ONLOAD_ONLY,SEND_IOV,SF_TEMPLATE_SEND,UL_64">template_send</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="stream_iov_recv">
+                <req id="SOCK_STREAM"/>
+                <req id="V5_SANITY"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_fake"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="func"  type="recv_func_with_iov_sys"/>
+        </run>
+        
+        <run>
+            <script name="peer_close">
+                <req id="SOCK_STREAM"/>
+                <req id="SO_ERROR"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_fake"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="first" type="send_recv_func">
+                <value>send</value>
+                <value>recv</value>
+            </arg>
+            <arg name="second" type="send_recv_func">
+                <value>send</value>
+                <value>recv</value>
+            </arg>
+            <arg name="overfill_buffers" type="boolean"/>
+            <arg name="get_err_first" type="boolean"/>
+        </run>
+
+        <!-- Iterations with Onload extension send functions. They are splitted
+             to avoid multiplying all to all. Testing calls combinations:
+                - onload_ext_funcion, onload_ext_funcion;
+                - send, onload_ext_funcion;
+                - recv, onload_ext_funcion;
+                - onload_ext_funcion, send;
+                - onload_ext_funcion, recv.
+              -->
+        <run>
+            <script name="peer_close">
+                <req id="SOCK_STREAM"/>
+                <req id="SO_ERROR"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_fake"/>
+            </arg>
+            <arg name="first" type="send_recv_func" list="">
+                <value>onload_zc_send</value>
+                <value>onload_zc_send_user_buf</value>
+                <value>template_send</value>
+                <value>onload_zc_recv</value>
+
+                <value>send</value>
+                <value>send</value>
+                <value>send</value>
+                <value>send</value>
+                <value>recv</value>
+                <value>recv</value>
+                <value>recv</value>
+                <value>recv</value>
+
+                <value>onload_zc_send</value>
+                <value>onload_zc_send_user_buf</value>
+                <value>template_send</value>
+                <value>onload_zc_recv</value>
+                <value>onload_zc_send</value>
+                <value>onload_zc_send_user_buf</value>
+                <value>template_send</value>
+                <value>onload_zc_recv</value>
+            </arg>
+            <arg name="second" type="send_recv_func" list="">
+                <value>onload_zc_send</value>
+                <value>onload_zc_send_user_buf</value>
+                <value>template_send</value>
+                <value>onload_zc_recv</value>
+
+                <value>onload_zc_send</value>
+                <value>onload_zc_send_user_buf</value>
+                <value>template_send</value>
+                <value>onload_zc_recv</value>
+                <value>onload_zc_send</value>
+                <value>onload_zc_send_user_buf</value>
+                <value>template_send</value>
+                <value>onload_zc_recv</value>
+
+                <value>send</value>
+                <value>send</value>
+                <value>send</value>
+                <value>send</value>
+                <value>recv</value>
+                <value>recv</value>
+                <value>recv</value>
+                <value>recv</value>
+            </arg>
+            <arg name="overfill_buffers" type="boolean"/>
+            <arg name="get_err_first" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="send_dontroute">
+                <req id="SOCK_DGRAM"/>
+                <req id="MSG_DONTROUTE"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="func" type="send_func_with_flags">
+                <value>send</value>
+                <value>sendto</value>
+                <value>sendmsg</value>
+                <value>sendmmsg</value>
+                <value>onload_zc_send</value>
+                <value>onload_zc_send_user_buf</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="send_nosignal">
+                <req id="SOCK_STREAM"/>
+                <req id="MSG_NOSIGNAL"/>
+                <req id="SIGNALS"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_tst"/>
+                <value ref="env.peer2peer_lo"/>
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+                <value ref="env.peer2peer_lo_ipv6"/>
+                <value ref="env.peer2peer_fake"/>
+            </arg>
+            <arg name="func" type="send_func_with_flags">
+                <value>send</value>
+                <value>sendto</value>
+                <value>sendmsg</value>
+                <value>sendmmsg</value>
+                <value>onload_zc_send</value>
+                <value>onload_zc_send_user_buf</value>
+            </arg>
+        </run>
+
+        <run>
+            <session>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                  <value ref="env.peer2peer_tst"/>
+                  <value ref="env.peer2peer_lo"/>
+                  <value ref="env.peer2peer_ipv6"/>
+                  <value ref="env.peer2peer_tst_ipv6"/>
+                  <value ref="env.peer2peer_lo_ipv6"/>
+                </arg>
+                <arg name="func" type="send_func_with_flags">
+                    <value reqs="SEND_FLAG,SEND_RECV">send</value>
+                    <value reqs="SEND_FLAG,SEND_ADDR,SENDTO_RECVFROM">sendto</value>
+                    <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMSG_RECVMSG">sendmsg</value>
+                    <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMMSG">sendmmsg</value>
+                    <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND">onload_zc_send</value>
+                </arg>
+
+                <run>
+                    <script name="send_dontwait">
+                        <req id="SOCK_STREAM"/>
+                        <req id="MSG_DONTWAIT"/>
+                    </script>
+                </run>
+            </session>
+       </run>
+
+        <run>
+            <session>
+                <arg name="env">
+                  <value ref="env.peer2peer_fake"/>
+                </arg>
+                <arg name="func" type="send_func_with_flags">
+                    <value reqs="SEND_FLAG,SEND_RECV">send</value>
+                    <value reqs="SEND_FLAG,SEND_ADDR,SENDTO_RECVFROM">sendto</value>
+                    <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMSG_RECVMSG">sendmsg</value>
+                    <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMMSG">sendmmsg</value>
+                    <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND">onload_zc_send</value>
+                </arg>
+
+                <run>
+                    <script name="send_dontwait">
+                        <req id="SOCK_STREAM"/>
+                        <req id="MSG_DONTWAIT"/>
+                    </script>
+                </run>
+            </session>
+       </run>
+       <run>
+            <session>
+                <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+                <arg name="func"  type="recv_func_with_flags"/>
+                <run>
+                    <script name="recv_peek_block">
+                      <req id="MSG_PEEK"/>
+                    </script>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                </run>
+                <run>
+                    <script name="recv_peek_stream">
+                        <req id="SOCK_STREAM"/>
+                      <req id="MSG_PEEK"/>
+                    </script>
+                    <arg name="pkt_len">
+                        <value>1024</value>
+                        <value>2900</value>
+                    </arg>
+                </run>
+            </session>
+        </run>
+
+        <run>
+            <script name="recv_peek_many">
+              <req id="MSG_PEEK"/>
+            </script>
+            <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+            <arg name="func" type="recv_func_with_flags"/>
+            <arg name="sock_type" type="sock_stream_dgram" list="fr">
+                <value>SOCK_STREAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value reqs="RECV_IP_FRAG">SOCK_DGRAM</value>
+            </arg>
+            <arg name="pkt_len" list="fr">
+                <value>1024</value>
+                <value>2900</value>
+                <value>1024</value>
+                <value>2900</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="recv_peek_stream">
+                <req id="SOCK_STREAM"/>
+                <req id="MSG_PEEK"/>
+            </script>
+            <arg name="pkt_len">
+                <value>1024</value>
+                <value>2900</value>
+            </arg>
+            <arg name="env">
+                <value ref="env.peer2peer_fake"/>
+            </arg>
+            <arg name="func" type="recv_func_with_flags"/>
+        </run>
+
+        <run>
+            <script name="recv_peek_dgram">
+                <req id="SOCK_DGRAM"/>
+                <req id="MSG_PEEK"/>
+            </script>
+            <arg name="env">
+                <!-- IPv4 evironments -->
+                <value>IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester}}},'pco_tst1'='pco_tst','pco_tst2'='pco_tst'</value>
+                <value>IUT{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet:unicast},{{'pco_tst2':tester}}}</value>
+                <value reqs="ENV-LOOPBACK">IUT{{{'pco_iut':IUT},{'pco_tst1':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst2':tester}}}</value>
+                <value>IUT{{{'pco_iut':IUT},{'pco_tst2':tester},addr:'iut_addr':inet:unicast},{{'pco_tst1':tester}}}</value>
+                <value reqs="ENV-LOOPBACK">IUT{{{'pco_iut':IUT},{'pco_tst2':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst1':tester}}}</value>
+                <!-- IPv6 evironments -->
+                <value reqs="IP6,IP6_ONLOAD">IUT{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester}}},'pco_tst1'='pco_tst','pco_tst2'='pco_tst'</value>
+                <value reqs="IP6,IP6_ONLOAD">IUT{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet6:unicast},{{'pco_tst2':tester}}}</value>
+                <value reqs="IP6,IP6_ONLOAD,ENV-LOOPBACK">IUT{{{'pco_iut':IUT},{'pco_tst1':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst2':tester}}}</value>
+                <value reqs="IP6,IP6_ONLOAD">IUT{{{'pco_iut':IUT},{'pco_tst2':tester},addr:'iut_addr':inet6:unicast},{{'pco_tst1':tester}}}</value>
+                <value reqs="IP6,IP6_ONLOAD,ENV-LOOPBACK">IUT{{{'pco_iut':IUT},{'pco_tst2':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst1':tester}}}</value>
+            </arg>
+            <arg name="func"  type="recv_func_with_flags"/>
+            <arg name="pkt_len">
+                <value>1024</value>
+                <value reqs="RECV_IP_FRAG">2900</value>
+            </arg>
+        </run>
+
+        <run>
+            <session>
+                <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+                <arg name="func" type="recv_func_with_flags"/>
+                <run>
+                    <script name="recv_dontwait">
+                        <req id="MSG_DONTWAIT"/>
+                    </script>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                </run>
+                <run>
+                    <script name="recv_peek_dontwait">
+                        <req id="MSG_PEEK"/>
+                        <req id="MSG_DONTWAIT"/>
+                        <req id="TEST_HARNESS_SANITY"/>
+                    </script>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                </run>
+                <run>
+                    <script name="recv_waitall_dgram">
+                        <req id="MSG_WAITALL"/>
+                        <req id="SOCK_DGRAM"/>
+                    </script>
+                </run>
+            </session>
+        </run>
+        <run>
+            <session>
+                <arg name="env">
+                  <value type="env.peer2peer_all_ipv4_ipv6"/>
+                  <value ref="env.peer2peer_fake"/>
+                </arg>
+                <arg name="func" type="recv_func_with_flags"/>
+                <run>
+                    <script name="recv_dontwait_peer_close">
+                        <req id="SOCK_STREAM"/>
+                        <req id="MSG_DONTWAIT"/>
+                    </script>
+                </run>
+                <run>
+                    <script name="recv_waitall_stream" track_conf="silent">
+                        <req id="MSG_WAITALL"/>
+                        <req id="SOCK_STREAM"/>
+                    </script>
+                </run>
+            </session>
+        </run>
+
+        <run>
+            <session>
+                <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+                <arg name="func" type="recv_func_with_flags"/>
+
+                <run>
+                    <script name="recv_dgram_small_buf">
+                        <req id="SOCK_DGRAM"/>
+                        <req id="L2_TS"/>
+                    </script>
+                </run>
+                <run>
+                    <script name="many_recv_threads">
+                        <req id="SOCK_DGRAM"/>
+                        <req id="L2_TS"/>
+                    </script>
+                    <arg name="env" list="">
+                        <value ref="env.peer2peer"/>
+                        <value ref="env.peer2peer_tst"/>
+                        <value ref="env.peer2peer_tst"/>
+                        <value ref="env.peer2peer_lo"/>
+                        <value ref="env.peer2peer_ipv6"/>
+                        <value ref="env.peer2peer_tst_ipv6"/>
+                        <value ref="env.peer2peer_tst_ipv6"/>
+                        <value ref="env.peer2peer_lo_ipv6"/>
+                    </arg>
+                    <arg name="use_wildcard" list="">
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="method">
+                        <value reqs="THREADS">thread</value>
+                        <value reqs="FORK">inherit</value>
+                    </arg>
+                </run>
+            </session>
+        </run>
+
+        <run>
+            <script name="many_recv_threads">
+                <req id="SOCK_DGRAM"/>
+                <req id="UNSTABLE"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="use_wildcard">
+                <value>FALSE</value>
+            </arg>
+            <arg name="func">
+                <value reqs="AIO">aio_read</value>
+            </arg>
+            <arg name="method">
+                <value reqs="THREADS">thread</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="recv_dgram_small_buf">
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="func">
+                <value reqs="AIO">aio_read</value>
+            </arg>
+        </run>
+
+        <!--
+        <run>
+            <script name="recvmsg_bcast">
+                <req id="SOCK_DGRAM"/>
+                <req id="MSG_BCAST"/>
+                <req id="SENDMSG_RECVMSG"/>
+            </script>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},addr:'bcast_addr':inet:broadcast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+            </arg>
+        </run>
+        <run>
+            <script name="recvmsg_mcast">
+                <req id="SOCK_DGRAM"/>
+                <req id="MSG_MCAST"/>
+                <req id="SENDMSG_RECVMSG"/>
+            </script>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},addr:'mcast_addr':inet:multicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+            </arg>
+        </run>
+        -->
+        <run>
+            <script name="recvmsg_trunc">
+                <req id="SOCK_DGRAM"/>
+                <req id="MSG_TRUNC"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="recv_f" type="recv_func_with_msg"/>
+        </run>
+        <run>
+            <script name="recvmsg_peek_trunc">
+                <req id="SOCK_DGRAM"/>
+                <req id="SO_BROADCAST"/>
+                <req id="MSG_PEEK"/>
+            </script>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'iut_bcast_addr':inet:broadcast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,addr:'tst_bcast_addr':inet:broadcast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast,addr:'iut_bcast_addr':inet6:broadcast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast,addr:'tst_bcast_addr':inet6:broadcast}}</value>
+            </arg>
+            <arg name="broadcast">
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="recv_f" type="recv_func_with_ctl"/>
+        </run>
+
+        <run>
+            <script name="two_thrds_simult" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <!-- IPv4 env -->
+                <value reqs="L2_TS" ref="env.peer2peer"/>
+                <value>{{{'pco_iut':IUT,'pco_tst':IUT},addr:'iut_addr':inet:loopback,addr:'tst_addr':inet:loopback}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst':IUT},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:loopback}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst':IUT},addr:'iut_addr':inet:loopback,addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr':inet:loopback,addr:'tst_addr':inet:loopback}}</value>
+                <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:loopback}}</value>
+                <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr':inet:loopback,addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr':inet:loopback,addr:'tst_addr':inet:loopback}}</value>
+                <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:loopback}}</value>
+                <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr':inet:loopback,addr:'tst_addr':inet:unicast}}</value>
+                <!-- IPv6 env -->
+                <value reqs="L2_TS" ref="env.peer2peer_ipv6"/>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst':IUT},addr:'iut_addr':inet6:loopback,addr:'tst_addr':inet6:loopback}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst':IUT},addr:'iut_addr':inet6:unicast,addr:'tst_addr':inet6:loopback}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst':IUT},addr:'iut_addr':inet6:loopback,addr:'tst_addr':inet6:unicast}}</value>
+                <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:loopback,addr:'tst_addr':inet6:loopback}}</value>
+                <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:unicast,addr:'tst_addr':inet6:loopback}}</value>
+                <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:loopback,addr:'tst_addr':inet6:unicast}}</value>
+                <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr':inet6:loopback,addr:'tst_addr':inet6:loopback}}</value>
+                <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr':inet6:unicast,addr:'tst_addr':inet6:loopback}}</value>
+                <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr':inet6:loopback,addr:'tst_addr':inet6:unicast}}</value>
+            </arg>
+            <arg name="method">
+                <value reqs="THREADS">thread</value>
+                <value reqs="FORK">forkandexec</value>
+            </arg>
+            <arg name="time2run">
+                <value>10</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="blk_recv_two_threads" track_conf="silent">
+                <req id="THREADS"/>
+                <req id="TEST_HARNESS_SANITY"/>
+            </script>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="env">
+                <value type="env.twothr2peer"/>
+                <value type="env.twothr2peer_ipv6"/>
+            </arg>
+            <arg name="func">
+                <value reqs="L2_TS">recv</value>
+                <value reqs="AIO">aio_read_suspend</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="send_oob_data">
+                <req id="SOCK_STREAM"/>
+                <req id="OOB"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_fake"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+        </run>
+
+        <run>
+            <script name="oob_span">
+                <req id="SOCK_STREAM"/>
+                <req id="OOB"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_fake"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="oobinline" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="recv_oob_absent">
+                <req id="SIOCATMARK"/>
+                <req id="SOCK_STREAM"/>
+                <req id="OOB"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_fake"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+        </run>
+
+        <run>
+            <script name="oob_overwritten">
+                <req id="SOCK_STREAM"/>
+                <req id="OOB"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_fake"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="recv_func" type="recv_func_with_flags">
+              <value>recv</value>
+              <value>recvfrom</value>
+              <value>recvmsg</value>
+              <value>recvmmsg</value>
+              <!-- MSG_OOB is not supported in ZC recv functions,
+                   see ON-11712 -->
+            </arg>
+        </run>
+
+        <run>
+            <script name="send_to_incomplete">
+                <req id="SOCK_STREAM"/>
+                <req id="THREADS"/>
+                <req id="TIME_CONSUMING"/>
+                <req id="L2_TS"/>
+            </script>
+            <arg name="env">
+              <value type="env.twothr2peer"/>
+              <value type="env.twothr2peer_ipv6"/>
+            </arg>
+        </run>
+
+        <run>
+            <script name="send_more_stream" track_conf="nohistory">
+                <req id="SOCK_STREAM"/>
+                <req id="MSG_MORE"/>
+                <req id="L2_TS"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_fake"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+              <!-- Disabled as in this case the test is always
+                   run over VLAN and GRO/LRO cannot be disabled
+                   for parent eth0 interface.
+              <value ref="env.peer2peer_tst"/> -->
+            </arg>
+            <arg name="func" type="send_func" list="send_f">
+              <value>onload_zc_send</value>
+              <value>onload_zc_send</value>
+              <value>onload_zc_send</value>
+              <value>onload_zc_send_user_buf</value>
+              <value>onload_zc_send_user_buf</value>
+              <value>onload_zc_send_user_buf</value>
+              <value reqs="V5_SANITY">send</value>
+              <value>sendmsg</value>
+              <!-- Onload does not support sendmmsg() on TCP,
+                   no need to check it here. -->
+            </arg>
+            <arg name="first_zc" type="boolean" list="send_f">
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="last_zc" type="boolean" list="send_f">
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="mtu" list="">
+                <value>1500</value>
+                <value>1500</value>
+                <value>1500</value>
+                <value>1500</value>
+            </arg>
+            <arg name="sz_first" list="">
+                <value>100</value>
+                <value>100</value>
+                <value>1600</value>
+                <value>1600</value>
+            </arg>
+            <arg name="sz_last" list="">
+                <value>100</value>
+                <value>1600</value>
+                <value>100</value>
+                <value>1600</value>
+            </arg>
+            <arg name="set_nodelay">
+                <value>FALSE</value>
+                <value reqs="TCP_NODELAY">TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="send_more_nodelay_stream" track_conf="nohistory">
+                <req id="SOCK_STREAM"/>
+                <req id="MSG_MORE"/>
+                <req id="L2_TS"/>
+                <req id="TCP_NODELAY"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_fake"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+              <!-- *_tst envs are not checked since with them
+                   the test is always run over VLAN and GRO/LRO
+                   cannot be disabled for parent eth0 interface. -->
+            </arg>
+            <arg name="func" type="send_func" list="">
+                <value>send</value>
+                <value>sendmsg</value>
+                <value>onload_zc_send</value>
+                <value>onload_zc_send</value>
+                <value>onload_zc_send</value>
+                <value>onload_zc_send_user_buf</value>
+                <value>onload_zc_send_user_buf</value>
+                <value>onload_zc_send_user_buf</value>
+                <!-- Onload does not support sendmmsg() on TCP,
+                     no need to check it here. -->
+            </arg>
+            <arg name="first_zc" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="last_zc" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="send_more_dgram">
+                <req id="SOCK_DGRAM"/>
+                <req id="MSG_MORE"/>
+                <req id="L2_TS"/>
+                <!-- ZF does not support MSG_MORE flags for UDP -->
+                <req id="ZF_INCOMPATIBLE"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+            </arg>
+            <arg name="send_buf_size" list="">
+                <value>100</value>
+                <value>400</value>
+                <value>8191</value>
+                <value>4681</value>
+                <value>4096</value>
+                <value>4096</value>
+                <value>5000</value>
+            </arg>
+            <arg name="max_fragments" list="">
+                <value>2</value>
+                <value>3</value>
+                <value>10</value>
+                <value>10</value>
+                <value>16</value>
+                <value>20</value>
+                <value>16</value>
+            </arg>
+            <arg name="use_sendmmsg">
+                <value reqs="SENDMSG_RECVMSG">FALSE</value>
+                <value reqs="SENDMMSG">TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="recv_peek_many_iovec">
+                <req id="SENDMSG_RECVMSG"/>
+                <req id="MSG_PEEK"/>
+            </script>
+            <arg name="recv_f" type="recv_func_with_ctl">
+                <value>recvmsg</value>
+                <value>recvmmsg</value>
+                <!-- onload_zc_recv() cannot checked here since
+                     we do not pass array of iovecs to it, but it
+                     passes iovecs with Onload buffers to out
+                     callback -->
+            </arg>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram" list="fr">
+                <value>SOCK_STREAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value reqs="RECV_IP_FRAG">SOCK_DGRAM</value>
+            </arg>
+            <arg name="pkt_len" list="fr">
+                <value>1024</value>
+                <value>2900</value>
+                <value>1024</value>
+                <value>2900</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="send_dgram_ip4_to_ip6_sock">
+                <req id="SOCK_DGRAM"/>
+                <req id="IP6"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value>{{{'pco_iut':IUT},{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+            </arg>
+            <arg name="func" type="send_func_with_addr"/>
+        </run>
+        
+        <run>
+            <script name="recv_data_after_peer_close">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+              <value type="env.peer2peer_all_ipv4_ipv6"/>
+              <value ref="env.peer2peer_fake"/>
+              <!--
+              This environment is not supported yet - see ST-1474
+              <value ref="env.peer2peer_fake_ipv6"/>
+              -->
+            </arg>
+            <arg name="func" type="recv_func_with_flags"/>
+            <arg name="data" type="boolean"/>
+        </run>
+
+        <run>
+            <script name = "sendmsg_pktinfo">
+                <req id="ENV-2PEERS"/>
+                <req id="MSG_CONTROL"/>
+                <req id="SOCK_DGRAM"/>
+                <req id="IP_PKTINFO"/>
+            </script>
+            <arg name="env">
+                <value ref="env.two_nets.iut_first"/>
+                <value ref="env.two_nets.iut_second"/>
+                <value reqs="IPV6_PKTINFO" ref="env.two_nets.iut_first_ipv6"/>
+                <value reqs="IPV6_PKTINFO" ref="env.two_nets.iut_second_ipv6"/>
+            </arg>
+            <arg name="data_len">
+                <value>120</value>
+            </arg>
+            <arg name="use_sendmmsg">
+                <value reqs="SENDMSG_RECVMSG">FALSE</value>
+                <value reqs="SENDMMSG">TRUE</value>
+            </arg>
+        </run>
+        <run>
+            <script name = "sendmsg_pktinfo_src">
+                <req id="ENV-2PEERS"/>
+                <req id="MSG_CONTROL"/>
+                <req id="SOCK_DGRAM"/>
+                <req id="IP_PKTINFO"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_2addr"/>
+                <value reqs="IPV6_PKTINFO" ref="env.peer2peer_2addr_ipv6"/>
+            </arg>
+            <arg name="data_len">
+                <value>120</value>
+            </arg>
+            <arg name="packet_num">
+                <value>10</value>
+            </arg>
+            <arg name="use_sendmmsg">
+                <value reqs="SENDMSG_RECVMSG">FALSE</value>
+                <value reqs="SENDMMSG">TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="send_recv_shutdown">
+                <req id="SOCK_STREAM"/>
+                <req id="SO_SNDBUF"/>
+                <req id="TIME_CONSUMING"/>
+            </script>
+            <arg name="env" list="">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="conn_num">
+                <value>1</value>
+                <value>2</value>
+            </arg>
+            <arg name="use_threads">
+                <value reqs="FORK">FALSE</value>
+                <value reqs="THREADS">TRUE</value>
+            </arg>
+            <arg name="shut_how" type="shutdown_way"/>
+            <arg name="iomux">
+                <value>default_iomux</value>
+                <value>no_iomux</value>
+            </arg>
+            <arg name="send_func" type="send_func" list="">
+                <value>send</value>
+                <value>send</value>
+                <value>send</value>
+                <value>send</value>
+                <value>send</value>
+                <value>send</value>
+                <value>onload_zc_send</value>
+                <value reqs="NO_LOOP_LINUX">onload_zc_send</value>
+                <value>onload_zc_send</value>
+                <value reqs="NO_LOOP_LINUX">onload_zc_send</value>
+            </arg>
+            <arg name="send_chunk_min" list="chunk_size">
+                <value>300</value>
+                <value>30000</value>
+            </arg>
+            <arg name="send_chunk_max" list="chunk_size">
+                <value>2000</value>
+                <value>50000</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="send_recv_shutdown">
+                <req id="SOCK_STREAM"/>
+                <req id="SO_SNDBUF"/>
+                <req id="TIME_CONSUMING"/>
+                <!-- See ST-2187; select() does not differentiate POLLOUT and
+                     POLLERR which is used for reporting completed buffers
+                     by onload_zc_send() -->
+                <req id="NO_DEFAULT_SELECT"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+                <!-- No loopback iterations with onload_zc_send()
+                     with user buffers, see ON-11571 -->
+            </arg>
+            <arg name="conn_num">
+                <value>1</value>
+                <value>2</value>
+            </arg>
+            <arg name="use_threads">
+                <value reqs="FORK">FALSE</value>
+                <value reqs="THREADS">TRUE</value>
+            </arg>
+            <arg name="shut_how" type="shutdown_way"/>
+            <arg name="iomux">
+                <value>default_iomux</value>
+                <value>no_iomux</value>
+            </arg>
+            <arg name="send_func" type="send_func">
+                <value>onload_zc_send_user_buf</value>
+            </arg>
+            <arg name="send_chunk_min" list="chunk_size">
+                <value>300</value>
+                <value>30000</value>
+            </arg>
+            <arg name="send_chunk_max" list="chunk_size">
+                <value>2000</value>
+                <value>50000</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="recvmmsg">
+                <req id="SOCK_DGRAM"/>
+                <req id="RECVMMSG"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.p2p_ip6ip4mapped"/>
+              <value ref="env.p2p_ip6"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="delay">
+                <value>1</value>
+            </arg>
+            <arg name="data_size">
+                <value>512</value>
+            </arg>
+            <arg name="pack_num">
+                <value>5</value>
+            </arg>
+            <arg name="timeout">
+                <value>0</value>
+                <value>2</value>
+            </arg>
+            <arg name="vlen">
+                <value>4</value>
+            </arg>
+            <arg name="waitforone" list="">
+              <value>TRUE</value>
+              <value>FALSE</value>
+              <value>FALSE</value>
+            </arg>
+            <arg name="use_zc" list="">
+              <value reqs="RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,RECVMMSG">FALSE</value>
+              <value reqs="RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,RECVMMSG">FALSE</value>
+              <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,ONLOAD_ZC_RECV">TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="recv_zero_dgram">
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="func"  type="recv_func"/>
+        </run>
+
+        <run>
+            <script name="largebuff_via_splice">
+                <req id="SOCK_STREAM"/>
+                <req id="F_SETPIPE_SZ"/>
+                <req id="F_GETPIPE_SZ"/>
+                <req id="PIPE"/>
+                <req id="RPC_RESTART"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="buff_size">
+              <value>0x00020000</value>
+            </arg>
+            <arg name="splice_from_socket" type="boolean"/>
+            <arg name="f_more_flag" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="fill_huge_rcvbuf" track_conf="nohistory">
+                <req id="TIME_CONSUMING"/>
+                <req id="RPC_RESTART"/>
+                  <!-- ST-1704 && ON-11181 -->
+                <req id="BROKEN"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_lo"/>
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="socket_udp_tcp"/>
+        </run>
+
+        <run>
+            <script name="recv_peek_stream_flow" track_conf="silent">
+              <req id="MSG_PEEK"/>
+              <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_lo"/>
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+        </run>
+
+    </session>
+</package>

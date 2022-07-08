@@ -1,0 +1,25 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup bpf BFF/XDP tests
+@ingroup sockapi
+@{
+
+@par Tests:
+
+-# @ref bpf-xdp_actions
+-# @ref bpf-xdp_diff_ifs
+-# @ref bpf-xdp_maps
+-# @ref bpf-tcp_flags
+-# @ref bpf-one_rule_filter
+-# @ref bpf-xdp_bpf_helpers
+-# @ref bpf-xdp_change_addr
+-# @ref bpf-xdp_lpm_rule
+-# @ref bpf-xdp_icmp_echo
+-# @ref bpf-xdp_perf_event
+-# @ref bpf-xdp_prog_load
+
+@}bpf
+
+*/

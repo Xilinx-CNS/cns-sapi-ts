@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+
+    <description>IP/TCP/UDP checksum tests</description>
+
+    <author mailto="Yurij.Plotnikov@arknetworks.am"/>
+
+    <req id="RX_CHECKSUM"/>
+
+    <session>
+        <enum name="checksum_val_type">
+            <value>zero</value>
+            <value>bad</value>
+        </enum>
+
+        <run>
+            <session>
+                <arg name="env">
+                    <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="csum_val" type="checksum_val_type"/>
+                <arg name="protocol">
+                    <value>IPPROTO_IP</value>
+                    <value>IPPROTO_TCP</value>
+                </arg>
+
+                <req id="SOCK_STREAM"/>
+
+                <run>
+                    <script name="tcp_bad_csum_open"/>
+                    <arg name="segment">
+                        <value>SYN</value>
+                        <value reqs="TCP_ACTIVE">SYNACK</value>
+                    </arg>
+                </run>
+            </session>
+        </run>
+    </session>
+
+</package>

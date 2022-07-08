@@ -1,0 +1,42 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup ifcfg Network interface
+@ingroup sockapi
+@{
+
+Testing of the network stack and socket API against changes on network interface. In particular, the
+following cases are tested:
+    - TCP/UDP socket behavior after removing local IP address which the socket was bound to.
+    - Add new local address while there is listener bound to INADDR_ANY.
+    - Source address selection when a few local addresses are assigned to the interface.
+    - Socket API when interface is down.
+    - Interface down/up during data transmission.
+
+@par Maintainers:
+  - Dmitry Izbitsky <Dmitry.Izbitsky@oktetlabs.ru>
+  - Andrey Dmitrov <Andrey.Dmitrov@oktetlabs.ru>
+
+@par Tests:
+
+-# @ref ifcfg-if_remove_addr_after_bind_stream
+-# @ref ifcfg-if_remove_addr_after_bind_dgram
+-# @ref ifcfg-if_remove_addr_after_connect
+-# @ref ifcfg-if_remove_addr_after_listen
+-# @ref ifcfg-if_remove_addr_after_many_conns
+-# @ref ifcfg-if_add_addr_after_listen
+-# @ref ifcfg-if_addr_add_remove_recv
+-# @ref ifcfg-if_addr_assign_order
+-# @ref ifcfg-if_source_addr_stream
+-# @ref ifcfg-if_source_addr_dgram
+-# @ref ifcfg-if_loopback_conn
+-# @ref ifcfg-if_up_down
+-# @ref ifcfg-if_bind_on_down_if
+-# @ref ifcfg-if_down_nodelay
+-# @ref ifcfg-if_up_down_influence
+-# @ref ifcfg-if_bind_down_use_other_if
+-# @ref ifcfg-recv_wrong_mac
+
+@}
+*/

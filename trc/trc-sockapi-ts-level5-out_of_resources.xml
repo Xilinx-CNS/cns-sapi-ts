@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<test name="out_of_resources" type="package">
+  <objective>L5 stack/system stack run out of hardware resources test</objective>
+  <notes/>
+  <iter result="PASSED">
+    <notes/>
+    <test name="prologue" type="script" auxiliary="true">
+      <objective/>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="ef_no_fail"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="out_of_hw_filters_udp_bind_connect" type="script">
+      <objective>Check that Level5 library does not return error when there are no more UDP hardware filters available when creating, binding and connecting UDP sockets.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="bind"/>
+        <arg name="bind_only"/>
+        <arg name="ef_no_fail"/>
+        <arg name="env"/>
+        <arg name="wild"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="out_of_hw_filters_tcp" type="script">
+      <objective>Check that Level5 library does not return error when there are no more TCP hardware filters available when creating and connecting TCP sockets.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="bind"/>
+        <arg name="ef_no_fail">TRUE</arg>
+        <arg name="env"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bind"/>
+        <arg name="ef_no_fail">FALSE</arg>
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="out_of_hw_filters_tcp_listen" type="script">
+      <objective>Check that Level5 library does not return error when there are no more TCP hardware filters available when creating listening TCP sockets.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="wild"/>
+        <arg name="ef_no_fail">TRUE</arg>
+        <arg name="env"/>
+        <arg name="iut_if_addr_count"/>
+        <notes/>
+        <results tags="v5">
+          <result value="PASSED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="wild"/>
+        <arg name="ef_no_fail">FALSE</arg>
+        <arg name="env"/>
+        <arg name="iut_if_addr_count"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="out_of_hw_filters_udp_recvfrom" type="script">
+      <objective>Check that Level5 library does not return error when there are no more UDP hardware filters available when creating and performing recvfrom operation on UDP socket.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="wild"/>
+        <arg name="ef_no_fail">TRUE</arg>
+        <arg name="env"/>
+        <arg name="iut_if_addr_count"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="wild"/>
+        <arg name="ef_no_fail">FALSE</arg>
+        <arg name="env"/>
+        <arg name="iut_if_addr_count"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="out_of_netifs" type="script">
+      <objective>Check that Level5 library does not return error when there are no more tcp_helper_resources available when doing fork-exec and creating socket.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="netifs_max"/>
+        <arg name="sock_type"/>
+        <arg name="ef_no_fail"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="out_of_multicast_filters" type="script">
+      <objective>Check that Level5 library does not return error when there are no more multicast filters available when joining to too many multicast groups.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="sock_func"/>
+        <arg name="bind_before"/>
+        <arg name="ef_no_fail">TRUE</arg>
+        <arg name="env"/>
+        <arg name="overfill"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="sock_func"/>
+        <arg name="bind_before"/>
+        <arg name="ef_no_fail">FALSE</arg>
+        <arg name="env"/>
+        <arg name="overfill"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="out_of_stacks" type="script">
+      <objective>Check that new stack can be created when we get out-of-stacks condition and then destroy one.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="ef_no_fail"/>
+        <notes/>
+        <results tags="linux&amp;!ef10" key="ST-529" notes="Onload reaches 'out of packet' with Siena NICs. So the test fails in the different way: either overfill_buffers() hangs in send() or socket() fails with ENOMEM">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>socket() called in out-of-stacks condition, returns -1, but: errno is set to ENOMEM instead of EBUSY</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>Send buffers overfilling timeout was reached</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="epilogue" type="script" auxiliary="true">
+      <objective/>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="ef_no_fail"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="oof_multicast_gradual" type="script">
+      <objective>Join to multicast groups until OOF state is achieved.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="sock_func"/>
+        <arg name="bind_before"/>
+        <arg name="ef_no_fail"/>
+        <arg name="env"/>
+        <arg name="portion"/>
+        <arg name="success"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="out_of_packets" type="script">
+      <objective>Check that sending can block if there is not enough packet buffers, and it can be unblocked by releasing some of them.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="create_process"/>
+        <arg name="udp_send">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="create_process"/>
+        <arg name="udp_send">FALSE</arg>
+        <notes/>
+        <results tags="v5&amp;safe_profile" key="ST-2486" notes="Onload returns ENOBUFS with safe profile (EF_TCP_SEND_NONBLOCK_NO_PACKETS_MODE=1)">
+          <result value="FAILED">
+            <verdict>Not blocked send() on the second TCP IUT socket failed with unexpected errno RPC-ENOBUFS</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="data_flows_few_pkts" type="script">
+      <objective>Check what happens when a lot of data is sent/received over multiple TCP connections when there is a small number of packet buffers available.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+        <results tags="v5&amp;safe_profile" key="ST-2486" notes="Onload returns ENOBUFS with safe profile (EF_TCP_SEND_NONBLOCK_NO_PACKETS_MODE=1)">
+          <result value="FAILED">
+            <verdict>rpc_pattern_sender() failed on IUT with error RPC-ENOBUFS</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+  </iter>
+</test>

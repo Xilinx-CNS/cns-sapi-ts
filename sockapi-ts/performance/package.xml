@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+<description>Performance testing</description>
+    <author mailto="Artemii.Morozov@oktetlabs.ru"/>
+
+    <req id="PERF" sticky="true"/>
+
+    <!-- Do not run performance tests when UL-32 is testing -->
+    <req id="NATIVE_ABI" sticky="true"/>
+
+    <session>
+        <prologue>
+            <script name="prologue"/>
+            <arg name="env" ref="env.peer2peer"/>
+        </prologue>
+
+        <epilogue>
+            <script name="epilogue"/>
+            <arg name="env" ref="env.peer2peer"/>
+        </epilogue>
+
+        <run>
+                <script name="netperf"/>
+                <arg name="env">
+                    <value ref="env.peer2peer"/>
+                    <value ref="env.peer2peer_ipv6"/>
+                </arg>
+                <arg name="test_name">
+                    <value reqs="SOCK_STREAM">tcp_stream</value>
+                    <value reqs="SOCK_STREAM">tcp_maerts</value>
+                    <value reqs="SOCK_DGRAM">udp_stream</value>
+                    <value reqs="SOCK_STREAM">tcp_rr</value>
+                    <value reqs="SOCK_DGRAM">udp_rr</value>
+                </arg>
+                <arg name="payload">
+                    <value>1</value>
+                    <value>1400</value>
+                    <value>1500</value>
+                </arg>
+        </run>
+        <run>
+                <script name="sfnt_pingpong"/>
+                <arg name="env">
+                    <value ref="env.peer2peer"/>
+                    <value ref="env.peer2peer_ipv6"/>
+                </arg>
+                <arg name="proto">
+                    <value reqs="SOCK_STREAM">IPPROTO_TCP</value>
+                     <!-- sfnt_pingpong has problems with UDP zockets.
+                          zfudppingpong should be used to test it.-->
+                    <value reqs="SOCK_DGRAM,ZF_INCOMPATIBLE">IPPROTO_UDP</value>
+                </arg>
+                <arg name="sizes">
+                    <value>1,1400,1500</value>
+                </arg>
+                <arg name="muxer">
+                    <value>none</value>
+                    <value reqs="POLL">poll</value>
+                    <value reqs="SELECT">select</value>
+                    <value reqs="EPOLL">epoll</value>
+                </arg>
+                <arg name="spin" type="boolean"/>
+        </run>
+    </session>
+</package>

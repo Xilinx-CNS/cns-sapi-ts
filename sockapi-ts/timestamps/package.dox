@@ -1,0 +1,32 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup timestamps Timestamping tests
+@ingroup sockapi
+@{
+
+@author Andrey Dmitrov <Andrey.Dmitrov@oktetlabs.ru>
+
+@par Tests:
+-# @ref timestamps-siocshwtstamp
+-# @ref timestamps-siocshwtstamp_tx
+-# @ref timestamps-ts_read
+-# @ref timestamps-ts_flow
+-# @ref timestamps-ts_env
+-# @ref timestamps-ts_tcp_re
+-# @ref timestamps-ts_states
+-# @ref timestamps-ts_queued_packets
+-# @ref timestamps-ts_fin
+-# @ref timestamps-ts_select_err_queue
+-# @ref timestamps-ts_opt_tsonly
+-# @ref timestamps-ts_tx_opt_id
+-# @ref timestamps-ts_tx_ack
+-# @ref timestamps-ts_tx_shut_rd
+-# @ref timestamps-ts_tx_shut_wr
+-# @ref timestamps-ts_recvmsg_trunc
+-# @ref timestamps-ts_msg_onepkt
+
+@}
+*/
+

@@ -1,0 +1,115 @@
+# SPDX-License-Identifier: Apache-2.0
+# (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved.
+# Kernel description part. Stable kernels should be the first one
+kernel_list:
+# Debian (updated 10.03.2022)
+  Deb5debug : [5.12.8-debug-1]
+  Deb5last  : [5.16.0-3-amd64, 5.16.0-3-rt-amd64]
+  Deb5lastbpo: [5.16.0-0.bpo.4-amd64, 5.16.0-0.bpo.4-rt-amd64]
+  Deb5.10   : [5.10.0-13-amd64, 5.10.0-13-rt-amd64]
+  # It is 5.10 recompiled as per ON-13352, with features disabled
+  Deb5min   : [5.10.46-min]
+  Deb5.10bpo : [5.10.0-0.bpo.9-amd64, 5.10.0-0.bpo.9-rt-amd64]
+  Deb4.19   : [4.19.0-19-amd64, 4.19.0-19-rt-amd64]
+
+# Ubuntu (updated 11.03.2022)
+  Ubu5.15: [5.15.0-22-generic, 5.15.0-22-lowlatency]
+  Ubu5.13: [5.13.0-35-generic, 5.13.0-35-lowlatency]
+  Ubu5.4 : [5.4.0-100-generic, 5.4.0-100-lowlatency]
+  Ubu4.15: [4.15.0-171-generic, 4.15.0-171-lowlatency]
+
+# Red Hat (updated 11.03.2022)
+# CentOS 8 and newer: do not forget to run
+#   sudo dnf upgrade --refresh
+#   sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+# After a major upgrade:
+#    grep GRUB_ENABLE_BLSCFG /etc/default/grub
+#    sudo vim /etc/default/grub: GRUB_ENABLE_BLSCFG=false
+# Ensure that the base kernel has kernel-modules-extra installed.
+  FC  : [5.16.12-200.fc35]
+  Cent9: [5.14.0-70.el9, 5.14.0-70.rt21.70.el9]
+  El8-ml : [5.16.13-1.el8.elrepo]
+  El8-lt : [5.4.183-1.el8.elrepo]
+  Cent8Plus: [4.18.0-365.el8, 4.18.0-357.rt7.142.el8]
+  Cent8Next: [4.18.0-348.7.1.el8_5, 4.18.0-348.2.1.rt7.132.el8_5]
+  El7-ml : [5.16.13-1.el7.elrepo]
+  El7-lt : [5.4.183-1.el7.elrepo]
+  RHEL7: [3.10.0-1160.59.1.el7, 3.10.0-1160.59.1.rt56.1200.el7]
+
+
+
+# Configuration description part. Stable kernels should be the first one as
+# in previous part
+# Add <branch>:[<kernel>, ...] for each configuration which uses other set
+# of kernels for the branch than for master branch. "<branch>:[]" means
+# that this branch can't be tested on this host and master branch will be
+# used.
+cfg_list:
+
+
+### Debian family
+
+# Testing
+- hosts      : [hurin, elrond]
+  master     : [Deb5last, Deb5debug]
+  onload-7.1 : []
+  eol6       : []
+
+# 11
+- hosts      : [oin, gloin]
+  master     : [Deb5.10, Deb5lastbpo, Deb5min]
+  onload-7.1 : [Deb5.10, Deb5min]
+  eol6       : []
+
+- hosts      : [fili, frerin]
+  master     : [Deb5.10, Deb5lastbpo]
+
+# 10
+- hosts : [telchar, loni]
+  master: [Deb4.19, Deb5.10bpo]
+  eol6  : [Deb4.19]
+
+
+### Ubuntu family
+
+# Ubuntu testing (22.04)
+- hosts : [nali, narvi]
+  master: [Ubu5.15]
+
+# Ubuntu last (21.10)
+- hosts     : [balin, dwalin]
+  master    : [Ubu5.13]
+  eol6      : []
+
+# 20.04 LTS
+- hosts : [olorin, bofur]
+  master: [Ubu5.4, Ubu5.13]
+  eol6  : [Ubu5.4]
+
+# 18.04 LTS
+- hosts : [fror, fundin]
+  master: [Ubu4.15, Ubu5.4]
+
+
+### Red Hat family
+
+# FC
+- hosts      : [farin, durin]
+  master     : [FC]
+  onload-7.1 : []
+  eol6       : []
+
+# CentOS 9
+- hosts : [borin, bifur]
+  master: [Cent9]
+  onload-7.1: [Cent9]
+
+# CentOS 8
+- hosts : [nar, mim]
+  master: [Cent8Plus, Cent8Next, El8-lt, El8-ml]
+
+# RH7
+- hosts : [floi, frar]
+  master: [RHEL7, El7-lt, El7-ml]
+  onload-7.1: [RHEL7, El7-lt]
+

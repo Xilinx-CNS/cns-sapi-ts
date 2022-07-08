@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+
+    <description>Onload specific BPF/XDP tests</description>
+
+    <author mailto="Sergey.Nikitin@oktetlabs.ru"/>
+
+    <req id="BPF" sticky="true"/>
+    <req id="ONLOAD_BPF" sticky="true"/>
+    <!-- The tests do not work with derived devices properly.
+         See ST-1848. -->
+    <req id="NO_BOND"/>
+    <req id="NO_VLAN"/>
+    <req id="NO_IPVLAN"/>
+    <req id="NO_MACVLAN"/>
+
+    <!-- Onload does not support attaching to a stack.
+         See ST-1858. -->
+    <req id="BROKEN"/>
+
+    <session track_conf="nohistory">
+
+        <prologue>
+            <script name="../../bpf/prologue"/>
+            <arg name="env" ref="env.peer2peer"/>
+        </prologue>
+
+        <run>
+            <script name="xdp_attach_to_stack">
+                <req id="RPC_RESTART"/>
+                <req id="ONLOAD_MOVE_FD"/>
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="link_before" type="boolean"/>
+            <arg name="wild_if" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="xdp_one_stack_two_ifs">
+                <req id="RPC_RESTART"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer.two_links"/>
+                <value ref="env.peer2peer.two_links_ipv6"/>
+            </arg>
+            <arg name="xdp_link_if">
+                <value>first</value>
+                <value>second</value>
+                <value>wild</value>
+                <value>both</value>
+            </arg>
+            <arg name="sock_type" type="socket_type">
+                <value>udp</value>
+                <value>tcp_active</value>
+                <value>tcp_passive_close</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="xdp_two_stacks">
+                <req id="RPC_RESTART"/>
+                <req id="ONLOAD_MOVE_FD"/>
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer.two_links"/>
+                <value ref="env.peer2peer.two_links_ipv6"/>
+            </arg>
+            <arg name="wild_stack" type="boolean"/>
+            <arg name="wild_if" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="xdp_same_stack">
+                <req id="RPC_RESTART"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer.two_links"/>
+                <value ref="env.peer2peer.two_links_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="socket_type">
+                <value>udp</value>
+                <value>tcp_active</value>
+                <value>tcp_passive_close</value>
+            </arg>
+            <arg name="link_before" type="boolean"/>
+        </run>
+
+    </session>
+</package>

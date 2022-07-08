@@ -1,0 +1,98 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup aio Asynchronous Input/Output
+@ingroup sockapi
+@{
+
+The package provides tests for following asynchronous I/O functions:
+- @b aio_read()
+- @b aio_write()
+- @b aio_error()
+- @b aio_suspend()
+- @b aio_return()
+- @b aio_fsync()
+- @b lio_listio()
+
+Completion notification about asynchronous requests using signals and
+callbacks are verified.
+
+Canceling of one or several requests of different types are verified.
+
+Passing of boundary and incorrect values to AIO functions (incorrect
+file descriptors, lists, opcode, etc.) is tested. 
+
+Unusual situations (like socket closing, thread/process killing, 
+posting AIO request from the callback, posting the request twice, 
+using AIO after fork()) are tested as well.
+
+Stress testing (posting huge number of requests, posting may requests
+of different types from different threads) is performed.
+
+@author Elena Vengerova <Elena.Vengerova@oktetlabs.ru>
+
+@par Tests:
+
+-# @ref aio-aio_read
+-# @ref aio-aio_read_ignore_opcode
+-# @ref aio-aio_read_many_reqs
+-# @ref aio-aio_read_many_socks
+-# @ref aio-aio_read_blk_read
+-# @ref aio-aio_write
+-# @ref aio-aio_write_ignore_opcode
+-# @ref aio-aio_write_many_reqs
+-# @ref aio-aio_write_many_socks
+-# @ref aio-aio_write_blk_write
+-# @ref aio-aio_fsync_socket
+-# @ref aio-aio_fsync_bad_op
+-# @ref aio-aio_error
+-# @ref aio-aio_ret_failed
+-# @ref aio-aio_ret_no_aio_error
+-# @ref aio-aio_cancel_read
+-# @ref aio-aio_cancel_write
+-# @ref aio-aio_cancel_many
+-# @ref aio-aio_cancel_alldone
+-# @ref aio-aio_cancel_inprogress
+-# @ref aio-aio_cancel_thread
+-# @ref aio-aio_suspend
+-# @ref aio-aio_suspend_forever
+-# @ref aio-aio_suspend_signal
+-# @ref aio-aio_suspend_completed
+-# @ref aio-aio_suspend_not_posted
+-# @ref aio-aio_suspend_cblist_with_holes
+-# @ref aio-aio_suspend_cblist_dummy
+-# @ref aio-aio_suspend_timeout
+-# @ref aio-aio_suspend_thread
+-# @ref aio-lio_listio_nowait
+-# @ref aio-lio_listio_wait
+-# @ref aio-lio_listio_wait_failed
+-# @ref aio-lio_listio_wait_canceled
+-# @ref aio-lio_listio_wait_signal
+-# @ref aio-lio_listio_cblist_with_holes
+-# @ref aio-lio_listio_cblist_dummy
+-# @ref aio-lio_listio_bad_mode
+-# @ref aio-lio_listio_too_many
+-# @ref aio-notify_signal
+-# @ref aio-notify_thread
+-# @ref aio-notify_callback
+-# @ref aio-notify_diff_signals
+-# @ref aio-notify_diff_callbacks
+-# @ref aio-notify_diff_types
+-# @ref aio-garbage_cb
+-# @ref aio-invalid_fd
+-# @ref aio-not_posted_cb
+-# @ref aio-bnb_cblist_nent
+-# @ref aio-one_buf
+-# @ref aio-close_sock
+-# @ref aio-post_twice
+-# @ref aio-too_many_req
+-# @ref aio-nested_requests
+-# @ref aio-kill_process
+-# @ref aio-stress
+-# @ref aio-aio_fork
+-# @ref aio-aio_suspend_file
+-# @ref aio-lio_listio_file
+
+@}
+*/

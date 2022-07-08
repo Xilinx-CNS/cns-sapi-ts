@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<test name="attacks" type="package">
+  <objective>Attacks and vulnerabilities</objective>
+  <notes/>
+  <iter result="PASSED">
+    <notes/>
+    <test name="ethernet" type="package">
+      <objective>Ethernet and ARP attacks</objective>
+      <notes/>
+      <iter result="PASSED">
+        <notes/>
+        <test name="padding" type="script">
+          <objective>Check that short frames are padded with zero bytes.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_DGRAM</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <notes/>
+          </iter>
+        </test>
+        <test name="oversized" type="script">
+          <objective>The test checks that sending of Ethernet frames with length greater than interface MTU does not lead to system crash.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">'net1'{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'iut_fake_addr':inet:fake,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+            <results tags="v5" key="OL 5356">
+              <result value="FAILED"/>
+              <result value="PASSED"/>
+            </results>
+            <results tags="failed" key="L5 Logging" notes="Random pass/fail with (ci_tp_log &amp; 1), which is default">
+              <result value="PASSED"/>
+              <result value="FAILED"/>
+            </results>
+          </iter>
+        </test>
+        <test name="zero_src_mac" type="script">
+          <objective>The test checks that sending of Ethernet frames with zero MAC address does not lead to system crash.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <notes/>
+          </iter>
+        </test>
+        <test name="own_arp" type="script">
+          <objective>Check that ARP requests with IUT IP address and non-IUT MAC address do not lead to IUT MAC address corruptiion.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="reply">TRUE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="reply">FALSE</arg>
+            <notes/>
+          </iter>
+        </test>
+      </iter>
+    </test>
+    <test name="ip" type="package">
+      <objective>IP packets processing</objective>
+      <notes/>
+      <iter result="PASSED">
+        <notes/>
+        <test name="frag_flood" type="script">
+          <objective>Check that flood of fragmented packets on the one connection does not lead to denial of service on other connections.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},{{'pco_tst':tester,'pco_flooder':tester},addr:'tst_addr':inet:unicast}}</arg>
+            <notes/>
+          </iter>
+        </test>
+        <test name="bonk" type="script">
+          <objective>Emulate "bonk" and "Ping of Death" attacks.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="check_frags">FALSE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="check_frags">TRUE</arg>
+            <notes/>
+            <results tags="v5" key="OLDSW2V0-96" notes="Fragmented TCP/IP packets are not supported in V5.">
+              <result value="FAILED"/>
+            </results>
+          </iter>
+        </test>
+        <test name="teardrop" type="script">
+          <objective>Emulate "Teardrop" attack.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="check_frags">FALSE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="check_frags">TRUE</arg>
+            <notes/>
+            <results tags="v5" key="OLDSW2V0-96" notes="Fragmented TCP/IP packets are not supported in V5.">
+              <result value="FAILED"/>
+            </results>
+          </iter>
+        </test>
+        <test name="frag_duplicate" type="script">
+          <objective>Check that duplication of fragments does not lead to packets loss.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="min_pkt">100</arg>
+            <arg name="max_pkt">300</arg>
+            <arg name="frag_len">64</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="min_pkt">2000</arg>
+            <arg name="max_pkt">4000</arg>
+            <arg name="frag_len">64</arg>
+            <notes/>
+          </iter>
+        </test>
+        <test name="frag_reorder" type="script">
+          <objective>Check that re-ordering of fragments does not lead to packets loss.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="frag_len"/>
+            <arg name="max_pkt">4000</arg>
+            <arg name="min_pkt"/>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="frag_len">32</arg>
+            <arg name="max_pkt"/>
+            <arg name="min_pkt"/>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="frag_len"/>
+            <arg name="max_pkt">300</arg>
+            <arg name="min_pkt"/>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="frag_len">256</arg>
+            <arg name="max_pkt"/>
+            <arg name="min_pkt"/>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer_tst</arg>
+            <arg name="frag_len"/>
+            <arg name="max_pkt"/>
+            <arg name="min_pkt"/>
+            <notes/>
+          </iter>
+        </test>
+        <test name="frag_lost" type="script">
+          <objective>Check that flood of packets with lost fragments does not lead to denial of service.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="check_frags">FALSE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="check_frags">TRUE</arg>
+            <notes/>
+            <results tags="v5" key="OLDSW2V0-96" notes="Fragmented TCP/IP packets are not supported in V5.">
+              <result value="FAILED"/>
+            </results>
+          </iter>
+        </test>
+      </iter>
+    </test>
+    <test name="icmp" type="package">
+      <objective>ICMP-based attacks</objective>
+      <notes/>
+      <iter result="PASSED">
+        <notes/>
+        <test name="tcp_break" type="script">
+          <objective>Check that sending of ICMP errors cannot break established connection.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="type">3</arg>
+            <arg name="code">0</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="type">3</arg>
+            <arg name="code">1</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="type">3</arg>
+            <arg name="code">2</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="type">3</arg>
+            <arg name="code">3</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="type">3</arg>
+            <arg name="code">4</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="type">3</arg>
+            <arg name="code">5</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="type">11</arg>
+            <arg name="code">0</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="type">11</arg>
+            <arg name="code">1</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="type">12</arg>
+            <arg name="code">0</arg>
+            <notes/>
+          </iter>
+        </test>
+        <test name="tcp_degrade" type="script">
+          <objective>Check that sending of ICMP Source Quench message does not lead to data transmit speed decreasing.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <notes/>
+          </iter>
+        </test>
+        <test name="icmp_flood" type="script">
+          <objective>Check that flood of ICMP packets does not lead to denial of service.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="only_echo"/>
+            <notes/>
+          </iter>
+        </test>
+        <test name="icmp_pmtu" type="script">
+          <objective>Check that it's not possible to decrease PMTU to value less than 68 bytes.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <notes/>
+          </iter>
+        </test>
+        <test name="icmp_forged_acknum" type="script">
+          <objective>Check that port unreachable ICMP packets with incorrect ACK number does not lead to denial of service.</objective>
+          <iter result="PASSED">
+            <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},'H1'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</arg>
+          </iter>
+        </test>
+        <test name="icmp_reduced_mtu" type="script">
+          <objective>Check that port unreachable ICMP packets with reduced PATH MTU does not lead to denial of service.</objective>
+          <iter result="PASSED">
+            <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},'H1'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</arg>
+          </iter>
+        </test>
+      </iter>
+    </test>
+    <test name="udp" type="package">
+      <objective>UDP-based attacks</objective>
+      <notes/>
+      <iter result="PASSED">
+        <notes/>
+        <test name="flood" type="script">
+          <objective>Check that flood of UDP packets with different dst/src addresses/ports does not lead to denial of service.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <notes/>
+          </iter>
+        </test>
+        <test name="land" type="script">
+          <objective>Check that flood of UDP packets with the same src/dst addresses/ports does not lead to denial of service.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="port"/>
+            <notes/>
+          </iter>
+        </test>
+      </iter>
+    </test>
+    <test name="tcp" type="package">
+      <objective>TCP-based attacks</objective>
+      <notes/>
+      <iter result="PASSED">
+        <notes/>
+        <test name="land" type="script">
+          <objective/>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <notes/>
+          </iter>
+        </test>
+        <test name="syn_flood" type="script">
+          <objective>Check that TCP SYN flood does not lead to denial of service.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <notes/>
+          </iter>
+        </test>
+        <test name="syn_cookies" type="script">
+          <objective>Check that TCP SYN cookies works well.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="disable_tst_timestamps"/>
+            <arg name="pending_accept"/>
+            <arg name="use_syn_cookies"/>
+            <arg name="syn_backlog"/>
+            <notes/>
+          </iter>
+        </test>
+        <test name="flood" type="script">
+          <objective>Check that flood of TCP packets with incorrect SEQN/ACKN does not lead to denial of service.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <notes/>
+          </iter>
+        </test>
+        <test name="reorder" type="script">
+          <objective>Check that reordering of TCP packets does not lead to loss or corruption of data.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <notes/>
+          </iter>
+        </test>
+        <test name="overlapped" type="script">
+          <objective>Check that overlapped of TCP packets do not lead to loss or corruption of data.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <notes/>
+          </iter>
+        </test>
+        <test name="syn_spoof" type="script">
+          <objective>Check that TCP SYN spoofing does not lead to DoS</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'alien_addr':inet:alien,addr:'alien_gw':inet:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tester_1'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},IUT{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tester_2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</arg>
+            <notes/>
+            <results tags="linux">
+              <result value="PASSED">
+                <verdict>Incorrect SYN is not accepted.</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'alien_addr':inet:alien,addr:'alien_gw':inet:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tester_1'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},tester{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tester_2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</arg>
+            <notes/>
+            <results tags="linux">
+              <result value="PASSED">
+                <verdict>Incorrect SYN is not accepted.</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">'net1':tester{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'alien_addr':inet:alien,addr:'alien_gw':inet:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tester_1'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},IUT{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tester_2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</arg>
+            <notes/>
+            <results tags="linux">
+              <result value="PASSED">
+                <verdict>Incorrect SYN is not accepted.</verdict>
+              </result>
+            </results>
+          </iter>
+        </test>
+      </iter>
+    </test>
+  </iter>
+</test>

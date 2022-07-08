@@ -1,0 +1,40 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+@defgroup sockapi Socket API Tests
+@{
+@par Control plane
+- @ref route
+- @ref ifcfg
+- @ref arp
+
+@par Other
+- @ref aio
+- @ref attacks
+- @ref basic
+- @ref bnbvalue
+- @ref bpf
+- @ref checksum
+- @ref congestion
+- @ref epoll
+- @ref fcntl
+- @ref ioctls
+- @ref iomux
+- @ref level5
+- @ref libinit
+- @ref multicast
+- @ref performance
+- @ref pmtu
+- @ref reuseport
+- @ref sendfile
+- @ref sendrecv
+- @ref services
+- @ref signal
+- @ref sockopts
+- @ref tcp
+- @ref timestamps
+- @ref udp
+- @ref usecases
+
+@}
+*/

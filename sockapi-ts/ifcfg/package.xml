@@ -1,0 +1,276 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+    
+    <description>Network interface related tests</description>
+    
+    <author mailto="Renata.Sayakhova@oktetlabs.ru"/>
+
+    <req id="IFCFG" sticky="true"/>
+
+    <session>
+
+        <run>
+            <script name="if_add_addr_after_listen" track_conf="silent"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="multicast" type="boolean">
+                <value>FALSE</value>
+                <!-- ON-7263 -->
+                <value reqs="MCAST_LOCAL_ADDR,OOL1606">TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="if_bind_on_down_if" track_conf="silent">
+                <!-- ST-1419, ST-1294 -->
+                <req id="NO_NETNS"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <!-- ST-2173 for NO_TEAM4 -->
+                <!-- BROKEN since TCP iterations fail on some hosts because of
+                     Onload unrelated issues. See ST-2541. -->
+                <value reqs="BROKEN,NO_TEAM4">SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="connect" type="boolean">
+                <value>FALSE</value>
+                <value reqs="ONLOAD_NONACCEL">TRUE</value>
+            </arg>
+        </run>
+
+         <run>
+            <script name="if_loopback_conn" track_conf="silent">
+                <req id="ENV-2PEERS"/>
+                <req id="FEW_ACCEL_PROCESSES"/>
+            </script>
+            <arg name="env">
+                <value>'net1'{'host1'{{'pco1_iut':IUT},{'pco2_iut':IUT},{'pco_tst':tester},if:'net1_if'}},'net2'{'host1'{if:'net2_if'}},'pco1'='pco1_iut','pco2'='pco2_iut','if1'='net1_if','if2'='net2_if'</value>
+                <value>'net1'{'host1'{{'pco1_iut':IUT},{'pco2_iut':IUT},{'pco_tst':tester},if:'net1_if'}},'net2'{'host1'{if:'net2_if'}},'pco1'='pco1_iut','pco2'='pco_tst','if1'='net1_if','if2'='net2_if'</value>
+                <value>'net1'{'host1'{{'pco1_iut':IUT},{'pco2_iut':IUT},{'pco_tst':tester},if:'net1_if'}},'net2'{'host1'{if:'net2_if'}},'pco1'='pco1_iut','pco2'='pco1_iut','if1'='net1_if','if2'='net2_if'</value>
+                <value>'net1'{'host1'{{'pco1_iut':IUT},{'pco2_iut':IUT},{'pco_tst':tester},if:'net1_if'}},'net2'{'host1'{if:'net2_if'}},'pco1'='pco1_iut','pco2'='pco2_iut','if1'='net1_if','if2'='net1_if'</value>
+                <value>'net1'{'host1'{{'pco1_iut':IUT},{'pco2_iut':IUT},{'pco_tst':tester},if:'net1_if'}},'net2'{'host1'{if:'net2_if'}},'pco1'='pco1_iut','pco2'='pco_tst','if1'='net1_if','if2'='net1_if'</value>
+                <value>'net1'{'host1'{{'pco1_iut':IUT},{'pco2_iut':IUT},{'pco_tst':tester},if:'net1_if'}},'net2'{'host1'{if:'net2_if'}},'pco1'='pco1_iut','pco2'='pco1_iut','if1'='net1_if','if2'='net1_if'</value>
+                <value>'net1'{'host1'{{'pco1_iut':IUT,'pco2_iut':IUT},{'pco_tst':tester},if:'net1_if'}},'net2'{'host1'{if:'net2_if'}},'pco1'='pco1_iut','pco2'='pco2_iut','if1'='net1_if','if2'='net2_if'</value>
+                <value>'net1'{'host1'{{'pco1_iut':IUT,'pco2_iut':IUT},{'pco_tst':tester},if:'net1_if'}},'net2'{'host1'{if:'net2_if'}},'pco1'='pco1_iut','pco2'='pco_tst','if1'='net1_if','if2'='net2_if'</value>
+                <value>'net1'{'host1'{{'pco1_iut':IUT,'pco2_iut':IUT},{'pco_tst':tester},if:'net1_if'}},'net2'{'host1'{if:'net2_if'}},'pco1'='pco1_iut','pco2'='pco1_iut','if1'='net1_if','if2'='net2_if'</value>
+                <value>'net1'{'host1'{{'pco1_iut':IUT,'pco2_iut':IUT},{'pco_tst':tester},if:'net1_if'}},'net2'{'host1'{if:'net2_if'}},'pco1'='pco1_iut','pco2'='pco2_iut','if1'='net1_if','if2'='net1_if'</value>
+                <value>'net1'{'host1'{{'pco1_iut':IUT,'pco2_iut':IUT},{'pco_tst':tester},if:'net1_if'}},'net2'{'host1'{if:'net2_if'}},'pco1'='pco1_iut','pco2'='pco_tst','if1'='net1_if','if2'='net1_if'</value>
+                <value>'net1'{'host1'{{'pco1_iut':IUT,'pco2_iut':IUT},{'pco_tst':tester},if:'net1_if'}},'net2'{'host1'{if:'net2_if'}},'pco1'='pco1_iut','pco2'='pco1_iut','if1'='net1_if','if2'='net1_if'</value>
+            </arg>
+        </run>
+        <run>
+            <script name="if_remove_addr_after_bind_dgram">
+                <!-- ON-5 comment 28 -->
+                <req id="NEW_CPLANE"/>
+            </script>
+            <arg name="env">
+                <value>'net1'{{{'pco_iut':IUT},if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+            </arg>
+        </run>
+ 
+        <run>
+            <script name="if_remove_addr_after_bind_stream" track_conf="silent">
+                <!-- ON-5 comment 28 -->
+                <req id="NEW_CPLANE"/>
+            </script>
+            <arg name="env">
+                <value>'net1'{{{'pco_iut':IUT},if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+            </arg>
+        </run>
+ 
+        <run>
+            <script name="if_remove_addr_after_connect">
+                <!-- ON-5 comment 28 -->
+                <req id="NEW_CPLANE"/>
+            </script>
+            <arg name="env">
+                <value>'net1'{{{'pco_iut':IUT},if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+        <run>
+            <script name="if_remove_addr_after_listen" track_conf="silent"/>
+            <arg name="env">
+                <value>'net1'{{{'pco_iut':IUT},if:'iut_if',addr:'iut_hwaddr':ether:unicast},{{'pco_tst':tester},if:'tst_if',addr:'tst_addr':inet:unicast}}</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="if_remove_addr_after_many_conns">
+                <req id="L2_TS"/>
+                <!-- ON-5 comment 28 -->
+                <req id="NEW_CPLANE"/>
+            </script>
+            <arg name="env">
+                <value>'net1'{{{'pco_iut':IUT},if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+            </arg>
+            <arg name="conn">
+                <value>10</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="if_source_addr_dgram" track_conf="silent"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="bind_to" type="bind_to">
+                <value>none</value>
+                <value>specific</value>
+                <value>wildcard</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="if_source_addr_stream" track_conf="silent"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="bind_to" type="bind_to" list="bind">
+                <value>none</value>
+                <value>specific</value>
+                <value>wildcard</value>
+                <value>specific</value>
+                <value>wildcard</value>
+            </arg>
+            <arg name="passive" type="boolean" list="bind">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="if_up_down" track_conf="silent">
+                <req id="L2_TS"/>
+                <!-- SF bug 83229 -->
+                <req id="NO_NETNS"/>
+                <!-- ON-5 comment 28 -->
+                <req id="NEW_CPLANE"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="rm_addr" type="boolean"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="incoming" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="if_down_nodelay" track_conf="silent">
+                <req id="L2_TS"/>
+                <req id="SO_SNDBUF"/>
+                <req id="TCP_NODELAY"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+            </arg>
+            <arg name="no_delay" type="boolean"/>
+            <arg name="non_blocked" type="boolean">
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="if_up_down_influence" track_conf="silent">
+                <req id="L2_TS"/>
+                <req id="TWO_INDEP_IFS"/>
+                <req id="FEW_ACCEL_PROCESSES"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env">
+                <value reqs="ENV-2LINKS-IUT">'net1':IUT{'iut_host'{{'pco_iut1':IUT},addr:'iut1_addr':inet:unicast,if:'iut1_if'},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},'net2':IUT{'iut_host'{{'pco_iut2':IUT},addr:'iut2_addr':inet:unicast,if:'iut2_if'},{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</value>
+            </arg>
+            <arg name="change_if" type="boolean"/>
+        </run>
+<!-- The test was disabled according to L5 bug 60462 -->
+<!--
+        <run>
+            <script name="two_if_on_subnet" track_conf="silent">
+            </script>
+            <arg name="env">
+                <value>'net1':IUT{'iut_host'{{'pco_iut1':IUT},addr:'iut1_addr':inet:unicast,addr:'iut1_hwaddr':ether:unicast,if:'iut1_if'},'tst1_host'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},'net2'{'iut_host'{{'pco_iut2':IUT},addr:'iut2_addr':inet:unicast,addr:'iut2_hwaddr':ether:unicast,if:'iut2_if'},'tst2_host'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="iut1_if_first" type="boolean"/>
+        </run>
+-->
+        <run>
+            <script name="if_addr_assign_order" track_conf="silent">
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="assign_first" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="if_bind_down_use_other_if" track_conf="nohistory">
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_nets">
+              <!-- We cannot use IPVLAN with socket bound to an
+                   address belonging to a different interface -->
+              <value ref="env.two_nets.iut_both" reqs="NO_IPVLAN"/>
+              <value ref="env.two_nets.iut_first"/>
+              <value ref="env.two_nets.iut_second" reqs="NO_IPVLAN"/>
+            </arg>
+            <arg name="sock_type" type="socket_type_all">
+                <value>udp</value>
+                <value>udp_notconn</value>
+                <value>tcp_active</value>
+                <value>tcp_passive</value>
+            </arg>
+            <arg name="bind_before" type="boolean"/>
+            <arg name="conn_before" type="boolean">
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="if_bind_down_use_other_if" track_conf="nohistory">
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_nets">
+              <!-- We cannot use IPVLAN with socket bound to an
+                   address belonging to a different interface -->
+              <value ref="env.two_nets.iut_both" reqs="NO_IPVLAN"/>
+              <value ref="env.two_nets.iut_first"/>
+              <value ref="env.two_nets.iut_second" reqs="NO_IPVLAN"/>
+            </arg>
+            <arg name="sock_type" type="socket_type_all">
+                <value>udp</value>
+                <value>tcp_active</value>
+            </arg>
+            <arg name="bind_before" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="conn_before" type="boolean">
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+          <script name="recv_wrong_mac" track_conf="silent"/>
+          <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_ipv6"/>
+          </arg>
+          <arg name="sock_type" type="socket_type"/>
+        </run>
+
+        <run>
+          <script name="if_addr_add_remove_recv" track_conf="nohistory"/>
+          <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_ipv6"/>
+          </arg>
+          <arg name="sock_type" type="sock_stream_dgram"/>
+          <arg name="same_net" type="boolean"/>
+          <arg name="traffic" type="boolean"/>
+        </run>
+
+    </session>
+</package>

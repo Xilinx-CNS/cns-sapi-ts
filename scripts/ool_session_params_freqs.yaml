@@ -1,0 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+# (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved.
+- {null : 5, ndebug: 2}
+- {null : 6, build_cloud: 2, build_ulhelper: 0}
+- {null : 1, build_with_x3: 0}

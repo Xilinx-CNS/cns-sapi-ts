@@ -1,0 +1,145 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup bnbvalue Bad Parameters and Boundary Values
+@ingroup sockapi
+@{
+
+This package is intended to test socket API against careless usage,
+which includes passing incorrect value for parameters (too short or
+too long buffer, @c NULL pointers), inconsistent parameters, boundary
+values, calling functions in wrong order, etc.
+
+Each test does one of the following: 
+    - check robustness of a particular function;
+    - check that the same situation correctly handled by a set of functions;
+    - check that one function influence on the behaviour of another.
+    .
+
+
+@author Oleg Kravtsov <Oleg.Kravtsov@oktetlabs.ru>
+
+
+@par Items:
+
+-# @ref bnbvalue-descr_nonexist
+-# @ref bnbvalue-descr_inapprop
+-# @ref bnbvalue-func_socket
+-# @ref bnbvalue-func_socket_pipe_too_many
+-# @ref bnbvalue-many_sock_on_server
+-# @ref bnbvalue-file_max_overflow
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref bnbvalue-addr_len_inapprop_bind
+-# @ref bnbvalue-addr_len_inapprop_connect
+-# @ref bnbvalue-addr_len_inapprop_sendto
+-# @ref bnbvalue-addr_len_inapprop_sendmsg
+-# @ref bnbvalue-addr_len_accept
+-# @ref bnbvalue-addr_len_getname
+-# @ref bnbvalue-addr_len_inapprop_recv_short
+-# @ref bnbvalue-addr_len_inapprop_recvfrom_long
+-# @ref bnbvalue-addr_len_inapprop_recvmsg_long
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref bnbvalue-func_accept_addr_null
+-# @ref bnbvalue-func_send_addr_null_stream_not_conn
+-# @ref bnbvalue-func_send_addr_null_stream_conn
+-# @ref bnbvalue-func_sendto_addr_null_dgram
+-# @ref bnbvalue-func_sendmsg_addr_null_dgram
+-# @ref bnbvalue-func_bind_addr_null
+-# @ref bnbvalue-func_connect_addr_null
+-# @ref bnbvalue-func_getname_addr_null_stream
+-# @ref bnbvalue-func_getname_addr_null_dgram
+-# @ref bnbvalue-func_recvfrom_addr_null_stream
+-# @ref bnbvalue-func_recvfrom_addr_null_dgram
+
+-# @ref bnbvalue-func_ioctl_null
+-# @ref bnbvalue-func_ioctl_unknown
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref bnbvalue-func_connect_inapprop_addr
+-# @ref bnbvalue-addr_family_inapprop_bind
+-# @ref bnbvalue-addr_family_inapprop_connect
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref bnbvalue-func_bind_twice
+-# @ref bnbvalue-func_bind_after_listen
+-# @ref bnbvalue-func_bind_after_accept
+-# @ref bnbvalue-func_bind_after_connect
+-# @ref bnbvalue-func_bind_notassigned_addr
+-# @ref bnbvalue-func_bind_after_implicit_bind_udp
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref bnbvalue-func_listen_dgram
+-# @ref bnbvalue-func_listen_after_connect
+-# @ref bnbvalue-func_listen_twice
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref bnbvalue-func_accept_dgram
+-# @ref bnbvalue-func_accept_stream_client
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref bnbvalue-func_connect_twice
+-# @ref bnbvalue-func_connect_after_listen
+-# @ref bnbvalue-func_connect_str_unspec_af
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref bnbvalue-func_getname
+-# @ref bnbvalue-func_sockopt_level_name
+-# @ref bnbvalue-func_setsockopt
+-# @ref bnbvalue-func_getsockopt
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref bnbvalue-func_select_negative_timeout
+-# @ref bnbvalue-func_select_pselect_neg_fdnum
+-# @ref bnbvalue-func_select_all_zeros
+-# @ref bnbvalue-func_select_inapprop_maxfd
+-# @ref bnbvalue-func_select_many_descrs
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref bnbvalue-func_shutdown_incorrect_how
+-# @ref bnbvalue-func_shutdown_before_connect
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref bnbvalue-func_poll_nval
+-# @ref bnbvalue-func_poll_fd_negative
+-# @ref bnbvalue-func_poll_zero_evt
+-# @ref bnbvalue-func_poll_nentries
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref bnbvalue-func_pselect_ppoll_negative_timeout
+-# @ref bnbvalue-iomux_notmasked_signals
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref bnbvalue-func_recvmsg_ctrunc
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref bnbvalue-tx_buf_len_not_connected
+-# @ref bnbvalue-tx_buf_len_connected
+-# @ref bnbvalue-rx_buf_len_zero_connected
+-# @ref bnbvalue-chk_too_big_len
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref bnbvalue-func_io_after_listen
+-# @ref bnbvalue-incorrect_iovec_pointer
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref bnbvalue-incorrect_family
+-# @ref bnbvalue-incorrect_address_length
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref bnbvalue-send_oob_dgram
+-# @ref bnbvalue-send_connect_zero_addr
+-# @ref bnbvalue-recv_oob_dgram
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref bnbvalue-func_send_too_long_dgram
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref bnbvalue-func_sockopt_boolean
+-# @ref bnbvalue-func_sockopt_get_integer
+-# @ref bnbvalue-func_sockopt_set_integer
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref bnbvalue-dgram_empty
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref bnbvalue-func_epoll_create
+-# @ref bnbvalue-func_epoll_ctl_add
+-# @ref bnbvalue-func_epoll_ctl_bad_epfd
+-# @ref bnbvalue-func_epoll_ctl_bad_fd
+-# @ref bnbvalue-func_epoll_ctl_bad_op
+-# @ref bnbvalue-func_epoll_ctl_mod_del
+-# @ref bnbvalue-func_epoll_wait_bad_epfd
+-# @ref bnbvalue-func_epoll_wait_bad_maxevents
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref bnbvalue-unbound
+-# @ref bnbvalue-extra_large_packet
+-# @ref bnbvalue-msg_controllen_inapprop
+-# @ref bnbvalue-ipv4_mapped_in_ipv6
+-# @ref bnbvalue-ipv4_mapped_connect_ipv6
+-# @ref bnbvalue-protected_signal
+
+@}
+
+*/

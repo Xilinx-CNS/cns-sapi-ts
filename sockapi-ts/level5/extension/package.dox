@@ -1,0 +1,59 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup level5-extension Onload private API
+@ingroup level5
+@{
+
+
+@author Konstantin Ushakov <Konstantin.Ushakov@oktetlabs.ru>
+
+@par Tests:
+
+-# @ref extension-dont_accelerate
+-# @ref extension-is_present
+-# @ref extension-oo_epoll
+-# @ref extension-oo_epoll_read
+-# @ref extension-oo_epoll_dont_read
+-# @ref extension-oo_epoll_seg_reordering
+-# @ref extension-template_update
+-# @ref extension-template_send
+-# @ref extension-template_mult
+-# @ref extension-template_hide_ack
+-# @ref extension-template_overfill
+-# @ref extension-template_signal
+-# @ref extension-template_close
+-# @ref extension-template_abort
+-# @ref extension-template_alloc_bnb
+-# @ref extension-template_update_bnb
+-# @ref extension-template_abort_bnb
+-# @ref extension-udp_rx_filter
+-# @ref extension-udp_rx_filter_simple
+-# @ref extension-delegated_api
+-# @ref extension-simple_ds
+-# @ref extension-onload_zc_send
+-# @ref extension-delegated_api
+-# @ref extension-od_overfill_sndbuf
+-# @ref extension-od_no_ack
+-# @ref extension-msg_warm
+-# @ref extension-msg_warm_send_flow
+-# @ref extension-msg_warm_fill_send_buf
+-# @ref extension-msg_warm_conn_problem
+-# @ref extension-msg_warm_large_buf
+-# @ref extension-msg_warm_zc_send
+-# @ref extension-msg_warm_concurrent
+-# @ref extension-od_send_peer_close
+-# @ref extension-zc_send_ack_complete
+-# @ref extension-zc_register_bufs
+-# @ref extension-zc_send_big_buf_complete
+-# @ref extension-zc_hlrx_pkts
+-# @ref extension-zc_send_mixed_bufs
+-# @ref extension-onload_zc_recv_keep
+-# @ref extension-zc_recv_oob
+-# @ref extension-zc_send_msg_more
+-# @ref extension-zc_send_user_buf_overfill
+-# @ref extension-msg_onepkt
+
+@}
+*/

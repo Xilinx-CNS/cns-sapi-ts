@@ -1,0 +1,31 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+@defgroup signal Signals and Socket API
+@ingroup sockapi
+@{
+
+The test package contains complex tests on Signals + Basic Socket API.
+
+@author Alexandra Kossovsky <Alexandra. Kossovsky@oktetlabs.ru>
+
+
+@par Tests:
+
+-# @ref signal-connect_interrupted_signal
+-# @ref signal-accept_interrupted_signal
+-# @ref signal-close_interrupted_signal
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref signal-read_interrupted_signal
+-# @ref signal-write_interrupted_signal
+-# @ref signal-sendfile_interrupted_signal
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref signal-iomux_interrupted_signal
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref signal-signal_handler_close
+-# @ref signal-signal_stacks_closed
+-# @ref signal-write_interrupted_signal_udp
+-# @ref signal-splice_interrupted_signal
+
+@}
+*/

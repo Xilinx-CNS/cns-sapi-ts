@@ -1,0 +1,242 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+
+    <description>BPF/XDP tests</description>
+
+    <author mailto="Damir.Mansurov@oktetlabs.ru"/>
+
+    <req id="BPF" sticky="true"/>
+
+    <session track_conf="nohistory">
+
+        <prologue>
+            <script name="prologue"/>
+            <arg name="env" ref="env.peer2peer"/>
+        </prologue>
+
+        <run>
+            <script name="xdp_actions"/>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="action" list="sanity_list">
+                <value>pass</value>
+                <value reqs="V5_SANITY">drop</value>
+                <value>pass</value>
+                <value>drop</value>
+            </arg>
+            <arg name="sock_type" type="socket_type">
+                <value>udp</value>
+                <value>tcp_active</value>
+                <value>tcp_passive_close</value>
+            </arg>
+            <arg name="parent_if" type="boolean">
+                <value>TRUE</value>
+                <!-- ST-2374: Onload supports XDP programs linking to base
+                     interface only, so no point to test parent_if=FALSE. -->
+                <!-- <value>FALSE</value> -->
+            </arg>
+            <arg name="link_type" list="sanity_list">
+                <value>xdp</value>
+                <value>xdp</value>
+                <!-- Do not test unsupported things. See discussion in
+                     https://reviewboard.oktetlabs.ru/r/22098/ -->
+                <value reqs="SF_BLACKLIST">tc_ingress</value>
+                <value reqs="SF_BLACKLIST">tc_ingress</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="xdp_diff_ifs">
+                <req id="NO_BOND"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer.two_links"/>
+                <value ref="env.peer2peer.two_links_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="socket_type">
+                <value>udp</value>
+                <value>tcp_active</value>
+                <value>tcp_passive_close</value>
+            </arg>
+            <arg name="link_if">
+                <value>first</value>
+                <value>second</value>
+                <value>both</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="xdp_maps"/>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="socket_type">
+                <value>udp</value>
+                <value>tcp_active</value>
+                <value>tcp_passive_close</value>
+            </arg>
+            <arg name="map_type">
+                <value>array</value>
+                <value>hash</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="tcp_flags"/>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="socket_type">
+                <value>tcp_active</value>
+                <value>tcp_passive_close</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="one_rule_filter"/>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="src_addr_diff" type="boolean"/>
+            <arg name="dst_addr_diff" type="boolean"/>
+            <arg name="src_port_diff" type="boolean"/>
+            <arg name="dst_port_diff" type="boolean"/>
+            <arg name="conn_type" type="sock_stream_dgram"/>
+        </run>
+
+        <run>
+            <script name="xdp_bpf_helpers"/>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="prog_name">
+                <value>xdp_sk_lookup</value>
+                <value>xdp_fib_lookup</value>
+                <value>xdp_redirect</value>
+            </arg>
+            <arg name="sock_type" type="socket_type">
+                <value>udp</value>
+                <value>tcp_active</value>
+                <value>tcp_passive_close</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="xdp_change_addr">
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_2addr"/>
+                <value ref="env.peer2peer_2addr_ipv6"/>
+            </arg>
+        </run>
+
+        <run>
+            <script name="xdp_lpm_rule"/>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+        </run>
+
+        <run>
+            <script name="xdp_icmp_echo"/>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+        </run>
+
+        <run>
+            <script name="xdp_perf_event"/>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="socket_type">
+                <value>udp</value>
+                <value>tcp_active</value>
+                <value>tcp_passive_close</value>
+            </arg>
+        </run>
+
+        <run name="map_type">
+        <!--
+            Sessions with different check_type parameter highlight,
+            so that each parameter check_type has its own session in the logs
+        -->
+            <session>
+                <arg name="env">
+                    <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="check_type">
+                    <value>map_type</value>
+                </arg>
+                <run>
+                    <script name="xdp_prog_load" track_conf="silent"/>
+                    <arg name="prog_name">
+                        <value>xdp_mt_hash</value>
+                        <value>xdp_mt_array</value>
+                        <value>xdp_mt_prog_array</value>
+                        <value>xdp_mt_perf_event_array</value>
+                        <value>xdp_mt_percpu_hash</value>
+                        <value>xdp_mt_percpu_array</value>
+                        <value>xdp_mt_stack_trace</value>
+                        <value>xdp_mt_cgroup_array</value>
+                        <value>xdp_mt_lru_hash</value>
+                        <value>xdp_mt_lru_percpu_hash</value>
+                        <value>xdp_mt_lpm_trie</value>
+                        <value>xdp_mt_devmap</value>
+                        <value>xdp_mt_sockmap</value>
+                        <value>xdp_mt_cpumap</value>
+                        <value>xdp_mt_xskmap</value>
+                        <value>xdp_mt_sockhash</value>
+                        <value>xdp_mt_cgroup_storage</value>
+                        <value>xdp_mt_reuseport_sockarray</value>
+                    </arg>
+                </run>
+            </session>
+        </run>
+        <run name="return_value">
+            <session>
+                <arg name="env">
+                    <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="check_type">
+                    <value>return_value</value>
+                </arg>
+                <run>
+                    <script name="xdp_prog_load"/>
+                    <arg name="prog_name">
+                        <value>xdp_rv_aborted</value>
+                        <value>xdp_rv_redirect</value>
+                        <value>xdp_rv_tx</value>
+                    </arg>
+                </run>
+            </session>
+        </run>
+    <run>
+        <script name="xdp_maps_functions"/>
+        <arg name="env">
+            <value ref="env.peer2peer"/>
+        </arg>
+        <arg name="map_name">
+            <value>map_array</value>
+            <value>map_hash</value>
+            <value>map_lpm_trie</value>
+        </arg>
+        <arg name="func">
+            <value>update</value>
+            <value>delete</value>
+        </arg>
+    </run>
+    </session>
+</package>

@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+    
+    <description>IP packets processing</description>
+    
+    <author mailto="Elena.Vengerova@oktetlabs.ru"/>
+
+    <req id="L2_TS" sticky="true"/>
+
+    <session>
+
+        <run>
+            <script name="frag_flood">
+                <req id="RECV_IP_FRAG"/>
+            </script>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},{{'pco_tst':tester,'pco_flooder':tester},addr:'tst_addr':inet:unicast}}</value>
+            </arg>                
+        </run>
+
+        <run>
+            <script name="bonk" track_conf="silent">
+                <req id="RECV_IP_FRAG"/>
+                <req id="OOL1805"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="check_frags" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="teardrop">
+                <req id="RECV_IP_FRAG"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="check_frags" type="boolean"/>
+        </run>
+             
+        <run>
+            <script name="frag_duplicate">
+                <!-- Test is disabled according to SF bug 84587 -->
+                <req id="BROKEN"/>
+                <req id="RECV_IP_FRAG"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="min_pkt" list="">
+                <value>100</value>
+                <value>2000</value>
+            </arg>
+            <arg name="max_pkt" list=""> 
+                <value>300</value>
+                <value>4000</value>
+            </arg>
+            <arg name="frag_len"> 
+                <value>64</value>
+            </arg>
+        </run>
+             
+        <run>
+            <script name="frag_reorder">
+                <req id="RECV_IP_FRAG"/>
+                <!--- @page ip-frag_reorder
+                     \n
+                     @warning The test is disabled because it can have
+                     unexpected results on SF NICs with and without Onload.
+                     See bugs OL 5843 and SF 41563 for details.
+                 -->
+                <req id="BROKEN"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="min_pkt" list="">
+                <value>100</value>
+                <value>2000</value>
+                <value>5000</value>
+            </arg>
+            <arg name="max_pkt" list=""> 
+                <value>300</value>
+                <value>4000</value>
+                <value>10000</value>
+            </arg>
+            <arg name="frag_len" list=""> 
+                <value>64</value>
+                <value>64</value>
+                <value>256</value>
+            </arg>
+        </run>
+        <run>
+            <script name="frag_reorder">
+                <!-- Test is disabled according to SF bug 41563 -->
+                <req id="BROKEN"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+            </arg>
+            <arg name="min_pkt">
+                <value>100</value>
+            </arg>
+            <arg name="max_pkt">
+                <value>10000</value>
+            </arg>
+            <arg name="frag_len">
+                <value>32</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="frag_lost">
+                <req id="RECV_IP_FRAG"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="check_frags" type="boolean"/>
+        </run>
+
+    </session>
+</package>

@@ -1,0 +1,19 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup congestion Congestion testing
+@ingroup sockapi
+@{
+
+@author Roman.Zhukov@oktetlabs.ru
+
+@par Tests:
+
+-# @ref congestion-prologue
+-# @ref congestion-epilogue
+
+-# @ref congestion-app_rtt
+@}
+
+*/

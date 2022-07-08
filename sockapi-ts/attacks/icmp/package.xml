@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+    
+    <description>ICMP-based attacks</description>
+    
+    <author mailto="Elena.Vengerova@oktetlabs.ru"/>
+
+    <session>
+        <arg name="env" ref="env.peer2peer"/> 
+
+        <run>
+            <script name="tcp_break">
+              <req id="SO_ERROR"/>
+            </script>
+            <arg name="type" list="">
+                <value>3</value>
+                <value>3</value>
+                <value>3</value>
+                <value>3</value>
+                <value>3</value>
+                <value>3</value>
+                <value>11</value>
+                <value>11</value>
+                <value>12</value>
+            </arg>
+            <arg name="code" list="">
+                <value>0</value>
+                <value>1</value>
+                <value>2</value>
+                <value>3</value>
+                <value>4</value>
+                <value>5</value>
+                <value>0</value>
+                <value>1</value>
+                <value>0</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="tcp_degrade"/>
+        </run>
+
+        <run>
+            <script name="icmp_flood">
+                <req id="ICMP_FLOOD"/>
+                <req id="L2_TS"/>
+                <!-- The test reduce PMTU and it affects other tests with zf_shim, see Bug 71608 -->
+                <req id="ZF_INCOMPATIBLE"/>
+            </script>
+            <arg name="only_echo" type="boolean"/> 
+        </run>
+
+        <run>
+            <script name="icmp_pmtu">
+                <req id="L2_TS"/>
+                <!-- The test reduce PMTU and it affects other tests with zf_shim, see Bug 71608 -->
+                <req id="ZF_INCOMPATIBLE"/>
+            </script>
+        </run>
+
+        <run>
+            <script name="icmp_forged_acknum"/>
+            <arg name="env">
+                <value reqs="ENV-2PEERS">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},'H1'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="icmp_reduced_mtu"/>
+            <arg name="env">
+                <value reqs="ENV-2PEERS">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},'H1'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</value>
+            </arg>
+        </run>
+
+    </session>
+    
+</package>

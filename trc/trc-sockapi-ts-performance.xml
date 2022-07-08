@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<test name="performance" type="package">
+  <objective>Measure performance with netperf</objective>
+  <notes/>
+  <iter result="PASSED">
+    <notes/>
+    <test name="prologue" type="script">
+      <objective/>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="epilogue" type="script">
+      <objective/>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="netperf" type="script">
+    <objective>Performance test</objective>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name"/>
+        <arg name="payload"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="sfnt_pingpong" type="script">
+    <objective>Measure performance with sfnt-pingpong</objective>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="proto"/>
+        <arg name="sizes"/>
+        <arg name="muxer"/>
+        <arg name="spin"/>
+        <notes/>
+      </iter>
+    </test>
+    </iter>
+</test>

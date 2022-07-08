@@ -1,0 +1,1400 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<test name="libinit" type="package">
+  <objective>Library _init() function tests</objective>
+  <notes/>
+  <iter result="PASSED">
+    <notes/>
+    <test name="popen" type="script">
+      <objective>Check the behavior of several functions used in terms of user-defined _init() library function.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">READ_PRE_INIT</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">popen</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">READ_POST_INIT</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">popen</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">READ_PRE_INIT</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">popen</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">READ_POST_INIT</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">popen</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="pipe" type="script">
+      <objective>Check the behavior of several functions used in terms of user-defined _init() library function.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">CHECK_PRE_INIT</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">pipe</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">CHECK_POST_INIT</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">pipe</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">CHECK_PRE_INIT</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">pipe</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">CHECK_POST_INIT</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">pipe</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="fork_exec" type="script">
+      <objective>Check the behavior of several functions used in terms of user-defined _init() library function.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">READ_PRE_INIT</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">fork_exec</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">READ_POST_INIT</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">fork_exec</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">READ_PRE_INIT</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">fork_exec</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">READ_POST_INIT</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">fork_exec</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="signal" type="script">
+      <objective>Check the behavior of several functions used in terms of user-defined _init() library function.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">SIGNAL_USR1_PRE_INIT_READ</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">SIGNAL_USR1_POST_INIT_READ</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">SIGNAL_USR1_PRE_INIT_WRITE</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">SIGNAL_USR1_POST_INIT_WRITE</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">SIGNAL_INT_PRE_INIT_READ</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">SIGNAL_INT_POST_INIT_READ</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">SIGNAL_INT_PRE_INIT_WRITE</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">SIGNAL_INT_POST_INIT_WRITE</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">SIGNAL_USR1_PRE_INIT_READ</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">SIGNAL_USR1_POST_INIT_READ</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">SIGNAL_USR1_PRE_INIT_WRITE</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">SIGNAL_USR1_POST_INIT_WRITE</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">SIGNAL_INT_PRE_INIT_READ</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">SIGNAL_INT_POST_INIT_READ</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">SIGNAL_INT_PRE_INIT_WRITE</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">SIGNAL_INT_POST_INIT_WRITE</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="thread_fork" type="script">
+      <objective>Check the behavior of several functions used in terms of user-defined _init() library function.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">WRITE_ON_PIPE</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">thread_fork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iteration">WRITE_ON_PIPE</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">thread_fork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_STREAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">thread_fork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_DGRAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">thread_fork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_STREAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">thread_fork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_DGRAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">thread_fork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_STREAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">thread_fork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_DGRAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">thread_fork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_STREAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">thread_fork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_DGRAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">thread_fork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_STREAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">thread_fork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_DGRAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">thread_fork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_STREAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">thread_fork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_DGRAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">thread_fork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_STREAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">thread_fork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_DGRAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">thread_fork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_STREAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">thread_fork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_DGRAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">thread_fork</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="signal_socket" type="script">
+      <objective>Check the behavior of several functions used in terms of user-defined _init() library function.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_PRE_STREAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_POST_STREAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_USR1_POST_STREAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_PRE_DGRAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_POST_DGRAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_USR1_POST_DGRAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_PRE_STREAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_POST_STREAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_INT_POST_STREAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_PRE_DGRAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_POST_DGRAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_INT_POST_DGRAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_PRE_STREAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_POST_STREAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_USR1_POST_STREAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_PRE_DGRAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_POST_DGRAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_USR1_POST_DGRAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_PRE_STREAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_POST_STREAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_INT_POST_STREAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_PRE_DGRAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_POST_DGRAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_INT_POST_DGRAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_PRE_STREAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_POST_STREAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_USR1_POST_STREAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_PRE_DGRAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_POST_DGRAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_USR1_POST_DGRAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_PRE_STREAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_POST_STREAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_INT_POST_STREAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_PRE_DGRAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_POST_DGRAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_INT_POST_DGRAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_PRE_STREAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_POST_STREAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_USR1_POST_STREAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_PRE_DGRAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_POST_DGRAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_USR1_POST_DGRAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_PRE_STREAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_POST_STREAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_INT_POST_STREAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_PRE_DGRAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_POST_DGRAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_INT_POST_DGRAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_PRE_STREAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_POST_STREAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_USR1_POST_STREAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_PRE_DGRAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_POST_DGRAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_USR1_POST_DGRAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_PRE_STREAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_POST_STREAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_INT_POST_STREAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_PRE_DGRAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_POST_DGRAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_INT_POST_DGRAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_PRE_STREAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_POST_STREAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_USR1_POST_STREAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_PRE_DGRAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_POST_DGRAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_USR1_POST_DGRAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_PRE_STREAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_POST_STREAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_INT_POST_STREAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_PRE_DGRAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_POST_DGRAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_INT_POST_DGRAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_PRE_STREAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_POST_STREAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_USR1_POST_STREAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_PRE_DGRAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_POST_DGRAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_USR1_POST_DGRAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_PRE_STREAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_POST_STREAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_INT_POST_STREAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_PRE_DGRAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_POST_DGRAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_INT_POST_DGRAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_PRE_STREAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_POST_STREAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_USR1_POST_STREAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_PRE_DGRAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_USR1_POST_DGRAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_USR1_POST_DGRAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_PRE_STREAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_POST_STREAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_INT_POST_STREAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_PRE_DGRAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_SIG_INT_POST_DGRAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_SIG_INT_POST_DGRAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">signal_socket</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="atfork" type="script">
+      <objective>Check the behavior of several functions used in terms of user-defined _init() library function.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_STREAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_STREAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_DGRAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_DGRAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_STREAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_STREAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_DGRAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_DGRAM_SEND</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_STREAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_STREAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_DGRAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_DGRAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_STREAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_STREAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_DGRAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_DGRAM_SEND</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_STREAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_STREAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_DGRAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_DGRAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_STREAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_STREAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_DGRAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_DGRAM_RECV</arg>
+        <arg name="lazy">FALSE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_STREAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_STREAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_DGRAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">300</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_DGRAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_STREAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_STREAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_PRE_DGRAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size">3000</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iteration">SOCK_POST_DGRAM_RECV</arg>
+        <arg name="lazy">TRUE</arg>
+        <arg name="sequence">atfork</arg>
+        <notes/>
+      </iter>
+    </test>
+  </iter>
+</test>

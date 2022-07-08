@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+    
+    <description>Attacks and vulnerabilities</description>
+    
+    <author mailto="Elena.Vengerova@oktetlabs.ru"/>
+
+    <req id="ATTACKS" sticky="true"/>
+
+    <session>
+        <run>
+            <package name="ethernet"/>
+        </run>
+        <run>
+            <package name="ip"/>
+        </run>
+        <run>
+            <package name="icmp"/>
+        </run>
+        <run>
+            <package name="udp"/>
+        </run>
+        <run>
+            <package name="tcp"/>
+        </run>
+             
+    </session>
+</package>

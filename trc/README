@@ -1,0 +1,17 @@
+# SPDX-License-Identifier: Apache-2.0
+# (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved.
+
+TRC keys:
+~~~~~~~~~
+TRC results with verdicts or FAILED results should be marked with
+'key' keyword where bug number from one of bugtrackers should be specified and
+this bug should be a reason of such TRC results.
+If you specify more than one bug in 'key', only first bug will have a link in
+TRC reports.
+
+Example: key="ON-3938"
+
+Possible values:
+* ON-XXXX, ST-XXXX and OLDSW2V0-XXXX - issue number in AMD Jira
+* OL XXXX - bug number in OKTETLabs Bugzilla
+* Kernel XXXX - bug number in Linux Kernel bugtracker

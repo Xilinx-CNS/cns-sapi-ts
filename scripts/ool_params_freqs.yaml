@@ -1,0 +1,51 @@
+# SPDX-License-Identifier: Apache-2.0
+# (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved.
+# The ordering is important for some ool parameters. For example, netns
+# should be after bond and vlan; vlan should be after bond, etc.
+- {null: 3, pkt_nocomp: 1, pkt_nohuge: 1}
+- {null: 1, hwport2: 1}
+- {null: 5, libc_close: 1}
+- {null: 12, ip_options: 1}
+- {null: 4, laddr_all: 1, laddr_prefsrc: 1}
+- {null: 2, udp_connect_no_handover: 1}
+- {epoll0: 1, epoll1: 1, epoll2: 1, epoll3: 1}
+- {null: 1, iomux_no_fast: 1}
+- {null: 3, epoll_ctl_fast: 1}
+- {null: 2, sleep_spin: 1}
+- {null: 2, m32: 1}
+- {scalable_any: 2, scalable_iut: 1}
+- {null: 60, reuse_stack: 3, scalable: 1, scalable_active: 1, scalable_active_passive: 3,
+  scalable_passive: 1}
+- {null: 2, syscall: 1}
+- {null: 1, no_rx_ts: 1}
+- {null: 11, pure_testing: 1}
+# The ordering is important here: vlan should be followed by bond, netns
+# should be after vlan and bond
+- {null: 4, bond1: 1, bond4: 1, team1: 1, team4: 1}
+- {null: 3, ipvlan: 1, macvlan: 1, 'macvlan,vlan': 1, vlan: 1, 'vlan,ipvlan': 1, 'vlan,macvlan': 1}
+- {null: 1, netns_all: 1, netns_iut: 1}
+- {no_reuse_pco: 1, reuse_pco: 1}
+- {null: 1, phys_mode: 1}
+- {fw_full_featured: 1, fw_low_latency: 1}
+- {null: 7, high_throughput: 1, scooby: 2}
+- {null: 10, cplane_no_dump: 1, cplane_server_grace_timeout_zero: 2, 'cplane_server_grace_timeout_zero,cplane_no_dump': 1}
+- {null: 16, tcp_shared_ports: 1, 'tcp_shared_ports_reuse_fast,tcp_shared_ports': 1}
+- {null: 1, default_epoll: 1, 'default_epoll,epoll2': 1, 'default_epoll,epoll3': 1,
+  default_epoll_pwait: 1, 'default_epoll_pwait,epoll2': 1, 'default_epoll_pwait,epoll3': 1,
+  default_poll: 2, default_ppoll: 1, default_pselect: 1, default_select: 2}
+- {null: 4, nopio: 1}
+- {null: 1, fds_mt_safe: 1}
+- {null: 1, epoll_mt_safe: 1}
+- {null: 3, tcp_no_delack: 1}
+- {null: 1, loop2: 2, loop3: 2, loop4: 2}
+# safe should be after any epoll
+- {null: 5, safe: 2}
+- {null: 3, disable_timestamps: 2}
+- {null: 5, fdtable_strict: 3, 'fdtable_strict,socket_cache': 2, socket_cache: 1}
+- {null: 2, int_spin: 1, small_spin: 1, spin: 1, tiny_spin: 1}
+- {null: 20, af_xdp: 1, 'af_xdp,zc_af_xdp': 1, af_xdp_single: 1, 'af_xdp_single,zc_af_xdp': 1}
+- {null: 5, tcp_combine_send: 1}
+- {null: 3, use_chk_funcs: 1}
+- {null: 1, zc_reg_huge: 1, zc_reg_huge_align: 1}
+- {null: 1, urg_ignore: 1, urg_allow: 1}
+- {mcast_send0: 1, mcast_send1: 1, mcast_send2: 1, mcast_send3: 1}

@@ -1,0 +1,605 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+
+    <description>Onload extensions tests where global EF_NAME is not applicable</description>
+
+    <author mailto="Andrey.Dmitrov@oktetlabs.ru"/>
+
+    <req id="NO_REUSE_STACK" sticky="true"/>
+    <req id="ONLOAD_ONLY" sticky="true"/>
+    <req id="NO_REUSE_PCO" sticky="true"/>
+
+    <session>
+
+      <enum name="onload_stack_scope">
+        <value>USER</value>
+        <value>PROCESS</value>
+        <value>GLOBAL</value>
+        <value>THREAD</value>
+      </enum>
+
+      <enum name="onload_stack_scope_all">
+        <value type="onload_stack_scope"/>
+        <value>NOCHANGE</value>
+      </enum>
+
+      <run>
+        <script name="dont_acc_and_set_stackname" track_conf="silent"/>
+        <arg name="env" ref="env.iut_only"/>
+        <arg name="object" type="objtype"/>
+        <arg name="all_threads" type="boolean"/>
+      </run>
+      <run>
+        <script name="set_stackname_null" track_conf="silent"/>
+        <arg name="env" ref="env.iut_only"/>
+        <arg name="object" value="TCP"/>
+        <arg name="all_threads" type="boolean"/>
+        <arg name="onload_stack_scope" type="onload_stack_scope"/>
+      </run>
+      <run>
+        <script name="set_stackname_scope_user" track_conf="silent">
+          <req id="SETUID"/>
+        </script>
+        <arg name="env" ref="env.iut_only"/>
+        <arg name="object" type="objtype"/>
+        <arg name="all_threads" type="boolean"/>
+        <arg name="check_parent" type="boolean"/>
+      </run>
+      <run>
+        <script name="set_stackname_scope_user_threads" track_conf="silent">
+          <req id="SETUID"/>
+        </script>
+        <arg name="env" ref="env.iut_only"/>
+        <arg name="object" type="objtype"/>
+        <arg name="all_threads" type="boolean"/>
+      </run>
+      <run>
+        <script name="set_stackname_scope_who" track_conf="silent"/>
+        <arg name="env" ref="env.iut_only"/>
+        <arg name="object" type="objtype"/>
+        <arg name="all_threads" type="boolean"/>
+        <arg name="onload_stack_scope" type="onload_stack_scope"/>
+      </run>
+      <run>
+        <script name="set_stackname_scope_nochange" track_conf="silent"/>
+        <arg name="env" ref="env.iut_only"/>
+        <arg name="object" type="objtype"/>
+        <arg name="onload_stack_scope" type="onload_stack_scope"/>
+      </run>
+      <run>
+        <script name="set_stackname_scope_process" track_conf="silent"/>
+        <arg name="env" ref="env.iut_only"/>
+        <arg name="all_threads" type="boolean"/>
+        <arg name="object" type="objtype"/>
+        <arg name="check_parent" type="boolean"/>
+      </run>
+      <run>
+        <script name="set_stackname_scope_process_ignore" track_conf="silent">
+          <req id="SETUID"/>
+        </script>
+        <arg name="env" ref="env.iut_only"/>
+        <arg name="all_threads" type="boolean"/>
+        <arg name="object" type="objtype"/>
+      </run>
+      <run>
+        <script name="set_stackname_scope_thread" track_conf="silent"/>
+        <arg name="env" ref="env.iut_only"/>
+        <arg name="all_threads" type="boolean"/>
+        <arg name="object" type="objtype"/>
+      </run>
+      <run>
+        <script name="set_stackname_scope_global" track_conf="silent"/>
+        <arg name="env" ref="env.iut_only"/>
+        <arg name="object" type="objtype"/>
+        <arg name="action">
+            <value>thread_create</value>
+            <value reqs="FORK">fork</value>
+            <value reqs="SETUID">setuid</value>
+        </arg>
+        <arg name="check_before_action" type="boolean"/>
+      </run>
+      <run>
+        <script name="set_stackname_caller_dead" track_conf="silent"/>
+        <arg name="env" ref="env.iut_only"/>
+        <arg name="object" type="objtype"/>
+        <arg name="onload_stack_scope" type="onload_stack_scope"/>
+      </run>
+      <run>
+        <script name="set_stackname_save_restore" track_conf="silent">
+            <req id="SETUID"/>
+        </script>
+        <arg name="env" ref="env.iut_only"/>
+        <arg name="all_threads1" type="boolean"/>
+        <arg name="all_threads2" type="boolean"/>
+        <arg name="object" type="objtype"/>
+        <arg name="scope1" type="onload_stack_scope"/>
+        <arg name="scope2" type="onload_stack_scope"/>
+      </run>
+      <run>
+        <script name="set_stackname_save_restore" track_conf="silent">
+            <req id="SETUID"/>
+        </script>
+        <arg name="env" ref="env.iut_only"/>
+        <arg name="all_threads1" type="boolean">
+            <value>TRUE</value>
+        </arg>
+        <arg name="all_threads2" type="boolean">
+          <value>FALSE</value>
+        </arg>
+        <arg name="object" type="objtype"/>
+        <arg name="scope1" type="onload_stack_scope_all">
+            <value>NOCHANGE</value>
+        </arg>
+        <arg name="scope2" type="onload_stack_scope"/>
+      </run>
+      <run>
+        <script name="set_stackname_nochange_restore" track_conf="silent"/>
+        <arg name="env" ref="env.iut_only"/>
+        <arg name="object" type="objtype"/>
+        <arg name="scope1" type="onload_stack_scope"/>
+        <arg name="scope2" type="onload_stack_scope"/>
+      </run>
+      <run>
+        <script name="set_stackname_null_restore" track_conf="silent"/>
+        <arg name="env" ref="env.iut_only"/>
+        <arg name="object" type="objtype"/>
+        <arg name="scope" type="onload_stack_scope"/>
+        <arg name="all_threads" type="boolean"/>
+        <arg name="restore_null" type="boolean"/>
+      </run>
+      <run>
+        <script name="set_stackname_restore_non_saved" track_conf="silent"/>
+        <arg name="env" ref="env.iut_only"/>
+        <arg name="call_set_stackname" type="boolean">
+            <value>FALSE</value>
+        </arg>
+        <arg name="all_threads" type="boolean">
+            <value>FALSE</value>
+        </arg>
+        <arg name="scope" type="onload_stack_scope">
+            <value>GLOBAL</value>
+        </arg>
+        <arg name="call_stackname_save" type="boolean"/>
+        <arg name="object" type="objtype"/>
+      </run>
+      <run>
+        <script name="set_stackname_restore_non_saved" track_conf="silent"/>
+        <arg name="env" ref="env.iut_only"/>
+        <arg name="call_set_stackname" type="boolean">
+            <value>TRUE</value>
+        </arg>
+        <arg name="all_threads" type="boolean"/>
+        <arg name="scope" type="onload_stack_scope"/>
+        <arg name="call_stackname_save" type="boolean"/>
+        <arg name="object" type="objtype"/>
+      </run>
+
+      <run>
+        <script name="shutdown_move_fd">
+          <req id="SOCK_STREAM"/>
+          <req id="ONLOAD_MOVE_FD"/>
+        </script>
+        <arg name="env" ref="env.peer2peer"/>
+        <arg name="passive_open" type="boolean"/>
+        <arg name="shutdown_ends" list="">
+            <value>both</value>
+            <value>iut</value>
+            <value>iut</value>
+            <value>iut</value>
+            <value>tst</value>
+        </arg>
+        <arg name="shutdown_how" list="">
+            <value>SHUT_RDWR</value>
+            <value>SHUT_RD</value>
+            <value>SHUT_WR</value>
+            <value>SHUT_RDWR</value>
+            <value>SHUT_RDWR</value>
+        </arg>
+        <arg name="existing_stack1" type="boolean"/>
+        <arg name="existing_stack2" type="boolean"/>
+      </run>
+
+      <run>
+        <script name="tcp_conn_move_fd">
+          <req id="SOCK_STREAM"/>
+          <req id="ONLOAD_MOVE_FD"/>
+        </script>
+        <arg name="env" ref="env.peer2peer"/>
+        <arg name="active" type="socket_tcp_boolean">
+            <value>TRUE</value>
+        </arg>
+        <arg name="existing_stack1" type="boolean"/>
+        <arg name="existing_stack2" type="boolean"/>
+        <arg name="close_listening" type="boolean">
+            <value>FALSE</value>
+        </arg>
+        <arg name="tst_sends_data">
+          <value>none</value>
+        </arg>
+        <arg name="iut_sends_data">
+          <value>none</value>
+        </arg>
+        <arg name="cache_socket" type="cache_socket_type">
+          <value>FALSE</value>
+        </arg>
+      </run>
+      <run>
+        <script name="tcp_conn_move_fd">
+          <req id="SOCK_STREAM"/>
+          <req id="ONLOAD_MOVE_FD"/>
+        </script>
+        <arg name="env" ref="env.peer2peer"/>
+        <arg name="active" type="socket_tcp_boolean">
+            <value>FALSE</value>
+        </arg>
+        <arg name="existing_stack1" type="boolean"/>
+        <arg name="existing_stack2" type="boolean"/>
+        <arg name="close_listening" type="boolean" list="1">
+          <value>FALSE</value>
+          <value>FALSE</value>
+          <value>TRUE</value>
+        </arg>
+        <arg name="tst_sends_data" list="">
+          <value>none</value>
+          <value>plain</value>
+          <value reqs="OOB">oob</value>
+          <value>none</value>
+        </arg>
+        <arg name="iut_sends_data" list="">
+          <value>none</value>
+          <value>none</value>
+          <value>none</value>
+          <value>plain</value>
+        </arg>
+        <arg name="cache_socket" type="cache_socket_type" list="1">
+          <value>FALSE</value>
+          <value>TRUE</value>
+          <value>FALSE</value>
+        </arg>
+      </run>
+
+      <run>
+        <script name="tcp_conn_move_fd_in_pkt_flow">
+          <req id="SOCK_STREAM"/>
+          <req id="ONLOAD_MOVE_FD"/>
+        </script>
+        <arg name="env" ref="env.peer2peer"/>
+        <arg name="threads">
+          <value>3</value>
+        </arg>
+        <arg name="time2send">
+          <value>2</value>
+        </arg>
+        <arg name="iterations">
+          <value>3</value>
+        </arg>
+        <arg name="close_accepted" type="boolean"/>
+      </run>
+
+      <run>
+        <script name="tcp_overfill_queue_move_fd">
+          <req id="SOCK_STREAM"/>
+          <req id="ONLOAD_MOVE_FD"/>
+        </script>
+        <arg name="env" ref="env.peer2peer"/>
+        <arg name="overfill_send_queue" type="boolean"/>
+      </run>
+
+      <run>
+        <script name="listen_move_fd">
+          <req id="SOCK_STREAM"/>
+          <req id="ONLOAD_MOVE_FD"/>
+        </script>
+        <arg name="env" ref="env.peer2peer"/>
+      </run>
+
+      <run>
+        <script name="bind_move_fd">
+          <req id="SOCK_STREAM"/>
+          <req id="ONLOAD_MOVE_FD"/>
+        </script>
+        <arg name="env" ref="env.peer2peer"/>
+        <arg name="existing_stack1" type="boolean"/>
+        <arg name="existing_stack2" type="boolean"/>
+      </run>
+
+      <run>
+        <script name="setsockopt_move_fd">
+          <req id="SOCK_STREAM"/>
+          <req id="ONLOAD_MOVE_FD"/>
+          <req ref="opt_name"/>
+        </script>
+        <arg name="env" ref="env.peer2peer"/>
+        <arg name="sock_accepted" type="boolean"/>
+        <arg name="opt_name">
+            <value>SO_BINDTODEVICE</value>
+            <value>SO_BROADCAST</value>
+            <value>SO_DEBUG</value>
+            <value>SO_DONTROUTE</value>
+            <value>SO_KEEPALIVE</value>
+            <value>SO_LINGER</value>
+            <value>SO_OOBINLINE</value>
+            <value>SO_PRIORITY</value>
+            <value>SO_RCVBUF</value>
+            <value>SO_RCVTIMEO</value>
+            <value>SO_SNDTIMEO</value>
+            <value>SO_REUSEADDR</value>
+            <value>SO_SNDBUF</value>
+            <value>SO_TIMESTAMP</value>
+            <value>SO_TIMESTAMPNS</value>
+            <value reqs="SO_TIMESTAMPING,HW_PTP_RX_TIMESTAMP">SO_TIMESTAMPING</value>
+            <value>TCP_CORK</value>
+            <value>TCP_DEFER_ACCEPT</value>
+            <value>TCP_KEEPCNT</value>
+            <value>TCP_KEEPIDLE</value>
+            <value>TCP_KEEPINTVL</value>
+            <!-- <value>TCP_MAXSEG</value> -->
+            <value>TCP_NODELAY</value>
+            <value>TCP_QUICKACK</value>
+            <value>TCP_USER_TIMEOUT</value>
+            <value>IP_MTU_DISCOVER</value>
+            <value>IP_OPTIONS</value>
+            <value>IP_RECVERR</value>
+            <value>IP_TOS</value>
+            <value>IP_TTL</value>
+        </arg>
+        <arg name="existing_stack1" type="boolean"/>
+        <arg name="existing_stack2" type="boolean"/>
+      </run>
+
+      <run>
+        <script name="fcntl_move_fd">
+          <req id="SOCK_STREAM"/>
+          <req id="ONLOAD_MOVE_FD"/>
+          <req ref="opt_name"/>
+        </script>
+        <arg name="env" ref="env.peer2peer"/>
+        <arg name="sock_accepted" type="boolean"/>
+        <arg name="fcntl_test">
+            <value>FD_CLOEXEC</value>
+            <value>O_ASYNC</value>
+            <value>O_NONBLOCK</value>
+            <value>F_SETOWN</value>
+            <value reqs="F_GETOWN_EX">F_SETOWN_EX</value>
+            <value>F_SETSIG</value>
+        </arg>
+        <arg name="existing_stack1" type="boolean"/>
+        <arg name="existing_stack2" type="boolean"/>
+      </run>
+
+      <run>
+        <script name="ioctl_move_fd">
+          <req id="SOCK_STREAM"/>
+          <req id="ONLOAD_MOVE_FD"/>
+          <req ref="req"/>
+        </script>
+        <arg name="env" ref="env.peer2peer"/>
+        <arg name="sock_accepted" type="boolean"/>
+        <arg name="req">
+            <value>FIOASYNC</value>
+            <value>FIONBIO</value>
+            <value>SIOCSPGRP</value>
+            <!-- This does not seem to be implemented in
+                 Onload and TE currently. -->
+            <!--<value>FIOSETOWN</value> -->
+        </arg>
+        <arg name="existing_stack1" type="boolean"/>
+        <arg name="existing_stack2" type="boolean"/>
+      </run>
+
+      <!-- The sequence of steps in the test is invalid. See
+           SFC bug 46721 comment 2.
+        -->
+      <!-- run>
+        <script name="iomux_move_fd">
+          <req id="SOCK_STREAM"/>
+          <req id="ONLOAD_MOVE_FD"/>
+        </script>
+        <arg name="env" ref="env.peer2peer"/>
+        <arg name="iomux" type="iomux_with_oo_epoll"/>
+        <arg name="existing_stack" type="boolean"/>
+      </run-->
+
+      <run>
+        <script name="stack_nochange_move_fd">
+          <req id="SOCK_STREAM"/>
+          <req id="ONLOAD_MOVE_FD"/>
+        </script>
+        <arg name="env" ref="env.peer2peer"/>
+        <arg name="sock_accepted" type="boolean"/>
+        <arg name="not_def_stack" type="boolean"/>
+      </run>
+
+      <run>
+        <script name="pipe_move_fd">
+          <req id="ONLOAD_MOVE_FD"/>
+        </script>
+        <arg name="env" ref="env.iut_only"/>
+        <arg name="read_end" type="boolean"/>
+        <arg name="system_fd" type="boolean"/>
+      </run>
+
+      <run>
+        <script name="unsupp_socket_move_fd">
+          <req id="ONLOAD_MOVE_FD"/>
+        </script>
+        <arg name="env" ref="env.peer2peer"/>
+        <arg name="sock_type" type="sock_stream_dgram">
+            <value reqs="SOCK_DGRAM">SOCK_DGRAM</value>
+        </arg>
+        <arg name="system_fd" type="boolean"/>
+        <arg name="af_unix" type="boolean"/>
+      </run>
+      <run>
+        <script name="unsupp_socket_move_fd">
+          <req id="ONLOAD_MOVE_FD"/>
+        </script>
+        <arg name="env" ref="env.peer2peer"/>
+        <arg name="sock_type" type="sock_stream_dgram">
+            <value reqs="SOCK_DGRAM">SOCK_STREAM</value>
+        </arg>
+        <arg name="system_fd" type="boolean" list="">
+            <value>TRUE</value>
+            <value>FALSE</value>
+            <value>TRUE</value>
+        </arg>
+        <arg name="af_unix" type="boolean" list="">
+            <value>FALSE</value>
+            <value>TRUE</value>
+            <value>TRUE</value>
+        </arg>
+      </run>
+
+      <run>
+        <script name="move_unsupp_fd">
+          <req id="ONLOAD_MOVE_FD"/>
+        </script>
+        <arg name="env" ref="env.iut_only"/>
+        <arg name="fd_type">
+            <value>dev_null</value>
+            <value>dev_zero</value>
+            <value>stdin</value>
+            <value>stdout</value>
+            <value>stderr</value>
+            <value>tmpfile</value>
+        </arg>
+      </run>
+
+      <run>
+        <script name="move_epoll_fd">
+          <req id="ONLOAD_MOVE_FD"/>
+        </script>
+        <arg name="env" ref="env.peer2peer"/>
+        <arg name="system_fd" type="boolean"/>
+        <arg name="iomux" type="epoll_wait_calls"/>
+      </run>
+
+      <run>
+        <script name="save_move_restore">
+          <req id="ONLOAD_MOVE_FD"/>
+        </script>
+        <arg name="env" ref="env.peer2peer"/>
+      </run>
+
+      <run>
+        <script name="sock_ping_pong">
+          <req id="ONLOAD_MOVE_FD"/>
+        </script>
+        <arg name="env" ref="env.peer2peer"/>
+        <arg name="sock_accepted" type="boolean"/>
+      </run>
+
+      <run>
+        <script name="sighandler_move_fd">
+          <req id="ONLOAD_MOVE_FD"/>
+        </script>
+        <arg name="env" ref="env.peer2peer"/>
+        <arg name="sock_accepted" type="boolean">
+            <value>FALSE</value>
+        </arg>
+        <arg name="receive_data" type="boolean">
+            <value>FALSE</value>
+        </arg>
+      </run>
+      <run>
+        <script name="sighandler_move_fd">
+          <req id="ONLOAD_MOVE_FD"/>
+        </script>
+        <arg name="env" ref="env.peer2peer"/>
+        <arg name="sock_accepted" type="boolean">
+            <value>TRUE</value>
+        </arg>
+        <arg name="receive_data" type="boolean"/>
+      </run>
+
+      <run>
+        <script name="problematic_rxq_move_fd">
+          <req id="ONLOAD_MOVE_FD"/>
+        </script>
+        <arg name="env">
+            <value reqs="IUT_NET">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if', addr:'iut_lladdr':ether:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:alien,if:'tst_if',addr:'alien_link_addr':ether:alien}}</value>
+        </arg>
+        <arg name="rxq_problem">
+            <value>lost</value>
+            <value>reorder</value>
+            <value>retransmit</value>
+        </arg>
+        <arg name="existing_stack" type="boolean"/>
+      </run>
+
+      <run>
+        <script name="move_fd_other_user" track_conf="silent">
+          <req id="ONLOAD_MOVE_FD"/>
+          <req id="SETUID"/>
+        </script>
+        <arg name="env" ref="env.peer2peer"/>
+      </run>
+
+      <run>
+        <script name="set_stackname_move_fd">
+          <req id="ONLOAD_MOVE_FD"/>
+        </script>
+        <arg name="env" ref="env.peer2peer"/>
+        <arg name="existing_stack" type="boolean"/>
+        <arg name="all_threads" type="boolean"/>
+        <arg name="scope" type="onload_stack_scope"/>
+      </run>
+
+      <run>
+        <script name="unbound_udp_move_fd">
+          <req id="ONLOAD_MOVE_FD"/>
+        </script>
+        <arg name="env" ref="env.peer2peer"/>
+        <arg name="existing_stack" type="boolean"/>
+      </run>
+
+      <run>
+        <script name="close_init_stack_after_fork">
+            <req id="FORK"/>
+        </script>
+        <arg name="env" ref="env.iut_ucast"/>
+        <arg name="reuseport" type="boolean"/>
+        <arg name="exec" type="boolean">
+             <value>FALSE</value>
+             <value reqs="EXEC">TRUE</value>
+        </arg>
+      </run>
+
+      <run>
+        <script name="ef_fork_netif" track_conf="silent">
+            <req id="FORK"/>
+        </script>
+        <arg name="env" ref="env.iut_only"/>
+        <arg name="sock_type" type="sock_stream_dgram"/>
+        <arg name="ef_fork_netif_val">
+            <value>0</value>
+            <value>1</value>
+            <value>2</value>
+            <value>3</value>
+        </arg>
+      </run>
+
+      <run>
+        <script name="linger_move_fd">
+            <req id="SO_LINGER"/>
+        </script>
+        <arg name="env" ref="env.peer2peer"/>
+        <arg name="active" type="boolean" list="">
+          <value>TRUE</value>
+          <value>TRUE</value>
+          <value>FALSE</value>
+        </arg>
+        <arg name="linger_before_connection" type="boolean" list="">
+          <value>TRUE</value>
+          <value>FALSE</value>
+          <value>TRUE</value>
+        </arg>
+        <arg name="linger_val">
+          <value>0</value>
+          <value>1</value>
+        </arg>
+      </run>
+    </session>
+</package>

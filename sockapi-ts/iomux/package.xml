@@ -1,0 +1,1147 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+    
+    <description>Input/Output multiplexing</description>
+    
+    <author mailto="Andrew.Rybchenko@oktetlabs.ru"/>
+
+    <session>
+
+        <run>
+            <script name="timeout_update">
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+              <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="iomux" type="iomux">
+              <value reqs="SELECT">select</value>
+              <value reqs="SELECT,PSELECT">pselect</value>
+              <value reqs="POLL,PPOLL">ppoll</value>
+            </arg>
+        </run>
+
+        <run>
+            <session>
+                <arg name="env">
+                  <value type="env.peer2peer_all_ipv4_ipv6"/>
+                </arg>
+                <arg name="iomux" type="iomux_with_oo_epoll"/>
+
+                <run>
+                    <script name="write_timeout">
+                        <req id="WRITE_TIMEOUT"/>
+                        <req id="SOCK_STREAM"/>
+                    </script>
+                </run>
+
+                <run>
+                    <script name="pollpri">
+                        <req id="SOCK_STREAM"/>
+                        <req id="OOB"/>
+                    </script>
+                    <arg name="iomux" type="iomux">
+                      <value reqs="POLL">poll</value>
+                      <value reqs="POLL,PPOLL">ppoll</value>
+                    </arg>
+                    <arg name="timeout">
+                      <value>0</value>
+                      <value>2000</value>
+                    </arg>
+                    <arg name="add_flags">
+                      <value>none</value>
+                    </arg>
+                    <arg name="read_after_oob" type="boolean"/>
+                </run>
+                <run>
+                    <script name="pollpri">
+                        <req id="SOCK_STREAM"/>
+                        <req id="OOB"/>
+                    </script>
+                    <arg name="iomux" type="iomux">
+                      <value reqs="EPOLL">epoll</value>
+                      <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+                    </arg>
+                    <arg name="timeout">
+                      <value>0</value>
+                      <value>2000</value>
+                    </arg>
+                    <arg name="add_flags">
+                      <value>none</value>
+                      <value reqs="EPOLLET">epollet</value>
+                      <value reqs="EPOLLONESHOT">epolloneshot</value>
+                    </arg>
+                    <arg name="read_after_oob" type="boolean"/>
+                </run>
+                <run>
+                    <session>
+                        <arg name="env"/>
+                        <arg name="iomux"/>
+                        <arg name="type" type="sock_stream_dgram"/>
+
+                        <run>
+                            <script name="ret_count_rd_wr">
+                                <req id="TEST_HARNESS_SANITY"/>
+                                <req id="V5_SANITY"/>
+                            </script>
+                        </run>
+                        <run>
+                            <script name="sock_shut_rd">
+                              <req id="SHUTDOWN"/>
+                            </script>
+                        </run>
+                        <run>
+                            <script name="sock_shut_wr">
+                              <req id="SHUTDOWN"/>
+                            </script>
+                        </run>
+                        <run>
+                            <script name="sock_shut_rdwr">
+                              <req id="SHUTDOWN"/>
+                            </script>
+                        </run>
+
+                        <run>
+                            <script name="iomux_timeout">
+                                <req id="CALL_DURATION"/>
+                            </script>
+                            <arg name="timeout">
+                                <value>1</value>
+                                <value>5000</value>
+                            </arg>
+                        </run>
+                    </session>
+                </run>
+                <run>
+                    <script name="ret_count_peer_close">
+                        <req id="SOCK_STREAM"/>
+                        <req id="WRITE_TIMEOUT"/>
+                    </script>
+                </run>
+                <run>
+                    <script name="pending_error">
+                        <req id="SOCK_STREAM"/>
+                    </script>
+                </run>
+                <run>
+                    <script name="peer_shut_rd">
+                        <req id="SOCK_STREAM"/>
+                        <req id="WRITE_TIMEOUT"/>
+                    </script>
+                </run>
+                <run>
+                    <script name="peer_shut_wr">
+                        <req id="SOCK_STREAM"/>
+                    </script>
+                </run>
+                <run>
+                    <script name="peer_shut_rdwr">
+                        <req id="SOCK_STREAM"/>
+                        <req id="WRITE_TIMEOUT"/>
+                    </script>
+                </run>
+                <run>
+                    <script name="peer_close">
+                        <req id="SOCK_STREAM"/>
+                    </script>
+                    <arg name="env">
+                        <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                        <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast}}</value>
+                    </arg>
+                    <arg name="passive" type="boolean"/>
+                    <arg name="call_shutdown" type="boolean"/>
+                    <arg name="timeout">
+                        <value>0</value>
+                        <value>2</value>
+                    </arg>
+                </run>
+                <run>
+                    <script name="oob">
+                        <req id="SOCK_STREAM"/>
+                        <!-- ST-2477: OOB tester req is removed here to be
+                             possible to run this test with
+                             urg_ignore ool -->
+                        <!-- req id="OOB"/ -->
+                    </script>
+                </run>
+                <run>
+                    <script name="peer_close_before_accept">
+                        <req id="SOCK_STREAM"/>
+                    </script>
+                    <arg name="linger">
+                        <value reqs="SO_LINGER">TRUE</value>
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="env">
+                        <!-- IPv4 envs -->
+                        <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},'pco_aux'='pco_tst'</value>
+                        <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT,'pco_aux':IUT},addr:'iut_addr':inet:loopback,addr:'tst_addr':inet:loopback}}</value>
+                        <!-- IPv6 envs -->
+                        <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast}},'pco_aux'='pco_tst'</value>
+                        <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_aux':IUT},addr:'iut_addr':inet6:loopback,addr:'tst_addr':inet6:loopback}}</value>
+                    </arg>
+                    <arg name="func">
+                        <value>send</value>
+                        <value>recv</value>
+                    </arg>
+                </run>
+                <run>
+                    <script name="mix_fds">
+                        <req id="SOCK_STREAM"/>
+                        <req id="SOCK_DGRAM"/>
+                        <req id="ENV-LOOPBACK"/>
+                        <req id="SELECT_FILE"/>
+                    </script>
+                    <arg name="n_fds">
+                        <value>30</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="two_sockets"/>
+                    <arg name="env">
+                        <!-- IPv4 envs -->
+                        <value>IUT{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},addr:'tst_addr1':inet:unicast,addr:'tst_addr2':inet:unicast}}</value>
+                        <value reqs="ENV-LOOPBACK">IUT{{{'pco_iut':IUT},{'pco_tst1':IUT},addr:'iut_addr1':inet:loopback,addr:'iut_addr2':inet:unicast,addr:'tst_addr1':inet:loopback},{{'pco_tst2':tester},addr:'tst_addr2':inet:unicast}}</value>
+                        <value reqs="ENV-LOOPBACK">IUT{{{'pco_iut':IUT},{'pco_tst2':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:loopback,addr:'tst_addr2':inet:loopback},{{'pco_tst1':tester},addr:'tst_addr1':inet:unicast}}</value>
+                        <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT},{'pco_tst1':IUT},{'pco_tst2':IUT},addr:'iut_addr1':inet:loopback,addr:'iut_addr2':inet:loopback,addr:'tst_addr1':inet:loopback,addr:'tst_addr2':inet:loopback}}</value>
+                        <!-- IPv6 envs -->
+                        <value reqs="IP6,IP6_ONLOAD">IUT{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},addr:'tst_addr1':inet6:unicast,addr:'tst_addr2':inet6:unicast}}</value>
+                        <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">IUT{{{'pco_iut':IUT},{'pco_tst1':IUT},addr:'iut_addr1':inet6:loopback,addr:'iut_addr2':inet6:unicast,addr:'tst_addr1':inet6:loopback},{{'pco_tst2':tester},addr:'tst_addr2':inet6:unicast}}</value>
+                        <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">IUT{{{'pco_iut':IUT},{'pco_tst2':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:loopback,addr:'tst_addr2':inet6:loopback},{{'pco_tst1':tester},addr:'tst_addr1':inet6:unicast}}</value>
+                        <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst1':IUT},{'pco_tst2':IUT},addr:'iut_addr1':inet6:loopback,addr:'iut_addr2':inet6:loopback,addr:'tst_addr1':inet6:loopback,addr:'tst_addr2':inet6:loopback}}</value>
+                    </arg>
+                    <arg name="use_wildcard">
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="sock_type" type="sock_stream_dgram">
+                        <value>SOCK_STREAM</value>
+                    </arg>
+                    <arg name="ready" list="">
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="how" list="">
+                        <value>rd</value>
+                        <value>wr</value>
+                        <value>rdwr</value>
+                        <value>rd</value>
+                        <value>wr</value>
+                        <value>rdwr</value>
+                    </arg>
+                    <arg name="ret_val" list="">
+                        <value>1</value>
+                        <value>1</value>
+                        <value>2</value>
+                        <value>1</value>
+                        <value>1</value>
+                        <value>1</value>
+                    </arg>
+                    <arg name="data_size">
+                        <value>4096</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="two_sockets"/>
+                    <arg name="env" list="wildcard">
+                        <!-- IPv4 envs -->
+                        <value>IUT{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},addr:'tst_addr1':inet:unicast,addr:'tst_addr2':inet:unicast}}</value>
+                        <value>IUT{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},addr:'tst_addr1':inet:unicast,addr:'tst_addr2':inet:unicast}}</value>
+                        <value reqs="ENV-LOOPBACK">IUT{{{'pco_iut':IUT},{'pco_tst1':IUT},addr:'iut_addr1':inet:loopback,addr:'iut_addr2':inet:unicast,addr:'tst_addr1':inet:loopback},{{'pco_tst2':tester},addr:'tst_addr2':inet:unicast}}</value>
+                        <value reqs="ENV-LOOPBACK">IUT{{{'pco_iut':IUT},{'pco_tst2':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:loopback,addr:'tst_addr2':inet:loopback},{{'pco_tst1':tester},addr:'tst_addr1':inet:unicast}}</value>
+                        <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT},{'pco_tst1':IUT},{'pco_tst2':IUT},addr:'iut_addr1':inet:loopback,addr:'iut_addr2':inet:loopback,addr:'tst_addr1':inet:loopback,addr:'tst_addr2':inet:loopback}}</value>
+                        <!-- IPv6 envs -->
+                        <value reqs="IP6,IP6_ONLOAD">IUT{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},addr:'tst_addr1':inet6:unicast,addr:'tst_addr2':inet6:unicast}}</value>
+                        <value reqs="IP6,IP6_ONLOAD">IUT{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},addr:'tst_addr1':inet6:unicast,addr:'tst_addr2':inet6:unicast}}</value>
+                        <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">IUT{{{'pco_iut':IUT},{'pco_tst1':IUT},addr:'iut_addr1':inet6:loopback,addr:'iut_addr2':inet6:unicast,addr:'tst_addr1':inet6:loopback},{{'pco_tst2':tester},addr:'tst_addr2':inet6:unicast}}</value>
+                        <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">IUT{{{'pco_iut':IUT},{'pco_tst2':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:loopback,addr:'tst_addr2':inet6:loopback},{{'pco_tst1':tester},addr:'tst_addr1':inet6:unicast}}</value>
+                        <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst1':IUT},{'pco_tst2':IUT},addr:'iut_addr1':inet6:loopback,addr:'iut_addr2':inet6:loopback,addr:'tst_addr1':inet6:loopback,addr:'tst_addr2':inet6:loopback}}</value>
+                    </arg>
+                    <arg name="use_wildcard" list="wildcard">
+                        <value>FALSE</value>
+                        <value reqs="ZF_INCOMPATIBLE">TRUE</value>
+                        <value reqs="ZF_INCOMPATIBLE">TRUE</value>
+                        <value reqs="ZF_INCOMPATIBLE">TRUE</value>
+                        <value reqs="ZF_INCOMPATIBLE">TRUE</value>
+                        <value>FALSE</value>
+                        <value reqs="ZF_INCOMPATIBLE">TRUE</value>
+                        <value reqs="ZF_INCOMPATIBLE">TRUE</value>
+                        <value reqs="ZF_INCOMPATIBLE">TRUE</value>
+                        <value reqs="ZF_INCOMPATIBLE">TRUE</value>
+                    </arg>
+                    <arg name="sock_type" type="sock_stream_dgram">
+                        <value>SOCK_DGRAM</value>
+                    </arg>
+                    <arg name="ready" list="">
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="how" list="">
+                        <value>rd</value>
+                        <value>wr</value>
+                        <value>rdwr</value>
+                        <value>rd</value>
+                    </arg>
+                    <arg name="ret_val" list="">
+                        <value>1</value>
+                        <value>2</value>
+                        <value>3</value>
+                        <value>1</value>
+                    </arg>
+                    <arg name="data_size">
+                        <value>512</value>
+                        <value reqs="RECV_IP_FRAG">4096</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="notconn"/>
+                    <arg name="iomux" type="iomux_with_oo_epoll"/>
+                    <arg name="domain" list="ip_fam">
+                        <value>PF_INET</value>
+                        <value>PF_INET6</value>
+                    </arg>
+                    <arg name="env" list="ip_fam">
+                        <value ref="env.iut_ucast"/>
+                        <value ref="env.iut_ucast_ipv6"/>
+                    </arg>
+                    <arg name="evt">
+                        <value>EVT_RD</value>
+                        <value>EVT_WR</value>
+                    </arg>
+                    <arg name="sock_type" type="sock_stream_dgram" list="1">
+                         <!-- ZF incompatible: adding bound unconnected
+                              socket to epoll set. -->
+                        <value reqs="ZF_INCOMPATIBLE">SOCK_STREAM</value>
+                        <value>SOCK_DGRAM</value>
+                        <value>SOCK_DGRAM</value>
+                    </arg>
+                    <arg name="bound" list="1">
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                    </arg>
+                </run>
+                <run>
+                    <script name="many_sockets"/>
+                    <arg name="iomux" type="iomux"/>
+                    <arg name="socket_to_test">
+                        <value>first</value>
+                        <value>middle</value>
+                        <value>last</value>
+                    </arg>
+                    <arg name="sockets_number">
+                        <value>150</value>
+                    </arg>
+                    <arg name="fork_or_exec_calls_number">
+                        <value>1</value>
+                        <value>3</value>
+                    </arg>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="use_exec" type="boolean">
+                        <value reqs="FORK">FALSE</value>
+                        <value reqs="EXEC">TRUE</value>
+                    </arg>
+                    <arg name="env" list="">
+                      <value ref="env.peer2peer"/>
+                      <value ref="env.peer2peer_tst"/>
+                      <value ref="env.peer2peer_tst"/>
+                      <value ref="env.peer2peer_lo"/>
+                      <value ref="env.peer2peer_ipv6"/>
+                      <value ref="env.peer2peer_tst_ipv6"/>
+                      <value ref="env.peer2peer_tst_ipv6"/>
+                      <value ref="env.peer2peer_lo_ipv6"/>
+                    </arg>
+                    <arg name="use_wildcard" list="">
+                      <value>FALSE</value>
+                      <value>FALSE</value>
+                      <value>TRUE</value>
+                      <value>FALSE</value>
+                      <value>FALSE</value>
+                      <value>FALSE</value>
+                      <value>TRUE</value>
+                      <value>FALSE</value>
+                    </arg>
+                </run>
+                <run>
+                    <script name="tcp_usecases">
+                        <req id="SOCK_STREAM"/>
+                    </script>
+                    <arg name="iomux" type="iomux_with_oo_epoll"/>
+                    <arg name="env">
+                        <!-- IPv4 envs -->
+                        <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet:unicast}},'pco_tst1'='pco_tst'</value>
+                        <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'host2_addr':inet:unicast}},'pco_tst2'='pco_tst'</value>
+                        <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'host2_addr':inet:unicast}},'pco_tst2'='pco_tst'</value>
+                        <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet:unicast}},'pco_tst2'='pco_tst'</value>
+                        <!-- IPv6 envs -->
+                        <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet6:unicast}},'pco_tst1'='pco_tst'</value>
+                        <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},addr:'host2_addr':inet6:unicast}},'pco_tst2'='pco_tst'</value>
+                        <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},addr:'host2_addr':inet6:unicast}},'pco_tst2'='pco_tst'</value>
+                        <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:unicast}},'pco_tst2'='pco_tst'</value>
+                        <!-- IPv6 mapped envs -->
+                        <value reqs="IP6,IP6_IP4MAPPED">{{{'pco_iut':IUT},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst1'='pco_tst'</value>
+                        <value reqs="IP6,IP6_IP4MAPPED">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</value>
+                        <value reqs="IP6,IP6_IP4MAPPED">{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</value>
+                        <value reqs="IP6,IP6_IP4MAPPED">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="iomux_one_pipe">
+                        <req id="PIPE"/>
+                    </script>
+                    <arg name="env" ref="env.iut_only"/>
+                    <arg name="data_size">
+                        <value>512</value>
+                    </arg>
+                    <arg name="timeout">
+                        <value>0</value>
+                        <value>2000</value>
+                    </arg>
+                    <arg name="evts">
+                        <value>rd</value>
+                        <value>wr</value>
+                        <value>rdwr</value>
+                    </arg>
+                    <arg name="pipe_end">
+                        <value>read</value>
+                        <value>write</value>
+                        <value>both</value>
+                    </arg>
+                    <arg name="action">
+                        <value>none</value>
+                    </arg>
+                    <arg name="pr_ev" type="boolean"/>
+                </run>
+                <run>
+                    <script name="iomux_one_pipe">
+                        <req id="PIPE"/>
+                    </script>
+                    <arg name="env" ref="env.iut_only"/>
+                    <arg name="data_size">
+                        <value>512</value>
+                    </arg>
+                    <arg name="timeout">
+                        <value>2000</value>
+                    </arg>
+                    <arg name="evts" list="">
+                        <value>rd</value>
+                        <value>wr</value>
+                    </arg>
+                    <arg name="pipe_end" list="">
+                        <value>read</value>
+                        <value>write</value>
+                    </arg>
+                    <arg name="action" list="">
+                        <value>write</value>
+                        <value>read</value>
+                    </arg>
+                    <arg name="pr_ev" type="boolean">
+                        <value>FALSE</value>
+                    </arg>
+                </run>
+                <run>
+                    <script name="iomux_splice_rd">
+                        <req id="SPLICE"/>
+                    </script>
+                    <arg name="splice_before_data" type="boolean"/>
+                    <arg name="set_move" type="boolean"/>
+                    <arg name="set_nonblock" type="boolean"/>
+                    <arg name="diff_stacks" type="boolean">
+                        <value>FALSE</value>
+                        <value reqs="ONLOAD_ONLY,NO_REUSE_STACK">TRUE</value>
+                    </arg>
+                    <arg name="iomux_nonblock" type="boolean"/>
+                </run>
+                <run>
+                    <script name="iomux_splice_wr">
+                        <req id="SPLICE"/>
+                    </script>
+                    <arg name="splice_before_recv" type="boolean"/>
+                    <arg name="set_move" type="boolean"/>
+                    <arg name="diff_stacks" type="boolean">
+                        <value>FALSE</value>
+                        <value reqs="ONLOAD_ONLY,NO_REUSE_STACK">TRUE</value>
+                    </arg>
+                    <arg name="iomux_nonblock" type="boolean"/>
+                </run>
+                <run>
+                    <script name="iomux_splice_two_sockets">
+                        <req id="SPLICE"/>
+                        <req id="TIME_CONSUMING"/>
+                    </script>
+                    <arg name="iomux" type="iomux"/>
+                    <arg name="env">
+                        <!-- IPv4 envs -->
+                        <value>{{{'pco_iut':IUT,'pco_iut1':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},addr:'tst_addr1':inet:unicast,addr:'tst_addr2':inet:unicast}}</value>
+                        <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT,'pco_iut1':IUT},{'pco_tst1':IUT},addr:'iut_addr1':inet:loopback,addr:'iut_addr2':inet:unicast,addr:'tst_addr1':inet:loopback},{{'pco_tst2':tester},addr:'tst_addr2':inet:unicast}}</value>
+                        <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT,'pco_iut1':IUT},{'pco_tst2':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:loopback,addr:'tst_addr2':inet:loopback},{{'pco_tst1':tester},addr:'tst_addr1':inet:unicast}}</value>
+                        <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT,'pco_iut1':IUT},{'pco_tst1':IUT},{'pco_tst2':IUT},addr:'iut_addr1':inet:loopback,addr:'iut_addr2':inet:loopback,addr:'tst_addr1':inet:loopback,addr:'tst_addr2':inet:loopback}}</value>
+                        <!-- IPv6 envs -->
+                        <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_iut1':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},addr:'tst_addr1':inet6:unicast,addr:'tst_addr2':inet6:unicast}}</value>
+                        <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_iut1':IUT},{'pco_tst1':IUT},addr:'iut_addr1':inet6:loopback,addr:'iut_addr2':inet6:unicast,addr:'tst_addr1':inet6:loopback},{{'pco_tst2':tester},addr:'tst_addr2':inet6:unicast}}</value>
+                        <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_iut1':IUT},{'pco_tst2':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:loopback,addr:'tst_addr2':inet6:loopback},{{'pco_tst1':tester},addr:'tst_addr1':inet6:unicast}}</value>
+                        <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_iut1':IUT},{'pco_tst1':IUT},{'pco_tst2':IUT},addr:'iut_addr1':inet6:loopback,addr:'iut_addr2':inet6:loopback,addr:'tst_addr1':inet6:loopback,addr:'tst_addr2':inet6:loopback}}</value>
+                    </arg>
+                    <arg name="packet_num">
+                      <value>100</value>
+                    </arg>
+                    <arg name="set_move" type="boolean"/>
+                    <arg name="set_nonblock" type="boolean"/>
+                    <arg name="diff_stacks" type="boolean">
+                        <value>FALSE</value>
+                        <value reqs="ONLOAD_ONLY,NO_REUSE_STACK">TRUE</value>
+                    </arg>
+                </run>
+                <!-- TCP connected iterations -->
+                <run>
+                    <script name="iomux_wrong_event">
+                        <req id="TIME_CONSUMING"/>
+                    </script>
+                    <arg name="sock_type" type="socket_type_all">
+                        <value>tcp_passive_close</value>
+                        <value>tcp_active</value>
+                    </arg>
+                    <arg name="timeout" type="boolean"/>
+                    <arg name="before" type="boolean"/>
+                    <arg name="event1" list="">
+                        <value>EVT_RD</value>
+                        <value>EVT_WR</value>
+                        <value reqs="THREADS">EVT_HUP</value>
+                    </arg>
+                    <arg name="event2" list="">
+                        <value>EVT_WR</value>
+                        <value>EVT_RD</value>
+                        <value>EVT_RD</value>
+                    </arg>
+                </run>
+                <!-- TCP listen iterations -->
+                <run>
+                    <script name="iomux_wrong_event">
+                        <req id="TIME_CONSUMING"/>
+                    </script>
+                    <!-- The test uses tcp_passive to perform
+                         tcp listen iteration. -->
+                    <arg name="sock_type" type="socket_type_all">
+                        <value>tcp_passive</value>
+                    </arg>
+                    <arg name="timeout" type="boolean"/>
+                    <arg name="before" type="boolean"/>
+                    <arg name="event1">
+                        <value reqs="THREADS">EVT_HUP</value>
+                    </arg>
+                    <arg name="event2">
+                        <value>EVT_RD</value>
+                    </arg>
+                </run>
+                <!-- UDP iterations -->
+                <run>
+                    <script name="iomux_wrong_event">
+                        <req id="TIME_CONSUMING"/>
+                    </script>
+                    <arg name="sock_type" type="socket_type_all">
+                        <value>udp</value>
+                        <value>udp_notconn</value>
+                    </arg>
+                    <arg name="timeout" type="boolean">
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="before" type="boolean"/>
+                    <arg name="event1">
+                        <value reqs="THREADS">EVT_HUP</value>
+                    </arg>
+                    <arg name="event2">
+                        <value>EVT_RD</value>
+                    </arg>
+                </run>
+            </session>
+        </run>
+
+        <run>
+            <script name="iomux_sigmask">
+              <req id="SIGNALS"/>
+            </script>
+            <arg name="sig1">
+                <value>SIGUSR1</value>
+            </arg>
+            <arg name="sig2">
+                <value>SIGUSR2</value>
+            </arg>
+            <arg name="env">
+                <!-- IPv4 envs -->
+                <value>IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr':inet:unicast}},'pco_killer'='pco_tst'</value>
+                <!-- IPv6 envs -->
+                <value reqs="IP6,IP6_ONLOAD">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast}}</value>
+                <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:unicast}},'pco_killer'='pco_tst'</value>
+            </arg>
+            <arg name="iomux">
+                <value reqs="SELECT,PSELECT">pselect</value>
+                <value reqs="POLL,PPOLL">ppoll</value>
+                <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="thread_close_sock">
+                <req id="THREADS"/>
+                <req id="FDS_NON_MT_SAFE"/>
+            </script>
+            <arg name="iomux" type="iomux_with_oo_epoll"/>
+            <arg name="env">
+                <!-- IPv4 env -->
+                <value>{{{'pco_iut1':IUT,'pco_iut2':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast},{{'pco_tst':tester},addr:'tst_addr1':inet:unicast,addr:'tst_addr2':inet:unicast}}</value>
+                <!-- IPv6 env -->
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut1':IUT,'pco_iut2':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr1':inet6:unicast,addr:'tst_addr2':inet6:unicast}}</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="data_size">
+                <value>512</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="thread_shut_sock">
+                <req id="THREADS"/>
+                <req id="SOCK_STREAM"/>
+                <req id="FDS_NON_MT_SAFE"/>
+            </script>
+            <arg name="env">
+                <!-- IPv4 env -->
+                <value>{{{'pco_iut1':IUT,'pco_iut2':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <!-- IPv6 env -->
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut1':IUT,'pco_iut2':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast}}</value>
+            </arg>
+            <arg name="iomux" type="iomux_with_oo_epoll"/>
+            <arg name="check_event">
+                <value>EVT_RD</value>
+                <value>EVT_WR</value>
+                <value>EVT_RDWR</value>
+            </arg>
+            <arg name="howto">
+                <value>SHUT_RD</value>
+                <value>SHUT_WR</value>
+                <value>SHUT_RDWR</value>
+            </arg>
+            <arg name="ready" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="udp_zero_dgram">
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="iomux" type="iomux_with_oo_epoll"/>
+            <arg name="iomux_before" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="timeout" list="">
+                <value>0</value>
+                <value>2000</value>
+                <value>2000</value>
+            </arg>
+        </run>
+
+        <run>
+            <session>
+              <!--  Some of the next test iterations are marked as
+              TIME_CONSUMING.  They are no more time consuming than
+              others, but there are A LOT of iterations, so we should ban
+              some of them.
+              TRC is not updated to know about these TIME_CONSUMING reqs.
+              -->
+                <arg name="sock_type" type="sock_stream_dgram"/>
+                <arg name="iomux1">
+                    <value reqs="SELECT">select</value>
+                    <value reqs="POLL">poll</value>
+                    <value reqs="EPOLL">epoll</value>
+                </arg>
+                <arg name="iomux2">
+                    <value reqs="SELECT,TIME_CONSUMING">select</value>
+                    <value reqs="POLL">poll</value>
+                    <value reqs="EPOLL,TIME_CONSUMING">epoll</value>
+                </arg>
+                <arg name="time2run">
+                    <value>10</value>
+                </arg>
+
+                <run>
+                    <script name="fork_robust">
+                        <req id="STRESS"/>
+                        <req id="FORK"/>
+                    </script>
+                    <arg name="env">
+                      <value reqs="L2_TS" ref="env.peer2peer"/>
+                      <value reqs="TIME_CONSUMING" ref="env.peer2peer_tst"/>
+                      <value reqs="ENV-LOOPBACK,TIME_CONSUMING" ref="env.peer2peer_lo"/>
+                      <value reqs="L2_TS" ref="env.peer2peer_ipv6"/>
+                      <value reqs="TIME_CONSUMING" ref="env.peer2peer_tst_ipv6"/>
+                      <value reqs="ENV-LOOPBACK,TIME_CONSUMING" ref="env.peer2peer_lo_ipv6"/>
+                    </arg>
+                    <arg name="method">
+                        <value>inherit</value>
+                    </arg>
+                </run>
+                <run>
+                    <script name="fork_robust">
+                        <req id="STRESS"/>
+                        <req id="FORK"/>
+                    </script>
+                    <arg name="env">
+                        <value reqs="ENV-LOOPBACK,TIME_CONSUMING">{{{'pco_iut':IUT,'pco_tst':IUT},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</value>
+                        <value reqs="ENV-LOOPBACK,TIME_CONSUMING,IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst':IUT},addr:'iut_addr':inet6:unicast,addr:'tst_addr':inet6:unicast}}</value>
+                    </arg>
+                    <arg name="method">
+                        <value>forkandexec</value>
+                    </arg>
+                </run>
+                <run>
+                    <script name="pair_bidir_perf">
+                        <req id="PERFORMANCE"/>
+                        <req id="TIME_CONSUMING"/>
+                    </script>
+                    <arg name="env">
+<!-- IPv4 -->
+<!-- On different hosts -->
+                        <value reqs="L2_TS">{{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast},{{'pco_tst':tester},addr:'iut2_addr':inet:unicast}},'pco_iut1'='pco_iut','pco_iut2'='pco_tst'</value>
+<!-- On one host different processes using unicast addresses -->
+                        <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT},{'pco_iut2':IUT},addr:'iut1_addr':inet:unicast,addr:'iut2_addr':inet:unicast}},'pco_iut1'='pco_iut'</value>
+<!-- On one host different processes using unicast and loopback addresses -->
+                        <value reqs="ENV-LOOPBACK,TIME_CONSUMING">{{{'pco_iut':IUT},{'pco_iut2':IUT},addr:'iut1_addr':inet:loopback,addr:'iut2_addr':inet:unicast}},'pco_iut1'='pco_iut'</value>
+<!-- On one host different processes using loopback addresses -->
+                        <value reqs="ENV-LOOPBACK,TIME_CONSUMING">{{{'pco_iut':IUT},{'pco_iut2':IUT},addr:'iut1_addr':inet:loopback,addr:'iut2_addr':inet:loopback}},'pco_iut1'='pco_iut'</value>
+<!-- On one host one process two threads using unicast addresses -->
+                        <value reqs="ENV-LOOPBACK,TIME_CONSUMING">{{{'pco_iut':IUT,'pco_iut2':IUT},addr:'iut1_addr':inet:unicast,addr:'iut2_addr':inet:unicast}},'pco_iut1'='pco_iut'</value>
+<!-- On one host one process two threads using uc and lb addresses -->
+                        <value reqs="ENV-LOOPBACK,TIME_CONSUMING">{{{'pco_iut':IUT,'pco_iut2':IUT},addr:'iut1_addr':inet:loopback,addr:'iut2_addr':inet:unicast}},'pco_iut1'='pco_iut'</value>
+<!-- On one host one process two threads using loopback addresses -->
+                        <value reqs="ENV-LOOPBACK,TIME_CONSUMING">{{{'pco_iut':IUT,'pco_iut2':IUT},addr:'iut1_addr':inet:loopback,addr:'iut2_addr':inet:loopback}},'pco_iut1'='pco_iut'</value>
+<!-- IPv6 -->
+<!-- On different hosts -->
+                        <value reqs="L2_TS,IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut1_addr':inet6:unicast},{{'pco_tst':tester},addr:'iut2_addr':inet6:unicast}},'pco_iut1'='pco_iut','pco_iut2'='pco_tst'</value>
+<!-- On one host different processes using unicast addresses -->
+                        <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_iut2':IUT},addr:'iut1_addr':inet6:unicast,addr:'iut2_addr':inet6:unicast}},'pco_iut1'='pco_iut'</value>
+<!-- On one host different processes using unicast and loopback addresses -->
+                        <value reqs="ENV-LOOPBACK,TIME_CONSUMING,IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_iut2':IUT},addr:'iut1_addr':inet6:loopback,addr:'iut2_addr':inet6:unicast}},'pco_iut1'='pco_iut'</value>
+<!-- On one host different processes using loopback addresses -->
+                        <value reqs="ENV-LOOPBACK,TIME_CONSUMING,IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_iut2':IUT},addr:'iut1_addr':inet6:loopback,addr:'iut2_addr':inet6:loopback}},'pco_iut1'='pco_iut'</value>
+<!-- On one host one process two threads using unicast addresses -->
+                        <value reqs="ENV-LOOPBACK,TIME_CONSUMING,IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_iut2':IUT},addr:'iut1_addr':inet6:unicast,addr:'iut2_addr':inet6:unicast}},'pco_iut1'='pco_iut'</value>
+<!-- On one host one process two threads using uc and lb addresses -->
+                        <value reqs="ENV-LOOPBACK,TIME_CONSUMING,IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_iut2':IUT},addr:'iut1_addr':inet6:loopback,addr:'iut2_addr':inet6:unicast}},'pco_iut1'='pco_iut'</value>
+<!-- On one host one process two threads using loopback addresses -->
+                        <value reqs="ENV-LOOPBACK,TIME_CONSUMING,IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_iut2':IUT},addr:'iut1_addr':inet6:loopback,addr:'iut2_addr':inet6:loopback}},'pco_iut1'='pco_iut'</value>
+                    </arg>
+                </run>
+
+            </session>
+        </run>
+        
+        <run>
+            <script name="trio_bidir_perf">
+                <req id="SOCK_STREAM"/>
+                <req id="SOCK_DGRAM"/>
+                <req id="ENV-LOOPBACK"/>
+                <req id="TIME_CONSUMING"/>
+            </script>
+            <arg name="time2run">
+                <value>20</value>
+            </arg>
+            <arg name="sock_type_12" type="sock_stream_dgram" list="">
+                <value>SOCK_STREAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="sock_type_23" type="sock_stream_dgram" list="">
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="sock_type_31" type="sock_stream_dgram" list="">
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="iomux1" list="">
+                <value reqs="SELECT">select</value>
+                <value reqs="SELECT">select</value>
+                <value reqs="SELECT">select</value>
+                <value reqs="POLL">poll</value>
+                <value reqs="SELECT">select</value>
+                <value reqs="SELECT">select</value>
+                <value reqs="SELECT">select</value>
+                <value reqs="EPOLL">epoll</value>
+                <value reqs="EPOLL">epoll</value>
+                <value reqs="EPOLL">epoll</value>
+                <value reqs="EPOLL">epoll</value>
+                <value reqs="POLL">poll</value>
+            </arg>
+            <arg name="iomux2" list="">
+                <value reqs="SELECT">select</value>
+                <value reqs="SELECT,PSELECT">pselect</value>
+                <value reqs="POLL">poll</value>
+                <value reqs="SELECT">select</value>
+                <value reqs="SELECT">select</value>
+                <value reqs="SELECT,PSELECT">pselect</value>
+                <value reqs="EPOLL">epoll</value>
+                <value reqs="SELECT">select</value>
+                <value reqs="EPOLL">epoll</value>
+                <value reqs="SELECT,PSELECT">pselect</value>
+                <value reqs="POLL">poll</value>
+                <value reqs="EPOLL">epoll</value>
+            </arg>
+            <arg name="iomux3" list="">
+                <value reqs="POLL">poll</value>
+                <value reqs="POLL">poll</value>
+                <value reqs="SELECT">select</value>
+                <value reqs="SELECT,PSELECT">pselect</value>
+                <value reqs="EPOLL">epoll</value>
+                <value reqs="EPOLL">epoll</value>
+                <value reqs="SELECT">select</value>
+                <value reqs="SELECT,PSELECT">pselect</value>
+                <value reqs="POLL">poll</value>
+                <value reqs="POLL">poll</value>
+                <value reqs="EPOLL">epoll</value>
+                <value reqs="SELECT,PSELECT">pselect</value>
+            </arg>
+            <arg name="env">
+                <!-- IPv4 envs -->
+                <!-- All on one host, three threads in one process -->
+                <value>{{{'pco_iut1':IUT,'pco_iut2':IUT,'pco_iut3':IUT},addr:'iut12_addr':inet:loopback,addr:'iut21_addr':inet:loopback,addr:'iut23_addr':inet:unicast,addr:'iut32_addr':inet:unicast,addr:'iut13_addr':inet:loopback,addr:'iut31_addr':inet:unicast}}</value>
+                <!-- All on one host, two threads in one process -->
+                <value>{{{'pco_iut1':IUT,'pco_iut2':IUT},{'pco_iut3':IUT},addr:'iut12_addr':inet:loopback,addr:'iut21_addr':inet:loopback,addr:'iut23_addr':inet:unicast,addr:'iut32_addr':inet:unicast,addr:'iut13_addr':inet:loopback,addr:'iut31_addr':inet:unicast}}</value>
+                <!-- On two hosts, two threads in one process -->
+                <value reqs="L2_TS">{{{'pco_iut1':IUT,'pco_iut2':IUT},addr:'iut12_addr':inet:loopback,addr:'iut21_addr':inet:loopback,addr:'iut23_addr':inet:unicast,addr:'iut13_addr':inet:unicast},{{'pco_iut3':tester},addr:'iut31_addr':inet:unicast,addr:'iut32_addr':inet:unicast}}</value>
+                <!-- On two hosts, all processes are different -->
+                <value reqs="L2_TS">{{{'pco_iut1':IUT},{'pco_iut2':IUT},addr:'iut12_addr':inet:loopback,addr:'iut21_addr':inet:loopback,addr:'iut23_addr':inet:unicast,addr:'iut13_addr':inet:unicast},{{'pco_iut3':tester},addr:'iut31_addr':inet:unicast,addr:'iut32_addr':inet:unicast}}</value>
+                <!-- IPv6 envs -->
+                <!-- All on one host, three threads in one process -->
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut1':IUT,'pco_iut2':IUT,'pco_iut3':IUT},addr:'iut12_addr':inet6:loopback,addr:'iut21_addr':inet6:loopback,addr:'iut23_addr':inet6:unicast,addr:'iut32_addr':inet6:unicast,addr:'iut13_addr':inet6:loopback,addr:'iut31_addr':inet6:unicast}}</value>
+                <!-- All on one host, two threads in one process -->
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut1':IUT,'pco_iut2':IUT},{'pco_iut3':IUT},addr:'iut12_addr':inet6:loopback,addr:'iut21_addr':inet6:loopback,addr:'iut23_addr':inet6:unicast,addr:'iut32_addr':inet6:unicast,addr:'iut13_addr':inet6:loopback,addr:'iut31_addr':inet6:unicast}}</value>
+                <!-- On two hosts, two threads in one process -->
+                <value reqs="L2_TS,IP6,IP6_ONLOAD">{{{'pco_iut1':IUT,'pco_iut2':IUT},addr:'iut12_addr':inet6:loopback,addr:'iut21_addr':inet6:loopback,addr:'iut23_addr':inet6:unicast,addr:'iut13_addr':inet6:unicast},{{'pco_iut3':tester},addr:'iut31_addr':inet6:unicast,addr:'iut32_addr':inet6:unicast}}</value>
+                <!-- On two hosts, all processes are different -->
+                <value reqs="L2_TS,IP6,IP6_ONLOAD">{{{'pco_iut1':IUT},{'pco_iut2':IUT},addr:'iut12_addr':inet6:loopback,addr:'iut21_addr':inet6:loopback,addr:'iut23_addr':inet6:unicast,addr:'iut13_addr':inet6:unicast},{{'pco_iut3':tester},addr:'iut31_addr':inet6:unicast,addr:'iut32_addr':inet6:unicast}}</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="multiple_iomux_nonblock_sock">
+              <req id="ENV-LOOPBACK"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:loopback}}</value>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr':inet6:loopback}}</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="iomux" type="iomux"/>
+            <arg name="ef_poll_nonblock_fast_usec">
+                <value>0</value>
+                <value>1000</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="read_write_nbio"/>
+            <arg name="env">
+              <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="iomux" type="iomux_with_oo_epoll"/>
+            <arg name="add_flags">
+              <value>none</value>
+            </arg>
+        </run>
+        <run>
+            <script name="read_write_nbio"/>
+            <arg name="env">
+              <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="iomux" type="iomux_with_oo_epoll">
+              <value>epoll</value>
+              <value>epoll_pwait</value>
+            </arg>
+            <arg name="add_flags">
+              <value reqs="EPOLLET">epollet</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="rdhup">
+                <req id="SOCK_STREAM"/>
+                <req id="OOL1509"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="who" list="">
+                <value>IUT</value>
+                <value>IUT</value>
+                <value>IUT</value>
+
+                <value>TST</value>
+                <value>TST</value>
+                <value>TST</value>
+                <value>TST</value>
+            </arg>
+            <arg name="shutdown_how" list="">
+                <!-- ZF itself only supports SHUT_WR option, ZF shim supports
+                     other events but the test fails because of ZF shim
+                     implementation which fixing is not expedient, i.e.
+                     testing ZF shim is not what we are interested. -->
+                <value reqs="ZF_INCOMPATIBLE">SHUT_RD</value>
+                <value>SHUT_WR</value>
+                <value reqs="ZF_INCOMPATIBLE">SHUT_RDWR</value>
+
+                <value>SHUT_NONE</value>
+                <value reqs="ZF_INCOMPATIBLE">SHUT_RD</value>
+                <value>SHUT_WR</value>
+                <value reqs="ZF_INCOMPATIBLE">SHUT_RDWR</value>
+            </arg>
+            <arg name="special">
+                <value>NONE</value>
+            </arg>
+            <arg name="iomux" type="iomux">
+                <value>poll</value>
+                <value>epoll</value>
+            </arg>
+        </run>
+        <run>
+            <script name="rdhup">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="who">
+                <value>TST</value>
+            </arg>
+            <arg name="shutdown_how" list="">
+                <value>SHUT_NONE</value>
+
+                <value>SHUT_NONE</value>
+                <value>SHUT_WR</value>
+                <value>SHUT_RDWR</value>
+            </arg>
+            <arg name="special" list="">
+                <value>SO_LINGER</value>
+
+                <value>MSG_MORE</value>
+                <value>MSG_MORE</value>
+                <value>MSG_MORE</value>
+            </arg>
+            <arg name="iomux" type="iomux">
+                <value>poll</value>
+                <value>epoll</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="udp_send_flooding">
+                <req id="SOCK_DGRAM"/>
+                <!-- The test cannot achieve desired state with ZF shim, but
+                     there is test zetaferno-ts/muxer/udp_out instead. -->
+                <req id="ZF_INCOMPATIBLE"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="iomux" type="iomux"/>
+            <arg name="send_func" type="send_func" list="flag">
+                <value>write</value>
+                <value>writev</value>
+                <value>send</value>
+                <value>send</value>
+                <value>sendto</value>
+                <value>sendto</value>
+                <value>sendmsg</value>
+                <value>sendmsg</value>
+            </arg>
+            <arg name="blocking" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="msg_dontwait" type="boolean" list="flag">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+        <!-- Blocking iterations -->
+        <run>
+            <script name="udp_send_flooding">
+                <req id="SOCK_DGRAM"/>
+                <!-- The test cannot achieve desired state with ZF shim, but
+                     there is test zetaferno-ts/muxer/udp_out instead. -->
+                <req id="ZF_INCOMPATIBLE"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="iomux" type="iomux"/>
+            <arg name="send_func" type="send_func">
+                <value>write</value>
+                <value>writev</value>
+                <value>send</value>
+                <value>send</value>
+                <value>sendto</value>
+                <value>sendto</value>
+                <value>sendmsg</value>
+                <value>sendmsg</value>
+            </arg>
+            <arg name="blocking" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="msg_dontwait" type="boolean">
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="nb_accept_read">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="type" type="iomux_with_oo_epoll"/>
+        </run>
+
+        <run>
+          <session track_conf="silent">
+            <!-- Look for values after the end of session, Tester does not
+                 allow to specify them before its beginning. Values should be
+                 specified outside of session so that it is iterated as a
+                 whole for each value (including prologue/epilogue). -->
+             <arg name="env">
+              <value ref="env.peer2peer_gw"/>
+             </arg>
+
+            <epilogue>
+              <script name="../gateways_epilogue"/>
+            </epilogue>
+
+            <run>
+              <script name="iomux_after_connect" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+                <!-- The test fails because of ZF shim problems which fix is
+                     inexpedient. Analogue test should be implemented in ZF
+                     direct test suite, see bug 64213 for details. -->
+                <req id="ZF_INCOMPATIBLE"/>
+              </script>
+              <arg name="env">
+                <value ref="env.peer2peer_gw"/>
+                <value ref="env.peer2peer_gw_ipv6"/>
+              </arg>
+              <arg name="iomux" type="iomux_with_oo_epoll"/>
+              <arg name="connection_result" type="conn_problem">
+                <value>ok</value>
+                <value>refused</value>
+                <!-- In this case we need update the variable tcp_syn_retries
+                     and restart RPC server. It breaks the one stack testing.
+                -->
+                <value reqs="NO_REUSE_STACK">timeout</value>
+              </arg>
+            </run>
+
+            <run>
+              <script name="ack_with_data" track_conf="silent"/>
+              <arg name="env">
+                <value ref="env.peer2peer_gw"/>
+                <value ref="env.peer2peer_tst_gw"/>
+                <value ref="env.peer2peer_gw_ipv6"/>
+                <value ref="env.peer2peer_tst_gw_ipv6"/>
+              </arg>
+              <arg name="function" type="iomux_with_recv">
+                <value>select</value>
+                <value>pselect</value>
+                <value>poll</value>
+                <value>ppoll</value>
+                <value>oo_epoll</value>
+                <value>recv</value>
+              </arg>
+              <arg name="epoll_flags" type="epoll_flags">
+                <value>none</value>
+              </arg>
+              <arg name="blocking_func" type="boolean"/>
+              <arg name="blocking_accept" type="boolean"/>
+            </run>
+
+            <run>
+              <script name="ack_with_data" track_conf="silent"/>
+              <arg name="env">
+                <value ref="env.peer2peer_gw"/>
+                <value ref="env.peer2peer_tst_gw"/>
+                <value ref="env.peer2peer_gw_ipv6"/>
+                <value ref="env.peer2peer_tst_gw_ipv6"/>
+              </arg>
+              <arg name="function" type="iomux_with_recv">
+                <value>epoll</value>
+                <value>epoll_pwait</value>
+              </arg>
+              <arg name="epoll_flags" type="epoll_flags"/>
+              <arg name="blocking_func" type="boolean"/>
+              <arg name="blocking_accept" type="boolean"/>
+            </run>
+          </session>
+        </run>
+
+    </session>
+</package>

@@ -1,0 +1,70 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup ioctls IOCTL Requests
+@ingroup sockapi
+@{
+
+<!--
+  - Specify full package name of the test package node after 'page'
+  - keyword (from root package to the node with '_' separator between
+  - names).
+  -
+  - The rest of the string in title of the test package.
+  -
+  - State brief description of the node in the next paragraph.
+  -->
+
+The package is intended to test a set of IOCTL requests deal with sockets.
+
+The following requests are tested:
+    - @c SIOCGSTAMP;
+    - @c SIOCSPGRP / @c SIOCGPGRP;
+    - @c FIOASYNC;
+    - @c FIONREAD / @c SIOCINQ;
+    - @c FIONBIO;
+    - @c SIOCATMARK;
+    - interface configuration requests.
+
+@author Oleg Kravtsov <Oleg.Kravtsov@oktetlabs.ru>
+
+
+@par Items:
+
+-# @ref ioctls-siocgstamp
+-# @ref ioctls-siocgstamp_null
+-# @ref ioctls-siocgstamp_two_senders
+-# @ref ioctls-siocpgrp
+-# @ref ioctls-fioasync
+-# @ref ioctls-fionbio_thread_unblock_send
+-# @ref ioctls-fionbio_thread_unblock_recv
+-# @ref ioctls-fionbio_thread_unblock_connect
+-# @ref ioctls-fionbio_thread_unblock_accept
+-# @ref ioctls-fionbio_accept
+-# @ref ioctls-fionbio_connect
+-# @ref ioctls-fionbio
+-# @ref ioctls-fionread_udp
+-# @ref ioctls-fionread_tcp
+-# @ref ioctls-fionread_oob
+-# @ref ioctls-fionread_pipe
+-# @ref ioctls-fionread_listening
+-# @ref ioctls-fionread_syn_sent
+-# @ref ioctls-siocatmark
+-# @ref ioctls-siocatmark_oobinline
+-# @ref ioctls-oob_marker_moves
+-# @ref ioctls-siocgifconf
+-# @ref ioctls-siocgifbrdaddr
+-# @ref ioctls-siocgifhwaddr
+-# @ref ioctls-siocifmtu
+-# @ref ioctls-siocgifaddr
+-# @ref ioctls-siocgifnameindex
+-# @ref ioctls-siocifnetmask
+-# @ref ioctls-siocifflags
+-# @ref ioctls-siocsif_inval_sa_family
+-# @ref ioctls-siocsif_no_perm
+-# @ref ioctls-siocif_ifr_name_nonexist
+-# @ref ioctls-siocgifaddr_no_addr
+
+@}
+*/

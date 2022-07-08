@@ -1,0 +1,3662 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+
+    <description>Socket options</description>
+
+    <author mailto="Oleg.Kravtsov@oktetlabs.ru"/>
+
+    <req id="SOCKOPTS" sticky="true"/>
+
+    <session>
+        <var name="env.p2p_loopback_threads">
+            <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT,'pco_tst':IUT},addr:'iut_addr':inet:loopback,addr:'tst_addr':inet:loopback,if:'iut_if'}},'iut_if'='iut_if'</value>
+        </var>
+        <var name="env.p2p_loopback_threads_ip6">
+            <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst':IUT},addr:'iut_addr':inet6:loopback,addr:'tst_addr':inet6:loopback,if:'iut_if'}},'iut_if'='iut_if'</value>
+        </var>
+
+        <!--- @subsection arg_types_env_iut_native env.iut_native
+        IUT and tester RPC servers with issued IPv4 address and pco_native on IUT host, but TESTER type
+        -->
+        <var name="env.iut_native" global="true">
+            <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,{'pco_native':tester}},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+        </var>
+
+        <!--- @subsection arg_types_env_iut_native_ipv6 env.iut_native_ipv6
+        IUT and tester RPC servers with issued IPv6 address and pco_native on IUT host, but TESTER type
+        -->
+        <var name="env.iut_native_ipv6" global="true">
+            <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast,{'pco_native':tester}},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast}}</value>
+        </var>
+        <var name="env.iut_native_only">
+            <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,{'pco_native':tester}}}</value>
+        </var>
+
+        <!-- Note: enums icmp{4,6}_* are used for tests error_icmp_recvmmsg and
+                   error_send_recv_icmp. These enums MUST used together as lists.
+         -->
+        <enum name="icmp4_type">
+            <value>3</value> <!-- Destination Unreachable -->
+            <value>3</value> <!-- Destination Unreachable -->
+            <value>3</value> <!-- Destination Unreachable -->
+            <value>3</value> <!-- Destination Unreachable -->
+            <value>3</value> <!-- Destination Unreachable -->
+            <value>11</value> <!-- Time Exceeded -->
+            <value>11</value> <!-- Time Exceeded -->
+            <value>12</value> <!-- Parameter Problem -->
+        </enum>
+        <enum name="icmp4_code">
+            <value>0</value> <!-- net unreachable -->
+            <value>1</value> <!-- host unreachable -->
+            <value>2</value> <!-- protocol unreachable -->
+            <value>3</value> <!-- port unreachable -->
+            <value>5</value> <!-- source route failed -->
+            <value>0</value> <!-- time to live exceeded in transit -->
+            <value>1</value> <!-- fragment reassembly time exceeded -->
+            <value>0</value> <!-- pointer indicates the error -->
+        </enum>
+        <enum name="icmp4_exp_errno_with_recverr">
+            <value>ENETUNREACH</value>
+            <value>EHOSTUNREACH</value>
+            <value>ENOPROTOOPT</value>
+            <value>ECONNREFUSED</value>
+            <value>EOPNOTSUPP</value>
+            <value>EHOSTUNREACH</value>
+            <value>EHOSTUNREACH</value>
+            <value>EPROTO</value>
+        </enum>
+        <enum name="icmp4_exp_errno_without_recverr">
+            <value>0</value>
+            <value>0</value>
+            <value>ENOPROTOOPT</value>
+            <value>ECONNREFUSED</value>
+            <value>0</value>
+            <value>0</value>
+            <value>0</value>
+            <value>EPROTO</value>
+        </enum>
+        <!-- End of set enums icmp4_* -->
+
+        <!-- Start of set enums icmp6_* -->
+        <enum name="icmp6_type">
+            <value>1</value> <!-- Destination Unreachable -->
+            <value>1</value> <!-- Destination Unreachable -->
+            <value>4</value> <!-- Parameter Problem -->
+            <value>1</value> <!-- Destination Unreachable -->
+            <value>1</value> <!-- Destination Unreachable -->
+            <value>3</value> <!-- Time Exceeded -->
+            <value>3</value> <!-- Time Exceeded -->
+            <value>4</value> <!-- Parameter Problem -->
+        </enum>
+        <enum name="icmp6_code">
+            <value>0</value> <!-- no route to destination -->
+            <value>3</value> <!-- address unreachable -->
+            <value>1</value> <!-- unrecognized next header type encountered -->
+            <value>4</value> <!-- port unreachable -->
+            <value>2</value> <!-- beyond scope of source address -->
+            <value>0</value> <!-- hop limit exceeded in transit -->
+            <value>1</value> <!-- fragment reassembly time exceeded -->
+            <value>0</value> <!-- erroneous header field encountered -->
+        </enum>
+        <enum name="icmp6_exp_errno_with_recverr">
+            <value>ENETUNREACH</value>
+            <value>EHOSTUNREACH</value>
+            <value>EPROTO</value>
+            <value>ECONNREFUSED</value>
+            <value>EHOSTUNREACH</value>
+            <value>EHOSTUNREACH</value>
+            <value>EHOSTUNREACH</value>
+            <value>EPROTO</value>
+        </enum>
+        <enum name="icmp6_exp_errno_without_recverr">
+            <value>0</value>
+            <value>0</value>
+            <value>EPROTO</value>
+            <value>ECONNREFUSED</value>
+            <value>0</value>
+            <value>0</value>
+            <value>0</value>
+            <value>EPROTO</value>
+        </enum>
+        <!-- End of set enums icmp6_* -->
+
+        <run>
+          <session>
+            <arg name="opt_name">
+              <value>SO_BINDTODEVICE</value>
+              <value>SO_DEBUG</value>
+              <value>SO_REUSEADDR</value>
+              <value>SO_REUSEPORT</value>
+              <value>SO_DONTROUTE</value>
+              <value>SO_BROADCAST</value>
+              <value>SO_SNDBUF</value>
+              <value>SO_RCVBUF</value>
+              <value>SO_PRIORITY</value>
+              <value>SO_RCVLOWAT</value>
+              <value>SO_SNDLOWAT</value>
+              <value>SO_RCVTIMEO</value>
+              <value>SO_SNDTIMEO</value>
+              <value>SO_TYPE</value>
+              <value>SO_ERROR</value>
+              <value>SO_ACCEPTCONN</value>
+              <value>SO_KEEPALIVE</value>
+              <value>SO_LINGER</value>
+              <value>SO_OOBINLINE</value>
+              <value>SO_TIMESTAMP</value>
+              <value>SO_TIMESTAMPNS</value>
+              <value reqs="SO_TIMESTAMPING,HW_PTP_RX_TIMESTAMP">SO_TIMESTAMPING</value>
+              <value>SO_BSDCOMPAT</value>
+              <value>SO_DOMAIN</value>
+              <value>SO_MARK</value>
+              <value>SO_PASSCRED</value>
+              <value>SO_PROTOCOL</value>
+              <value>SO_RCVBUFFORCE</value>
+              <value>SO_SNDBUFFORCE</value>
+<!--  Option is not supported in TE
+              <value>SO_PEERCRED</value>
+-->
+
+              <value>IP_OPTIONS</value>
+              <value>IP_PKTOPTIONS</value>
+              <value>IP_MTU_DISCOVER</value>
+              <value>IP_ADD_MEMBERSHIP</value>
+              <value>IP_DROP_MEMBERSHIP</value>
+              <value>IP_FREEBIND</value>
+              <value>IP_HDRINCL</value>
+              <value>IP_MTU</value>
+              <value>IP_MULTICAST_ALL</value>
+              <value>IP_MULTICAST_IF</value>
+              <value>IP_MULTICAST_LOOP</value>
+              <value>IP_MULTICAST_TTL</value>
+              <value>IP_NODEFRAG</value>
+              <value>IP_PKTINFO</value>
+              <value>IP_RECVERR</value>
+              <value>IP_RECVOPTS</value>
+              <value>IP_RECVORIGDSTADDR</value>
+              <value>IP_RECVTOS</value>
+              <value>IP_RECVTTL</value>
+              <value>IP_RETOPTS</value>
+              <value>IP_ROUTER_ALERT</value>
+              <value>IP_TOS</value>
+              <value>IP_TRANSPARENT</value>
+              <value>IP_TTL</value>
+              <value>IP_ADD_SOURCE_MEMBERSHIP</value>
+              <value>IP_DROP_SOURCE_MEMBERSHIP</value>
+              <value>IP_BLOCK_SOURCE</value>
+              <value>IP_UNBLOCK_SOURCE</value>
+<!-- Option is not supported in TE
+              <value>IP_MSFILTER</value>
+-->
+
+              <value>TCP_DEFER_ACCEPT</value>
+              <value>TCP_USER_TIMEOUT</value>
+              <value>TCP_CORK</value>
+              <value>TCP_INFO</value>
+              <value>TCP_KEEPCNT</value>
+              <value>TCP_KEEPIDLE</value>
+              <value>TCP_KEEPINTVL</value>
+              <value>TCP_LINGER2</value>
+              <value>TCP_MAXSEG</value>
+              <value>TCP_NODELAY</value>
+              <value>TCP_QUICKACK</value>
+              <value>TCP_SYNCNT</value>
+              <value>TCP_WINDOW_CLAMP</value>
+
+              <value>UDP_CORK</value>
+            </arg>
+
+            <arg name="env">
+              <value>IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if'}}</value>
+            </arg>
+
+            <arg name="domain" type="socket_domain" list="dom">
+              <value>PF_INET</value>
+              <value>PF_INET</value>
+              <value reqs="PF_INET6">PF_INET6</value>
+              <value reqs="PF_INET6">PF_INET6</value>
+              <value>PF_INET</value>
+              <value>PF_INET</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"  list="dom">
+              <value>SOCK_STREAM</value>
+              <value>SOCK_DGRAM</value>
+              <value>SOCK_STREAM</value>
+              <value>SOCK_DGRAM</value>
+              <value>SOCK_STREAM</value>
+              <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="is_pipe" list="dom">
+              <value>FALSE</value>
+              <value>FALSE</value>
+              <value>FALSE</value>
+              <value>FALSE</value>
+              <value>TRUE</value>
+              <value>TRUE</value>
+            </arg>
+            <arg name="write_end" type="boolean" list="dom">
+              <value>FALSE</value>
+              <value>FALSE</value>
+              <value>FALSE</value>
+              <value>FALSE</value>
+              <value>FALSE</value>
+              <value>TRUE</value>
+            </arg>
+
+            <run>
+              <script name="get_supported">
+                <req ref="opt_name"/>
+              </script>
+            </run>
+            <run>
+              <script name="set_supported">
+                <req ref="opt_name"/>
+                <req id="BNB_PARAM_CHECK"/>
+              </script>
+            </run>
+
+            <run>
+              <script name="default_opts">
+                <req id="ONLOAD_ONLY"/>
+                <req ref="opt_name"/>
+              </script>
+              <arg name="env" ref="env.iut_native_only"/>
+            </run>
+
+          </session>
+        </run>
+
+        <run>
+          <session>
+            <arg name="opt_name">
+              <value>IPV6_DSTOPTS</value>
+              <value>IPV6_RECVHOPLIMIT</value>
+              <value>IPV6_HOPOPTS</value>
+              <value>IPV6_NEXTHOP</value>
+              <value>IPV6_V6ONLY</value>
+              <value>IPV6_ROUTER_ALERT</value>
+              <value>IPV6_ADDRFORM</value>
+              <value>IPV6_AUTHHDR</value>
+              <value>IPV6_CHECKSUM</value>
+              <value>IPV6_MULTICAST_HOPS</value>
+              <value>IPV6_MULTICAST_LOOP</value>
+              <value>IPV6_RECVPKTINFO</value>
+              <value>IPV6_UNICAST_HOPS</value>
+              <value>IPV6_ADD_MEMBERSHIP</value>
+              <value>IPV6_DROP_MEMBERSHIP</value>
+              <value>IPV6_MTU</value>
+              <value>IPV6_MTU_DISCOVER</value>
+              <value>IPV6_MULTICAST_IF</value>
+              <value>IPV6_RTHDR</value>
+              <value>IPV6_FLOWINFO</value>
+              <value>IPV6_RECVERR</value>
+              <value>IPV6_HOPLIMIT</value>
+            </arg>
+
+            <arg name="env">
+              <value>IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if'}}</value>
+            </arg>
+
+            <arg name="domain" type="socket_domain" list="dom">
+              <value reqs="PF_INET6">PF_INET6</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="is_pipe">
+              <value>FALSE</value>
+            </arg>
+            <arg name="write_end" type="boolean">
+              <value>FALSE</value>
+            </arg>
+
+            <req id="IP6_ONLOAD" sticky="true"/>
+            <run>
+              <script name="get_supported"/>
+            </run>
+            <run>
+              <script name="set_supported"/>
+            </run>
+
+            <run>
+              <script name="default_opts">
+                <req id="ONLOAD_ONLY"/>
+              </script>
+              <arg name="env" ref="env.iut_native_only"/>
+            </run>
+
+          </session>
+        </run>
+
+        <run>
+            <script name="zero_optlen">
+                <req ref="opt_name"/>
+                <req id="BNB_PARAM_CHECK"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="domain" type="socket_domain"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="opt_name">
+                <value>SO_DEBUG</value>
+                <value>SO_REUSEADDR</value>
+                <value>SO_OOBINLINE</value>
+                <value>SO_BROADCAST</value>
+                <value>SO_ACCEPTCONN</value>
+                <value>SO_ERROR</value>
+                <value>SO_TYPE</value>
+                <value>SO_DONTROUTE</value>
+                <value>SO_PRIORITY</value>
+                <value>SO_RCVBUF</value>
+                <value>SO_RCVBUFFORCE</value>
+                <value>SO_RCVLOWAT</value>
+                <value>SO_RCVTIMEO</value>
+                <value>SO_SNDBUF</value>
+                <value>SO_SNDBUFFORCE</value>
+                <value>SO_SNDTIMEO</value>
+                <value>SO_KEEPALIVE</value>
+                <value>SO_LINGER</value>
+                <value>SO_TIMESTAMP</value>
+                <value>SO_TIMESTAMPNS</value>
+                <value reqs="SO_TIMESTAMPING,HW_PTP_RX_TIMESTAMP">SO_TIMESTAMPING</value>
+                <value>SO_BINDTODEVICE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="inherit_derived" track_conf="silent">
+                <req ref="opt_name"/>
+            </script>
+            <arg name="env">
+              <value>IUT{{{'pco_iut':IUT},if:'iut_if'}}</value>
+            </arg>
+            <arg name="domain" type="socket_domain"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="opt_level">
+                <value>SOL_SOCKET</value>
+            </arg>
+            <arg name="opt_name" list="">
+                <value>SO_ACCEPTCONN</value>
+                <value>SO_ERROR</value>
+                <value>SO_TYPE</value>
+                <value>SO_BROADCAST</value>
+                <value>SO_DEBUG</value>
+                <value>SO_DONTROUTE</value>
+                <value>SO_PRIORITY</value>
+                <value>SO_RCVBUF</value>
+                <value>SO_RCVBUFFORCE</value>
+                <value>SO_RCVLOWAT</value>
+                <value>SO_RCVTIMEO</value>
+                <value>SO_REUSEADDR</value>
+                <value>SO_SNDBUF</value>
+                <value>SO_SNDBUFFORCE</value>
+                <value>SO_SNDTIMEO</value>
+                <!-- It is a bit confusing, but Linux and FreeBSD allows
+                     to get/set values of connection-oriented socket
+                     options on datagram sockets -->
+                <value>SO_KEEPALIVE</value>
+                <value>SO_LINGER</value>
+                <value>SO_OOBINLINE</value>
+                <value>SO_TIMESTAMP</value>
+                <value>SO_TIMESTAMPNS</value>
+                <value reqs="SO_TIMESTAMPING,HW_PTP_RX_TIMESTAMP">SO_TIMESTAMPING</value>
+                <value>SO_BINDTODEVICE</value>
+            </arg>
+            <arg name="before" type="boolean" list="exec_fork">
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="method" list="exec_fork">
+                <value reqs="EXEC">exec</value>
+                <value>inherit</value>
+                <value>inherit</value>
+            </arg>
+        </run>
+
+        <run>
+            <session>
+                <arg name="checkopt">
+                    <value>SO_DEBUG</value>
+                    <value>SO_KEEPALIVE</value>
+                    <value>SO_OOBINLINE</value>
+                    <value>SO_TIMESTAMP</value>
+                    <value>SO_TIMESTAMPNS</value>
+                    <value reqs="SO_TIMESTAMPING,HW_PTP_RX_TIMESTAMP">SO_TIMESTAMPING</value>
+                    <value>TCP_NODELAY</value>
+                    <value>TCP_CORK</value>
+                    <value>IP_MTU_DISCOVER</value>
+                    <value>IP_TOS</value>
+                    <value>IP_TTL</value>
+                    <value>SO_RCVBUF</value>
+                    <value>SO_SNDBUF</value>
+                    <value>SO_RCVBUFFORCE</value>
+                    <value>SO_SNDBUFFORCE</value>
+                    <value>SO_RCVLOWAT</value>
+                    <value>SO_SNDLOWAT</value>
+                    <value>TCP_KEEPIDLE</value>
+                    <value>TCP_KEEPINTVL</value>
+                    <value>TCP_KEEPCNT</value>
+                    <value>TCP_USER_TIMEOUT</value>
+                    <value>SO_LINGER</value>
+                    <value>SO_RCVTIMEO</value>
+                    <value>SO_SNDTIMEO</value>
+                    <value>IP_OPTIONS</value>
+                    <value>IP_PKTINFO</value>
+                    <value>IP_RECVERR</value>
+                    <value>IP_RECVOPTS</value>
+                    <value>IP_RECVTOS</value>
+                    <value>IP_RECVTTL</value>
+                    <value>SO_BINDTODEVICE</value>
+                </arg>
+
+                <run>
+                    <script name="inherited_option">
+                        <req id="SOCK_STREAM"/>
+                        <req ref="checkopt"/>
+                    </script>
+                    <arg name="env">
+                        <value ref="env.peer2peer"/>
+                        <value ref="env.peer2peer_ipv6"/>
+                        <value ref="env.p2p_loopback_threads"/>
+                        <value ref="env.p2p_loopback_threads_ip6"/>
+                    </arg>
+                    <arg name="listen_before" type="boolean">
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="accept_before">
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="how">
+                        <value>connect_failed_connect</value>
+                        <value>connect_failed_listen</value>
+                        <value reqs="ONLOAD_ONLY">connect_another_listen</value>
+                    </arg>
+                </run>
+                <run>
+                    <script name="inherited_option">
+                        <req id="L5WIN64_BLACKLIST"/>
+                        <req id="SOCK_STREAM"/>
+                        <req ref="checkopt"/>
+                    </script>
+                    <arg name="env">
+                        <value ref="env.peer2peer"/>
+                        <value ref="env.peer2peer_ipv6"/>
+                        <value ref="env.p2p_loopback_threads"/>
+                        <value ref="env.p2p_loopback_threads_ip6"/>
+                    </arg>
+                    <arg name="listen_before" type="boolean">
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="accept_before">
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="how">
+                        <value reqs="LISTEN_SHUTDOWN">listen_shutdown_connect</value>
+                        <value>listen_accept</value>
+                    </arg>
+                </run>
+                <run>
+                    <script name="inherited_option">
+                        <req id="L5WIN64_BLACKLIST"/>
+                        <req id="SOCK_STREAM"/>
+                        <req ref="checkopt"/>
+                    </script>
+                    <arg name="env">
+                        <value ref="env.peer2peer"/>
+                        <value ref="env.peer2peer_ipv6"/>
+                    </arg>
+                    <arg name="listen_before" type="boolean"/>
+                    <arg name="accept_before">
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="how">
+                        <value reqs="LISTEN_SHUTDOWN">listen_shutdown_rd</value>
+                        <value reqs="LISTEN_SHUTDOWN">listen_shutdown_wr</value>
+                        <value reqs="LISTEN_SHUTDOWN">listen_shutdown_rdwr</value>
+                        <value reqs="LISTEN_SHUTDOWN">listen_shutdown_listen</value>
+                    </arg>
+                </run>
+            </session>
+            <arg name="env.p2p_loopback_threads"/>
+        </run>
+
+        <run>
+            <script name="default_bufs">
+                <req id="PROC_SYS_NET"/>
+            </script>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="env">
+                <value ref="env.iut_native"/>
+                <value ref="env.iut_native_ipv6"/>
+            </arg>
+            <arg name="server">
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="change_val">
+                <value reqs="NO_REUSE_STACK">TRUE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="max_bufs" track_conf="silent">
+                <req id="PROC_SYS_NET"/>
+            </script>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="check_sndbuf" type="boolean"/>
+            <arg name="max_value_change">
+                <value>none</value>
+                <value reqs="RPC_RESTART">increase</value>
+                <value reqs="RPC_RESTART">decrease</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="acceptconn">
+                <req id="SO_ACCEPTCONN"/>
+            </script>
+            <arg name="env">
+              <value reqs="TEST_HARNESS_SANITY" ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value reqs="TEST_HARNESS_SANITY" ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+        <run>
+            <script name="bindtodevice_dgram">
+                <req id="SO_BINDTODEVICE"/>
+                <req id="SOCK_DGRAM"/>
+                <!-- Bug 58706 -->
+                <req id="NO_SCALABLE"/>
+            </script>
+            <arg name="env">
+                <value reqs="ENV-2PEERS">{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,if:'iut_if1'},'tst1_host'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2'},'tst2_host'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</value>
+                <value reqs="ENV-2PEERS,IP6,IP6_ONLOAD">{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,if:'iut_if1'},'tst1_host'{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast,if:'tst1_if'}},{'iut_host'{addr:'iut_addr2':inet6:unicast,if:'iut_if2'},'tst2_host'{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast,if:'tst2_if'}}</value>
+            </arg>
+        </run>
+        <run>
+            <script name="bindtodevice_no_route" track_conf="nohistory">
+                <req id="SO_BINDTODEVICE"/>
+                <req id="SOCK_DGRAM"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_tst"/>
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+            </arg>
+        </run>
+        <run>
+            <script name="bindtodevice_stream">
+                <req id="SO_BINDTODEVICE"/>
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.two_nets.iut_first"/>
+                <value ref="env.two_nets.iut_second"/>
+                <value ref="env.two_nets.iut_first_ipv6"/>
+                <value ref="env.two_nets.iut_second_ipv6"/>
+            </arg>
+            <arg name="bind_to_lo" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="connect_to_lo" type="boolean">
+                <value>FALSE</value>
+            </arg>
+        </run>
+        <run>
+            <script name="bindtodevice_stream">
+                <req id="SO_BINDTODEVICE"/>
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value reqs="ENV-LOOPBACK,ENV-2LINKS-IUT">'net1':IUT{'iut_host'{{'pco_iut':IUT},{'pco_tst1':IUT},addr:'iut_addr1':inet:unicast,if:'iut_if1'}},'net2':IUT{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2'},{{'pco_tst2':tester}}}</value>
+                <value reqs="ENV-LOOPBACK,ENV-2LINKS-IUT,IP6,IP6_ONLOAD">'net1':IUT{'iut_host'{{'pco_iut':IUT},{'pco_tst1':IUT},addr:'iut_addr1':inet6:unicast,if:'iut_if1'}},'net2':IUT{'iut_host'{addr:'iut_addr2':inet6:unicast,if:'iut_if2'},{{'pco_tst2':tester}}}</value>
+            </arg>
+            <arg name="bind_to_lo" type="boolean"/>
+            <arg name="connect_to_lo" type="boolean"/>
+        </run>
+        <run>
+            <script name="bindtodevice_dstunreach">
+                <req id="SO_BINDTODEVICE"/>
+                <req id="SOCK_DGRAM"/>
+                <req id="ENV-2PEERS"/>
+                <req id="MSG_CONTROL"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env">
+                <value ref="env.two_nets.iut_first"/>
+                <!-- Bug 58706 for NO_SCALABLE -->
+                <value reqs="NO_SCALABLE" ref="env.two_nets.iut_second"/>
+                <value reqs="ENV-2LINKS-IUT">'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'alien_addr':inet:alien,addr:'alien_gw':inet:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tst_host'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net1a':IUT{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tst_host'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</value>
+                <value ref="env.two_nets.iut_first_ipv6"/>
+                <!-- Bug 58706 for NO_SCALABLE -->
+                <value reqs="NO_SCALABLE" ref="env.two_nets.iut_second_ipv6"/>
+                <value reqs="ENV-2LINKS-IUT">'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'alien_addr':inet6:alien,addr:'alien_gw':inet6:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tst_host'{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net1a':IUT{'iut_host'{addr:'iut_addr2':inet6:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tst_host'{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</value>
+            </arg>
+            <arg name="create_if">
+                <value>FALSE</value>
+            </arg>
+        </run>
+        <run>
+            <script name="bindtodevice_dstunreach" track_conf="nohistory">
+                <req id="SO_BINDTODEVICE"/>
+                <req id="SOCK_DGRAM"/>
+                <req id="MSG_CONTROL"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="create_if">
+                <!-- Linux doesn't support vlan over ipvlan. ST-2001 -->
+                <value reqs="CREATE_NET_IF,NO_IPVLAN">TRUE</value>
+            </arg>
+            <arg name="if_type" type="created_interface_type"/>
+            <arg name="bind_to_if" type="boolean"/>
+            <arg name="vlan_id">
+                <value>1001</value>
+            </arg>
+        </run>
+        <run>
+            <script name="bindtodevice_send" track_conf="nohistory">
+                <req id="SO_BINDTODEVICE"/>
+                <req id="SOCK_DGRAM"/>
+                <req id="ENV-2PEERS"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env">
+                <value>'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,if:'iut1_if'},'tst1_host'{{'pco_tst':tester},addr:'gw_addr':inet:unicast,if:'tst1_if'}},'net2':tester{'iut_host'{addr:'iut2_addr':inet:unicast,if:'iut2_if'},'tst2_host'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,addr:'dst_addr':inet:fake,if:'tst2_if'}},'pco_tst1'='pco_tst'</value>
+                <value>'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,if:'iut1_if'},'tst1_host'{{'pco_tst':tester},addr:'gw_addr':inet:unicast,if:'tst1_if'}},'net2':tester{'iut_host'{addr:'iut2_addr':inet:unicast,if:'iut2_if'},'tst2_host'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,addr:'dst_addr':inet:alien,if:'tst2_if'}},'pco_tst1'='pco_tst'</value>
+                <value>'net1':tester{'iut_host'{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,if:'iut1_if'},'tst1_host'{{'pco_tst':tester},addr:'gw_addr':inet:unicast,if:'tst1_if'}},'net2':IUT{'iut_host'{addr:'iut2_addr':inet:unicast,if:'iut2_if'},'tst2_host'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,addr:'dst_addr':inet:fake,if:'tst2_if'}},'pco_tst1'='pco_tst'</value>
+                <value>'net1':tester{'iut_host'{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,if:'iut1_if'},'tst1_host'{{'pco_tst':tester},addr:'gw_addr':inet:unicast,if:'tst1_if'}},'net2':IUT{'iut_host'{addr:'iut2_addr':inet:unicast,if:'iut2_if'},'tst2_host'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,addr:'dst_addr':inet:alien,if:'tst2_if'}},'pco_tst1'='pco_tst'</value>
+
+                <value reqs="IP6,IP6_ONLOAD">'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut1_addr':inet6:unicast,if:'iut1_if'},'tst1_host'{{'pco_tst':tester},addr:'gw_addr':inet6:unicast,if:'tst1_if'}},'net2':tester{'iut_host'{addr:'iut2_addr':inet6:unicast,if:'iut2_if'},'tst2_host'{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast,addr:'dst_addr':inet6:fake,if:'tst2_if'}},'pco_tst1'='pco_tst'</value>
+                <value reqs="IP6,IP6_ONLOAD">'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut1_addr':inet6:unicast,if:'iut1_if'},'tst1_host'{{'pco_tst':tester},addr:'gw_addr':inet6:unicast,if:'tst1_if'}},'net2':tester{'iut_host'{addr:'iut2_addr':inet6:unicast,if:'iut2_if'},'tst2_host'{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast,addr:'dst_addr':inet6:alien,if:'tst2_if'}},'pco_tst1'='pco_tst'</value>
+                <value reqs="IP6,IP6_ONLOAD">'net1':tester{'iut_host'{{'pco_iut':IUT},addr:'iut1_addr':inet6:unicast,if:'iut1_if'},'tst1_host'{{'pco_tst':tester},addr:'gw_addr':inet6:unicast,if:'tst1_if'}},'net2':IUT{'iut_host'{addr:'iut2_addr':inet6:unicast,if:'iut2_if'},'tst2_host'{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast,addr:'dst_addr':inet6:fake,if:'tst2_if'}},'pco_tst1'='pco_tst'</value>
+                <value reqs="IP6,IP6_ONLOAD">'net1':tester{'iut_host'{{'pco_iut':IUT},addr:'iut1_addr':inet6:unicast,if:'iut1_if'},'tst1_host'{{'pco_tst':tester},addr:'gw_addr':inet6:unicast,if:'tst1_if'}},'net2':IUT{'iut_host'{addr:'iut2_addr':inet6:unicast,if:'iut2_if'},'tst2_host'{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast,addr:'dst_addr':inet6:alien,if:'tst2_if'}},'pco_tst1'='pco_tst'</value>
+            </arg>
+            <arg name="direct_route" type="boolean"/>
+        </run>
+        <run>
+            <script name="bindtodevice_connect" track_conf="silent">
+                <req id="SO_BINDTODEVICE"/>
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env" type="env.two_nets_all"/>
+            <arg name="blocking" type="boolean"/>
+        </run>
+        <run>
+            <script name="bindtodevice_vs_bind" track_conf="silent">
+                <req id="SO_BINDTODEVICE"/>
+                <req id="ENV-2PEERS"/>
+                <!-- IPVLAN interface cannot be used to receive
+                     traffic to an IP address assigned to another
+                     interface -->
+                <req id="NO_IPVLAN"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env">
+                <value ref="env.two_nets.iut_first"/>
+                <value ref="env.two_nets.iut_first_ipv6"/>
+                <!-- Bug 58706 for NO_SCALABLE -->
+                <value reqs="NO_SCALABLE" ref="env.two_nets.iut_second"/>
+                <value reqs="NO_SCALABLE" ref="env.two_nets.iut_second_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+        </run>
+        <run>
+            <script name="bindtodevice_vs_bind" track_conf="silent">
+                <req id="SO_BINDTODEVICE"/>
+                <req id="ENV-2PEERS"/>
+                <!-- IPVLAN interface cannot be used to receive
+                     traffic to an IP address assigned to another
+                     interface -->
+                <req id="NO_IPVLAN"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env">
+                <value ref="env.two_nets.iut_first"/>
+                <value ref="env.two_nets.iut_first_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <!-- AF_XDP doesn't support big MTU value. ST-2188 -->
+            <arg name="mtu_first">
+                <value>1500</value>
+                <value reqs="JUMBO_FRAME,NO_VLAN">5000</value>
+            </arg>
+            <arg name="mtu_second">
+                <value>1500</value>
+            </arg>
+        </run>
+        <run>
+            <script name="bindtodevice_vs_bind" track_conf="silent">
+                <req id="SO_BINDTODEVICE"/>
+                <req id="ENV-2PEERS"/>
+                <!-- IPVLAN interface cannot be used to receive
+                     traffic to an IP address assigned to another
+                     interface -->
+                <req id="NO_IPVLAN"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env">
+                <!-- Bug 58706 for NO_SCALABLE -->
+                <value reqs="NO_SCALABLE" ref="env.two_nets.iut_second"/>
+                <value reqs="NO_SCALABLE" ref="env.two_nets.iut_second_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="mtu_first">
+                <value>1500</value>
+            </arg>
+            <!-- AF_XDP doesn't support big MTU value. ST-2188 -->
+            <arg name="mtu_second">
+                <value>1500</value>
+                <value reqs="JUMBO_FRAME,NO_VLAN">5000</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="bindtodevice_vlan" track_conf="nohistory">
+                <req id="SO_BINDTODEVICE"/>
+                <req id="SOCK_DGRAM"/>
+                <req id="CREATE_NET_IF"/>
+                <!-- Linux doesn't support vlan over ipvlan. ST-2001-->
+                <req id="NO_IPVLAN"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="vlan1">
+                <value>999</value>
+            </arg>
+            <arg name="vlan2">
+                <value>1001</value>
+            </arg>
+            <arg name="if_type" type="created_interface_type"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+
+        <run>
+            <script name="bindtodevice_mtu" track_conf="nohistory">
+                <req id="SO_BINDTODEVICE"/>
+                <req id="SOCK_DGRAM"/>
+                <!-- ON-12713: the test craches with call trace. -->
+                <req id="NO_AF_XDP"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="packet_num">
+                <value>3</value>
+            </arg>
+            <!-- The test changes MTU to packet_len + 1000, this is too big
+                 for AF_XDP -->
+            <arg name="packet_len">
+                <value>1400</value>
+                <value reqs="JUMBO_FRAME">2000</value>
+                <value reqs="JUMBO_FRAME,NO_VLAN">7000</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="broadcast">
+                <req id="SO_BROADCAST"/>
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,addr:'bcast_addr':inet:broadcast}}</value>
+            </arg>
+        </run>
+        <run>
+            <script name="broadcast_no_fragment">
+                <req id="SO_BROADCAST"/>
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,addr:'bcast_addr':inet:broadcast}}</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="dontroute" track_conf="silent">
+                <req id="SO_DONTROUTE"/>
+                <req id="SOCK_DGRAM"/>
+                <req id="ENV-GW"/>
+            </script>
+            <arg name="env">
+                <value>IUT{'host_iut'{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast},'host_gw'{{'pco_gw':tester},addr:'gw_iut1_addr':inet:unicast}},{'host_gw'{addr:'gw_tst1_addr':inet:unicast},'host_tst'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast}},'pco_tst2'='pco_gw','tst2_addr'='gw_iut1_addr'</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="error" track_conf="silent">
+                <req id="SO_ERROR"/>
+                <req id="SOCK_DGRAM"/>
+                <req id="IP_TTL"/>
+            </script>
+            <arg name="env">
+                <value>IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_gw':tester},addr:'gw_addr':inet:unicast,addr:'dst_addr':inet:alien}}</value>
+                <value reqs="ENV-TST-LINK">tester{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_gw':tester},addr:'gw_addr':inet:unicast,addr:'dst_addr':inet:alien}}</value>
+            </arg>
+            <arg name="connect" type="boolean"/>
+            <arg name="ip_recverr" type="boolean">
+                <value>FALSE</value>
+                <value reqs="IP_RECVERR">TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="last_pending_error" track_conf="silent">
+                <req id="SO_ERROR"/>
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env" type="env.two_nets"/>
+            <arg name="tst1_msgs">
+                <value>type:11,code:0,errno:EHOSTUNREACH</value>
+            </arg>
+            <arg name="tst2_msgs">
+                <value>type:3,code:0,errno:ENETUNREACH</value>
+            </arg>
+            <arg name="num_pkts">
+                <value>1</value>
+            </arg>
+            <arg name="ip_recverr" type="boolean">
+                <value reqs="IP_RECVERR">TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+        <session>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_tst"/>
+            </arg>
+            <arg name="pending_err" type="boolean"/>
+            <arg name="is_iomux" value="TRUE"/>
+            <arg name="iomux" type="iomux_with_oo_epoll"/>
+
+            <run>
+                <script name="error_send_recv_icmp">
+                    <req id="SO_ERROR"/>
+                    <req id="IP_RECVERR"/>
+                    <req id="SOCK_DGRAM"/>
+                </script>
+                <arg name="ip_recverr" value="TRUE"/>
+                <arg name="icmp_type" type="icmp4_type" list=""/>
+                <arg name="icmp_code" type="icmp4_code" list=""/>
+                <arg name="exp_errno" type="icmp4_exp_errno_with_recverr" list=""/>
+            </run>
+
+            <run>
+                <script name="error_send_recv_icmp">
+                    <req id="SO_ERROR"/>
+                    <req id="SOCK_DGRAM"/>
+                </script>
+                <arg name="ip_recverr" value="FALSE"/>
+                <arg name="icmp_type" type="icmp4_type" list=""/>
+                <arg name="icmp_code" type="icmp4_code" list=""/>
+                <arg name="exp_errno" type="icmp4_exp_errno_without_recverr" list=""/>
+            </run>
+
+        </session>
+        </run>
+        <run>
+        <session>
+            <arg name="env">
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+            </arg>
+            <arg name="pending_err" type="boolean"/>
+            <arg name="is_iomux" value="TRUE"/>
+            <arg name="iomux" type="iomux_with_oo_epoll"/>
+
+            <run>
+                <script name="error_send_recv_icmp">
+                    <req id="SO_ERROR"/>
+                    <req id="IPV6_RECVERR"/>
+                    <req id="SOCK_DGRAM"/>
+                </script>
+                <arg name="ip_recverr" value="TRUE"/>
+                <arg name="icmp_type" type="icmp6_type" list=""/>
+                <arg name="icmp_code" type="icmp6_code" list=""/>
+                <arg name="exp_errno" type="icmp6_exp_errno_with_recverr" list=""/>
+            </run>
+
+            <run>
+                <script name="error_send_recv_icmp">
+                    <req id="SO_ERROR"/>
+                    <req id="SOCK_DGRAM"/>
+                </script>
+                <arg name="ip_recverr" value="FALSE"/>
+                <arg name="icmp_type" type="icmp6_type" list=""/>
+                <arg name="icmp_code" type="icmp6_code" list=""/>
+                <arg name="exp_errno" type="icmp6_exp_errno_without_recverr" list=""/>
+            </run>
+
+        </session>
+        </run>
+
+        <run>
+        <session>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_tst"/>
+            </arg>
+            <arg name="pending_err" value="FALSE"/>
+            <arg name="is_iomux" value="FALSE"/>
+            <arg name="func">
+                <value>recv</value>
+                <value>recvfrom</value>
+                <value reqs="SENDMSG_RECVMSG">recvmsg</value>
+                <value reqs="RECVMMSG">recvmmsg</value>
+                <value reqs="READ_WRITE">read</value>
+                <value reqs="READV_WRITEV">readv</value>
+                <value reqs="AIO">aio_read_suspend</value>
+            </arg>
+
+            <run>
+                <script name="error_send_recv_icmp">
+                    <req id="SO_ERROR"/>
+                    <req id="IP_RECVERR"/>
+                    <req id="SOCK_DGRAM"/>
+                </script>
+                <arg name="ip_recverr" value="TRUE"/>
+                <arg name="icmp_type" type="icmp4_type" list=""/>
+                <arg name="icmp_code" type="icmp4_code" list=""/>
+                <arg name="exp_errno" type="icmp4_exp_errno_with_recverr" list=""/>
+            </run>
+
+            <run>
+                <script name="error_send_recv_icmp">
+                    <req id="SO_ERROR"/>
+                    <req id="SOCK_DGRAM"/>
+                </script>
+                <arg name="ip_recverr" value="FALSE"/>
+                <arg name="icmp_type" type="icmp4_type" list=""/>
+                <arg name="icmp_code" type="icmp4_code" list=""/>
+                <arg name="exp_errno" type="icmp4_exp_errno_without_recverr" list=""/>
+            </run>
+
+        </session>
+        </run>
+        <run>
+        <session>
+            <arg name="env">
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+            </arg>
+            <arg name="pending_err" value="FALSE"/>
+            <arg name="is_iomux" value="FALSE"/>
+            <arg name="func">
+                <value>recv</value>
+                <value>recvfrom</value>
+                <value reqs="SENDMSG_RECVMSG">recvmsg</value>
+                <value reqs="RECVMMSG">recvmmsg</value>
+                <value reqs="READ_WRITE">read</value>
+                <value reqs="READV_WRITEV">readv</value>
+                <value reqs="AIO">aio_read_suspend</value>
+            </arg>
+
+            <run>
+                <script name="error_send_recv_icmp">
+                    <req id="SO_ERROR"/>
+                    <req id="IPV6_RECVERR"/>
+                    <req id="SOCK_DGRAM"/>
+                </script>
+                <arg name="ip_recverr" value="TRUE"/>
+                <arg name="icmp_type" type="icmp6_type" list=""/>
+                <arg name="icmp_code" type="icmp6_code" list=""/>
+                <arg name="exp_errno" type="icmp6_exp_errno_with_recverr" list=""/>
+            </run>
+
+            <run>
+                <script name="error_send_recv_icmp">
+                    <req id="SO_ERROR"/>
+                    <req id="SOCK_DGRAM"/>
+                </script>
+                <arg name="ip_recverr" value="FALSE"/>
+                <arg name="icmp_type" type="icmp6_type" list=""/>
+                <arg name="icmp_code" type="icmp6_code" list=""/>
+                <arg name="exp_errno" type="icmp6_exp_errno_without_recverr" list=""/>
+            </run>
+
+        </session>
+        </run>
+
+        <run>
+        <session>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_tst"/>
+            </arg>
+            <arg name="pending_err" value="TRUE"/>
+            <arg name="is_iomux" value="FALSE"/>
+            <arg name="func">
+                <value>send</value>
+                <value>sendto</value>
+                <value reqs="SENDMSG_RECVMSG">sendmsg</value>
+                <value reqs="READ_WRITE">write</value>
+                <value reqs="READV_WRITEV">writev</value>
+                <value reqs="AIO">aio_write</value>
+                <value>recv</value>
+                <value>recvfrom</value>
+                <value reqs="SENDMSG_RECVMSG">recvmsg</value>
+                <value reqs="RECVMMSG">recvmmsg</value>
+                <value reqs="READ_WRITE">read</value>
+                <value reqs="READV_WRITEV">readv</value>
+                <value reqs="AIO">aio_read</value>
+            </arg>
+
+            <run>
+                <script name="error_send_recv_icmp">
+                    <req id="SO_ERROR"/>
+                    <req id="IP_RECVERR"/>
+                    <req id="SOCK_DGRAM"/>
+                </script>
+                <arg name="ip_recverr" value="TRUE"/>
+                <arg name="icmp_type" type="icmp4_type" list=""/>
+                <arg name="icmp_code" type="icmp4_code" list=""/>
+                <arg name="exp_errno" type="icmp4_exp_errno_with_recverr" list=""/>
+            </run>
+
+            <run>
+                <script name="error_send_recv_icmp">
+                    <req id="SO_ERROR"/>
+                    <req id="SOCK_DGRAM"/>
+                </script>
+                <arg name="ip_recverr" value="FALSE"/>
+                <arg name="icmp_type" type="icmp4_type" list=""/>
+                <arg name="icmp_code" type="icmp4_code" list=""/>
+                <arg name="exp_errno" type="icmp4_exp_errno_without_recverr" list=""/>
+            </run>
+
+        </session>
+        </run>
+        <run>
+        <session>
+            <arg name="env">
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+            </arg>
+            <arg name="pending_err" value="TRUE"/>
+            <arg name="is_iomux" value="FALSE"/>
+            <arg name="func">
+                <value>send</value>
+                <value>sendto</value>
+                <value reqs="SENDMSG_RECVMSG">sendmsg</value>
+                <value reqs="READ_WRITE">write</value>
+                <value reqs="READV_WRITEV">writev</value>
+                <value reqs="AIO">aio_write</value>
+                <value>recv</value>
+                <value>recvfrom</value>
+                <value reqs="SENDMSG_RECVMSG">recvmsg</value>
+                <value reqs="RECVMMSG">recvmmsg</value>
+                <value reqs="READ_WRITE">read</value>
+                <value reqs="READV_WRITEV">readv</value>
+                <value reqs="AIO">aio_read</value>
+            </arg>
+
+            <run>
+                <script name="error_send_recv_icmp">
+                    <req id="SO_ERROR"/>
+                    <req id="IPV6_RECVERR"/>
+                    <req id="SOCK_DGRAM"/>
+                </script>
+                <arg name="ip_recverr" value="TRUE"/>
+                <arg name="icmp_type" type="icmp6_type" list=""/>
+                <arg name="icmp_code" type="icmp6_code" list=""/>
+                <arg name="exp_errno" type="icmp6_exp_errno_with_recverr" list=""/>
+            </run>
+
+            <run>
+                <script name="error_send_recv_icmp">
+                    <req id="SO_ERROR"/>
+                    <req id="SOCK_DGRAM"/>
+                </script>
+                <arg name="ip_recverr" value="FALSE"/>
+                <arg name="icmp_type" type="icmp6_type" list=""/>
+                <arg name="icmp_code" type="icmp6_code" list=""/>
+                <arg name="exp_errno" type="icmp6_exp_errno_without_recverr" list=""/>
+            </run>
+
+        </session>
+        </run>
+
+        <run>
+        <session>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="pending_err" value="FALSE"/>
+            <arg name="is_iomux" value="FALSE"/>
+            <arg name="func">
+                <value reqs="ONLOAD_ONLY,ONLOAD_ZC_RECV">onload_zc_recv</value>
+                <value reqs="ONLOAD_ONLY,ONLOAD_ZC_HLRX">onload_zc_hlrx_recv_zc</value>
+                <value reqs="ONLOAD_ONLY,ONLOAD_ZC_HLRX,ONLOAD_ZC_HLRX_COPY">onload_zc_hlrx_recv_copy</value>
+            </arg>
+
+            <run>
+                <script name="error_send_recv_icmp">
+                    <req id="SO_ERROR"/>
+                    <req id="IP_RECVERR"/>
+                    <req id="SOCK_DGRAM"/>
+                </script>
+                <arg name="ip_recverr" value="TRUE"/>
+                <arg name="icmp_type" type="icmp4_type" list=""/>
+                <arg name="icmp_code" type="icmp4_code" list=""/>
+                <arg name="exp_errno" type="icmp4_exp_errno_with_recverr" list=""/>
+            </run>
+
+            <run>
+                <script name="error_send_recv_icmp">
+                    <req id="SO_ERROR"/>
+                    <req id="SOCK_DGRAM"/>
+                </script>
+                <arg name="ip_recverr" value="FALSE"/>
+                <arg name="icmp_type" type="icmp4_type" list=""/>
+                <arg name="icmp_code" type="icmp4_code" list=""/>
+                <arg name="exp_errno" type="icmp4_exp_errno_without_recverr" list=""/>
+            </run>
+
+        </session>
+        </run>
+        <run>
+        <session>
+            <arg name="env" ref="env.peer2peer_ipv6"/>
+            <arg name="pending_err" value="FALSE"/>
+            <arg name="is_iomux" value="FALSE"/>
+            <arg name="func">
+                <value reqs="ONLOAD_ONLY,ONLOAD_ZC_RECV">onload_zc_recv</value>
+                <value reqs="ONLOAD_ONLY,ONLOAD_ZC_HLRX">onload_zc_hlrx_recv_zc</value>
+                <value reqs="ONLOAD_ONLY,ONLOAD_ZC_HLRX,ONLOAD_ZC_HLRX_COPY">onload_zc_hlrx_recv_copy</value>
+            </arg>
+
+            <run>
+                <script name="error_send_recv_icmp">
+                    <req id="SO_ERROR"/>
+                    <req id="IPV6_RECVERR"/>
+                    <req id="SOCK_DGRAM"/>
+                </script>
+                <arg name="ip_recverr" value="TRUE"/>
+                <arg name="icmp_type" type="icmp6_type" list=""/>
+                <arg name="icmp_code" type="icmp6_code" list=""/>
+                <arg name="exp_errno" type="icmp6_exp_errno_with_recverr" list=""/>
+            </run>
+
+            <run>
+                <script name="error_send_recv_icmp">
+                    <req id="SO_ERROR"/>
+                    <req id="SOCK_DGRAM"/>
+                </script>
+                <arg name="ip_recverr" value="FALSE"/>
+                <arg name="icmp_type" type="icmp6_type" list=""/>
+                <arg name="icmp_code" type="icmp6_code" list=""/>
+                <arg name="exp_errno" type="icmp6_exp_errno_without_recverr" list=""/>
+            </run>
+
+        </session>
+        </run>
+
+        <run>
+        <session>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="pending_err" value="TRUE"/>
+            <arg name="is_iomux" value="FALSE"/>
+            <arg name="func">
+                <value reqs="ONLOAD_ONLY,ONLOAD_ZC_RECV">onload_zc_recv</value>
+                <value reqs="ONLOAD_ONLY,ONLOAD_ZC_HLRX">onload_zc_hlrx_recv_zc</value>
+                <value reqs="ONLOAD_ONLY,ONLOAD_ZC_HLRX,ONLOAD_ZC_HLRX_COPY">onload_zc_hlrx_recv_copy</value>
+            </arg>
+
+            <run>
+                <script name="error_send_recv_icmp">
+                    <req id="SO_ERROR"/>
+                    <req id="IP_RECVERR"/>
+                    <req id="SOCK_DGRAM"/>
+                </script>
+                <arg name="ip_recverr" value="TRUE"/>
+                <arg name="icmp_type" type="icmp4_type" list=""/>
+                <arg name="icmp_code" type="icmp4_code" list=""/>
+                <arg name="exp_errno" type="icmp4_exp_errno_with_recverr" list=""/>
+            </run>
+
+            <run>
+                <script name="error_send_recv_icmp">
+                    <req id="SO_ERROR"/>
+                    <req id="SOCK_DGRAM"/>
+                </script>
+                <arg name="ip_recverr" value="FALSE"/>
+                <arg name="icmp_type" type="icmp4_type" list=""/>
+                <arg name="icmp_code" type="icmp4_code" list=""/>
+                <arg name="exp_errno" type="icmp4_exp_errno_without_recverr" list=""/>
+            </run>
+
+        </session>
+        </run>
+        <run>
+        <session>
+            <arg name="env" ref="env.peer2peer_ipv6"/>
+            <arg name="pending_err" value="TRUE"/>
+            <arg name="is_iomux" value="FALSE"/>
+            <arg name="func">
+                <value reqs="ONLOAD_ONLY,ONLOAD_ZC_RECV">onload_zc_recv</value>
+                <value reqs="ONLOAD_ONLY,ONLOAD_ZC_HLRX">onload_zc_hlrx_recv_zc</value>
+                <value reqs="ONLOAD_ONLY,ONLOAD_ZC_HLRX,ONLOAD_ZC_HLRX_COPY">onload_zc_hlrx_recv_copy</value>
+            </arg>
+
+            <run>
+                <script name="error_send_recv_icmp">
+                    <req id="SO_ERROR"/>
+                    <req id="IPV6_RECVERR"/>
+                    <req id="SOCK_DGRAM"/>
+                </script>
+                <arg name="ip_recverr" value="TRUE"/>
+                <arg name="icmp_type" type="icmp6_type" list=""/>
+                <arg name="icmp_code" type="icmp6_code" list=""/>
+                <arg name="exp_errno" type="icmp6_exp_errno_with_recverr" list=""/>
+            </run>
+
+            <run>
+                <script name="error_send_recv_icmp">
+                    <req id="SO_ERROR"/>
+                    <req id="SOCK_DGRAM"/>
+                </script>
+                <arg name="ip_recverr" value="FALSE"/>
+                <arg name="icmp_type" type="icmp6_type" list=""/>
+                <arg name="icmp_code" type="icmp6_code" list=""/>
+                <arg name="exp_errno" type="icmp6_exp_errno_without_recverr" list=""/>
+            </run>
+
+        </session>
+        </run>
+
+
+        <run>
+            <script name="error_icmp_recvmmsg">
+                <req id="SO_ERROR"/>
+                <req id="IP_RECVERR"/>
+                <req id="SOCK_DGRAM"/>
+                <req id="RECVMMSG"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_tst"/>
+            </arg>
+            <arg name="ip_recverr" value="TRUE"/>
+            <arg name="icmp_type" type="icmp4_type" list=""/>
+            <arg name="icmp_code" type="icmp4_code" list=""/>
+            <arg name="exp_errno" type="icmp4_exp_errno_with_recverr" list=""/>
+            <arg name="send_error">
+                <value>before</value>
+                <value>during</value>
+                <value>after</value>
+            </arg>
+            <arg name="timeout">
+                <value>5</value>
+            </arg>
+            <arg name="pack_num">
+                <value>3</value>
+            </arg>
+            <arg name="vlen">
+                <value>4</value>
+            </arg>
+            <arg name="data_size">
+                <value>512</value>
+            </arg>
+        </run>
+        <run>
+            <script name="error_icmp_recvmmsg">
+                <req id="SO_ERROR"/>
+                <req id="SOCK_DGRAM"/>
+                <req id="RECVMMSG"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_tst"/>
+            </arg>
+            <arg name="ip_recverr" value="FALSE"/>
+            <arg name="icmp_type" type="icmp4_type" list=""/>
+            <arg name="icmp_code" type="icmp4_code" list=""/>
+            <arg name="exp_errno" type="icmp4_exp_errno_without_recverr" list=""/>
+            <arg name="send_error">
+                <value>before</value>
+                <value>during</value>
+                <value>after</value>
+            </arg>
+            <arg name="timeout">
+                <value>5</value>
+            </arg>
+            <arg name="pack_num">
+                <value>3</value>
+            </arg>
+            <arg name="vlen">
+                <value>4</value>
+            </arg>
+            <arg name="data_size">
+                <value>512</value>
+            </arg>
+        </run>
+        <run>
+            <script name="error_icmp_recvmmsg">
+                <req id="SO_ERROR"/>
+                <req id="IP_RECVERR"/>
+                <req id="SOCK_DGRAM"/>
+                <req id="RECVMMSG"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+            </arg>
+            <arg name="ip_recverr" value="TRUE"/>
+            <arg name="icmp_type" type="icmp6_type" list=""/>
+            <arg name="icmp_code" type="icmp6_code" list=""/>
+            <arg name="exp_errno" type="icmp6_exp_errno_with_recverr" list=""/>
+            <arg name="send_error">
+                <value>before</value>
+                <value>during</value>
+                <value>after</value>
+            </arg>
+            <arg name="timeout">
+                <value>5</value>
+            </arg>
+            <arg name="pack_num">
+                <value>3</value>
+            </arg>
+            <arg name="vlen">
+                <value>4</value>
+            </arg>
+            <arg name="data_size">
+                <value>512</value>
+            </arg>
+        </run>
+        <run>
+            <script name="error_icmp_recvmmsg">
+                <req id="SO_ERROR"/>
+                <req id="SOCK_DGRAM"/>
+                <req id="RECVMMSG"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+            </arg>
+            <arg name="ip_recverr" value="FALSE"/>
+            <arg name="icmp_type" type="icmp6_type" list=""/>
+            <arg name="icmp_code" type="icmp6_code" list=""/>
+            <arg name="exp_errno" type="icmp6_exp_errno_without_recverr" list=""/>
+            <arg name="send_error">
+                <value>before</value>
+                <value>during</value>
+                <value>after</value>
+            </arg>
+            <arg name="timeout">
+                <value>5</value>
+            </arg>
+            <arg name="pack_num">
+                <value>3</value>
+            </arg>
+            <arg name="vlen">
+                <value>4</value>
+            </arg>
+            <arg name="data_size">
+                <value>512</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="error_errqueue">
+                <req id="SO_ERROR"/>
+                <req id="IP_RECVERR"/>
+                <req id="SOCK_DGRAM"/>
+                <req id="MSG_ERRQUEUE"/>
+                <req id="MSG_CONTROL"/>
+                <req id="OOL1502"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_tst"/>
+            </arg>
+            <arg name="icmp_msgs">
+                <value>
+                    type:11,code:0,errno:EHOSTUNREACH/
+                    type:12,code:0,errno:EPROTO
+                </value>
+                <value>
+                    type:3,code:0,errno:ENETUNREACH/
+                    type:3,code:3,errno:ECONNREFUSED/
+                    type:11,code:0,errno:EHOSTUNREACH
+                </value>
+                <value>
+                    type:3,code:3,errno:ECONNREFUSED/
+                    type:3,code:3,errno:ECONNREFUSED/
+                    type:3,code:3,errno:ECONNREFUSED/
+                    type:11,code:0,errno:EHOSTUNREACH
+                </value>
+            </arg>
+            <arg name="set_msg_peek" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="iomux" type="iomux_with_oo_epoll"/>
+            <arg name="select_err_queue" type="select_err_queue_bool"/>
+        </run>
+
+        <run>
+            <script name="error_errqueue">
+                <req id="SO_ERROR"/>
+                <req id="IP_RECVERR"/>
+                <req id="SOCK_DGRAM"/>
+                <req id="MSG_ERRQUEUE"/>
+                <req id="MSG_CONTROL"/>
+                <req id="OOL1502"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_tst"/>
+            </arg>
+            <arg name="icmp_msgs">
+                <value>type:12,code:0,errno:EPROTO</value>
+                <value>type:11,code:0,errno:EHOSTUNREACH</value>
+                <value>type:3,code:0,errno:ENETUNREACH</value>
+                <value>type:3,code:3,errno:ECONNREFUSED</value>
+            </arg>
+            <arg name="set_msg_peek" type="boolean">
+                <value reqs="MSG_PEEK">TRUE</value>
+            </arg>
+            <arg name="iomux" type="iomux_with_oo_epoll"/>
+            <arg name="select_err_queue" type="select_err_queue_bool"/>
+        </run>
+
+        <run>
+            <script name="error_errqueue_flush">
+                <req id="SO_ERROR"/>
+                <req id="IP_RECVERR"/>
+                <req id="SOCK_DGRAM"/>
+                <req id="MSG_ERRQUEUE"/>
+                <req id="OOL1502"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_tst"/>
+            </arg>
+            <arg name="icmp_msgs">
+                <value>
+                    type:3,code:0,errno:ENETUNREACH/
+                    type:3,code:3,errno:ECONNREFUSED/
+                    type:11,code:0,errno:EHOSTUNREACH
+                </value>
+            </arg>
+            <arg name="iomux" type="iomux_with_oo_epoll"/>
+            <arg name="select_err_queue" type="select_err_queue_bool"/>
+        </run>
+        <run>
+            <script name="error_errqueue_flush">
+                <req id="SO_ERROR"/>
+                <req id="IPV6_RECVERR"/>
+                <req id="SOCK_DGRAM"/>
+                <req id="MSG_ERRQUEUE"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+            </arg>
+            <arg name="icmp_msgs">
+                <value>
+                    type:1,code:0,errno:ENETUNREACH/
+                    type:1,code:4,errno:ECONNREFUSED/
+                    type:3,code:0,errno:EHOSTUNREACH
+                </value>
+            </arg>
+            <arg name="iomux" type="iomux_with_oo_epoll"/>
+            <arg name="select_err_queue" type="select_err_queue_bool"/>
+        </run>
+
+        <run>
+            <script name="error_errqueue_disabled">
+                <req id="SO_ERROR"/>
+                <req id="IP_RECVERR"/>
+                <req id="SOCK_DGRAM"/>
+                <req id="MSG_ERRQUEUE"/>
+                <req id="OOL1502"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_tst"/>
+            </arg>
+            <arg name="icmp_msgs">
+                <value>
+                    type:3,code:0,errno:ENETUNREACH/
+                    type:3,code:3,errno:ECONNREFUSED/
+                    type:11,code:0,errno:EHOSTUNREACH
+                </value>
+            </arg>
+            <arg name="iomux" type="iomux_with_oo_epoll"/>
+            <arg name="select_err_queue" type="select_err_queue_bool"/>
+        </run>
+        <run>
+            <script name="error_errqueue_disabled">
+                <req id="SO_ERROR"/>
+                <req id="IPV6_RECVERR"/>
+                <req id="SOCK_DGRAM"/>
+                <req id="MSG_ERRQUEUE"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+            </arg>
+            <arg name="icmp_msgs">
+                <value>
+                    type:1,code:0,errno:ENETUNREACH/
+                    type:1,code:4,errno:ECONNREFUSED/
+                    type:3,code:0,errno:EHOSTUNREACH
+                </value>
+            </arg>
+            <arg name="iomux" type="iomux_with_oo_epoll"/>
+            <arg name="select_err_queue" type="select_err_queue_bool"/>
+        </run>
+
+        <run>
+            <script name="error_errqueue_tcp">
+                <req id="SO_ERROR"/>
+                <req id="IP_RECVERR"/>
+                <req id="SOCK_STREAM"/>
+                <req id="MSG_ERRQUEUE"/>
+                <req id="OOL1502"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_tst"/>
+            </arg>
+            <arg name="icmp_msgs">
+                <value>
+                    type:3,code:0,errno:ENETUNREACH/
+                    type:3,code:3,errno:ECONNREFUSED/
+                    type:11,code:0,errno:EHOSTUNREACH
+                </value>
+            </arg>
+            <arg name="passive" type="boolean"/>
+            <arg name="iomux" type="iomux_with_oo_epoll"/>
+            <arg name="select_err_queue" type="select_err_queue_bool"/>
+        </run>
+        <run>
+            <script name="error_errqueue_tcp">
+                <req id="SO_ERROR"/>
+                <req id="IPV6_RECVERR"/>
+                <req id="SOCK_STREAM"/>
+                <req id="MSG_ERRQUEUE"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+            </arg>
+            <arg name="icmp_msgs">
+                <value>
+                    type:1,code:0,errno:ENETUNREACH/
+                    type:1,code:4,errno:ECONNREFUSED/
+                    type:3,code:0,errno:EHOSTUNREACH
+                </value>
+            </arg>
+            <arg name="passive" type="boolean"/>
+            <arg name="iomux" type="iomux_with_oo_epoll"/>
+            <arg name="select_err_queue" type="select_err_queue_bool"/>
+        </run>
+
+        <run>
+            <script name="error_errqueue_shutdown">
+                <req id="SO_ERROR"/>
+                <req id="IP_RECVERR"/>
+                <req id="SOCK_DGRAM"/>
+                <req id="MSG_ERRQUEUE"/>
+                <req id="OOL1502"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_tst"/>
+            </arg>
+            <arg name="icmp_msgs">
+                <value>
+                    type:3,code:0,errno:ENETUNREACH/
+                    type:3,code:3,errno:ECONNREFUSED/
+                    type:11,code:0,errno:EHOSTUNREACH
+                </value>
+            </arg>
+            <arg name="iomux" type="iomux_with_oo_epoll"/>
+            <arg name="shutdown_how">
+                <value>SHUT_RD</value>
+                <value>SHUT_WR</value>
+                <value>SHUT_RDWR</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="error_tcp">
+                <req id="SO_ERROR"/>
+                <req id="IP_RECVERR"/>
+                <req id="SOCK_STREAM"/>
+                <req id="OOL1502"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_tst"/>
+            </arg>
+            <arg name="icmp_msgs">
+                <value>type:3,code:0,errno:ENETUNREACH</value>
+            </arg>
+            <arg name="passive" type="boolean"/>
+            <arg name="iomux" type="iomux_with_oo_epoll"/>
+            <arg name="select_err_queue" type="select_err_queue_bool"/>
+        </run>
+        <run>
+            <script name="error_tcp">
+                <req id="SO_ERROR"/>
+                <req id="IPV6_RECVERR"/>
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+            </arg>
+            <arg name="icmp_msgs">
+                <value>type:1,code:0,errno:ENETUNREACH</value>
+            </arg>
+            <arg name="passive" type="boolean"/>
+            <arg name="iomux" type="iomux_with_oo_epoll"/>
+            <arg name="select_err_queue" type="select_err_queue_bool"/>
+        </run>
+
+        <run>
+            <script name="error_icmp_rcv">
+                <req id="SO_ERROR"/>
+                <req id="IP_RECVERR"/>
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="icmp_msgs" list="">
+                <value>
+                    type:11,code:0/
+                    type:12,code:0
+                </value>
+                <value>
+                    type:3,code:0/
+                    type:11,code:0/
+                    type:3,code:3
+                </value>
+                <value>
+                    type:3,code:3/
+                    type:3,code:3/
+                    type:3,code:3/
+                    type:11,code:0
+                </value>
+            </arg>
+            <arg name="exp_errno" list="">
+                <value>EPROTO</value>
+                <value>ECONNREFUSED</value>
+                <value>EHOSTUNREACH</value>
+            </arg>
+        </run>
+        <run>
+            <script name="error_icmp_rcv">
+                <req id="SO_ERROR"/>
+                <req id="IPV6_RECVERR"/>
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env" ref="env.peer2peer_ipv6"/>
+            <arg name="icmp_msgs" list="">
+                <value>
+                    type:3,code:0/
+                    type:4,code:0
+                </value>
+                <value>
+                    type:1,code:0/
+                    type:3,code:0/
+                    type:1,code:4
+                </value>
+                <value>
+                    type:1,code:4/
+                    type:1,code:4/
+                    type:1,code:4/
+                    type:3,code:0
+                </value>
+            </arg>
+            <arg name="exp_errno" list="">
+                <value>EPROTO</value>
+                <value>ECONNREFUSED</value>
+                <value>EHOSTUNREACH</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="keepalive" track_conf="silent">
+                <req id="TIME_CONSUMING"/>
+                <req id="SO_KEEPALIVE"/>
+                <req id="TCP_KEEPIDLE"/>
+                <req id="TCP_KEEPINTVL"/>
+                <req id="TCP_KEEPCNT"/>
+                <req id="SOCK_STREAM"/>
+                <req id="ENV-GW"/>
+            </script>
+            <arg name="env">
+                <value>{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},'GW'{{'pco_gw':tester},addr:'gw1_addr':inet:unicast}},{'GW'{addr:'gw2_addr':inet:unicast,addr:'alien_link_addr':ether:alien,if:'gw2_if'},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+            </arg>
+            <arg name="n_probes">
+                <value>0</value>
+                <value>1</value>
+            </arg>
+            <arg name="intv_cor">
+                <value>0</value>
+                <value>10</value>
+            </arg>
+        </run>
+        <run>
+            <script name="keepalive_failed" track_conf="silent">
+                <req id="SO_KEEPALIVE"/>
+                <req id="TCP_KEEPIDLE"/>
+                <req id="TCP_KEEPINTVL"/>
+                <req id="TCP_KEEPCNT"/>
+                <req id="SOCK_STREAM"/>
+                <req id="ENV-GW"/>
+            </script>
+            <arg name="env">
+                <value>IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},'GW'{{'pco_gw':tester},addr:'gw1_addr':inet:unicast}},{'GW'{addr:'gw2_addr':inet:unicast,addr:'alien_link_addr':ether:alien,if:'gw2_if'},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+            </arg>
+            <arg name="intv_cor">
+                <value>0</value>
+                <value>10</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="keepalive_enforce" track_conf="silent">
+                <req id="TIME_CONSUMING"/>
+                <req id="SO_KEEPALIVE"/>
+                <req id="TCP_KEEPIDLE"/>
+                <req id="TCP_KEEPINTVL"/>
+                <req id="TCP_KEEPCNT"/>
+                <req id="SOCK_STREAM"/>
+                <req id="ENV-GW"/>
+            </script>
+            <arg name="env">
+                <value>{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},'GW'{{'pco_gw':tester},addr:'gw1_addr':inet:unicast}},{'GW'{addr:'gw2_addr':inet:unicast,addr:'alien_link_addr':ether:alien,if:'gw2_if'},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+            </arg>
+            <arg name="check_iomux" type="boolean"/>
+            <arg name="func" type="recv_func">
+                <value>recv</value>
+                <value>recvfrom</value>
+                <value>recvmsg</value>
+                <value>onload_zc_recv</value>
+                <value>read</value>
+                <value>readv</value>
+            </arg>
+            <arg name="intv_cor">
+                <value>0</value>
+                <value>10</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="tcp_user_timeout" track_conf="silent">
+                <req id="TCP_USER_TIMEOUT"/>
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_gw"/>
+                <value ref="env.peer2peer_gw_ipv6"/>
+            </arg>
+            <arg name="func" type="send_func">
+                <value>write</value>
+            </arg>
+            <arg name="tcp_state">
+                <value>TCP_SYN_SENT</value>
+                <value>TCP_SYN_RECV</value>
+                <value>TCP_ESTABLISHED</value>
+                <value>TCP_FIN_WAIT1</value>
+                <value>TCP_CLOSE_WAIT</value>
+                <value>TCP_LAST_ACK</value>
+                <value>TCP_CLOSING</value>
+            </arg>
+            <arg name="user_timeout">
+                <value>smaller</value>
+                <value>greater</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="linger_listening_close">
+                <req id="SO_LINGER"/>
+                <req id="TCP_INFO"/>
+                <req id="SOCK_STREAM"/>
+                <req id="CALL_DURATION"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+            </arg>
+            <arg name="zero_linger" type="boolean"/>
+            <arg name="acceptq" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="rcvbuf_dgram">
+                <req id="SO_RCVBUF"/>
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+            <arg name="payload_len" list="">
+                <value>2</value>
+                <value>222</value>
+                <value>1472</value>
+                <value>1472</value>
+            </arg>
+            <arg name="rcvbuf_new" list="">
+                <value>15000</value>
+                <value>20000</value>
+                <value>20000</value>
+                <value>30000</value>
+            </arg>
+            <arg name="force" type="boolean">
+                <value reqs="SO_RCVBUFFORCE">TRUE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="rcvlowat_stream">
+                <req id="SO_RCVLOWAT"/>
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.p2p_loopback_threads"/>
+                <value ref="env.p2p_loopback_threads_ip6"/>
+            </arg>
+            <arg name="rcvlowat" list="">
+                <value>20</value>
+                <value>1</value>
+                <value>10</value>
+            </arg>
+            <arg name="iomux" type="iomux_with_oo_epoll"/>
+            <arg name="n1" list="">
+                <value>19</value>
+                <value>0</value>
+                <value>10</value>
+            </arg>
+            <arg name="n2" list="">
+                <value>1</value>
+                <value>1</value>
+                <value>0</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="rcvlowat_dgram">
+                <req id="SO_RCVLOWAT"/>
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.p2p_loopback_threads"/>
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.p2p_loopback_threads_ip6"/>
+            </arg>
+            <arg name="rcvlowat" list="">
+                <value>20</value>
+                <value>1</value>
+                <value>10</value>
+            </arg>
+            <arg name="send" list="">
+                <value>19</value>
+                <value>0</value>
+                <value>10</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="rcvlowat_recv">
+                <req id="SO_RCVLOWAT"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="rcvlowat">
+                <value>20</value>
+            </arg>
+            <arg name="n1" list="">
+                <value>15</value>
+                <value>15</value>
+                <value>15</value>
+                <value>5</value>
+                <value>5</value>
+            </arg>
+            <arg name="more_data_tx" list="">
+                <value>0</value>
+                <value>0</value>
+                <value>10</value>
+                <value>9</value>
+                <value>9</value>
+            </arg>
+            <arg name="more_data_rx" list="">
+                <value>0</value>
+                <value>5</value>
+                <value>12</value>
+                <value>9</value>
+                <value>19</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="rcv_snd_zero_timeo">
+                <req id="SO_RCVTIMEO"/>
+                <req id="SO_SNDTIMEO"/>
+            </script>
+            <arg name="env">
+              <value ref="env.iut_only"/>
+            </arg>
+            <arg name="domain" type="socket_domain"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+
+        <run>
+            <script name="rcvtimeo_accept">
+                <req id="SO_RCVTIMEO"/>
+                <req id="SOCK_STREAM"/>
+                <req id="CALL_DURATION"/>
+            </script>
+            <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+        </run>
+
+        <run>
+            <script name="rcvtimeo">
+                <req id="SO_RCVTIMEO"/>
+                <req id="CALL_DURATION"/>
+            </script>
+            <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="func" type="recv_func_with_sys"/>
+            <arg name="is_blocking">
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run name="reuseaddr_shutdown">
+            <session>
+                <arg name="env">
+                    <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester}}}</value>
+                    <value>{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr':inet:unicast}}</value>
+                    <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester}}}</value>
+                    <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr':inet6:unicast}}</value>
+                </arg>
+                <arg name="how_to_shut">
+                    <value>SHUT_RDWR</value>
+                </arg>
+                <run name="reuseaddr_shutdown_unicast">
+                    <script name="reuseaddr_shutdown">
+                        <req id="SO_REUSEADDR"/>
+                        <req id="SOCK_STREAM"/>
+                    </script>
+                    <arg name="accepted" type="boolean"/>
+                    <arg name="wildcard" type="boolean">
+                        <value>FALSE</value>
+                    </arg>
+                </run>
+
+                <run name="reuseaddr_shutdown_wildcard">
+                    <script name="reuseaddr_shutdown">
+                        <req id="SO_REUSEADDR"/>
+                        <req id="SOCK_STREAM"/>
+                    </script>
+                    <arg name="accepted" type="boolean"/>
+                    <arg name="wildcard" type="boolean">
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="auto_port" type="boolean"/>
+                </run>
+            </session>
+        </run>
+
+        <run>
+            <script name="reuseaddr_tcp_1">
+                <req id="SO_REUSEADDR"/>
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <!-- pco_iut1 and pco_iut2 are in different processes -->
+                <value reqs="FEW_ACCEL_PROCESSES">{{{'pco_iut1':IUT},{'pco_iut2':IUT},addr:'iut_addr':inet:unicast}}</value>
+                <!-- pco_iut1 and pco_iut2 are in the same process -->
+                <value reqs="FEW_ACCEL_PROCESSES">{{{'pco_iut1':IUT},addr:'iut_addr':inet:unicast}},'pco_iut2'='pco_iut1'</value>
+                <!-- pco_iut1 and pco_iut2 are in the same process, but in different
+                     threads -->
+                <value>{{{'pco_iut1':IUT,'pco_iut2':IUT},addr:'iut_addr':inet:unicast}}</value>
+                <!-- pco_iut1 and pco_iut2 are in different processes -->
+                <value reqs="IP6,IP6_ONLOAD,FEW_ACCEL_PROCESSES">{{{'pco_iut1':IUT},{'pco_iut2':IUT},addr:'iut_addr':inet6:unicast}}</value>
+                <!-- pco_iut1 and pco_iut2 are in the same process -->
+                <value reqs="IP6,IP6_ONLOAD,FEW_ACCEL_PROCESSES">{{{'pco_iut1':IUT},addr:'iut_addr':inet6:unicast}},'pco_iut2'='pco_iut1'</value>
+                <!-- pco_iut1 and pco_iut2 are in the same process, but in different
+                     threads -->
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut1':IUT,'pco_iut2':IUT},addr:'iut_addr':inet6:unicast}}</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="reuseaddr_tcp_2">
+                <req id="SO_REUSEADDR"/>
+                <req id="SOCK_STREAM"/>
+                <!--<req id="ENV-2PEERS"/>-->
+            </script>
+            <arg name="env">
+                <!-- pco_iut1 and pco_iut2 are in different processes -->
+                <value reqs="V5_SANITY,FEW_ACCEL_PROCESSES">{{{'pco_iut1':IUT},{'pco_iut2':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'srv_addr1':inet:unicast,addr:'srv_addr2':inet:unicast}}</value>
+                <value reqs="V5_SANITY,IP6,IP6_ONLOAD,FEW_ACCEL_PROCESSES">{{{'pco_iut1':IUT},{'pco_iut2':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},addr:'srv_addr1':inet6:unicast,addr:'srv_addr2':inet6:unicast}}</value>
+                <!-- pco_iut1 and pco_iut2 are in the same process -->
+                <value reqs="FEW_ACCEL_PROCESSES">{{{'pco_iut1':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'srv_addr1':inet:unicast,addr:'srv_addr2':inet:unicast}},'pco_iut2'='pco_iut1'</value>
+                <value reqs="IP6,IP6_ONLOAD,FEW_ACCEL_PROCESSES">{{{'pco_iut1':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},addr:'srv_addr1':inet6:unicast,addr:'srv_addr2':inet6:unicast}},'pco_iut2'='pco_iut1'</value>
+                <!-- pco_iut1 and pco_iut2 are in the same process, but in different
+                     threads -->
+                <value>{{{'pco_iut1':IUT,'pco_iut2':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'srv_addr1':inet:unicast,addr:'srv_addr2':inet:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut1':IUT,'pco_iut2':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},addr:'srv_addr1':inet6:unicast,addr:'srv_addr2':inet6:unicast}}</value>
+                <!-- pco_iut1 and pco_iut2 are in different processes -->
+                <value reqs="FEW_ACCEL_PROCESSES">{{{'pco_iut1':IUT},{'pco_iut2':IUT},{'pco_tst':IUT},addr:'iut_addr':inet:unicast}},'srv_addr1'='iut_addr','srv_addr2'='iut_addr'</value>
+                <value reqs="IP6,IP6_ONLOAD,FEW_ACCEL_PROCESSES">{{{'pco_iut1':IUT},{'pco_iut2':IUT},{'pco_tst':IUT},addr:'iut_addr':inet6:unicast}},'srv_addr1'='iut_addr','srv_addr2'='iut_addr'</value>
+                <!-- pco_iut1 and pco_iut2 are in the same process -->
+                <value reqs="FEW_ACCEL_PROCESSES">{{{'pco_iut1':IUT},{'pco_tst':IUT},addr:'iut_addr':inet:unicast}},'pco_iut2'='pco_iut1','srv_addr1'='iut_addr','srv_addr2'='iut_addr'</value>
+                <value reqs="IP6,IP6_ONLOAD,FEW_ACCEL_PROCESSES">{{{'pco_iut1':IUT},{'pco_tst':IUT},addr:'iut_addr':inet6:unicast}},'pco_iut2'='pco_iut1','srv_addr1'='iut_addr','srv_addr2'='iut_addr'</value>
+                <!-- pco_iut1 and pco_iut2 are in the same process, but in different
+                     threads -->
+                <value>{{{'pco_iut1':IUT,'pco_iut2':IUT},{'pco_tst':IUT},addr:'iut_addr':inet:unicast}},'srv_addr1'='iut_addr','srv_addr2'='iut_addr'</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut1':IUT,'pco_iut2':IUT},{'pco_tst':IUT},addr:'iut_addr':inet6:unicast}},'srv_addr1'='iut_addr','srv_addr2'='iut_addr'</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="reuseaddr_tcp_3">
+                <req id="SO_REUSEADDR"/>
+                <req id="SOCK_STREAM"/>
+                <req id="ENV-2PEERS"/>
+            </script>
+            <arg name="env">
+                <!-- pco_iut1 and pco_iut2 are in different processes -->
+                <value reqs="FEW_ACCEL_PROCESSES">{'H1'{{'pco_iut1':IUT},{'pco_iut2':IUT},addr:'iut1_addr':inet:unicast}},{'H1'{addr:'iut2_addr':inet:unicast}}</value>
+                <value reqs="FEW_ACCEL_PROCESSES,IP6,IP6_ONLOAD">{'H1'{{'pco_iut1':IUT},{'pco_iut2':IUT},addr:'iut1_addr':inet6:unicast}},{'H1'{addr:'iut2_addr':inet6:unicast}}</value>
+                <!-- pco_iut1 and pco_iut2 are in the same process -->
+                <value reqs="V5_SANITY,FEW_ACCEL_PROCESSES">{'H1'{{'pco_iut1':IUT},addr:'iut1_addr':inet:unicast}},{'H1'{addr:'iut2_addr':inet:unicast}},'pco_iut2'='pco_iut1'</value>
+                <value reqs="V5_SANITY,FEW_ACCEL_PROCESSES,IP6,IP6_ONLOAD">{'H1'{{'pco_iut1':IUT},addr:'iut1_addr':inet6:unicast}},{'H1'{addr:'iut2_addr':inet6:unicast}},'pco_iut2'='pco_iut1'</value>
+                <!-- pco_iut1 and pco_iut2 are in the same process,
+                     but in different threads -->
+                <value>{'H1'{{'pco_iut1':IUT,'pco_iut2':IUT},addr:'iut1_addr':inet:unicast}},{'H1'{addr:'iut2_addr':inet:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{'H1'{{'pco_iut1':IUT,'pco_iut2':IUT},addr:'iut1_addr':inet6:unicast}},{'H1'{addr:'iut2_addr':inet6:unicast}}</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="reuseaddr_tcp_4">
+                <req id="SO_REUSEADDR"/>
+                <req id="SOCK_STREAM"/>
+                <!-- See ON-12690. -->
+                <req id="NO_LOOP4_M32"/>
+            </script>
+            <arg name="env">
+                <!-- IP4 environment -->
+                <!-- 'pco_iut1' and 'pco_iut2' are in different processes -->
+                <value reqs="FEW_ACCEL_PROCESSES">{{{'pco_iut1':IUT},{'pco_iut2':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <!-- 'pco_iut1' and 'pco_iut2' are in the same process -->
+                <value reqs="FEW_ACCEL_PROCESSES">{{{'pco_iut1':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},'pco_iut2'='pco_iut1'</value>
+                <!-- 'pco_iut1' and 'pco_iut2' are in the same process, but in
+                     different threads -->
+                <value>{{{'pco_iut1':IUT,'pco_iut2':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <!-- localhost communication. NO_LOOP4 due to ON-13489. -->
+                <value reqs="FEW_ACCEL_PROCESSES,NO_LOOP4">{{{'pco_iut1':IUT},{'pco_iut2':IUT},{'pco_tst':tester},addr:'iut_addr':inet:loopback,addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="FEW_ACCEL_PROCESSES,NO_LOOP4">{{{'pco_iut1':IUT},{'pco_iut2':IUT},{'pco_tst':IUT},addr:'iut_addr':inet:loopback,addr:'tst_addr':inet:unicast}}</value>
+                <!-- 'pco_iut1' and 'pco_iut2' are in different processes -->
+                <value reqs="IP6,IP6_ONLOAD,FEW_ACCEL_PROCESSES">{{{'pco_iut1':IUT},{'pco_iut2':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast}}</value>
+                <!-- IP6 environment -->
+                <!-- 'pco_iut1' and 'pco_iut2' are in the same process -->
+                <value reqs="IP6,IP6_ONLOAD,FEW_ACCEL_PROCESSES">{{{'pco_iut1':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast}},'pco_iut2'='pco_iut1'</value>
+                <!-- 'pco_iut1' and 'pco_iut2' are in the same process, but in
+                     different threads -->
+                <value reqs="IP6,IP6_ONLOAD,FEW_ACCEL_PROCESSES">{{{'pco_iut1':IUT,'pco_iut2':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast}}</value>
+                <!-- localhost communication. NO_LOOP4 due to ON-13489.-->
+                <value reqs="IP6,IP6_ONLOAD,FEW_ACCEL_PROCESSES,NO_LOOP4">{{{'pco_iut1':IUT},{'pco_iut2':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:loopback,addr:'tst_addr':inet6:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD,FEW_ACCEL_PROCESSES,NO_LOOP4">{{{'pco_iut1':IUT},{'pco_iut2':IUT},{'pco_tst':IUT},addr:'iut_addr':inet6:loopback,addr:'tst_addr':inet6:unicast}}</value>
+            </arg>
+            <arg name="reuse_addr1" type="boolean"/>
+            <arg name="reuse_addr2" type="boolean"/>
+            <arg name="connections">
+                <value>1</value>
+                <value>210</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="reuseaddr_tcp_5">
+                <req id="SO_REUSEADDR"/>
+                <req id="SOCK_STREAM"/>
+                <req id="FEW_ACCEL_PROCESSES"/>
+            </script>
+            <arg name="one_wcard" type="boolean"/>
+            <arg name="wcard_first" type="boolean"/>
+            <arg name="reuse_addr1" type="boolean"/>
+            <arg name="reuse_addr2" type="boolean"/>
+            <arg name="env">
+                <value>{{{'pco_iut1':IUT},{'pco_iut2':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},addr:'tst_addr1':inet:unicast,addr:'tst_addr2':inet:unicast}}</value>
+                <value>{{{'pco_iut1':IUT},{'pco_iut2':IUT},{'pco_tst1':tester},{'pco_tst2':tester},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast}},'tst_addr1'='iut_addr2','tst_addr2'='iut_addr2'</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut1':IUT},{'pco_iut2':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},addr:'tst_addr1':inet6:unicast,addr:'tst_addr2':inet6:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut1':IUT},{'pco_iut2':IUT},{'pco_tst1':tester},{'pco_tst2':tester},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast}},'tst_addr1'='iut_addr2','tst_addr2'='iut_addr2'</value>
+            </arg>
+        </run>
+
+        <run>
+          <session>
+            <arg name="reuse" type="boolean">
+                <value>TRUE</value>
+                <value reqs="TIME_CONSUMING">FALSE</value>
+            </arg>
+            <arg name="exec">
+                <value>none</value>
+                <value reqs="EXEC">iut</value>
+                <value reqs="EXEC">aux</value>
+            </arg>
+            <arg name="pass_op" type="boolean"/>
+
+            <run>
+              <script name="reuseaddr_2msl">
+                <req id="SO_REUSEADDR"/>
+                <req id="SOCK_STREAM"/>
+              </script>
+              <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_tst"/>
+                <value ref="env.peer2peer_lo"/>
+                <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr':inet:loopback}},'tst_addr'='iut_addr'</value>
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+                <value ref="env.peer2peer_lo_ipv6"/>
+                <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr':inet6:loopback}},'tst_addr'='iut_addr'</value>
+              </arg>
+              <arg name="use_wildcard">
+                <value>FALSE</value>
+              </arg>
+            </run>
+            <run>
+              <script name="reuseaddr_2msl">
+                <req id="SO_REUSEADDR"/>
+                <req id="SOCK_STREAM"/>
+              </script>
+              <arg name="env">
+                <value ref="env.peer2peer_tst"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+              </arg>
+              <!-- See bug 44608 for more info about wildcard iterations. -->
+              <arg name="use_wildcard">
+                <value>TRUE</value>
+              </arg>
+            </run>
+          </session>
+        </run>
+
+        <run>
+            <script name="sndbuf_dgram" track_conf="silent">
+                <req id="SO_SNDBUF"/>
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name ="env">
+                <value>{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'iut_hwaddr':ether:unicast,if:'iut_if'},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,addr:'tst_hwaddr':ether:unicast}}</value>
+                <value>{'iut_host'{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr':inet:unicast,addr:'iut_hwaddr':ether:unicast,if:'iut_if'}},'tst_addr'='iut_addr','tst_hwaddr'='iut_hwaddr'</value>
+                <value reqs="IP6,IP6_ONLOAD">{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast,addr:'iut_hwaddr':ether:unicast,if:'iut_if'},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet6:unicast,addr:'tst_hwaddr':ether:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{'iut_host'{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr':inet6:unicast,addr:'iut_hwaddr':ether:unicast,if:'iut_if'}},'tst_addr'='iut_addr','tst_hwaddr'='iut_hwaddr'</value>
+            </arg>
+            <arg name="sndbuf_new">
+                <value>500</value>
+                <value>1000</value>
+                <value>1472</value>
+                <value>65000</value>
+            </arg>
+            <arg name="force" type="boolean">
+                <value reqs="SO_SNDBUFFORCE">TRUE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="sndbuf_stream">
+                <req id="SO_SNDBUF"/>
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.p2p_loopback_threads"/>
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.p2p_loopback_threads_ip6"/>
+            </arg>
+            <arg name="sndbuf_new">
+                <!-- Pure Linux 'ignores' such small buffers -->
+                <!--value>10</value>
+                <value>4000</value-->
+                <!-- There are two different values to check that real send
+                     buffer changes when SO_SNDBUF option is changed -->
+                <value>60000</value>
+                <value>130000</value>
+            </arg>
+            <arg name="server" type="boolean"/>
+            <arg name="proper_sequence" type="boolean"/>
+            <arg name="force" type="boolean">
+                <value reqs="SO_SNDBUFFORCE">TRUE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="rcvbuf_stream">
+                <req id="SO_RCVBUF"/>
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.p2p_loopback_threads"/>
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.p2p_loopback_threads_ip6"/>
+            </arg>
+            <arg name="server" type="boolean"/>
+            <arg name="force" type="boolean">
+                <value reqs="SO_RCVBUFFORCE">TRUE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="sndlowat">
+                <req id="SO_SNDLOWAT"/>
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+        </run>
+
+        <run>
+            <script name="sndtimeo">
+                <req id="SO_SNDTIMEO"/>
+                <req id="SOCK_STREAM"/>
+                <req id="CALL_DURATION"/>
+            </script>
+            <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+            <arg name="func" type="send_func_with_sys">
+                <value>write</value>
+                <value reqs="OOL_INTEROP">sys_write</value>
+                <value>writev</value>
+                <value reqs="OOL_INTEROP">sys_writev</value>
+                <value>send</value>
+                <value>sendto</value>
+                <value>sendmsg</value>
+                <value>sendmmsg</value>
+                <value>onload_zc_send</value>
+                <value>onload_zc_send_user_buf</value>
+            </arg>
+            <arg name="is_blocking" type="boolean"/>
+            <arg name="onload_template_extension">
+              <value>FALSE</value>
+            </arg>
+        </run>
+        <run>
+            <script name="sndtimeo">
+                <req id="SO_SNDTIMEO"/>
+                <req id="SOCK_STREAM"/>
+                <req id="ONLOAD_ONLY"/>
+                <req id="SF_TEMPLATE_SEND"/>
+                <req id="CALL_DURATION"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="func" type="send_func_with_sys">
+              <value>template_send</value>
+            </arg>
+            <arg name="is_blocking" type="boolean"/>
+            <arg name="onload_template_extension">
+              <value>TRUE</value>
+            </arg>
+            <arg name="flags_pio_retry" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="sndtimeo_connect" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+                <req id="SO_SNDTIMEO"/>
+                <req id="ENV-GW"/>
+            </script>
+            <arg name="env">
+                <value>IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},'GW'{{'pco_gw':tester},addr:'gw1_addr':inet:unicast}},{'GW'{addr:'gw2_addr':inet:unicast,addr:'alien_link_addr':ether:alien,if:'gw2_if'},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+            </arg>
+        </run>
+
+
+        <run>
+            <script name="oobinline_recv_oob">
+                <req id="SO_OOBINLINE"/>
+                <req id="SIOCATMARK"/>
+                <req id="SOCK_STREAM"/>
+                <req id="OOB"/>
+            </script>
+            <arg name="env">
+                <!-- IP4 environment -->
+              <value>IUT{{{'pco_rcv':IUT},addr:'rcv_addr':inet:unicast},{{'pco_snd':tester},addr:'snd_addr':inet:unicast}}</value>
+              <value>IUT{{{'pco_snd':IUT},addr:'snd_addr':inet:unicast},{{'pco_rcv':tester},addr:'rcv_addr':inet:unicast}}</value>
+              <value reqs="ENV-TST-LINK">tester{{{'pco_rcv':IUT},addr:'rcv_addr':inet:unicast},{{'pco_snd':tester},addr:'snd_addr':inet:unicast}}</value>
+              <value reqs="ENV-TST-LINK">tester{{{'pco_snd':IUT},addr:'snd_addr':inet:unicast},{{'pco_rcv':tester},addr:'rcv_addr':inet:unicast}}</value>
+              <value reqs="ENV-LOOPBACK">IUT{{{'pco_rcv':IUT},{'pco_snd':IUT},addr:'snd_addr':inet:unicast}},'rcv_addr'='snd_addr'</value>
+                <!-- IP6 environment -->
+              <value reqs="IP6,IP6_ONLOAD">IUT{{{'pco_rcv':IUT},addr:'rcv_addr':inet6:unicast},{{'pco_snd':tester},addr:'snd_addr':inet6:unicast}}</value>
+              <value reqs="IP6,IP6_ONLOAD">IUT{{{'pco_snd':IUT},addr:'snd_addr':inet6:unicast},{{'pco_rcv':tester},addr:'rcv_addr':inet6:unicast}}</value>
+              <value reqs="ENV-TST-LINK,IP6,IP6_ONLOAD">tester{{{'pco_rcv':IUT},addr:'rcv_addr':inet6:unicast},{{'pco_snd':tester},addr:'snd_addr':inet6:unicast}}</value>
+              <value reqs="ENV-TST-LINK,IP6,IP6_ONLOAD">tester{{{'pco_snd':IUT},addr:'snd_addr':inet6:unicast},{{'pco_rcv':tester},addr:'rcv_addr':inet6:unicast}}</value>
+              <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">IUT{{{'pco_rcv':IUT},{'pco_snd':IUT},addr:'snd_addr':inet6:unicast}},'rcv_addr'='snd_addr'</value>
+            </arg>
+            <arg name="buf_len">
+                <value>333</value>
+            </arg>
+            <arg name="call_after" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="type">
+                <req id="SO_TYPE"/>
+                <req id="TEST_HARNESS_SANITY"/>
+            </script>
+            <arg name="domain" type="socket_domain"/>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+
+        <!-- IP layer socket options -->
+
+        <run>
+            <script name="udp_ttl_tos">
+                <req id="SOCK_DGRAM"/>
+                <req id="MSG_CONTROL"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_opt">
+                <value reqs="IP_TTL">IP_TTL</value>
+            </arg>
+            <arg name="connect_sender" type="boolean"/>
+            <arg name="recv_iut" type="boolean">
+                <value reqs="IP_TOS_TOO_BIG">FALSE</value>
+            </arg>
+            <arg name="fragmented_packets" type="boolean"/>
+            <arg name="recv_f" type="recv_func_with_ctl">
+                <value>recvmsg</value>
+            </arg>
+            <arg name="with_cmsg" type="boolean">
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="udp_ttl_tos">
+                <req id="SOCK_DGRAM"/>
+                <req id="MSG_CONTROL"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_opt">
+                <value reqs="IP_TOS">IP_TOS</value>
+            </arg>
+            <arg name="connect_sender" type="boolean"/>
+            <arg name="recv_iut" type="boolean">
+                <value reqs="IP_TOS_TOO_BIG">FALSE</value>
+            </arg>
+            <arg name="fragmented_packets" type="boolean"/>
+            <arg name="recv_f" type="recv_func_with_ctl">
+                <value>recvmsg</value>
+            </arg>
+            <arg name="with_cmsg" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="udp_ttl_tos">
+                <req id="SOCK_DGRAM"/>
+                <req id="MSG_CONTROL"/>
+            </script>
+            <arg name="env" ref="env.peer2peer_ipv6"/>
+            <arg name="sock_opt">
+                <value reqs="IPV6_UNICAST_HOPS">IPV6_UNICAST_HOPS</value>
+            </arg>
+            <arg name="connect_sender" type="boolean"/>
+            <arg name="recv_iut" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="fragmented_packets" type="boolean"/>
+            <arg name="recv_f" type="recv_func_with_ctl">
+                <value>recvmsg</value>
+            </arg>
+            <arg name="with_cmsg" type="boolean">
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="udp_ttl_tos">
+                <req id="SOCK_DGRAM"/>
+                <req id="MSG_CONTROL"/>
+            </script>
+            <arg name="env" ref="env.peer2peer_ipv6"/>
+            <arg name="sock_opt">
+                <value reqs="IPV6_TCLASS">IPV6_TCLASS</value>
+            </arg>
+            <arg name="connect_sender" type="boolean"/>
+            <arg name="recv_iut" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="fragmented_packets" type="boolean"/>
+            <arg name="recv_f" type="recv_func_with_ctl">
+                <value>recvmsg</value>
+            </arg>
+            <arg name="with_cmsg" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="udp_ttl_tos">
+                <req id="SOCK_DGRAM"/>
+                <req id="MSG_CONTROL"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_opt">
+                <value reqs="IP_RECVTTL">IP_TTL</value>
+                <value reqs="IP_RECVTOS">IP_TOS</value>
+            </arg>
+            <arg name="connect_sender" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="recv_iut" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="fragmented_packets" type="boolean"/>
+            <arg name="recv_f" type="recv_func_with_ctl"/>
+            <arg name="with_cmsg" type="boolean">
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="udp_ttl_tos">
+                <req id="SOCK_DGRAM"/>
+                <req id="MSG_CONTROL"/>
+            </script>
+            <arg name="env" ref="env.peer2peer_ipv6"/>
+            <arg name="sock_opt">
+                <value reqs="IPV6_RECVHOPLIMIT">IPV6_UNICAST_HOPS</value>
+                <value reqs="IPV6_RECVTCLASS">IPV6_TCLASS</value>
+            </arg>
+            <arg name="connect_sender" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="recv_iut" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="fragmented_packets" type="boolean"/>
+            <arg name="recv_f" type="recv_func_with_ctl"/>
+            <arg name="with_cmsg" type="boolean">
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="ip_recvopts">
+                <req id="SOCK_DGRAM"/>
+                <req id="MSG_CONTROL"/>
+            </script>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},addr:'snd_addr':inet:unicast},{{'pco_tst':tester},addr:'rcv_addr':inet:unicast}},'pco_snd'='pco_iut','pco_rcv'='pco_tst'</value>
+                <value reqs="MSG_CONTROL,IP_RECVOPTS">{{{'pco_iut':IUT},addr:'rcv_addr':inet:unicast},{{'pco_tst':tester},addr:'snd_addr':inet:unicast}},'pco_snd'='pco_tst','pco_rcv'='pco_iut'</value>
+                <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'snd_addr':inet:unicast}},'rcv_addr'='snd_addr','pco_snd'='pco_iut','pco_rcv'='pco_tst'</value>
+            </arg>
+            <arg name="recv_f">
+                <value reqs="SENDMSG_RECVMSG">recvmsg</value>
+            </arg>
+            <arg name="use_retopts" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="use_sendmmsg" list="">
+                <value reqs="SENDMSG_RECVMSG">FALSE</value>
+                <value reqs="SENDMSG_RECVMSG">FALSE</value>
+                <value reqs="SENDMMSG">TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="ip_recvopts">
+                <req id="IP_RECVOPTS"/>
+                <req id="SOCK_DGRAM"/>
+                <req id="MSG_CONTROL"/>
+            </script>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},addr:'rcv_addr':inet:unicast},{{'pco_tst':tester},addr:'snd_addr':inet:unicast}},'pco_snd'='pco_tst','pco_rcv'='pco_iut'</value>
+                <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'snd_addr':inet:unicast}},'rcv_addr'='snd_addr','pco_snd'='pco_iut','pco_rcv'='pco_tst'</value>
+            </arg>
+            <arg name="recv_f" type="recv_func_many_msgs"/>
+            <arg name="use_retopts" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="use_sendmmsg" list="">
+                <value reqs="SENDMSG_RECVMSG">FALSE</value>
+                <value reqs="SENDMSG_RECVMSG">FALSE</value>
+                <value reqs="SENDMMSG">TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="ip_pktoptions">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+            </arg>
+            <arg name="garbage" type="boolean"/>
+            <arg name="active_connection" type="boolean"/>
+            <arg name="traffic" type="boolean"/>
+            <arg name="set_pktinfo">
+                <value>FALSE</value>
+                <value reqs="IP_PKTINFO">TRUE</value>
+            </arg>
+            <arg name="set_recvttl" list="">
+                <value>FALSE</value>
+                <value reqs="IP_TTL,IP_MULTICAST_TTL">TRUE</value>
+                <value reqs="IP_TTL,IP_MULTICAST_TTL">TRUE</value>
+            </arg>
+            <arg name="set_new_ttl" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="ip_pktinfo" track_conf="silent">
+                <req id="IP_PKTINFO"/>
+                <req id="SOCK_DGRAM"/>
+                <req id="MSG_CONTROL"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_mcast"/>
+                <value reqs="NO_REUSE_STACK" ref="env.peer2peer_mcast_lo"/>
+                <value ref="env.peer2peer_mcast_ipv6"/>
+                <value reqs="NO_REUSE_STACK" ref="env.peer2peer_mcast_lo_ipv6"/>
+            </arg>
+            <arg name="addr_type">
+                <value reqs="MULTICAST">multicast</value>
+            </arg>
+            <arg name="method" type="mcast_method"/>
+        </run>
+        <run>
+            <script name="ip_pktinfo">
+                <req id="IP_PKTINFO"/>
+                <req id="MSG_CONTROL"/>
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_2addr"/>
+                <value ref="env.peer2peer_2addr_lo"/>
+                <value ref="env.peer2peer_2addr_ipv6"/>
+                <value ref="env.peer2peer_2addr_lo_ipv6"/>
+            </arg>
+            <arg name="addr_type">
+                <value>specific</value>
+            </arg>
+            <arg name="method">
+                <value>none</value>
+            </arg>
+        </run>
+        <run>
+            <script name="ip_pktinfo">
+                <req id="IP_PKTINFO"/>
+                <req id="MSG_CONTROL"/>
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_lo"/>
+            </arg>
+            <arg name="addr_type">
+                <value>broadcast</value>
+            </arg>
+            <arg name="method">
+                <value>none</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="ipv6_ipv4_pktinfo" track_conf="silent">
+                <req id="IP_PKTINFO"/>
+                <req id="MSG_CONTROL"/>
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.p2p_ip4_ip6"/>
+            </arg>
+            <arg name="ip_pktinfo" type="boolean" list="">
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="ipv6_recvpktinfo" type="boolean" list="">
+                <value>FALSE</value>
+                <value reqs="IPV6_RECVPKTINFO">TRUE</value>
+                <value reqs="IPV6_RECVPKTINFO">TRUE</value>
+            </arg>
+            <arg name="addr_type" list="packet">
+                <value>specific</value>
+                <value>broadcast</value>
+                <value>specific</value>
+            </arg>
+            <arg name="send_ipv4" list="packet" type="boolean">
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="method">
+                <value>none</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="ipv6_ipv4_pktinfo" track_conf="silent">
+                <req id="IP_PKTINFO"/>
+                <req id="MSG_CONTROL"/>
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.p2p_ip4_ip6"/>
+            </arg>
+            <arg name="ip_pktinfo" type="boolean" list="">
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="ipv6_recvpktinfo" type="boolean" list="">
+                <value>FALSE</value>
+                <value reqs="IPV6_RECVPKTINFO">TRUE</value>
+                <value reqs="IPV6_RECVPKTINFO">TRUE</value>
+            </arg>
+            <arg name="addr_type">
+                <value reqs="MULTICAST">multicast</value>
+            </arg>
+            <arg name="send_ipv4" type="boolean"/>
+            <arg name="method" type="mcast_method"/>
+        </run>
+
+        <run>
+            <script name="pktinfo_ip4_ip6_alternate" track_conf="silent">
+                <req id="IP_PKTINFO"/>
+                <req id="IPV6_RECVPKTINFO"/>
+                <req id="IP6"/>
+                <req id="IP6_ONLOAD"/>
+                <req id="MSG_CONTROL"/>
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+            </arg>
+            <arg name="addr_type">
+                <value>specific</value>
+                <value>broadcast</value>
+            </arg>
+            <arg name="method">
+                <value>none</value>
+            </arg>
+            <arg name="pkts_num">
+                <value>3</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="pktinfo_ip4_ip6_alternate" track_conf="silent">
+                <req id="IP_PKTINFO"/>
+                <req id="IPV6_RECVPKTINFO"/>
+                <req id="IP6"/>
+                <req id="IP6_ONLOAD"/>
+                <req id="MSG_CONTROL"/>
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+            </arg>
+            <arg name="addr_type">
+                <value reqs="MULTICAST">multicast</value>
+            </arg>
+            <arg name="method" type="mcast_method"/>
+            <arg name="pkts_num">
+                <value>3</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="ip_recverr" track_conf="silent">
+                <req id="IP_RECVERR"/>
+                <req id="IP_TTL"/>
+                <req id="MSG_ERRQUEUE"/>
+                <req id="MSG_CONTROL"/>
+                <req id="SOCK_DGRAM"/>
+                <req id="OOL1502"/>
+            </script>
+            <arg name="env">
+                <value>IUT{'host_iut'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'dst_addr':inet:alien},{{'pco_gw':tester},addr:'gw_addr':inet:unicast}}</value>
+                <value reqs="ENV-TST-LINK">tester{'host_iut'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'dst_addr':inet:alien},{{'pco_gw':tester},addr:'gw_addr':inet:unicast}}</value>
+            </arg>
+            <arg name="iomux" type="iomux_with_oo_epoll"/>
+            <arg name="select_err_queue" type="select_err_queue_bool"/>
+        </run>
+
+        <run>
+            <script name="mtu_changing" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+                <req id="ENV-GW"/>
+                <req id="L5WIN_BLACKLIST"/>
+                <req id="IP_MTU"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="retr_queue" type="boolean"/>
+            <arg name="env">
+                <value>{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},'GW'{{'pco_gw':tester},addr:'gw1_addr':inet:unicast}},{'GW'{addr:'gw2_addr':inet:unicast,addr:'alien_link_addr':ether:alien,if:'gw2_if'},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+            </arg>
+
+        </run>
+
+        <run>
+            <script name="ip_mtu_discover_tcp" track_conf="silent">
+                <req id="IP_MTU_DISCOVER"/>
+                <req id="LINUX_BEHAVIOUR"/>
+                <req id="SOCK_STREAM"/>
+                <req id="IP_MTU"/>
+                <req id="IF_DOWN_UP"/>
+                <req id="TIME_CONSUMING"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_gw"/>
+            </arg>
+        </run>
+
+        <run>
+          <session track_conf="silent">
+
+            <epilogue>
+              <script name="../gateways_epilogue"/>
+              <arg name="env">
+                  <value ref="env.peer2peer_gw"/>
+              </arg>
+            </epilogue>
+
+            <run>
+                <script name="ip_mtu_discover_udp" track_conf="nohistory">
+                    <req id="IP_MTU_DISCOVER"/>
+                    <req id="LINUX_BEHAVIOUR"/>
+                    <req id="SOCK_DGRAM"/>
+                    <req id="ENV-GW"/>
+                    <req id="IP_MTU"/>
+                    <req id="PROC_SYS_NET"/>
+                    <req id="TIME_CONSUMING"/>
+                    <req id="IF_DOWN_UP"/>
+                </script>
+                <arg name="ip_recverr" type="boolean"/>
+                <arg name="connected" type="boolean"/>
+                <arg name="pmtu_val">
+                  <value>want</value>
+                  <value>dont</value>
+                  <value>do</value>
+                  <value>probe</value>
+                </arg>
+                <arg name="env">
+                  <value ref="env.peer2peer_gw"/>
+                </arg>
+                <arg name="route_direct" type="boolean"/>
+            </run>
+            <run>
+                <script name="ip_mtu_discover_udp" track_conf="nohistory">
+                    <req id="IPV6_MTU_DISCOVER"/>
+                    <req id="LINUX_BEHAVIOUR"/>
+                    <req id="SOCK_DGRAM"/>
+                    <req id="ENV-GW"/>
+                    <req id="IPV6_MTU"/>
+                    <req id="PROC_SYS_NET"/>
+                    <req id="TIME_CONSUMING"/>
+                    <req id="IF_DOWN_UP"/>
+                </script>
+                <arg name="ip_recverr" type="boolean"/>
+                <arg name="connected" type="boolean"/>
+                <arg name="pmtu_val">
+                  <value>want</value>
+                  <value>dont</value>
+                  <value>do</value>
+                  <value>probe</value>
+                </arg>
+                <arg name="env">
+                  <value ref="env.peer2peer_gw_ipv6"/>
+                </arg>
+                <arg name="route_direct" type="boolean"/>
+            </run>
+
+            <run>
+                <script name="tcp_nodelay" track_conf="silent">
+                    <req id="TCP_NODELAY"/>
+                    <req id="SOCK_STREAM"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer_gw"/>
+                    <value ref="env.peer2peer_gw_ipv6"/>
+                </arg>
+            </run>
+
+          </session>
+        </run>
+
+        <run>
+            <script name="ip_mtu_inapprop_state">
+                <req id="IP_MTU"/>
+            </script>
+            <arg name="env" list="opt">
+                <value>{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast}}</value>
+                <value reqs="IP6,IP6_IP4MAPPED">{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet6:ip4mapped_uc}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast}}</value>
+            </arg>
+            <arg name="opt_name" list="opt">
+                <value reqs="IP_MTU">IP_MTU</value>
+                <value reqs="IP_MTU">IP_MTU</value>
+                <value reqs="IPV6_MTU">IPV6_MTU</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram" list="">
+                <value>SOCK_STREAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="state" list="">
+                <value>created</value>
+                <value>bound</value>
+                <value>listening</value>
+                <value>created</value>
+                <value>bound</value>
+            </arg>
+        </run>
+
+        <!-- TCP layer socket options -->
+
+        <run>
+            <script name="tcp_info_state" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+                <req id="TAPI_TCP_STATES"/>
+            </script>
+            <arg name="env" list="">
+                <!--
+                This environment can be used for full check of TSA_SOCKET
+                mode (i.e. with using gateway and routing breaks/repairs to
+                achieve all possible TCP states using linux socket on the
+                other side).
+                <value ref="env.peer2peer_gw"/>-->
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_tst"/>
+            </arg>
+            <arg name="loopback">
+                <value>FALSE</value>
+            </arg>
+            <arg name="tcp_state_seq">
+                <value>TCP_CLOSE->TCP_SYN_SENT->TCP_ESTABLISHED->TCP_FIN_WAIT1->TCP_FIN_WAIT2->TCP_TIME_WAIT->timeout->TCP_CLOSE</value>
+                <value>TCP_CLOSE->TCP_LISTEN->TCP_SYN_SENT</value>
+                <value>TCP_CLOSE->TCP_LISTEN->TCP_SYN_RECV->TCP_ESTABLISHED</value>
+                <value>TCP_ESTABLISHED->TCP_CLOSE_WAIT->TCP_LAST_ACK->TCP_CLOSE</value>
+                <value>TCP_FIN_WAIT1->TCP_CLOSING->TCP_TIME_WAIT</value>
+                <value>TCP_FIN_WAIT1->TCP_TIME_WAIT</value>
+                <value>TCP_SYN_SENT->TCP_CLOSE</value>
+                <value>TCP_SYN_SENT->timeout->TCP_CLOSE</value>
+                <value reqs="SIMULTANEOUS_OPEN">TCP_SYN_SENT->TCP_SYN_RECV->TCP_FIN_WAIT1</value>
+                <value reqs="SIMULTANEOUS_OPEN">TCP_SYN_SENT->TCP_SYN_RECV->TCP_ESTABLISHED</value>
+                <value reqs="SIMULTANEOUS_OPEN">TCP_SYN_SENT->TCP_SYN_RECV->TCP_LISTEN</value>
+            </arg>
+            <arg name="tst_type" list="">
+                <!--<value>TSA_TST_SOCKET</value>-->
+                <value>TSA_TST_CSAP</value>
+                <value>TSA_TST_CSAP</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="tcp_info_state" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+                <req id="TAPI_TCP_STATES"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_lo"/>
+            </arg>
+            <arg name="loopback">
+                <value>TRUE</value>
+            </arg>
+            <arg name="tcp_state_seq">
+                <value>TCP_CLOSE->TCP_SYN_SENT->TCP_ESTABLISHED->TCP_FIN_WAIT1->TCP_FIN_WAIT2->TCP_TIME_WAIT->timeout->TCP_CLOSE</value>
+                <value>TCP_CLOSE->TCP_LISTEN->TCP_SYN_RECV->TCP_ESTABLISHED</value>
+                <value>TCP_ESTABLISHED->TCP_CLOSE_WAIT->TCP_LAST_ACK->TCP_CLOSE</value>
+            </arg>
+            <arg name="tst_type">
+                <value>TSA_TST_SOCKET</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="tcp_info_ca_state">
+                <req id="SOCK_STREAM"/>
+                <req id="TAPI_TCP_STATES"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="tcp_ca_state_seq">
+                <value>OPEN-LOSS-OPEN</value>
+                <value>OPEN-DISORDER-OPEN</value>
+                <value>OPEN-DISORDER-LOSS-OPEN</value>
+                <value>OPEN-DISORDER-RECOVERY-OPEN</value>
+                <value>OPEN-DISORDER-RECOVERY-LOSS-OPEN</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="tcp_info_last_data_sent_ack_recv">
+                <req id="SOCK_STREAM"/>
+                <!-- See ON-11917 -->
+                <req id="BROKEN"/>
+            </script>
+            <arg name="env">
+                <value ref ="env.peer2peer"/>
+                <value ref ="env.peer2peer_ipv6"/>
+            </arg>
+        </run>
+
+        <run>
+            <script name="tcp_info_snd_adv_mss">
+                <req id="SOCK_STREAM"/>
+                <req id="TCP_INFO"/>
+            </script>
+            <arg name="env">
+                <value ref ="env.peer2peer"/>
+                <value ref ="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="active" type="socket_tcp_boolean"/>
+        </run>
+
+        <run>
+            <script name="tcp_cork">
+                <req id="SOCK_STREAM"/>
+                <req id="TCP_CORK"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+        </run>
+        <run>
+            <script name="tcp_cork_nodelay">
+                <req id="SOCK_STREAM"/>
+                <req id="TCP_CORK"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+        </run>
+
+        <run>
+            <script name="tcp_maxseg" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+                <req id="TCP_MAXSEG"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="mss_1">
+                <value>500</value>
+            </arg>
+            <arg name="mss_2">
+                <value>400</value>
+            </arg>
+            <arg name="buf_size">
+                <value>4889</value>
+                <value>300</value>
+            </arg>
+            <arg name="passive" type="boolean"/>
+            <arg name="before_bind" type="boolean"/>
+        </run>
+        <run name="tcp_cork_aux">
+            <script name="tcp_cork_aux" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+                <req id="TCP_CORK"/>
+                <req id="TCP_MAXSEG"/>
+                <req id="ETHTOOL_GGRO"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="remove_cork" type="boolean"/>
+            <arg name="ts_option_length">
+                <value>12</value>
+            </arg>
+            <arg name="send_size">
+                <value>300</value>
+                <value>600</value>
+           </arg>
+            <arg name="first_func" list="func">
+                <value>send</value>
+                <value reqs="SENDFILE">sendfile</value>
+                <value reqs="SENDFILE">sendfile</value>
+                <value>send</value>
+                <value>send</value>
+            </arg>
+            <arg name="second_func" list="func">
+                <value reqs="SENDFILE">sendfile</value>
+                <value>send</value>
+                <value reqs="SENDFILE">sendfile</value>
+                <value>send</value>
+                <value>send</value>
+            </arg>
+            <arg name="packets_number" list="func">
+                <value>-1</value>
+                <value>-1</value>
+                <value>-1</value>
+                <value>5</value>
+                <value>10</value>
+            </arg>
+            <arg name="set_maxseg" type="boolean" list="">
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="connection_mss" list="">
+                <value>512</value>
+                <value>1012</value>
+                <value>-1</value>
+            </arg>
+        </run>
+        <run>
+            <script name="tcp_maxseg_and_pmtu" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+                <req id="TCP_MAXSEG"/>
+                <req id="ENV-GW"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer_gw"/>
+            </arg>
+            <arg name="mtu_1">
+                <value>1000</value>
+            </arg>
+            <arg name="mtu_2">
+                <value>600</value>
+            </arg>
+            <arg name="mtu_3">
+                <value>800</value>
+            </arg>
+        </run>
+        <run>
+            <script name="tcp_defer_accept_simple">
+                <req id="SOCK_STREAM"/>
+                <req id="TCP_DEFER_ACCEPT"/>
+                <req id="CALL_DURATION"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_lo"/>
+            </arg>
+            <arg name="test_timeout" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="opt_val" list="">
+                <value>10</value>
+                <value>1</value>
+                <value>10</value>
+            </arg>
+            <arg name="big_packet" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="tcp_defer_accept_close">
+                <req id="SOCK_STREAM"/>
+                <req id="TCP_DEFER_ACCEPT"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer"/>
+            </arg>
+            <arg name="swap_pco" type="boolean">
+              <value>TRUE</value>
+            </arg>
+            <arg name="iomux" type="iomux_with_oo_epoll"/>
+            <arg name="is_blocking" type="boolean"/>
+            <arg name="use_shutdown" type="boolean"/>
+            <arg name="overfill_buffers" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="check_writable" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="peer_close">
+                <value>FALSE</value>
+            </arg>
+        </run>
+        <run>
+            <script name="tcp_defer_accept_close">
+                <req id="SOCK_STREAM"/>
+                <req id="TCP_DEFER_ACCEPT"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+            </arg>
+            <arg name="swap_pco" type="boolean">
+              <value>FALSE</value>
+            </arg>
+            <arg name="iomux" type="iomux_with_oo_epoll">
+              <value>poll</value>
+            </arg>
+            <arg name="is_blocking" type="boolean"/>
+            <arg name="use_shutdown" type="boolean"/>
+            <arg name="overfill_buffers" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="check_writable" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="peer_close">
+                <value>FALSE</value>
+            </arg>
+        </run>
+        <run>
+            <script name="tcp_defer_accept_close">
+                <req id="SOCK_STREAM"/>
+                <req id="TCP_DEFER_ACCEPT"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+            </arg>
+            <arg name="use_shutdown" type="boolean"/>
+            <arg name="peer_close">
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+<!-- TCP_DEFER_ACCEPT socket options changed behaviour on kernels >=2.6.32.
+     For more info please see SFC bug 33198 comment #4.
+        <run>
+            <script name="tcp_defer_accept_rst">
+                <req id="SOCK_STREAM"/>
+                <req id="TCP_DEFER_ACCEPT"/>
+                <req id="TIME_CONSUMING"/>
+                <req id="EXTRA_TIME_CONSUMING"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.p2p_loopback_threads"/>
+            </arg>
+        </run>
+-->
+        <run>
+            <script name="udp_cork" track_conf="silent">
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="packet_size" list="">
+                <value>300</value>
+                <value>300</value>
+                <value>300</value>
+                <value>300</value>
+                <value>300</value>
+                <value>5000</value>
+                <value>300</value>
+                <value>300</value>
+            </arg>
+            <arg name="sndbuf" list="">
+                <value>-1</value>
+                <value>-1</value>
+                <value>-1</value>
+                <value>-1</value>
+                <value>4096</value>
+                <value>2048</value>
+                <value>-1</value>
+                <value>-1</value>
+            </arg>
+            <arg name="stop_type" list="">
+                <value>cork</value>
+                <value>close</value>
+                <value>linger</value>
+                <value>overflow</value>
+                <value>overflow</value>
+                <value>overflow</value>
+                <value>exit</value>
+                <value>kill</value>
+            </arg>
+            <arg name="use_sendmmsg">
+                <value reqs="SENDMSG_RECVMSG">FALSE</value>
+                <value reqs="SENDMMSG">TRUE</value>
+            </arg>
+        </run>
+        <!--run>
+            <script name="ipv6_only"/>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},addr:'iut_addr6':inet6:ip4mapped_uc,addr:'iut_addr':inet:unicast},{{'pco_tst':tester}}}</value>
+            </arg>
+        </run-->
+        <run>
+            <script name="ipv6_only_bind" track_conf="silent"/>
+            <arg name="env">
+                <value ref="env.p2p_ip4_ip6"/>
+            </arg>
+            <arg name="ipv6_bind">
+                <value>any</value>
+                <value>ipv4</value>
+                <value>ipv4_mapped</value>
+                <value>ipv4_mapped_any</value>
+                <value>ipv6</value>
+            </arg>
+            <arg name="ipv4_bind">
+                <value>any</value>
+                <value>ipv4</value>
+            </arg>
+            <arg name="v6only" type="boolean"/>
+            <arg name="v6only_after" type="boolean"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+
+        <run>
+            <script name="ipv6_tclass">
+                <req id="IPV6_TCLASS"/>
+                <req id="IP_TOS"/>
+            </script>
+            <arg name="env" ref="env.peer2peer_ipv6"/>
+            <arg name="sock_type" type="socket_type_all"/>
+            <arg name="with_cmsg" type="boolean">
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="ipv6_tclass">
+                <req id="IPV6_TCLASS"/>
+                <req id="IP_TOS"/>
+            </script>
+            <arg name="env" ref="env.peer2peer_ipv6"/>
+            <arg name="sock_type">
+                <value reqs="SOCK_DGRAM">udp</value>
+                <value reqs="SOCK_DGRAM">udp_notconn</value>
+            </arg>
+            <arg name="with_cmsg" type="boolean">
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="ipv6_tclass_tos" track_conf="silent">
+                <req id="IPV6_TCLASS"/>
+                <req id="IP_TOS"/>
+            </script>
+            <arg name="env" ref="env.p2p_ip4_ip6"/>
+            <arg name="sock_type">
+              <value reqs="SOCK_DGRAM">udp</value>
+              <value reqs="SOCK_DGRAM">udp_notconn</value>
+              <value reqs="SOCK_STREAM,TCP_ACTIVE">tcp_active</value>
+              <value reqs="SOCK_STREAM,IP_TOS_TCP_PASSIVE">tcp_passive</value>
+              <value reqs="SOCK_STREAM,IP_TOS_TCP_PASSIVE">tcp_passive_close</value>
+            </arg>
+            <arg name="precedence_bits" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="ip_tos">
+                <req id="IP_TOS"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="socket_type_all"/>
+            <arg name="precedence_bits" type="boolean"/>
+            <arg name="with_cmsg" type="boolean">
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="ip_tos">
+                <req id="IP_TOS"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type">
+              <value reqs="SOCK_DGRAM">udp</value>
+              <value reqs="SOCK_DGRAM">udp_notconn</value>
+            </arg>
+            <arg name="precedence_bits" type="boolean"/>
+            <arg name="with_cmsg" type="boolean">
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="auto_flowlabels" track_conf="silent">
+                <req id="RPC_RESTART"/>
+                <req id="IPV6_AUTOFLOWLABEL"/>
+            </script>
+            <arg name="env" ref="env.peer2peer_ipv6"/>
+            <arg name="sock_type" type="socket_type_all"/>
+            <arg name="auto_fl">
+                <value>0</value>
+                <value>1</value>
+                <value>2</value>
+                <value>3</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="so_priority_and_tos">
+                <req id="SO_PRIORITY"/>
+                <req id="MSG_CONTROL"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="connected" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="ip_tos_tcp"/>
+            <arg name="env" ref="env.iut_only"/>
+        </run>
+
+        <run>
+            <script name="error_rst">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+            </arg>
+        </run>
+
+        <run>
+            <script name="errind_conn_not_conn">
+                <req id="SOCK_DGRAM"/>
+                <req id="SOLARIS_SPECIFIC"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+            </arg>
+        </run>
+
+        <run>
+            <script name="errind_conn_disable">
+                <req id="SOCK_DGRAM"/>
+                <req id="SOLARIS_SPECIFIC"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+            </arg>
+        </run>
+
+        <run>
+            <script name="errind_not_conn">
+                <req id="SOCK_DGRAM"/>
+                <req id="SOLARIS_SPECIFIC"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+            </arg>
+        </run>
+
+        <run>
+            <script name="rcvtimeo_recvmmsg">
+                <req id="SOCK_DGRAM"/>
+                <req id="RECVMMSG"/>
+                <req id="SO_RCVTIMEO"/>
+                <req id="CALL_DURATION"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+            </arg>
+            <arg name="data_size">
+                <value>512</value>
+            </arg>
+            <arg name="before_pack">
+                <value>2</value>
+            </arg>
+            <arg name="during_pack">
+                <value>2</value>
+            </arg>
+            <arg name="after_pack" type="boolean"/>
+            <arg name="timeout">
+                <value>5</value>
+            </arg>
+            <arg name="rcvtimeo">
+                <value>10</value>
+            </arg>
+            <arg name="vlen">
+                <value>6</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="tcp_quickack">
+                <req id="TCP_QUICKACK"/>
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <!-- env.peer2peer_tst is here to compare with linux
+                     behaviour -->
+                <value ref="env.peer2peer_tst"/>
+            </arg>
+            <arg name="packet_num">
+                <value>10</value>
+            </arg>
+            <arg name="opt_val">
+                <value>0</value>
+                <value>1</value>
+                <!--value>2</value-->
+            </arg>
+            <arg name="do_recv" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="bindtodevice_bond" track_conf="nohistory">
+                <!-- SFC bug 72361 -->
+                <req id="OOL1606"/>
+                <req id="NO_BOND"/>
+                <req id="CREATE_NET_IF"/>
+                <req id="NO_VLAN"/>
+                <req id="NO_MACVLAN"/>
+                <req id="NO_IPVLAN"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" ref="env.peer2peer.two_links"/>
+            <arg name="mode">
+                <value reqs="BOND">bond1</value>
+                <value reqs="BOND">bond4</value>
+                <value reqs="TEAM">team1</value>
+                <value reqs="TEAM">team4</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+
+        <run>
+            <script name="keepalive_flooder">
+                <req id="SOCK_STREAM"/>
+                <req id="SO_KEEPALIVE"/>
+                <req id="TCP_KEEPIDLE"/>
+                <req id="TCP_KEEPINTVL"/>
+                <req id="TCP_KEEPCNT"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_tst"/>
+                <value ref="env.peer2peer_lo"/>
+            </arg>
+            <arg name="time2run">
+                <value>20</value>
+            </arg>
+            <arg name="keepcnt">
+                <value>3</value>
+            </arg>
+            <arg name="keepidle">
+                <value>5</value>
+            </arg>
+            <arg name="keepintvl">
+                <value>4</value>
+            </arg>
+            <arg name="func_aux">
+                <value>fork</value>
+                <value>thread</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="so_protocol">
+                <req id="SO_PROTOCOL"/>
+            </script>
+            <arg name="env" list="">
+                <value ref="env.iut_ucast"/>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast}}</value>
+                <value ref="env.iut_ucast"/>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr':inet6:ip4mapped_uc}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast}}</value>
+            </arg>
+            <arg name="use_bind" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="use_zero" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="tcpinfo_optlen">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+            </arg>
+            <arg name="overflow">
+              <value>10</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="setbuf_force">
+              <req ref="opt_name"/>
+            </script>
+            <arg name="env">
+                <value ref="env.iut_only"/>
+            </arg>
+            <arg name="domain" type="socket_domain"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="opt_name">
+              <value>SO_RCVBUFFORCE</value>
+              <value>SO_SNDBUFFORCE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="tcp_info_retransmits" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+                <req id="TCP_INFO"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer_gw"/>
+              <value ref="env.peer2peer_gw_ipv6"/>
+              <value ref="env.peer2peer_tst_gw"/>
+              <value ref="env.peer2peer_tst_gw_ipv6"/>
+            </arg>
+            <arg name="tcpi_fields">
+              <value>tcpi_retransmits,tcpi_retrans,tcpi_unacked,tcpi_lost,tcpi_backoff,tcpi_rto</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="tcp_info_rtt" track_conf="nohistory">
+                <req id="SOCK_STREAM"/>
+                <req id="TCP_INFO"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_gw"/>
+                <value ref="env.peer2peer_gw_ipv6"/>
+                <value ref="env.peer2peer_tst_gw"/>
+                <value ref="env.peer2peer_tst_gw_ipv6"/>
+            </arg>
+        </run>
+
+        <run>
+            <script name="ipv6_tos_tclass_cmsg"/>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+            </arg>
+            <arg name="sock_type">
+                <value reqs="SOCK_DGRAM">udp</value>
+                <value reqs="SOCK_DGRAM">udp_notconn</value>
+            </arg>
+            <arg name="set_sockopt_tclass" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="set_sockopt_tos" type="boolean"/>
+            <arg name="set_cmsg_tclass" type="boolean"/>
+            <arg name="set_cmsg_tos" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="ipv6_tos_tclass_cmsg"/>
+            <arg name="env">
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="sock_type">
+                <value reqs="SOCK_DGRAM">udp</value>
+                <value reqs="SOCK_DGRAM">udp_notconn</value>
+            </arg>
+            <arg name="set_sockopt_tclass" type="boolean"/>
+            <arg name="set_sockopt_tos" type="boolean"/>
+            <arg name="set_cmsg_tclass" type="boolean"/>
+            <arg name="set_cmsg_tos" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="fill_reduce_rcvbuf">
+                <req id="SO_RCVBUF"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="socket_type">
+                <value>tcp_active</value>
+                <value>tcp_passive</value>
+                <value>tcp_passive_close</value>
+            </arg>
+        </run>
+
+    </session>
+</package>

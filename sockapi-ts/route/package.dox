@@ -1,0 +1,106 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup route Routing table
+@ingroup sockapi
+@{
+
+This package tests various routing configurations which are used by different kinds of sockets:
+    - TCP active;
+    - TCP passive;
+    - non-connected UPD;
+    - connected UPD.
+
+Check that the correct route is choosen when:
+    - direct route is specified;
+    - route is specified using gateway;
+    - there are routes with different metric values;
+    - there are routes with different prefix length;
+    - there are routes with different prefix length and metric in combinations;
+    - default route is changed;
+    - TOS is specified.
+
+It includes @b policy-based routing tests. The following ip rules criteria are tested:
+    - source address;
+    - destination address;
+    - oif;
+    - tos.
+
+It is tested:
+    - the correct routing table is chosen in dependence on:
+        - rule criteria or criteria combinations;
+        - rules order and preference;
+        - TOS value and traffic marking, various TOS values are checked;
+    - traffic goes to the correct route in dependence on:
+        - there is (or not) a route in the table determined by ip rule;
+        - route prefix and metric;
+        - binding type in source based routing;
+    - changing route after sockets connection;
+    - the same IP is used on two interfaces at the testing host.
+
+All tests check that traffic which is passed throug SFC interfaces is Onload accelerated.
+
+@section terminology Terminology
+
+@tdt_start
+
+@tdt_term direct route
+@tdt_def  A packet that going out a direct route has both the network address
+          and the link-layer address specifying the destination.
+
+@tdt_term indirect route
+@tdt_def  A packet that going out an indirect route, the network address
+          specifies the final destination but the link-layer address specifies
+          the gateway (that is, the next-hop router).
+
+@tdt_end
+
+@par Maintainers:
+  - Dmitry Izbitsky <Dmitry.Izbitsky@oktetlabs.ru>
+  - Andrey Dmitrov <Andrey.Dmitrov@oktetlabs.ru>
+
+@par Tests:
+
+-# @ref route-prologue
+
+-# @ref route-rt_if_by_dst_dr
+-# @ref route-rt_if_by_dst_gw
+-# @ref route-rt_many_subnets_via_gw
+-# @ref route-rt_default
+-# @ref route-rt_prefix_len_flexible
+-# @ref route-rt_metric
+-# @ref route-rt_prefix_vs_metric
+-# @ref route-rt_choose_by_tos
+-# @ref route-conn_changed_gw
+-# @ref route-rt_same_addr_if_down_up
+-# @ref route-rt_same_addr_if_down_up_one_sock
+-# @ref route-rt_src_addr
+-# @ref route-rt_src_other_if
+-# @ref route-tcp_loopback_alien
+-# @ref route-multipath_balancing
+-# @ref route-multipath_add_del
+-# @ref route-multipath_del_add_same_conns
+-# @ref route-rt_switched_tos
+-# @ref route-asymmetric
+-# @ref route-rt_hoplimit
+-# @ref route-retransmit_change_route
+-# @ref route-if_change_netns
+-# @ref route-conn_changed_tos
+
+@par Policy-based routing:
+
+-# @ref route-rt_src_based
+-# @ref route-pbr_tos
+-# @ref route-pbr_tos_two_rules
+-# @ref route-pbr_criterion
+-# @ref route-pbr_metric
+-# @ref route-pbr_rules_order
+-# @ref route-pbr_prefix
+-# @ref route-pbr_rule_from
+-# @ref route-pbr_rule_combined
+-# @ref route-pbr_oif_src
+-# @ref route-pbr_oif_gw
+
+@}
+*/

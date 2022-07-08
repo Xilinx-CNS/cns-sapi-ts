@@ -1,0 +1,4970 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<test name="iomux" type="package">
+  <objective>Input/Output multiplexing</objective>
+  <notes/>
+  <iter result="PASSED">
+    <notes/>
+    <test name="timeout_update" type="script">
+      <objective>Check if select(), pselect() or poll() update timeout argument.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">pselect</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">ppoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">select</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>Timeout parameter was modified by select() function</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="thread_shut_sock" type="script">
+      <objective>Check I/O multiplexing functions behaviour when socket is shutdowned from another thread.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="check_event"/>
+        <arg name="env"/>
+        <arg name="howto"/>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="ready"/>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_WR</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="ready">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_WR</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="ready">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_WR</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="ready">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_WR</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="ready">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RDWR</arg>
+        <arg name="iomux">epoll</arg>
+        <arg name="ready">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RDWR</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="ready">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RDWR</arg>
+        <arg name="iomux">epoll</arg>
+        <arg name="ready">FALSE</arg>
+        <notes/>
+        <results tags="v5&amp;ool_spin" key="ON-1119" notes="Expected behaviour">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>POLLHUP is not returned when shutdown(SHUT_RDWR) is called</verdict>
+            <verdict>The first iomux call after shutdown(RDWR) returned only EVT_WR event</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RDWR</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="ready">FALSE</arg>
+        <notes/>
+        <results tags="v5&amp;ool_spin" key="ON-1119" notes="Expected behaviour">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>POLLHUP is not returned when shutdown(SHUT_RDWR) is called</verdict>
+            <verdict>The first iomux call after shutdown(RDWR) returned only EVT_WR event</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RDWR</arg>
+        <arg name="iomux">epoll</arg>
+        <arg name="ready">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RDWR</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="ready">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RDWR</arg>
+        <arg name="iomux">epoll</arg>
+        <arg name="ready">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-1183">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>POLLHUP is not returned when shutdown(SHUT_RDWR) is called</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RDWR</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="ready">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-1183">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>POLLHUP is not returned when shutdown(SHUT_RDWR) is called</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_WR</arg>
+        <arg name="iomux">epoll</arg>
+        <arg name="ready">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_WR</arg>
+        <arg name="iomux">epoll</arg>
+        <arg name="ready">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_WR</arg>
+        <arg name="iomux">epoll</arg>
+        <arg name="ready">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_WR</arg>
+        <arg name="iomux">epoll</arg>
+        <arg name="ready">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RDWR</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="ready">FALSE</arg>
+        <notes/>
+        <results tags="v5&amp;ool_spin" key="ON-1119" notes="Expected behaviour">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>POLLHUP is not returned when shutdown(SHUT_RDWR) is called</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_WR</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="ready">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_WR</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="ready">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_WR</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="ready">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_WR</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="ready">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RDWR</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="ready">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RDWR</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="ready">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RDWR</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="ready">FALSE</arg>
+        <notes/>
+        <results tags="v5&amp;ool_spin" key="ON-1119" notes="Expected behaviour">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>POLLHUP is not returned when shutdown(SHUT_RDWR) is called</verdict>
+            <verdict>The first iomux call after shutdown(RDWR) returned only EVT_WR event</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RDWR</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="ready">FALSE</arg>
+        <notes/>
+        <results tags="v5&amp;ool_spin" key="ON-1119" notes="Expected behaviour">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>POLLHUP is not returned when shutdown(SHUT_RDWR) is called</verdict>
+            <verdict>The first iomux call after shutdown(RDWR) returned only EVT_WR event</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RDWR</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="ready">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RDWR</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="ready"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_WR</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="ready">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_WR</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="ready">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_WR</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="ready">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_WR</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="ready">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RDWR</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="ready">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RDWR</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="ready">FALSE</arg>
+        <notes/>
+        <results tags="v5&amp;ool_spin" key="ON-1119" notes="Expected behaviour">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>pselect() returned unexpected number of events: 1 instead of 2</verdict>
+            <verdict>The first iomux call after shutdown(RDWR) returned only EVT_WR event</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_WR</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="ready">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RDWR</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="ready">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_WR</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="ready">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_WR</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="ready">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RDWR</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="ready">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_WR</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="ready">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RD</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RDWR</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="ready"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RD</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="ready"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RD</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="ready"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RD</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="ready"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RD</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="ready"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event"/>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RD</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="ready"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RD</arg>
+        <arg name="env"/>
+        <arg name="howto"/>
+        <arg name="iomux">poll</arg>
+        <arg name="ready"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RD</arg>
+        <arg name="env"/>
+        <arg name="howto"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="ready"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RDWR</arg>
+        <arg name="iomux">select</arg>
+        <arg name="ready">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RDWR</arg>
+        <arg name="iomux">select</arg>
+        <arg name="ready">FALSE</arg>
+        <notes/>
+        <results tags="v5&amp;ool_spin" key="ON-1119" notes="Expected behaviour">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>select() returned unexpected number of events: 1 instead of 2</verdict>
+            <verdict>The first iomux call after shutdown(RDWR) returned only EVT_WR event</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_WR</arg>
+        <arg name="iomux">select</arg>
+        <arg name="ready">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RDWR</arg>
+        <arg name="iomux">select</arg>
+        <arg name="ready">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_WR</arg>
+        <arg name="iomux">select</arg>
+        <arg name="ready">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_WR</arg>
+        <arg name="iomux">select</arg>
+        <arg name="ready">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RDWR</arg>
+        <arg name="iomux">select</arg>
+        <arg name="ready">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_WR</arg>
+        <arg name="iomux">select</arg>
+        <arg name="ready">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RD</arg>
+        <arg name="iomux">select</arg>
+        <arg name="ready"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RD</arg>
+        <arg name="iomux">select</arg>
+        <arg name="ready"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RD</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_WR</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="ready"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RD</arg>
+        <arg name="iomux">epoll</arg>
+        <arg name="ready"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RD</arg>
+        <arg name="iomux">epoll</arg>
+        <arg name="ready"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RD</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="ready"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RD</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="ready"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RD</arg>
+        <arg name="env"/>
+        <arg name="howto"/>
+        <arg name="iomux">select</arg>
+        <arg name="ready"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RD</arg>
+        <arg name="env"/>
+        <arg name="howto"/>
+        <arg name="iomux">epoll</arg>
+        <arg name="ready"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RD</arg>
+        <arg name="env"/>
+        <arg name="howto"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="ready"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="pair_bidir_perf" type="script">
+      <objective>Measure performance of the connection using I/O multiplexing.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">select</arg>
+        <arg name="iomux2">poll</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">poll</arg>
+        <arg name="iomux2">select</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">poll</arg>
+        <arg name="iomux2">poll</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">select</arg>
+        <arg name="iomux2">select</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">select</arg>
+        <arg name="iomux2">epoll</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">poll</arg>
+        <arg name="iomux2">epoll</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">epoll</arg>
+        <arg name="iomux2"/>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="trio_bidir_perf" type="script">
+      <objective>Measure performance of the connection using I/O multiplexing. Check robustness under high loads.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1"/>
+        <arg name="iomux2"/>
+        <arg name="iomux3"/>
+        <arg name="sock_type_12"/>
+        <arg name="sock_type_23"/>
+        <arg name="sock_type_31"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="iomux_timeout" type="script">
+      <objective>Check that I/O Multiplexing functions terminate after supplied timeout expires when no events are observed, and report no events in such case.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="type"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="write_timeout" type="script">
+      <objective>Check support of write event and possibility of timeout on write event.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">oo_epoll</arg>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">pselect</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">poll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">ppoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">select</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ret_count_rd_wr" type="script">
+      <objective>Check that I/O Multiplexing functions correctly counts events in return value when the same socket is waited for reading and writing.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="type"/>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">select</arg>
+        <arg name="type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">poll</arg>
+        <arg name="type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll</arg>
+        <arg name="type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="type"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="sock_shut_rd" type="script">
+      <objective>Check I/O multiplexing functions behaviour when socket was shut down for reading.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="type"/>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll</arg>
+        <arg name="type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">poll</arg>
+        <arg name="type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">select</arg>
+        <arg name="type"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="sock_shut_wr" type="script">
+      <objective>Check I/O multiplexing functions behaviour when socket was shut down for writing.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>No SIGPIPE signal has been recieved.</verdict>
+          </result>
+        </results>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">select</arg>
+        <arg name="type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>No SIGPIPE signal has been recieved.</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>No SIGPIPE signal has been recieved.</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">poll</arg>
+        <arg name="type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>No SIGPIPE signal has been recieved.</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>No SIGPIPE signal has been recieved.</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll</arg>
+        <arg name="type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>No SIGPIPE signal has been recieved.</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>No SIGPIPE signal has been recieved.</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux">select</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux">epoll</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">select</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">epoll</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">select</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">epoll</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="iomux"/>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="iomux"/>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="iomux"/>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="sock_shut_rdwr" type="script">
+      <objective>Check I/O multiplexing functions behaviour when socket was shut down for reading and writing.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>No SIGPIPE signal has been recieved</verdict>
+          </result>
+        </results>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">select</arg>
+        <arg name="type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>No SIGPIPE signal has been recieved</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>No SIGPIPE signal has been recieved</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">poll</arg>
+        <arg name="type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>No SIGPIPE signal has been recieved</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>No SIGPIPE signal has been recieved</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll</arg>
+        <arg name="type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>No SIGPIPE signal has been recieved</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>No SIGPIPE signal has been recieved</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux">select</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux">epoll</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">select</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">epoll</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">select</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">epoll</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="iomux"/>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="iomux"/>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="iomux"/>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ret_count_peer_close" type="script">
+      <objective>Check that I/O Multiplexing functions correctly counts events in return value when the same socket is waited for reading and writing and peer closes connection.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">oo_epoll</arg>
+        <notes/>
+        <results tags="(linux&lt;4|linux-4&lt;12)&amp;v5&amp;ool_spin&amp;ool_epoll=3" key="ON-8231" notes="Race condition in Linux">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>Peer has closed its socket, oo_epoll() returns 1 with (EVT_EXC | EVT_ERR) event(s) instead of 1 with (EVT_RDWR | EVT_EXC | EVT_HUP | EVT_ERR) events</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>Peer has closed its socket, oo_epoll() returns 1 with (EVT_EXC | EVT_ERR | EVT_HUP) event(s) instead of 1 with (EVT_RDWR | EVT_EXC | EVT_HUP | EVT_ERR) events</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <notes/>
+        <results tags="(linux&lt;4|linux-4&lt;12)&amp;v5&amp;ool_spin&amp;ool_epoll=3" key="ON-8231" notes="Race condition in Linux">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>Peer has closed its socket, epoll_pwait() returns 1 with (EVT_EXC | EVT_ERR) event(s) instead of 1 with (EVT_RDWR | EVT_EXC | EVT_HUP | EVT_ERR) events</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>Peer has closed its socket, epoll_pwait() returns 1 with (EVT_EXC | EVT_ERR | EVT_HUP) event(s) instead of 1 with (EVT_RDWR | EVT_EXC | EVT_HUP | EVT_ERR) events</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll</arg>
+        <notes/>
+        <results tags="(linux&lt;4|linux-4&lt;12)&amp;v5&amp;ool_spin&amp;ool_epoll=3" key="ON-8231" notes="Race condition in Linux">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>Peer has closed its socket, epoll() returns 1 with (EVT_EXC | EVT_ERR) event(s) instead of 1 with (EVT_RDWR | EVT_EXC | EVT_HUP | EVT_ERR) events</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>Peer has closed its socket, epoll() returns 1 with (EVT_EXC | EVT_ERR | EVT_HUP) event(s) instead of 1 with (EVT_RDWR | EVT_EXC | EVT_HUP | EVT_ERR) events</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">select</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">pselect</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">poll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">ppoll</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="pending_error" type="script">
+      <objective>Check that IOMUX function return "ready" if a pending error exists on the socket and read operation on the socket will not block and return (-1) with errno ECONNRESET.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">oo_epoll</arg>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>oo_epoll() failed unexpectedly with errno EINVAL</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">pselect</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">poll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">ppoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">select</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="peer_shut_rd" type="script">
+      <objective>Check I/O multiplexing functions behaviour when peer shuts down connection for reading.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">oo_epoll</arg>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">pselect</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">poll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">ppoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">select</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="peer_shut_wr" type="script">
+      <objective>Check I/O multiplexing functions behaviour when peer shuts down connection for writing.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">oo_epoll</arg>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">pselect</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">poll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">ppoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">select</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="peer_shut_rdwr" type="script">
+      <objective>Check I/O multiplexing functions behaviour when peer shuts down connection for reading and writing.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">oo_epoll</arg>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">pselect</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">poll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">ppoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">select</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="oob" type="script">
+      <objective>Check that I/O multiplexing indicates exception on reception of out-of-band data.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <notes/>
+        <results tags="v5&amp;urg_ignore&amp;!(ool_loop=0)" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, oo_epoll() returns (EVT_RD | EVT_RD_NORM) event(s) instead of (EVT_PRI)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="iomux"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <notes/>
+        <results tags="v5&amp;urg_ignore" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, oo_epoll() returns (EVT_RD | EVT_RD_NORM) event(s) instead of (EVT_PRI)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <notes/>
+        <results tags="v5&amp;urg_ignore" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, epoll_pwait() returns (EVT_RD | EVT_RD_NORM) event(s) instead of (EVT_PRI)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="iomux">epoll</arg>
+        <notes/>
+        <results tags="v5&amp;urg_ignore" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, epoll() returns (EVT_RD | EVT_RD_NORM) event(s) instead of (EVT_PRI)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="iomux">ppoll</arg>
+        <notes/>
+        <results tags="v5&amp;urg_ignore" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, ppoll() returns (EVT_RD | EVT_RD_NORM) event(s) instead of (EVT_PRI)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="iomux">poll</arg>
+        <notes/>
+        <results tags="v5&amp;urg_ignore" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, poll() returns (EVT_RD | EVT_RD_NORM) event(s) instead of (EVT_PRI)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="iomux">pselect</arg>
+        <notes/>
+        <results tags="v5&amp;urg_ignore" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, pselect() returns (EVT_RD) event(s) instead of (EVT_EXC)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="iomux">select</arg>
+        <notes/>
+        <results tags="v5&amp;urg_ignore" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, select() returns (EVT_RD) event(s) instead of (EVT_EXC)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <notes/>
+        <results tags="v5&amp;urg_ignore&amp;!(ool_loop=0)" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, oo_epoll() returns (EVT_RD | EVT_RD_NORM) event(s) instead of (EVT_PRI)</verdict>
+          </result>
+        </results>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <notes/>
+        <results tags="v5&amp;urg_ignore&amp;!(ool_loop=0)" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, epoll_pwait() returns (EVT_RD | EVT_RD_NORM) event(s) instead of (EVT_PRI)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <notes/>
+        <results tags="v5&amp;urg_ignore&amp;!(ool_loop=0)" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, epoll_pwait() returns (EVT_RD | EVT_RD_NORM) event(s) instead of (EVT_PRI)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">epoll</arg>
+        <notes/>
+        <results tags="v5&amp;urg_ignore&amp;!(ool_loop=0)" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, epoll() returns (EVT_RD | EVT_RD_NORM) event(s) instead of (EVT_PRI)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="iomux">epoll</arg>
+        <notes/>
+        <results tags="v5&amp;urg_ignore&amp;!(ool_loop=0)" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, epoll() returns (EVT_RD | EVT_RD_NORM) event(s) instead of (EVT_PRI)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">ppoll</arg>
+        <notes/>
+        <results tags="v5&amp;urg_ignore&amp;!(ool_loop=0)" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, ppoll() returns (EVT_RD | EVT_RD_NORM) event(s) instead of (EVT_PRI)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="iomux">ppoll</arg>
+        <notes/>
+        <results tags="v5&amp;urg_ignore&amp;!(ool_loop=0)" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, ppoll() returns (EVT_RD | EVT_RD_NORM) event(s) instead of (EVT_PRI)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">poll</arg>
+        <notes/>
+        <results tags="v5&amp;urg_ignore&amp;!(ool_loop=0)" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, poll() returns (EVT_RD | EVT_RD_NORM) event(s) instead of (EVT_PRI)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="iomux">poll</arg>
+        <notes/>
+        <results tags="v5&amp;urg_ignore&amp;!(ool_loop=0)" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, poll() returns (EVT_RD | EVT_RD_NORM) event(s) instead of (EVT_PRI)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">pselect</arg>
+        <notes/>
+        <results tags="v5&amp;urg_ignore&amp;!(ool_loop=0)" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, pselect() returns (EVT_RD) event(s) instead of (EVT_EXC)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="iomux">pselect</arg>
+        <notes/>
+        <results tags="v5&amp;urg_ignore&amp;!(ool_loop=0)" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, pselect() returns (EVT_RD) event(s) instead of (EVT_EXC)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">select</arg>
+        <notes/>
+        <results tags="v5&amp;urg_ignore&amp;!(ool_loop=0)" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, select() returns (EVT_RD) event(s) instead of (EVT_EXC)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="iomux">select</arg>
+        <notes/>
+        <results tags="v5&amp;urg_ignore&amp;!(ool_loop=0)" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, select() returns (EVT_RD) event(s) instead of (EVT_EXC)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">select</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">pselect</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">poll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">ppoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">epoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED"/>
+        </results>
+        <results tags="v5&amp;urg_ignore" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, oo_epoll() returns (EVT_RD | EVT_RD_NORM) event(s) instead of (EVT_PRI)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <notes/>
+        <results tags="v5&amp;linux">
+          <result value="PASSED"/>
+        </results>
+        <results tags="v5&amp;urg_ignore" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, epoll_pwait() returns (EVT_RD | EVT_RD_NORM) event(s) instead of (EVT_PRI)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux">epoll</arg>
+        <notes/>
+        <results tags="v5&amp;linux">
+          <result value="PASSED"/>
+        </results>
+        <results tags="v5&amp;urg_ignore" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, epoll() returns (EVT_RD | EVT_RD_NORM) event(s) instead of (EVT_PRI)</verdict>
+          </result>
+        </results>
+        <results tags="zf_shim">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, epoll() returns (EVT_RD) event(s) instead of (EVT_PRI)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux">ppoll</arg>
+        <notes/>
+        <results tags="v5&amp;linux">
+          <result value="PASSED"/>
+        </results>
+        <results tags="v5&amp;urg_ignore" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, ppoll() returns (EVT_RD | EVT_RD_NORM) event(s) instead of (EVT_PRI)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux">poll</arg>
+        <notes/>
+        <results tags="v5&amp;linux">
+          <result value="PASSED"/>
+        </results>
+        <results tags="v5&amp;urg_ignore" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, poll() returns (EVT_RD | EVT_RD_NORM) event(s) instead of (EVT_PRI)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux">pselect</arg>
+        <notes/>
+        <results tags="v5&amp;urg_ignore" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, pselect() returns (EVT_RD) event(s) instead of (EVT_EXC)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux">select</arg>
+        <notes/>
+        <results tags="v5&amp;urg_ignore" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, select() returns (EVT_RD) event(s) instead of (EVT_EXC)</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="peer_close_before_accept" type="script">
+      <objective>Check that accept() after indication of the connection by iomux function doesn't block, if peer closed the connection before accept() call on server.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func"/>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="linger"/>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">send</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="linger">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">send</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="linger">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">send</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="linger">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">send</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="linger">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">send</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="linger">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">send</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="linger">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">recv</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="linger"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">recv</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="linger"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">recv</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="linger"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">send</arg>
+        <arg name="iomux">select</arg>
+        <arg name="linger">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">send</arg>
+        <arg name="iomux">select</arg>
+        <arg name="linger">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">recv</arg>
+        <arg name="iomux">select</arg>
+        <arg name="linger"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func"/>
+        <arg name="iomux">epoll</arg>
+        <arg name="linger"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="linger"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="mix_fds" type="script">
+      <objective>Check that I/O multiplexing functions correctly handles mixture of file descriptors.</objective>
+      <notes>The test depends on how TA is run, since it uses stdin, stdout and stderr file descriptors. Nature of this descriptors depends on redirections made by OS.</notes>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="n_fds"/>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>Calling oo_epoll() after opening fds failed with errno EINVAL</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll</arg>
+        <arg name="n_fds"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="n_fds"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">select</arg>
+        <arg name="n_fds"/>
+        <notes/>
+        <results tags="v5&amp;!ool_iomux_no_fast" notes="On Onload events on Onload fds only are reported firstly">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>When calling iomux after opening fds, no events are detected on system fds</verdict>
+            <verdict>When calling iomux after making fds readable, no events are detected on system fds</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="iomux">select</arg>
+        <arg name="n_fds"/>
+        <notes/>
+        <results tags="v5&amp;!ool_iomux_no_fast" notes="On Onload events on Onload fds only are reported firstly">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>When calling iomux after opening fds, no events are detected on system fds</verdict>
+            <verdict>When calling iomux after making fds readable, no events are detected on system fds</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">select</arg>
+        <arg name="n_fds"/>
+        <notes/>
+        <results tags="v5&amp;!ool_iomux_no_fast" notes="On Onload events on Onload fds only are reported firstly">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>When calling iomux after opening fds, no events are detected on system fds</verdict>
+            <verdict>When calling iomux after making fds readable, no events are detected on system fds</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="iomux">select</arg>
+        <arg name="n_fds"/>
+        <notes/>
+        <results tags="v5&amp;!ool_iomux_no_fast" notes="On Onload events on Onload fds only are reported firstly">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>When calling iomux after opening fds, no events are detected on system fds</verdict>
+            <verdict>When calling iomux after making fds readable, no events are detected on system fds</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="n_fds"/>
+        <notes/>
+        <results tags="v5&amp;!ool_iomux_no_fast" notes="On Onload events on Onload fds only are reported firstly">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>When calling iomux after opening fds, no events are detected on system fds</verdict>
+            <verdict>When calling iomux after making fds readable, no events are detected on system fds</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="n_fds"/>
+        <notes/>
+        <results tags="v5&amp;!ool_iomux_no_fast" notes="On Onload events on Onload fds only are reported firstly">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>When calling iomux after opening fds, no events are detected on system fds</verdict>
+            <verdict>When calling iomux after making fds readable, no events are detected on system fds</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="n_fds"/>
+        <notes/>
+        <results tags="v5&amp;!ool_iomux_no_fast" notes="On Onload events on Onload fds only are reported firstly">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>When calling iomux after opening fds, no events are detected on system fds</verdict>
+            <verdict>When calling iomux after making fds readable, no events are detected on system fds</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="n_fds"/>
+        <notes/>
+        <results tags="v5&amp;!ool_iomux_no_fast" notes="On Onload events on Onload fds only are reported firstly">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>When calling iomux after opening fds, no events are detected on system fds</verdict>
+            <verdict>When calling iomux after making fds readable, no events are detected on system fds</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="n_fds"/>
+        <notes/>
+        <results tags="v5&amp;!ool_iomux_no_fast" notes="On Onload events on Onload fds only are reported firstly">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>When calling iomux after opening fds, no events are detected on system fds</verdict>
+            <verdict>When calling iomux after making fds readable, no events are detected on system fds</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="n_fds"/>
+        <notes/>
+        <results tags="v5&amp;!ool_iomux_no_fast" notes="On Onload events on Onload fds only are reported firstly">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>When calling iomux after opening fds, no events are detected on system fds</verdict>
+            <verdict>When calling iomux after making fds readable, no events are detected on system fds</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="n_fds"/>
+        <notes/>
+        <results tags="v5&amp;!ool_iomux_no_fast" notes="On Onload events on Onload fds only are reported firstly">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>When calling iomux after opening fds, no events are detected on system fds</verdict>
+            <verdict>When calling iomux after making fds readable, no events are detected on system fds</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="n_fds"/>
+        <notes/>
+        <results tags="v5&amp;!ool_iomux_no_fast" notes="On Onload events on Onload fds only are reported firstly">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>When calling iomux after opening fds, no events are detected on system fds</verdict>
+            <verdict>When calling iomux after making fds readable, no events are detected on system fds</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="n_fds"/>
+        <notes/>
+        <results tags="v5&amp;!ool_iomux_no_fast" notes="On Onload events on Onload fds only are reported firstly">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>When calling iomux after opening fds, no events are detected on system fds</verdict>
+            <verdict>When calling iomux after making fds readable, no events are detected on system fds</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="n_fds"/>
+        <notes/>
+        <results tags="v5&amp;!ool_iomux_no_fast" notes="On Onload events on Onload fds only are reported firstly">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>When calling iomux after opening fds, no events are detected on system fds</verdict>
+            <verdict>When calling iomux after making fds readable, no events are detected on system fds</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="n_fds"/>
+        <notes/>
+        <results tags="v5&amp;!ool_iomux_no_fast" notes="On Onload events on Onload fds only are reported firstly">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>When calling iomux after opening fds, no events are detected on system fds</verdict>
+            <verdict>When calling iomux after making fds readable, no events are detected on system fds</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="n_fds"/>
+        <notes/>
+        <results tags="v5&amp;!ool_iomux_no_fast" notes="On Onload events on Onload fds only are reported firstly">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>When calling iomux after opening fds, no events are detected on system fds</verdict>
+            <verdict>When calling iomux after making fds readable, no events are detected on system fds</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux">select</arg>
+        <arg name="n_fds"/>
+        <notes/>
+        <results tags="v5&amp;!ool_iomux_no_fast" notes="On Onload events on Onload fds only are reported firstly">
+          <result value="PASSED">
+            <verdict>When calling iomux after opening fds, no events are detected on system fds</verdict>
+            <verdict>When calling iomux after making fds readable, no events are detected on system fds</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="iomux">select</arg>
+        <arg name="n_fds"/>
+        <notes/>
+        <results tags="v5&amp;!ool_iomux_no_fast" notes="On Onload events on Onload fds only are reported firstly">
+          <result value="PASSED">
+            <verdict>When calling iomux after opening fds, no events are detected on system fds</verdict>
+            <verdict>When calling iomux after making fds readable, no events are detected on system fds</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="n_fds"/>
+        <notes/>
+        <results tags="v5&amp;!ool_iomux_no_fast" notes="On Onload events on Onload fds only are reported firstly">
+          <result value="PASSED">
+            <verdict>When calling iomux after opening fds, no events are detected on system fds</verdict>
+            <verdict>When calling iomux after making fds readable, no events are detected on system fds</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="n_fds"/>
+        <notes/>
+        <results tags="v5&amp;!ool_iomux_no_fast" notes="On Onload events on Onload fds only are reported firstly">
+          <result value="PASSED">
+            <verdict>When calling iomux after opening fds, no events are detected on system fds</verdict>
+            <verdict>When calling iomux after making fds readable, no events are detected on system fds</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="n_fds"/>
+        <notes/>
+        <results tags="v5&amp;!ool_iomux_no_fast" notes="On Onload events on Onload fds only are reported firstly">
+          <result value="PASSED">
+            <verdict>When calling iomux after opening fds, no events are detected on system fds</verdict>
+            <verdict>When calling iomux after making fds readable, no events are detected on system fds</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="n_fds"/>
+        <notes/>
+        <results tags="v5&amp;!ool_iomux_no_fast" notes="On Onload events on Onload fds only are reported firstly">
+          <result value="PASSED">
+            <verdict>When calling iomux after opening fds, no events are detected on system fds</verdict>
+            <verdict>When calling iomux after making fds readable, no events are detected on system fds</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="n_fds"/>
+        <notes/>
+        <results tags="v5&amp;!ool_iomux_no_fast" notes="On Onload events on Onload fds only are reported firstly">
+          <result value="PASSED">
+            <verdict>When calling iomux after opening fds, no events are detected on system fds</verdict>
+            <verdict>When calling iomux after making fds readable, no events are detected on system fds</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="n_fds"/>
+        <notes/>
+        <results tags="v5&amp;!ool_iomux_no_fast" notes="On Onload events on Onload fds only are reported firstly">
+          <result value="PASSED">
+            <verdict>When calling iomux after opening fds, no events are detected on system fds</verdict>
+            <verdict>When calling iomux after making fds readable, no events are detected on system fds</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="fork_robust" type="script">
+      <objective>Test robustness of the I/O multiplexing usage when a socket is owned by two processes after fork().</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">select</arg>
+        <arg name="iomux2">select</arg>
+        <arg name="method">inherit</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">select</arg>
+        <arg name="iomux2">epoll</arg>
+        <arg name="method">inherit</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">poll</arg>
+        <arg name="iomux2">epoll</arg>
+        <arg name="method">inherit</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">select</arg>
+        <arg name="iomux2">select</arg>
+        <arg name="method">forkandexec</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">select</arg>
+        <arg name="iomux2">epoll</arg>
+        <arg name="method">forkandexec</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">poll</arg>
+        <arg name="iomux2">epoll</arg>
+        <arg name="method">forkandexec</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">epoll</arg>
+        <arg name="iomux2"/>
+        <arg name="method">inherit</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">epoll</arg>
+        <arg name="iomux2"/>
+        <arg name="method">forkandexec</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">select</arg>
+        <arg name="iomux2">poll</arg>
+        <arg name="method">inherit_no_net_init</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">select</arg>
+        <arg name="iomux2">poll</arg>
+        <arg name="method">DuplicateSocket</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">select</arg>
+        <arg name="iomux2">poll</arg>
+        <arg name="method">DuplicateHandle</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">poll</arg>
+        <arg name="iomux2">select</arg>
+        <arg name="method">inherit_no_net_init</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">poll</arg>
+        <arg name="iomux2">select</arg>
+        <arg name="method">DuplicateSocket</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">poll</arg>
+        <arg name="iomux2">select</arg>
+        <arg name="method">DuplicateHandle</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">poll</arg>
+        <arg name="iomux2">poll</arg>
+        <arg name="method">inherit_no_net_init</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">poll</arg>
+        <arg name="iomux2">poll</arg>
+        <arg name="method">DuplicateSocket</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">poll</arg>
+        <arg name="iomux2">poll</arg>
+        <arg name="method">DuplicateHandle</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">select</arg>
+        <arg name="iomux2">select</arg>
+        <arg name="method">DuplicateSocket</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">select</arg>
+        <arg name="iomux2">select</arg>
+        <arg name="method">DuplicateHandle</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">select</arg>
+        <arg name="iomux2">epoll</arg>
+        <arg name="method">inherit_no_net_init</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">select</arg>
+        <arg name="iomux2">epoll</arg>
+        <arg name="method">DuplicateSocket</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">select</arg>
+        <arg name="iomux2">epoll</arg>
+        <arg name="method">DuplicateHandle</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">poll</arg>
+        <arg name="iomux2">epoll</arg>
+        <arg name="method">inherit_no_net_init</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">poll</arg>
+        <arg name="iomux2">epoll</arg>
+        <arg name="method">DuplicateSocket</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">poll</arg>
+        <arg name="iomux2">epoll</arg>
+        <arg name="method">DuplicateHandle</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">epoll</arg>
+        <arg name="iomux2"/>
+        <arg name="method">inherit_no_net_init</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">epoll</arg>
+        <arg name="iomux2"/>
+        <arg name="method">DuplicateSocket</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">epoll</arg>
+        <arg name="iomux2"/>
+        <arg name="method">DuplicateHandle</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">select</arg>
+        <arg name="iomux2">select</arg>
+        <arg name="method">inherit_no_net_init</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">select</arg>
+        <arg name="iomux2">select</arg>
+        <arg name="method">inherit</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">select</arg>
+        <arg name="iomux2">poll</arg>
+        <arg name="method">inherit</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">poll</arg>
+        <arg name="iomux2">select</arg>
+        <arg name="method">inherit</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">poll</arg>
+        <arg name="iomux2">poll</arg>
+        <arg name="method">inherit</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">select</arg>
+        <arg name="iomux2">poll</arg>
+        <arg name="method">forkandexec</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">poll</arg>
+        <arg name="iomux2">select</arg>
+        <arg name="method">forkandexec</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux1">poll</arg>
+        <arg name="iomux2">poll</arg>
+        <arg name="method">forkandexec</arg>
+        <arg name="sock_type"/>
+        <arg name="time2run"/>
+        <notes/>
+      </iter>
+    </test>
+
+    <test name="two_sockets" type="script">
+      <objective>Check I/O multiplexing functions behaviour when it was called with two sockets in the sets.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="how"/>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="ready"/>
+        <arg name="ret_val"/>
+        <arg name="sock_type"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="how"/>
+        <arg name="iomux">select</arg>
+        <arg name="ready"/>
+        <arg name="ret_val"/>
+        <arg name="sock_type"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="how"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="ready"/>
+        <arg name="ret_val"/>
+        <arg name="sock_type"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="how"/>
+        <arg name="iomux">poll</arg>
+        <arg name="ready"/>
+        <arg name="ret_val"/>
+        <arg name="sock_type"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="how"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="ready"/>
+        <arg name="ret_val"/>
+        <arg name="sock_type"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="how"/>
+        <arg name="iomux">epoll</arg>
+        <arg name="ready"/>
+        <arg name="ret_val"/>
+        <arg name="sock_type"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="how"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="ready"/>
+        <arg name="ret_val"/>
+        <arg name="sock_type"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+    </test>
+    
+    <test name="notconn" type="script">
+      <objective>Check that iomux() function does not mark not connected socket as readable or writable.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="bound"/>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt">EVT_WR</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>oo_epoll() called on not connected SOCK_STREAM socket to wait for EVT_WR event returns 1 and sets events to EVT_WR | EVT_EXC | EVT_HUP instead of 0 with empty events or 1 with EVT_HUP|EVT_EXC</verdict>
+          </result>
+        </results>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>WODA is not supported</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound">FALSE</arg>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt"/>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>WODA is not supported</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound">TRUE</arg>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt"/>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="sock_type"/>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>WODA is not supported</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound"/>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt">EVT_RD</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>EVT_HUP | EVT_EXC event is set</verdict>
+          </result>
+        </results>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>WODA is not supported</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound"/>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt">EVT_WR</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>epoll_pwait() called on not connected SOCK_STREAM socket to wait for EVT_WR event returns 1 and sets events to EVT_WR | EVT_EXC | EVT_HUP instead of 0 with empty events or 1 with EVT_HUP|EVT_EXC</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound"/>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt">EVT_WR</arg>
+        <arg name="iomux">epoll</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>epoll() called on not connected SOCK_STREAM socket to wait for EVT_WR event returns 1 and sets events to EVT_WR | EVT_EXC | EVT_HUP instead of 0 with empty events or 1 with EVT_HUP|EVT_EXC</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound"/>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt">EVT_RD</arg>
+        <arg name="iomux">epoll</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>EVT_HUP | EVT_EXC event is set</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound"/>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt">EVT_RD</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>EVT_HUP | EVT_EXC event is set</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound"/>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt">EVT_WR</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>ppoll() called on not connected SOCK_STREAM socket to wait for EVT_WR event returns 1 and sets events to EVT_WR | EVT_EXC | EVT_HUP instead of 0 with empty events or 1 with EVT_HUP|EVT_EXC</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound"/>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt">EVT_WR</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>poll() called on not connected SOCK_STREAM socket to wait for EVT_WR event returns 1 and sets events to EVT_WR | EVT_EXC | EVT_HUP instead of 0 with empty events or 1 with EVT_HUP|EVT_EXC</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound"/>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt">EVT_RD</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>EVT_HUP | EVT_EXC event is set</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound"/>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt">EVT_RD</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>EVT_HUP | EVT_EXC event is set</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound"/>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt">EVT_WR</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>pselect() called on not connected SOCK_STREAM socket to wait for EVT_WR event returns 1 and sets events to EVT_WR instead of 0</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound">FALSE</arg>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound">FALSE</arg>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt"/>
+        <arg name="iomux">poll</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound">FALSE</arg>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound">TRUE</arg>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound">TRUE</arg>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt"/>
+        <arg name="iomux">poll</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound">TRUE</arg>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound"/>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt">EVT_RD</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>pselect() called on not connected SOCK_STREAM socket to wait for EVT_RD event returns 1 and sets events to EVT_RD instead of 0</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound"/>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt">EVT_WR</arg>
+        <arg name="iomux">select</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>select() called on not connected SOCK_STREAM socket to wait for EVT_WR event returns 1 and sets events to EVT_WR instead of 0</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound">FALSE</arg>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt"/>
+        <arg name="iomux">select</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound">FALSE</arg>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt"/>
+        <arg name="iomux">epoll</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound">FALSE</arg>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound">TRUE</arg>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt"/>
+        <arg name="iomux">select</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound">TRUE</arg>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt"/>
+        <arg name="iomux">epoll</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound">TRUE</arg>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound"/>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt">EVT_RD</arg>
+        <arg name="iomux">select</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>select() called on not connected SOCK_STREAM socket to wait for EVT_RD event returns 1 and sets events to EVT_RD instead of 0</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="many_sockets" type="script">
+      <objective>Test the iomux functionality for large number of sockets from different processes</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">select</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">TRUE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="v5&amp;!ool_iomux_no_fast" key="ON-523">
+          <result value="FAILED">
+            <verdict>Not all sockets are marked as writable by iomux() call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">TRUE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="v5&amp;!ool_iomux_no_fast" key="ON-523">
+          <result value="FAILED">
+            <verdict>Not all sockets are marked as writable by iomux() call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">poll</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">TRUE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="v5&amp;!ool_iomux_no_fast" key="ON-523">
+          <result value="FAILED">
+            <verdict>Not all sockets are marked as writable by iomux() call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">TRUE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="v5&amp;!ool_iomux_no_fast" key="ON-523">
+          <result value="FAILED">
+            <verdict>Not all sockets are marked as writable by iomux() call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">select</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">FALSE</arg>
+        <arg name="use_wildcard">FALSE</arg>
+        <notes/>
+        <results tags="v5&amp;!(ool_iomux_no_fast|laddr_all)" key="ON-523">
+          <result value="FAILED">
+            <verdict>Not all sockets are marked as writable by iomux() call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">select</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">FALSE</arg>
+        <arg name="use_wildcard">FALSE</arg>
+        <notes/>
+        <results tags="v5&amp;!(ool_iomux_no_fast|laddr_all)" key="ON-523">
+          <result value="FAILED">
+            <verdict>Not all sockets are marked as writable by iomux() call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">FALSE</arg>
+        <arg name="use_wildcard">FALSE</arg>
+        <notes/>
+        <results tags="v5&amp;!(ool_iomux_no_fast|laddr_all)" key="ON-523">
+          <result value="FAILED">
+            <verdict>Not all sockets are marked as writable by iomux() call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">FALSE</arg>
+        <arg name="use_wildcard">FALSE</arg>
+        <notes/>
+        <results tags="v5&amp;!(ool_iomux_no_fast|laddr_all)" key="ON-523">
+          <result value="FAILED">
+            <verdict>Not all sockets are marked as writable by iomux() call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">poll</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">FALSE</arg>
+        <arg name="use_wildcard">FALSE</arg>
+        <notes/>
+        <results tags="v5&amp;!(ool_iomux_no_fast|laddr_all)" key="ON-523">
+          <result value="FAILED">
+            <verdict>Not all sockets are marked as writable by iomux() call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">poll</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">FALSE</arg>
+        <arg name="use_wildcard">FALSE</arg>
+        <notes/>
+        <results tags="v5&amp;!(ool_iomux_no_fast|laddr_all)" key="ON-523">
+          <result value="FAILED">
+            <verdict>Not all sockets are marked as writable by iomux() call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">FALSE</arg>
+        <arg name="use_wildcard">FALSE</arg>
+        <notes/>
+        <results tags="v5&amp;!(ool_iomux_no_fast|laddr_all)" key="ON-523">
+          <result value="FAILED">
+            <verdict>Not all sockets are marked as writable by iomux() call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">FALSE</arg>
+        <arg name="use_wildcard">FALSE</arg>
+        <notes/>
+        <results tags="v5&amp;!(ool_iomux_no_fast|laddr_all)" key="ON-523">
+          <result value="FAILED">
+            <verdict>Not all sockets are marked as writable by iomux() call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">select</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">FALSE</arg>
+        <arg name="use_wildcard">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">FALSE</arg>
+        <arg name="use_wildcard">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">poll</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">FALSE</arg>
+        <arg name="use_wildcard">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">FALSE</arg>
+        <arg name="use_wildcard">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">select</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">FALSE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">select</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">FALSE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">select</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">FALSE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">select</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">FALSE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">FALSE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">FALSE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">FALSE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">FALSE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">poll</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">FALSE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">poll</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">FALSE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">poll</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">FALSE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">poll</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">FALSE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">FALSE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">FALSE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">FALSE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec">FALSE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">select</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">poll</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">epoll</arg>
+        <arg name="sock_type"/>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="fork_or_exec_calls_number"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="sock_type"/>
+        <arg name="socket_to_test"/>
+        <arg name="sockets_number"/>
+        <arg name="use_exec"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="tcp_usecases" type="script">
+      <objective>Test on reliability of the iomux() operation on BSD compatible sockets.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst1'='pco_tst'</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet:unicast}},'pco_tst1'='pco_tst'</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'host2_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'host2_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst1'='pco_tst'</arg>
+        <arg name="iomux">select</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">select</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">select</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">select</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst1'='pco_tst'</arg>
+        <arg name="iomux">pselect</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">pselect</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">pselect</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">pselect</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst1'='pco_tst'</arg>
+        <arg name="iomux">poll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">poll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">poll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">poll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst1'='pco_tst'</arg>
+        <arg name="iomux">ppoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">ppoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">ppoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">ppoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst1'='pco_tst'</arg>
+        <arg name="iomux">epoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">epoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">epoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">epoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst1'='pco_tst'</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet:unicast}},'pco_tst1'='pco_tst'</arg>
+        <arg name="iomux">select</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'host2_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">select</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'host2_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">select</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">select</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet:unicast}},'pco_tst1'='pco_tst'</arg>
+        <arg name="iomux">pselect</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'host2_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">pselect</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'host2_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">pselect</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">pselect</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet:unicast}},'pco_tst1'='pco_tst'</arg>
+        <arg name="iomux">poll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'host2_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">poll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'host2_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">poll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">poll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet:unicast}},'pco_tst1'='pco_tst'</arg>
+        <arg name="iomux">ppoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'host2_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">ppoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'host2_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">ppoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">ppoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet:unicast}},'pco_tst1'='pco_tst'</arg>
+        <arg name="iomux">epoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'host2_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">epoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'host2_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">epoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">epoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet:unicast}},'pco_tst1'='pco_tst'</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'host2_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'host2_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet6:unicast}},'pco_tst1'='pco_tst'</arg>
+        <arg name="iomux"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},addr:'host2_addr':inet6:unicast}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},addr:'host2_addr':inet6:unicast}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:unicast}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux"/>
+        <notes/>
+      </iter>
+    </test>
+
+    <test name="iomux_sigmask" type="script">
+      <objective>Check support of sigmask parameter in pselect()/ ppoll()/ epoll_pwait() implementation.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="sig1"/>
+        <arg name="sig2"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="thread_close_sock" type="script">
+      <objective>Check I/O multiplexing functions behaviour when the socket is closed from another thread.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="sock_type"/>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>iomux_call() returned -1 instead of 1 with errno EINVAL</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="iomux">poll</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="iomux">epoll</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="iomux">select</arg>
+        <arg name="sock_type"/>
+        <notes/>
+        <results tags="v5&amp;(ool_spin|small_spin)" key="ON-1120">
+          <result value="FAILED">
+            <verdict>iomux_call() returned -1 instead of 1 with errno EBADF</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="sock_type"/>
+        <notes/>
+        <results tags="v5&amp;(ool_spin|small_spin)" key="ON-1120">
+          <result value="FAILED">
+            <verdict>iomux_call() returned -1 instead of 1 with errno EBADF</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="iomux_one_pipe" type="script">
+      <objective>Check that iomux function correctly report events for one pipe.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="action"/>
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="evts">rdwr</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="pipe_end">both</arg>
+        <arg name="pr_ev"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>oo_epoll() called with rdwr events for both ends returns -1 instead of 0</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="action"/>
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="evts">rdwr</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="pipe_end">write</arg>
+        <arg name="pr_ev"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>oo_epoll() called with rdwr events on write end returns -1 with 0 events</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="action"/>
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="evts">rdwr</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="pipe_end">read</arg>
+        <arg name="pr_ev"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>oo_epoll() called with rdwr events on read end returns -1 with 0 events</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="action"/>
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="evts">wr</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="pipe_end">both</arg>
+        <arg name="pr_ev"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>oo_epoll() called with wr events for both ends returns -1 instead of 0</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="action">none</arg>
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="evts">wr</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="pipe_end">write</arg>
+        <arg name="pr_ev"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>oo_epoll() called with wr events on write end returns -1 with 0 events</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="action">read</arg>
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="evts"/>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="pipe_end"/>
+        <arg name="pr_ev"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>oo_epoll() called with wr events on write end returns -1 with 0 events</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="action"/>
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="evts">wr</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="pipe_end">read</arg>
+        <arg name="pr_ev"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>oo_epoll() called with wr events on read end returns -1 with 0 events</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="action"/>
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="evts">rd</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="pipe_end">both</arg>
+        <arg name="pr_ev"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>oo_epoll() called with rd events for both ends returns -1 instead of 0</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="action"/>
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="evts">rd</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="pipe_end">write</arg>
+        <arg name="pr_ev"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>oo_epoll() called with rd events on write end returns -1 with 0 events</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="action">none</arg>
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="evts">rd</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="pipe_end">read</arg>
+        <arg name="pr_ev"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>oo_epoll() called with rd events on read end returns -1 with 0 events</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="action">write</arg>
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="evts"/>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="pipe_end"/>
+        <arg name="pr_ev"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>oo_epoll() called with rd events on read end returns -1 with 0 events</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="action"/>
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="evts"/>
+        <arg name="iomux">select</arg>
+        <arg name="pipe_end"/>
+        <arg name="pr_ev"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="action"/>
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="evts"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="pipe_end"/>
+        <arg name="pr_ev"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="action"/>
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="evts"/>
+        <arg name="iomux">poll</arg>
+        <arg name="pipe_end"/>
+        <arg name="pr_ev"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="action"/>
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="evts"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="pipe_end"/>
+        <arg name="pr_ev"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="action"/>
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="evts"/>
+        <arg name="iomux">epoll</arg>
+        <arg name="pipe_end"/>
+        <arg name="pr_ev"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="action"/>
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="evts"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="pipe_end"/>
+        <arg name="pr_ev"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="peer_close" type="script">
+      <objective>Check that calling of iomux functions on connected TCP socket with closed peer socket doesn't lead to failures.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="call_shutdown"/>
+        <arg name="env"/>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="passive"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>iomux() returns incorrect value</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_shutdown">TRUE</arg>
+        <arg name="env"/>
+        <arg name="iomux">poll</arg>
+        <arg name="passive"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_shutdown">TRUE</arg>
+        <arg name="env"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="passive"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_shutdown">TRUE</arg>
+        <arg name="env"/>
+        <arg name="iomux">epoll</arg>
+        <arg name="passive"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_shutdown">TRUE</arg>
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="passive"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_shutdown">TRUE</arg>
+        <arg name="env"/>
+        <arg name="iomux">select</arg>
+        <arg name="passive"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_shutdown">TRUE</arg>
+        <arg name="env"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="passive"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_shutdown">FALSE</arg>
+        <arg name="env"/>
+        <arg name="iomux">select</arg>
+        <arg name="passive"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_shutdown">FALSE</arg>
+        <arg name="env"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="passive"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_shutdown">FALSE</arg>
+        <arg name="env"/>
+        <arg name="iomux">poll</arg>
+        <arg name="passive"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_shutdown">FALSE</arg>
+        <arg name="env"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="passive"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_shutdown">FALSE</arg>
+        <arg name="env"/>
+        <arg name="iomux">epoll</arg>
+        <arg name="passive"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_shutdown">FALSE</arg>
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="passive"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="udp_zero_dgram" type="script">
+      <objective>Check I/O multiplexing functions behaviour when zero-length packet is received.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="iomux_before"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>iomux call doesn't detect read event</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">select</arg>
+        <arg name="iomux_before"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="iomux_before"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">poll</arg>
+        <arg name="iomux_before"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="iomux_before"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll</arg>
+        <arg name="iomux_before"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="iomux_before"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="multiple_iomux_nonblock_sock" type="script">
+      <objective>Check behaviour of iomux function when it is called multiple times on a nonblocking socket</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="ef_poll_nonblock_fast_usec"/>
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="pollpri" type="script">
+      <objective>Check that poll()/ ppoll/ epoll_wait() / epoll_pwait() functions returns POLLPRI (EPOLLPRI) event when there is available OOB data on the socket.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="add_flags">epolloneshot</arg>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux"/>
+        <arg name="read_after_oob"/>
+        <arg name="timeout">2000</arg>
+        <notes/>
+        <results tags="v5&amp;(small_spin|tiny_spin)&amp;(ool_loop=0)&amp;!epoll_mt_safe&amp;(ool_epoll=3|ool_sleep_spin)" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=3&amp;(ool_loop=0)&amp;!ool_spin&amp;!ool_sleep_spin&amp;!epoll_mt_safe" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags">epolloneshot</arg>
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="iomux"/>
+        <arg name="read_after_oob"/>
+        <arg name="timeout">2000</arg>
+        <notes/>
+        <results tags="v5&amp;(small_spin|tiny_spin)&amp;(ool_loop=0)&amp;!epoll_mt_safe&amp;(ool_epoll=3|ool_sleep_spin)" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=3&amp;(ool_loop=0)&amp;!ool_spin&amp;!ool_sleep_spin&amp;!epoll_mt_safe" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags">epollet</arg>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux"/>
+        <arg name="read_after_oob"/>
+        <arg name="timeout">2000</arg>
+        <notes/>
+        <results tags="v5&amp;(small_spin|tiny_spin)&amp;(ool_loop=0)&amp;!epoll_mt_safe&amp;(ool_epoll=3|ool_sleep_spin)" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=3&amp;(ool_loop=0)&amp;!ool_spin&amp;!ool_sleep_spin&amp;!epoll_mt_safe" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;!(ool_loop=0)&amp;(ool_epoll=1|ool_epoll=3)" key="ON-929">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags">epollet</arg>
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="iomux"/>
+        <arg name="read_after_oob"/>
+        <arg name="timeout">2000</arg>
+        <notes/>
+        <results tags="v5&amp;(small_spin|tiny_spin)&amp;(ool_loop=0)&amp;!epoll_mt_safe&amp;(ool_epoll=3|ool_sleep_spin)" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=3&amp;(ool_loop=0)&amp;!ool_spin&amp;!ool_sleep_spin&amp;!epoll_mt_safe" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;!(ool_loop=0)&amp;(ool_epoll=1|ool_epoll=3)" key="ON-929">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags">epollet</arg>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux"/>
+        <arg name="read_after_oob"/>
+        <arg name="timeout">2000</arg>
+        <notes/>
+        <results tags="v5&amp;(small_spin|tiny_spin)&amp;!epoll_mt_safe&amp;(ool_epoll=3|ool_sleep_spin)" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=3&amp;!ool_spin&amp;!ool_sleep_spin&amp;!epoll_mt_safe" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags">epolloneshot</arg>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux"/>
+        <arg name="read_after_oob"/>
+        <arg name="timeout">2000</arg>
+        <notes/>
+        <results tags="v5&amp;(small_spin|tiny_spin)&amp;!epoll_mt_safe&amp;(ool_epoll=3|ool_sleep_spin)" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=3&amp;!ool_spin&amp;!ool_sleep_spin&amp;!epoll_mt_safe" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags">epollet</arg>
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="iomux"/>
+        <arg name="read_after_oob"/>
+        <arg name="timeout">2000</arg>
+        <notes/>
+        <results tags="v5&amp;(small_spin|tiny_spin)&amp;!epoll_mt_safe&amp;(ool_epoll=3|ool_sleep_spin)" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=3&amp;!ool_spin&amp;!ool_sleep_spin&amp;!epoll_mt_safe" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags">epolloneshot</arg>
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="iomux"/>
+        <arg name="read_after_oob"/>
+        <arg name="timeout">2000</arg>
+        <notes/>
+        <results tags="v5&amp;(small_spin|tiny_spin)&amp;!epoll_mt_safe&amp;(ool_epoll=3|ool_sleep_spin)" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=3&amp;!ool_spin&amp;!ool_sleep_spin&amp;!epoll_mt_safe" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags">epollet</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux"/>
+        <arg name="read_after_oob"/>
+        <arg name="timeout">2000</arg>
+        <notes/>
+        <results tags="v5&amp;(ool_epoll=1|ool_epoll=3)" key="ON-929">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags">epollet</arg>
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="iomux"/>
+        <arg name="read_after_oob"/>
+        <arg name="timeout">2000</arg>
+        <notes/>
+        <results tags="v5&amp;(ool_epoll=1|ool_epoll=3)" key="ON-929">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags">epolloneshot</arg>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux"/>
+        <arg name="read_after_oob"/>
+        <arg name="timeout">0</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags">epolloneshot</arg>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux"/>
+        <arg name="read_after_oob"/>
+        <arg name="timeout">0</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags">epolloneshot</arg>
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="iomux"/>
+        <arg name="read_after_oob"/>
+        <arg name="timeout">0</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags">epolloneshot</arg>
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="iomux"/>
+        <arg name="read_after_oob"/>
+        <arg name="timeout">0</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags">epollet</arg>
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="read_after_oob"/>
+        <arg name="timeout">0</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags">epolloneshot</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux"/>
+        <arg name="read_after_oob"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags">epolloneshot</arg>
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="iomux"/>
+        <arg name="read_after_oob"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags">none</arg>
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="read_after_oob"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="read_write_nbio" type="script">
+      <objective>Check that iomux functions works correctly in case of receiving 1-bytes packets.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="add_flags"/>
+        <arg name="env"/>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="sock_type"/>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>oo_epoll() failed with EINVAL</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags">none</arg>
+        <arg name="env"/>
+        <arg name="iomux">epoll</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags">none</arg>
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags"/>
+        <arg name="env"/>
+        <arg name="iomux">select</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags"/>
+        <arg name="env"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags"/>
+        <arg name="env"/>
+        <arg name="iomux">poll</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags"/>
+        <arg name="env"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags">epollet</arg>
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="iomux_splice_rd" type="script">
+      <objective>Test that iomux function correctly reports event generated via splice() operation</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="splice_before_data"/>
+        <arg name="set_move"/>
+        <arg name="set_nonblock"/>
+        <arg name="diff_stacks"/>
+        <arg name="iomux_nonblock"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="iomux_splice_wr" type="script">
+      <objective>Test that iomux function correctly reports write event generated via splice() operation</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="splice_before_recv"/>
+        <arg name="set_move"/>
+        <arg name="diff_stacks"/>
+        <arg name="iomux_nonblock"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="iomux_splice_two_sockets" type="script">
+      <objective>Check I/O multiplexing functions behaviour with two connections, pipe and two splice() operations</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="packet_num"/>
+        <arg name="set_move"/>
+        <arg name="set_nonblock"/>
+        <arg name="diff_stacks"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="rdhup" type="script">
+      <objective>Check that iomux event EVT_RDHUP is handled properly when close() or shutdown() is called on IUT or TST socket.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="shutdown_how"/>
+        <arg name="special"/>
+        <arg name="who"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="iomux_after_connect" type="script">
+      <objective>Check behaviour of iomux function when it is called during and after connect() on a non-blocking TCP socket</objective>
+      <notes>On old linux kernel without Onload (RHEL6 with kernel 2.6.32) test was PASSED with verdict</notes>
+      <iter result="PASSED">
+        <arg name="connection_result"/>
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="udp_send_flooding" type="script">
+      <objective>Continously transmit data over UDP socket during a time. Check that a send call occasionally fails with EAGAIN, then a multiplexer call declares the socket unwritable, but after a time it is writable again.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="blocking">TRUE</arg>
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="msg_dontwait"/>
+        <arg name="send_func"/>
+        <notes>The test mostly useless on ef10+Linux because EAGAIN is not achievable in this case.</notes>
+      </iter>
+      <iter result="PASSED">
+        <arg name="blocking">FALSE</arg>
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="msg_dontwait"/>
+        <arg name="send_func"/>
+        <notes/>
+        <results tags="linux" notes="The test mostly useless on ef10+Linux because EAGAIN is not achievable in this case.">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>Send operation has not failed with EAGAIN</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="nb_accept_read" type="script">
+      <objective>Repeatedly: (non-blocking) accept connections, add accepted socket to the iomux set, receive data. Wait for events using an iomux.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="type"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ack_with_data" type="script">
+      <objective>Check iomux IN events when connection establishing sequence is enclosed by ACK with data.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="blocking_accept"/>
+        <arg name="blocking_func"/>
+        <arg name="env"/>
+        <arg name="epoll_flags"/>
+        <arg name="function"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="iomux_wrong_event" type="script">
+      <objective>Check that iomux ignores wrong event</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="before"/>
+        <arg name="env"/>
+        <arg name="event1"/>
+        <arg name="event2"/>
+        <arg name="iomux">select</arg>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="before"/>
+        <arg name="env"/>
+        <arg name="event1"/>
+        <arg name="event2"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="before"/>
+        <arg name="env"/>
+        <arg name="event1"/>
+        <arg name="event2"/>
+        <arg name="iomux">poll</arg>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="before"/>
+        <arg name="env"/>
+        <arg name="event1"/>
+        <arg name="event2"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="before"/>
+        <arg name="env"/>
+        <arg name="event1"/>
+        <arg name="event2"/>
+        <arg name="iomux">epoll</arg>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="before"/>
+        <arg name="env"/>
+        <arg name="event1"/>
+        <arg name="event2"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="before"/>
+        <arg name="env"/>
+        <arg name="event1"/>
+        <arg name="event2"/>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="v5&amp;ool_epoll=3" key="ON-10256">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>reserved call is not blocked</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="../gateways_epilogue" type="script">
+      <objective>Epilogue used to reset interfaces after different gateway settings.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+  </iter>
+</test>

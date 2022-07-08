@@ -1,0 +1,18 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup level5-bpf Onload specific BPF/XDP tests
+@ingroup level5
+@{
+
+@par Tests:
+
+-# @ref level5-bpf-xdp_attach_to_stack
+-# @ref level5-bpf-xdp_one_stack_two_ifs
+-# @ref level5-bpf-xdp_two_stacks
+-# @ref level5-bpf-xdp_same_stack
+
+@}
+
+*/

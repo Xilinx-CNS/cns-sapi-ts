@@ -1,0 +1,36 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup udp UDP tests: connections and round-trip
+@ingroup sockapi
+@{
+
+The test package contains UDP-specific test cases.
+
+UDP tunneling is tested here as well.
+
+@author Renata Sayakhova <Renata.Sayakhova@oktetlabs.ru>
+
+@par Conformance tests:
+
+-# @ref udp-round_trip_1
+-# @ref udp-round_trip_2
+-# @ref udp-udp_checksum
+-# @ref udp-bad_udp_csum
+-# @ref udp-recv_connect
+-# @ref udp-udp_fork_distrib
+-# @ref udp-udp_send_flow
+-# @ref udp-reuseaddr_connect
+-# @ref udp-varied_send
+-# @ref udp-share_remove_addr
+-# @ref udp-close_tx_active
+-# @ref udp-check_double_bind
+-# @ref udp-receive_before_and_after_connect
+-# @ref udp-send_via_os
+-# @ref udp-recv_from_multiple_sources
+-# @ref udp-recv_from_multiple_sources_two_ifs
+
+@}
+
+*/

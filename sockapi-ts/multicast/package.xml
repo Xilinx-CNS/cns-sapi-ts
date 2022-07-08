@@ -1,0 +1,1571 @@
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+
+
+  <description>Multicasting support in Socket API</description>
+
+  <author mailto="Ivan.Soloducha@oktetlabs.ru"/>
+
+  <req id="MULTICAST" sticky="true"/>
+
+  <session>
+    <var name="env.peer2peer_mcast.two_links">
+      <value reqs="ENV-2LINKS-IUT">'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'mcast_addr':inet:multicast,addr:'alien_addr':inet:alien,addr:'alien_gw':inet:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net1a':IUT{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</value>
+    </var>
+
+    <arg name="packet_number">
+        <value>3</value>
+    </arg>
+
+    <run>
+        <script name="ip_multicast_if_no_route" track_conf="silent">
+            <req id="IP_MULTICAST_IF"/>
+            <req id="SOCK_DGRAM"/>
+        </script>
+        <arg name="env">
+            <value ref="env.peer2peer_mcast"/>
+            <value ref="env.peer2peer_mcast_tst"/>
+        </arg>
+        <arg name="method" type="mcast_method"/>
+    </run>
+
+    <run>
+      <script name="recv_zero_ttl">
+        <req id="SOCK_DGRAM"/>
+        <!-- The main point of this test was to test loopback packets, see
+             OL bug 6724 for details.  ZF does not support loopback, and does
+             not set or check the IP TTL field. -->
+        <req id="ZF_INCOMPATIBLE"/>
+      </script>
+      <arg name="env">
+        <value ref="env.peer2peer_mcast"/>
+        <value ref="env.peer2peer_mcast_tst"/>
+        <value>IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:mcast_all_hosts,addr:'any_addr':inet:wildcard,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+      </arg>
+      <arg name="bind_wildcard" type="boolean"/>
+      <arg name="method" type="mcast_method"/>
+      <arg name="sock_func" type="socket_function"/>
+    </run>
+
+    <run>
+      <script name="ip_multicast_ttl" track_conf="silent">
+        <req id="SOCK_DGRAM"/>
+        <req id="MSG_CONTROL"/>
+        <req id="IP_TTL"/>
+        <req id="IP_RECVTTL"/>
+        <req id="IP_MULTICAST_TTL"/>
+      </script>
+      <arg name="env">
+        <value reqs="IP_RECVTTL">IUT{{{'pco_iut':IUT},addr:'rcv_addr':inet:unicast,addr:'mult_addr':inet:multicast,if:'iut_if'},{{'pco_tst':tester},addr:'snd_addr':inet:unicast,if:'tst_if'}},'pco_snd'='pco_tst','pco_rcv'='pco_iut','snd_if'='tst_if','rcv_if'='iut_if'</value>
+        <value reqs="IP_RECVTTL,ENV-TST-LINK">tester{{{'pco_iut':IUT},addr:'rcv_addr':inet:unicast,addr:'mult_addr':inet:multicast,if:'iut_if'},{{'pco_tst':tester},addr:'snd_addr':inet:unicast,if:'tst_if'}},'pco_snd'='pco_tst','pco_rcv'='pco_iut','snd_if'='tst_if','rcv_if'='iut_if'</value>
+      </arg>
+      <arg name="use_route" type="boolean"/>
+      <arg name="connect" type="boolean"/>
+      <arg name="method" type="mcast_method"/>
+    </run>
+
+    <run>
+      <script name="ip_add_drop_membership">
+        <req id="SOCK_DGRAM"/>
+        <req id="L2_TS"/>
+      </script>
+      <arg name="env">
+        <value reqs="ENV-2PEERS-IUT">IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_ifname1'},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},IUT{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_ifname2'},{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</value>
+        <value reqs="ENV-2PEERS">IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_ifname1'},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},tester{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_ifname2'},{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</value>
+      </arg>
+      <arg name="struct_to_use">
+        <value reqs="IP_ADD_MEMBERSHIP">mreq</value>
+        <value reqs="IP_ADD_MEMBERSHIP,STRUCT_IP_MREQN">mreqn</value>
+        <value reqs="MCAST_JOIN_GROUP">group_req</value>
+      </arg>
+      <arg name="use_route" type="boolean"/>
+      <arg name="use_zc" type="boolean">
+        <value reqs="ONLOAD_ZC_RECV">TRUE</value>
+        <value>FALSE</value>
+      </arg>
+      <arg name="sock_func" type="socket_function"/>
+    </run>
+    
+    <run>
+      <script name="ip_add_membership_inval">
+        <req id="SOCK_DGRAM"/>
+        <req id="BNBVALUE"/>
+      </script>
+      <arg name="env">
+        <value>IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'na_addr':inet:alien,addr:'mcast_addr':inet:multicast,if:'iut_ifname'}}</value>
+      </arg>
+      <arg name="struct_to_use">
+        <value reqs="IP_ADD_MEMBERSHIP">ip_mreq</value>
+        <value reqs="MCAST_JOIN_GROUP">group_req</value>
+      </arg>
+      <arg name="sock_func" type="socket_function"/>
+    </run>
+
+    <run>
+      <script name="ip_drop_membership_inval">
+        <req id="IP_DROP_MEMBERSHIP"/>
+        <req id="SOCK_DGRAM"/>
+        <req id="ENV-2PEERS"/>
+      </script>
+      <arg name="env">
+        <value reqs="ENV-2PEERS">IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'na_addr':inet:alien,addr:'mcast_addr':inet:multicast,if:'iut_ifname'}},tester{'iut_host'{addr:'iut_addr2':inet:unicast}}</value>
+      </arg>
+      <arg name="sock_func" type="socket_function"/>
+    </run>
+
+    <run>
+      <script name="multiple_membership">
+      </script>
+      <arg name="env">
+        <value>IUT{{{'pco_iut':IUT},addr:'mcast_addr':inet:multicast,if:'iut_if'}}</value>
+      </arg>
+      <arg name="method" type="mcast_common_method"/>
+      <arg name="sock_func" type="socket_function"/>
+    </run>
+
+    <run>
+      <script name="mcast_on_tcp">
+        <req id="BNBVALUE"/>
+      </script>
+      <arg name="env">
+        <value>IUT{{{'pco_iut':IUT},addr:'mcast_addr':inet:multicast,addr:'iut_addr':inet:unicast,if:'iut_if'}}</value>
+      </arg>
+      <arg name="operation">
+        <value reqs="BNB_PARAM_CHECK">Set</value>
+        <value>Get</value>
+      </arg>
+      <arg name="opt_name">
+        <value>IP_ADD_MEMBERSHIP</value>
+        <value>IP_DROP_MEMBERSHIP</value>
+        <value>IP_MULTICAST_LOOP</value>
+        <value>IP_MULTICAST_TTL</value>
+        <value>IP_MULTICAST_IF</value>
+        <value>MCAST_JOIN_GROUP</value>
+        <value>MCAST_LEAVE_GROUP</value>
+      </arg>
+      <arg name="sock_func" type="socket_function"/>
+    </run>
+
+    <run>
+      <script name="mcast_bcast_port_unreach">
+        <req id="SO_BROADCAST"/> 
+      </script>
+      <arg name="env" ref="env.peer2peer_mcast"/>
+      <arg name="data_len">
+        <value>120</value>
+      </arg>
+      <arg name="method" type="mcast_common_method"/>
+      <arg name="sock_func" type="socket_function"/>
+    </run>
+
+    <run>
+      <script name="mcast_bind_recv" track_conf="nohistory">
+          <req id="IF_DOWN_UP"/>
+      </script>
+      <arg name="env">                
+        <value>IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:mcast_all_hosts,addr:'any_addr':inet:wildcard,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}},'bind_addr'='any_addr'</value>
+        <value reqs="ENV-LOOPBACK">IUT{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast,addr:'mcast_addr':inet:multicast,addr:'any_addr':inet:wildcard,if:'iut_if'}},'tst_if'='iut_if','bind_addr'='any_addr'</value>
+      </arg>
+      <arg name="connect_socket" type="boolean">
+        <value>FALSE</value> <!-- connect() kills bind(any_addr) -->
+      </arg>
+      <arg name="use_route" type="boolean"/>
+      <arg name="method" type="mcast_method"/>
+      <arg name="use_zc" type="boolean">
+        <value reqs="ONLOAD_ZC_RECV">TRUE</value>
+        <value>FALSE</value>
+      </arg>
+      <arg name="mtu">
+          <value>1500</value>
+          <value reqs="JUMBO_FRAME,NO_VLAN">5000</value>
+          <value reqs="JUMBO_FRAME,NO_VLAN">8000</value>
+      </arg>
+      <arg name="sock_func" type="socket_function"/>
+    </run>
+
+    <run>
+      <script name="mcast_bind_recv" track_conf="nohistory">
+          <req id="IF_DOWN_UP"/>
+      </script>
+      <arg name="env" list="">                
+        <value>IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:multicast,addr:'any_addr':inet:wildcard,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}},'bind_addr'='mcast_addr'</value>
+        <value>IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:multicast,addr:'any_addr':inet:wildcard,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}},'bind_addr'='mcast_addr'</value>
+        <!-- bind to unicast address and join multicast - a bnbvalue test -->
+        <value reqs="BNBVALUE">IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:multicast,addr:'any_addr':inet:wildcard,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}},'bind_addr'='iut_addr'</value>
+      </arg>
+      <arg name="connect_socket" type="boolean"/>
+      <arg name="use_route" type="boolean"/>
+      <arg name="method" type="mcast_method"/>
+      <arg name="use_zc" type="boolean" list="">
+        <value>FALSE</value>
+        <value reqs="ONLOAD_ZC_RECV">TRUE</value>
+        <value>FALSE</value>
+      </arg>
+      <arg name="mtu">
+          <value>1500</value>
+          <value reqs="JUMBO_FRAME,NO_VLAN">5000</value>
+          <value reqs="JUMBO_FRAME,NO_VLAN">8000</value>
+      </arg>
+      <arg name="sock_func" type="socket_function"/>
+    </run>
+
+    <run>
+      <script name="mcast_route">
+        <req id="NO_SAFE"/>
+      </script>
+      <arg name="env">
+        <value>IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,addr:'mcast_addr':inet:multicast,if:'tst_if'}}</value>
+        <value reqs="ENV-2PEERS">tester{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,addr:'mcast_addr':inet:multicast,if:'tst_if'}}</value>
+      </arg>
+      <arg name="data_len">
+        <value>120</value>
+      </arg>
+      <arg name="connect_iut" type="boolean"/>
+      <arg name="method" type="mcast_method"/>
+      <arg name="use_gw" type="boolean"/>
+    </run>
+
+    <run>
+      <script name="ip_multicast_if_optlen">
+        <req id="IP_MULTICAST_IF"/>
+      </script>
+      <arg name="env">
+        <value>IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'}}</value>
+      </arg>
+      <arg name="optlen">
+        <value>null-zero</value>
+        <value>zero</value>
+        <value>zero-in_addr</value>
+        <value>in_addr</value>
+        <value reqs="STRUCT_IP_MREQN">in_addr-ip_mreq</value>
+        <value reqs="STRUCT_IP_MREQN">ip_mreq-ip_mreqn</value>
+        <value reqs="STRUCT_IP_MREQN">ip_mreqn</value>
+        <value reqs="STRUCT_IP_MREQN">ip_mreqn-</value>
+      </arg>
+      <arg name="sock_func" type="socket_function"/>
+    </run>
+
+    <run>
+      <script name="bind_join_order">
+      </script>
+      <arg name="env" ref="env.peer2peer_mcast"/>
+      <arg name="bind_multiaddr">
+        <value>TRUE</value>
+        <value>FALSE</value>
+      </arg>
+      <arg name="data_len">
+        <value>120</value>
+      </arg>           
+      <arg name="use_route" type="boolean"/>
+      <arg name="method" type="mcast_common_method"/>
+      <arg name="use_zc" type="boolean">
+        <value reqs="ONLOAD_ZC_RECV">TRUE</value>
+        <value>FALSE</value>
+      </arg>
+      <arg name="sock_func" type="socket_function"/>
+    </run>
+
+    <run>
+      <script name="join_leave_different_param">
+        <req id="IP_ADD_MEMBERSHIP"/>
+      </script>
+      <arg name="env">
+        <value reqs="ENV-2PEERS-IUT">IUT{'H1'{{'pco_iut':IUT},addr:'mcast_addr':inet:multicast,addr:'iut_addr1':inet:unicast,if:'iut_if1'},{{'pco_tst1':tester}}},IUT{'H1'{addr:'iut_addr2':inet:unicast,if:'iut_if2'},{{'pco_tst2':tester}}}</value>
+        <value reqs="ENV-2PEERS">IUT{'H1'{{'pco_iut':IUT},addr:'mcast_addr':inet:multicast,addr:'iut_addr1':inet:unicast,if:'iut_if1'},{{'pco_tst1':tester}}},tester{'H1'{addr:'iut_addr2':inet:unicast,if:'iut_if2'},{{'pco_tst2':tester}}}</value>
+        <value reqs="ENV-2PEERS">tester{'H1'{{'pco_iut':IUT},addr:'mcast_addr':inet:multicast,addr:'iut_addr1':inet:unicast,if:'iut_if1'},{{'pco_tst1':tester}}},IUT{'H1'{addr:'iut_addr2':inet:unicast,if:'iut_if2'},{{'pco_tst2':tester}}}</value>
+      </arg> 
+      <arg name="struct_to_use">
+        <value reqs="IP_ADD_MEMBERSHIP">mreq</value>
+      </arg>
+      <arg name="change_address" type="boolean" list="">
+        <value reqs="STRUCT_IP_MREQN">TRUE</value>
+        <value reqs="STRUCT_IP_MREQN">FALSE</value>
+        <value reqs="STRUCT_IP_MREQN">FALSE</value>
+        <value>TRUE</value>
+        <value>TRUE</value>
+      </arg>
+      <arg name="change_ifindex" type="boolean" list="">
+        <value reqs="STRUCT_IP_MREQN">TRUE</value>
+        <value reqs="STRUCT_IP_MREQN">TRUE</value>
+        <value reqs="STRUCT_IP_MREQN">TRUE</value>
+        <value>FALSE</value>
+        <value>FALSE</value>
+      </arg>
+      <arg name="zero_other" type="boolean" list="">
+        <value reqs="STRUCT_IP_MREQN">FALSE</value> 
+        <value reqs="STRUCT_IP_MREQN">TRUE</value>
+        <value reqs="STRUCT_IP_MREQN">FALSE</value>
+        <value>TRUE</value>
+        <value>FALSE</value>
+      </arg>
+      <arg name="sock_func" type="socket_function"/>
+    </run>
+<run>
+      <script name="join_leave_different_param">
+        <req id="IP_ADD_MEMBERSHIP"/>
+      </script>
+      <arg name="env">
+        <value reqs="ENV-2PEERS-IUT">IUT{'H1'{{'pco_iut':IUT},addr:'mcast_addr':inet:multicast,addr:'iut_addr1':inet:unicast,if:'iut_if1'},{{'pco_tst1':tester}}},IUT{'H1'{addr:'iut_addr2':inet:unicast,if:'iut_if2'},{{'pco_tst2':tester}}}</value>
+        <value reqs="ENV-2PEERS">IUT{'H1'{{'pco_iut':IUT},addr:'mcast_addr':inet:multicast,addr:'iut_addr1':inet:unicast,if:'iut_if1'},{{'pco_tst1':tester}}},tester{'H1'{addr:'iut_addr2':inet:unicast,if:'iut_if2'},{{'pco_tst2':tester}}}</value>
+        <value reqs="ENV-2PEERS">tester{'H1'{{'pco_iut':IUT},addr:'mcast_addr':inet:multicast,addr:'iut_addr1':inet:unicast,if:'iut_if1'},{{'pco_tst1':tester}}},IUT{'H1'{addr:'iut_addr2':inet:unicast,if:'iut_if2'},{{'pco_tst2':tester}}}</value>
+      </arg> 
+      <arg name="struct_to_use">
+        <value reqs="MCAST_JOIN_GROUP">group_req</value>
+      </arg>
+      <arg name="change_address" type="boolean" list="">
+        <value>FALSE</value>
+      </arg>
+      <arg name="change_ifindex" type="boolean" list="">
+        <value>TRUE</value>
+      </arg>
+      <arg name="zero_other" type="boolean" list="">
+        <value>FALSE</value>
+      </arg>
+      <arg name="sock_func" type="socket_function"/>
+    </run>
+    <run>
+      <script name="imr_ifindex_vs_imr_address">
+        <req id="IP_ADD_MEMBERSHIP"/>
+        <req id="STRUCT_IP_MREQN"/>
+      </script>
+      <arg name="env">
+        <value reqs="ENV-2PEERS-IUT">IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if1'},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},IUT{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2'},{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</value>
+        <value reqs="ENV-2PEERS">IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if1'},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},tester{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2'},{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</value>
+        <value reqs="ENV-2PEERS">tester{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if1'},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},IUT{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2'},{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</value>
+      </arg>
+      <arg name="data_len">
+        <value>120</value>
+      </arg>
+      <arg name="use_zc" type="boolean">
+        <value reqs="ONLOAD_ZC_RECV">TRUE</value>
+        <value>FALSE</value>
+      </arg>
+      <arg name="sock_func" type="socket_function"/>
+    </run>
+
+    <run>
+      <script name="bindtodevice_vs_ip_multicast_if">
+        <req id="IP_ADD_MEMBERSHIP"/>
+        <req id="STRUCT_IP_MREQN"/>
+        <req id="SO_BINDTODEVICE"/>
+      </script>
+      <arg name="env">
+        <value reqs="ENV-2PEERS-IUT">IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if1'},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},IUT{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2'},{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</value>
+        <value reqs="ENV-2PEERS">IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if1'},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},tester{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2'},{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</value>
+        <value reqs="ENV-2PEERS">tester{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if1'},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},IUT{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2'},{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</value>
+      </arg>
+      <arg name="field_to_use">
+        <value>address</value>
+        <value>ifindex</value>
+        <value>both</value>
+      </arg>
+      <arg name="sock_func" type="socket_function"/>
+      <arg name="method">
+        <value>add_drop</value>
+        <value>join_leave</value>
+      </arg>
+    </run>
+
+    <run>
+      <script name="default_if_for_join">
+        <req id="L2_TS"/>
+        <!-- we test Socket API here, not the underlying ZF code -->
+        <req id="ZF_INCOMPATIBLE"/>
+      </script>
+      <arg name="env" ref="env.peer2peer_mcast"/>
+      <arg name="data_len">
+        <value>120</value>
+      </arg>
+      <arg name="direct_route">
+        <value>TRUE</value>
+        <value>FALSE</value>
+      </arg>
+      <arg name="method" type="mcast_common_method"/>
+      <arg name="use_zc" type="boolean">
+        <value reqs="ONLOAD_ZC_RECV">TRUE</value>
+        <value>FALSE</value>
+      </arg>
+      <arg name="sock_func" type="socket_function"/>
+    </run>
+    <run>
+      <script name="mcast_invisible"/>
+      <arg name="env">
+        <value>IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:mcast_all_hosts,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+      </arg>
+      <arg name="dont_join" type="boolean">
+        <!-- ZF does not handle 244.0.0.1 in any special way -->
+        <!-- Multicast packets are dropped in the case of AF_XDP
+             when a socket is bound but not joined to mcast addr.
+             See ON-12704 -->
+        <value reqs="ZF_INCOMPATIBLE,NO_AF_XDP">TRUE</value>
+      </arg>
+      <arg name="bind_wildcard" type="boolean"/>
+      <arg name="use_zc" type="boolean">
+        <value reqs="ONLOAD_ZC_RECV">TRUE</value>
+        <value>FALSE</value>
+      </arg>
+      <arg name="sock_func" type="socket_function"/>
+    </run>
+    <run>
+      <script name="mcast_invisible"/>
+      <arg name="env">
+        <value>IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+        <value>IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:mcast_all_hosts,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+      </arg>
+      <arg name="dont_join" type="boolean">
+        <value>FALSE</value>
+      </arg>
+      <arg name="bind_wildcard" type="boolean"/>
+      <arg name="method" type="mcast_common_method"/>
+      <arg name="use_zc" type="boolean">
+        <value reqs="ONLOAD_ZC_RECV">TRUE</value>
+        <value>FALSE</value>
+      </arg>
+      <arg name="sock_func" type="socket_function"/>
+    </run>
+
+    <run>
+      <script name="mcast_recv">
+        <req id="SO_REUSEADDR"/>
+        <!-- See bug 81968 for details -->
+        <req id="MULTICAST_RECV"/>
+        <req id="FEW_ACCEL_PROCESSES"/>
+      </script>
+      <arg name="env">
+        <value>IUT{{{'pco_iut1':IUT},{'pco_iut2':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:mcast_all_hosts,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+      </arg>
+      <arg name="dont_join" type="boolean">
+        <value>TRUE</value>
+      </arg>
+      <arg name="bind_wildcard" type="boolean"/>
+      <arg name="use_zc" type="boolean">
+        <value reqs="ONLOAD_ZC_RECV">TRUE</value>
+        <value>FALSE</value>
+      </arg>
+      <arg name="sock_func" type="socket_function"/>
+    </run>
+    <run>
+      <script name="mcast_recv">
+        <req id="SO_REUSEADDR"/>
+        <!-- See bug 81968 for details -->
+        <req id="MULTICAST_RECV"/>
+        <req id="FEW_ACCEL_PROCESSES"/>
+      </script>
+      <arg name="env" list="">
+        <value>IUT{{{'pco_iut1':IUT},{'pco_iut2':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+        <value>IUT{{{'pco_iut1':IUT},{'pco_iut2':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+        <value>IUT{{{'pco_iut1':IUT},{'pco_iut2':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:mcast_all_hosts,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+      </arg>
+      <arg name="second_join" list="">
+        <value>FALSE</value>
+        <value>TRUE</value>
+        <value reqs="V5_SANITY">TRUE</value>
+      </arg>
+      <arg name="dont_join" type="boolean">
+        <value>FALSE</value>
+      </arg>
+      <arg name="bind_wildcard" type="boolean"/>
+      <arg name="method" type="mcast_common_method"/>
+      <arg name="use_zc" type="boolean">
+        <value reqs="ONLOAD_ZC_RECV">TRUE</value>
+        <value>FALSE</value>
+      </arg>
+      <arg name="sock_func" type="socket_function"/>
+    </run>
+
+    <run>
+      <script name="mcast_recv_two_socks">
+        <!-- See bugs 72965,72697 for details of TWO_INDEP_IFS -->
+        <req id="TWO_INDEP_IFS"/>
+        <req id="SO_REUSEADDR"/>
+        <req id="FEW_ACCEL_PROCESSES"/>
+        <req id="MULTICAST_RECV"/>
+      </script>
+      <arg name="env">
+        <value reqs="ENV-2LINKS-IUT">IUT{{{'pco_iut1':IUT},{'pco_iut2':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if1'},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},IUT{{addr:'iut_addr2':inet:unicast,if:'iut_if2'},{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</value>
+        <!-- FIXME: ADD MORE env's!!! -->
+      </arg>
+      <arg name="method" type="mcast_method"/>
+      <arg name="diff_ifs" type="boolean"/>
+      <arg name="connect_sock" type="boolean"/>
+      <arg name="zero_length" type="boolean"/>
+      <arg name="use_zc" type="boolean">
+        <value reqs="ONLOAD_ZC_RECV">TRUE</value>
+        <value>FALSE</value>
+      </arg>
+      <arg name="sock_func" type="socket_function"/>
+      <arg name="diff_stacks" type="boolean">
+          <value reqs="NO_REUSE_STACK">TRUE</value>
+          <value>FALSE</value>
+      </arg>
+    </run>
+
+    <run>
+      <script name="multi_socks_two_stacks">
+        <req id="ONLOAD_ONLY"/>
+        <req id="SO_REUSEADDR"/>
+        <req id="NO_REUSE_STACK"/>
+        <req id="FEW_ACCEL_PROCESSES"/>
+        <req id="MULTICAST_RECV"/>
+      </script>
+      <arg name="env">
+        <value reqs="ENV-2LINKS-IUT">IUT{{{'pco_iut1':IUT,'pco_iut2':IUT},{'pco_iut3':IUT,'pco_iut4':IUT},addr:'mcast_addr1':inet:multicast,addr:'mcast_addr2':inet:multicast,addr:'mcast_addr3':inet:multicast,addr:'mcast_addr4':inet:multicast,if:'iut_if1'},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},IUT{{addr:'iut_addr2':inet:unicast,if:'iut_if2'},{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</value>
+      </arg>
+      <arg name="method" type="mcast_method"/>
+      <arg name="sock_func" type="socket_function"/>
+    </run>
+
+    <run>
+      <script name="many_stacks_one_group">
+        <req id="NO_REUSE_STACK"/>
+        <req id="ONLOAD_ONLY"/>
+        <req id="SO_REUSEADDR"/>
+        <req id="SO_BINDTODEVICE"/>
+        <req id="MULTICAST_RECV"/>
+      </script>
+      <arg name="env">
+        <!-- See bug L5 72965 for details of TWO_INDEP_IFS -->
+        <value reqs="ENV-2LINKS-IUT,TWO_INDEP_IFS">IUT{{{'pco_iut':IUT},addr:'mcast_addr':inet:multicast,addr:'iut_addr1':inet:unicast,if:'iut_if1'},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},IUT{{addr:'iut_addr2':inet:unicast,if:'iut_if2'},{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</value>
+      </arg>
+      <arg name="method" type="mcast_method"/>
+      <arg name="sock_func" type="socket_function"/>
+    </run>
+
+    <run>
+      <script name="three_pairs_three_stacks">
+        <req id="NO_REUSE_STACK"/>
+        <req id="ONLOAD_ONLY"/>
+        <req id="SO_REUSEADDR"/>
+        <req id="MULTICAST_RECV"/>
+      </script>
+      <arg name="env">
+        <value>IUT{{{'pco_iut':IUT},addr:'mcast_addr':inet:multicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+      </arg>
+      <arg name="method" type="mcast_method"/>
+      <arg name="sock_func" type="socket_function"/>
+    </run>
+
+    <run>
+      <script name="mcast_bind_send">
+        <req id="V5_SANITY"/>
+        <!-- ZF mcast send is not implemented -->
+        <req id="ZF_INCOMPATIBLE"/>
+      </script>
+      <arg name="env" ref="env.peer2peer_mcast"/>
+      <arg name="data_len">
+        <value>120</value>
+      </arg>
+      <arg name="connect_iut" type="boolean"/>
+      <arg name="sock_func" type="socket_function"/>
+    </run>
+    
+    <run>
+      <script name="send_all_host_group">
+        <req id="IP_MULTICAST_IF"/>
+        <!-- Multicast packets are dropped in the case of AF_XDP
+             when a socket is bound but not joined to mcast addr.
+             See ON-12704 -->
+       <req id="NO_AF_XDP"/>
+      </script>
+      <arg name="env">
+        <value>IUT{{{'pco_iut':IUT},addr:'mcast_addr':inet:mcast_all_hosts,if:'iut_if'},{{'pco_tst':tester},if:'tst_if'}}</value>
+      </arg>
+      <arg name="bind_multiaddr" type="boolean">
+        <value>TRUE</value>
+        <value>FALSE</value>
+      </arg>
+      <arg name="use_zc" type="boolean">
+        <value reqs="ONLOAD_ZC_RECV">TRUE</value>
+        <value>FALSE</value>
+      </arg>
+      <arg name="sock_func" type="socket_function"/>
+    </run>
+
+    <run>
+      <script name="source_join"/>
+      <arg name="env">
+        <value>'net1'{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr1':inet:unicast,if:'tst_if'}}</value>
+      </arg>
+      <arg name="method" type="mcast_source_method"/>
+      <arg name="sock_func" type="socket_function"/>
+    </run>
+
+    <!-- 
+      Now run all multicast-sending tests. For L5, they should be run
+      twice. 
+    -->
+    <run name="mcast_send">
+      <session track_conf="nohistory">
+        <arg name="force_loop"/>
+        
+        <arg name="packet_number">
+            <value>3</value>
+        </arg>
+
+        <prologue>
+          <script name="loop_prologue">
+            <!-- ZF mcast send is not implemented -->
+            <req id="ZF_INCOMPATIBLE"/>
+          </script>
+          <arg name="env" ref="env.iut_only"/>
+        </prologue>
+        <epilogue>
+          <script name="loop_epilogue">
+            <!-- ZF mcast send is not implemented -->
+            <req id="ZF_INCOMPATIBLE"/>
+          </script>
+          <arg name="env" ref="env.iut_only"/>
+        </epilogue>
+
+        <run>
+          <script name="ip_multicast_ttl" track_conf="silent">
+            <req id="SOCK_DGRAM"/>
+            <req id="IP_TTL"/>
+            <req id="IP_RECVTTL"/>
+            <req id="IP_MULTICAST_TTL"/>
+          </script>
+          <arg name="env">
+            <value reqs="IP_MULTICAST_TTL">IUT{{{'pco_iut':IUT},addr:'snd_addr':inet:unicast,if:'iut_if'},{{'pco_tst':tester},addr:'rcv_addr':inet:unicast,addr:'mult_addr':inet:multicast,if:'tst_if'}},'pco_snd'='pco_iut','pco_rcv'='pco_tst','snd_if'='iut_if','rcv_if'='tst_if'</value>
+            <value reqs="IP_MULTICAST_TTL,ENV-TST-LINK">tester{{{'pco_iut':IUT},addr:'snd_addr':inet:unicast,if:'iut_if'},{{'pco_tst':tester},addr:'rcv_addr':inet:unicast,addr:'mult_addr':inet:multicast,if:'tst_if'}},'pco_snd'='pco_iut','pco_rcv'='pco_tst','snd_if'='iut_if','rcv_if'='tst_if'</value>
+          </arg>
+          <arg name="use_route" type="boolean"/>
+          <arg name="connect" type="boolean"/>
+          <arg name="method" type="mcast_method"/>
+        </run>
+
+        <run>
+          <script name="ip_multicast_if">
+            <req id="ENV-2PEERS"/>
+            <req id="IP_MULTICAST_IF"/>
+            <req id="SOCK_DGRAM"/>
+            <req id="SO_REUSEADDR"/>
+          </script>
+          <arg name="env">
+            <value reqs="ENV-2PEERS-IUT">IUT{'H1'{{'pco_iut':IUT},addr:'mcast_addr':inet:multicast,addr:'iut_addr1':inet:unicast,if:'iut_if1'},'H2'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},IUT{'H1'{addr:'iut_addr2':inet:unicast,if:'iut_if2'},'H3'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</value>
+            <value reqs="ENV-2PEERS">IUT{'H1'{{'pco_iut':IUT},addr:'mcast_addr':inet:multicast,addr:'iut_addr1':inet:unicast,if:'iut_if1'},'H2'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},tester{'H1'{addr:'iut_addr2':inet:unicast,if:'iut_if2'},'H3'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</value>
+            <value reqs="ENV-2PEERS">tester{'H1'{{'pco_iut':IUT},addr:'mcast_addr':inet:multicast,addr:'iut_addr1':inet:unicast,if:'iut_if1'},'H2'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},IUT{'H1'{addr:'iut_addr2':inet:unicast,if:'iut_if2'},'H3'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</value>
+          </arg>
+          <arg name="opt_param">
+            <value>addr</value>
+            <value reqs="STRUCT_IP_MREQN">{addr}</value>
+            <value reqs="STRUCT_IP_MREQN">{addr index}</value>            
+            <value reqs="STRUCT_IP_MREQN">{index}</value>
+          </arg>
+          <arg name="connect_iut" type="boolean"/>
+          <arg name="method" type="mcast_method"/>
+        </run>
+        
+        <!-- Special iterations with address/ifindex conflict -->
+        <run>
+          <script name="ip_multicast_if">
+            <req id="ENV-2PEERS"/>
+            <req id="IP_MULTICAST_IF"/>
+            <req id="SOCK_DGRAM"/>
+            <req id="SO_REUSEADDR"/>
+          </script>
+          <arg name="env">
+            <value reqs="ENV-2PEERS-IUT">IUT{'H1'{{'pco_iut':IUT},addr:'mcast_addr':inet:multicast,addr:'iut_addr2':inet:unicast,if:'iut_if1'},'H2'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},IUT{'H1'{addr:'iut_addr1':inet:unicast,if:'iut_if2'},'H3'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</value>
+            <value reqs="ENV-2PEERS">IUT{'H1'{{'pco_iut':IUT},addr:'mcast_addr':inet:multicast,addr:'iut_addr2':inet:unicast,if:'iut_if1'},'H2'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},tester{'H1'{addr:'iut_addr1':inet:unicast,if:'iut_if2'},'H3'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</value>
+            <value reqs="ENV-2PEERS">tester{'H1'{{'pco_iut':IUT},addr:'mcast_addr':inet:multicast,addr:'iut_addr2':inet:unicast,if:'iut_if1'},'H2'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},IUT{'H1'{addr:'iut_addr1':inet:unicast,if:'iut_if2'},'H3'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</value>
+          </arg>
+          <arg name="opt_param">
+            <value reqs="STRUCT_IP_MREQN">{addr index}</value>            
+          </arg>
+          <arg name="connect_iut" type="boolean"/>
+          <arg name="method" type="mcast_method"/>
+        </run>
+
+        <run>
+          <script name="outgoing_if">
+          </script>
+          <arg name="env">
+            <value reqs="ENV-2PEERS-IUT">IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if1'},'tst1_host'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},IUT{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2'},'tst2_host'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</value>
+            <value reqs="ENV-2PEERS">IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if1'},'tst1_host'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},tester{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2'},'tst2_host'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</value>
+            <value reqs="ENV-2PEERS">tester{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if1'},'tst1_host'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},IUT{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2'},'tst2_host'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</value>
+          </arg>
+          <arg name="data_len">
+            <value>120</value>
+          </arg>
+          <arg name="connect_iut" type="boolean"/>
+          <arg name="bind_iut">
+            <value>FALSE</value>
+          </arg>
+          <arg name="method" type="mcast_method"/>
+          <arg name="sock_func" type="socket_function"/>
+        </run>
+        <run>
+          <script name="outgoing_if"/>
+          <arg name="env">
+            <value reqs="ENV-2PEERS">IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if1'},'tst1_host'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},tester{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2'},'tst2_host'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</value>
+          </arg>
+          <arg name="data_len">
+            <value>120</value>
+          </arg>
+          <arg name="connect_iut">
+            <value>TRUE</value>
+          </arg>
+          <arg name="bind_iut">
+            <value>TRUE</value>
+          </arg>
+          <arg name="method" type="mcast_method"/>
+          <arg name="sock_func" type="socket_function"/>
+        </run>
+
+        <run>
+          <script name="mcast_src_address" track_conf="silent"/>
+          <arg name="env" list="">
+            <value reqs="ENV-2PEERS">IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'alien_addr':inet:alien,addr:'mcast_addr':inet:multicast,if:'iut_if1'},{{'pco_tst1':tester},if:'tst1_if'}},tester{'iut_host'{if:'iut_if2'},{{'pco_tst2':tester},if:'tst2_if'}}</value>
+            <value reqs="ENV-2PEERS">tester{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'alien_addr':inet:alien,addr:'mcast_addr':inet:multicast,if:'iut_if1'},{{'pco_tst1':tester},if:'tst1_if'}},IUT{'iut_host'{if:'iut_if2'},{{'pco_tst2':tester},if:'tst2_if'}}</value>
+            <value reqs="ENV-2PEERS-IUT">IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'alien_addr':inet:alien,addr:'mcast_addr':inet:multicast,if:'iut_if1'},{{'pco_tst1':tester},if:'tst1_if'}},IUT{'iut_host'{if:'iut_if2'},{{'pco_tst2':tester},if:'tst2_if'}}</value>
+          </arg>
+          <arg name="first_competitor" list="list">
+            <value>bind</value>
+            <value>route</value>
+            <value>ip_multicast_if</value>
+            <value>bind</value>
+            <value>route</value>
+            <value>ip_multicast_if</value>
+          </arg>
+          <arg name="second_competitor" list="list">
+            <value>route</value>
+            <value>ip_multicast_if</value>
+            <value>bind</value>
+            <value>ip_multicast_if</value>
+            <value>bind</value>
+            <value>route</value>
+          </arg>
+          <arg name="same_dev" type="boolean">
+            <value>FALSE</value>
+          </arg>
+          <arg name="data_len">
+            <value>120</value>
+          </arg>
+          <arg name="connect_iut" type="boolean"/>
+          <arg name="join_method" type="mcast_method"/>
+        </run>
+
+        <run>
+          <script name="mcast_src_address" track_conf="silent"/>
+          <arg name="env">
+            <value>IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'alien_addr':inet:alien,addr:'mcast_addr':inet:multicast,if:'iut_if1'},{{'pco_tst1':tester},{'pco_tst2':tester},if:'tst1_if'}},'iut_if2'='iut_if1','tst2_if'='tst1_if'</value>
+          </arg>
+          <arg name="first_competitor" list="list">
+            <value>bind</value>
+            <value>route</value>
+            <value>ip_multicast_if</value>
+            <value>bind</value>
+            <value>route</value>
+            <value>ip_multicast_if</value>
+          </arg>
+          <arg name="second_competitor" list="list">
+            <value>route</value>
+            <value>ip_multicast_if</value>
+            <value>bind</value>
+            <value>ip_multicast_if</value>
+            <value>bind</value>
+            <value>route</value>
+          </arg>
+          <arg name="same_dev" type="boolean">
+            <value>TRUE</value>
+          </arg>
+          <arg name="data_len">
+            <value>120</value>
+          </arg>
+          <arg name="connect_iut" type="boolean"/>
+          <arg name="join_method" type="mcast_method"/>
+        </run>
+
+        <run>
+          <script name="mcast_fragmented_mac">
+            <req id="IP_MULTICAST_IF"/>
+          </script>
+          <arg name="env">
+            <value>IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:multicast,addr:'iut_ll_addr':ether:unicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,addr:'tst_ll_addr':ether:unicast,if:'tst_if'}}</value>
+          </arg>
+          <arg name="data_len">
+            <value>12000</value>
+            <value>100</value>
+          </arg>
+          <arg name="connect_iut" type="boolean"/>
+          <!-- Fixme: this mcast_method is iterated on TST here; it does
+               not make any sense -->
+          <arg name="method" type="mcast_method"/>
+        </run>
+
+        <run>
+          <script name="mcast_mac_via_gw" track_conf="silent">
+            <req id="SOCK_DGRAM"/>
+            <req id="ENV-GW"/>
+            <req id="CHANGE_DEFAULT_ROUTE"/>
+          </script>
+          <arg name="env">
+            <value>IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:multicast,addr:'iut_ll_addr':ether:unicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,addr:'tst_ll_addr':ether:unicast,if:'tst_if'}}</value>
+          </arg>
+          <arg name="data_len">
+            <value>3000</value>
+            <value>100</value>
+          </arg>
+          <arg name="connect_iut" type="boolean"/>
+          <arg name="bind_iut" type="boolean"/>
+          <arg name="use_route">
+            <value>TRUE</value>
+          </arg>
+          <arg name="prefix">
+            <value>0</value>
+            <value>2</value>
+            <value>4</value>
+            <value>8</value>
+            <value>16</value>
+            <value>24</value>
+            <value>32</value>
+          </arg>
+          <arg name="opt_name">
+            <value reqs="SO_BINDTODEVICE">SO_BINDTODEVICE</value>
+            <value reqs="IP_MULTICAST_IF">IP_MULTICAST_IF</value>
+            <value>SOCKOPT_UNKNOWN</value>
+          </arg>
+        </run>
+
+        <run>
+          <script name="mcast_mac_via_gw" track_conf="silent">
+            <req id="SOCK_DGRAM"/>
+            <req id="ENV-GW"/>
+            <req id="CHANGE_DEFAULT_ROUTE"/>
+          </script>
+          <arg name="env">
+            <value>IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:multicast,addr:'iut_ll_addr':ether:unicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,addr:'tst_ll_addr':ether:unicast,if:'tst_if'}}</value>
+          </arg>
+          <arg name="data_len">
+            <value>3000</value>
+            <value>100</value>
+          </arg>
+          <arg name="connect_iut" type="boolean"/>
+          <arg name="bind_iut" type="boolean"/>
+          <arg name="use_route">
+            <value reqs="SO_BINDTODEVICE, IP_MULTICAST_IF">FALSE</value>
+          </arg>
+          <arg name="prefix">
+            <value>0</value>
+          </arg>
+          <arg name="opt_name">
+            <value reqs="SO_BINDTODEVICE">SO_BINDTODEVICE</value>
+            <value reqs="IP_MULTICAST_IF">IP_MULTICAST_IF</value>
+          </arg>
+        </run>
+
+        <run>
+          <script name="mcast_multiple_groups">
+            <req id="SOCK_DGRAM"/>
+          </script>
+          <arg name="env">
+            <value reqs="ENV-2PEERS">IUT{'iut_host'{{'pco_iut':IUT},addr:'any_addr':inet:wildcard,addr:'mcast_addr1':inet:multicast,if:'iut_if1'},'tst1_host'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},tester{'iut_host'{addr:'mcast_addr2':inet:multicast,if:'iut_if2'},'tst2_host'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</value>
+            <value>IUT{{{'pco_iut':IUT},addr:'any_addr':inet:wildcard,addr:'mcast_addr1':inet:multicast,addr:'mcast_addr2':inet:multicast,if:'iut_if1'},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,addr:'tst2_addr':inet:unicast,if:'tst1_if'}},'iut_if2'='iut_if1','pco_tst2'='pco_tst1'</value>
+          </arg>
+          <arg name="method" type="mcast_method"/>
+          <arg name="use_zc" type="boolean">
+            <value reqs="ONLOAD_ZC_RECV">TRUE</value>
+            <value>FALSE</value>
+          </arg>
+          <arg name="sock_func" type="socket_function"/>
+        </run>
+
+        <run>
+            <script name="mcast_two_sockets">
+                <req id="SOCK_DGRAM"/>
+                <req id="SO_REUSEADDR"/>
+                <req id="MULTICAST_RECV"/>
+            </script>
+            <arg name="env">
+                <value>IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+            </arg>
+            <arg name="forkexec">
+                <value reqs="FORK">TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="method" type="mcast_method"/>
+            <arg name="use_zc" type="boolean">
+              <value reqs="ONLOAD_ZC_RECV">TRUE</value>
+              <value>FALSE</value>
+            </arg>
+            <arg name="sock_func" type="socket_function"/>
+        </run>
+
+        <run>
+            <script name="mcast_vlan" track_conf="nohistory">
+                <req id="SOCK_DGRAM"/>
+                <req id="NO_VLAN"/>
+                <!-- Linux doesn't support vlan over ipvlan. ST-2001-->
+                <req id="NO_IPVLAN"/>
+                <req id="CREATE_NET_IF"/>
+            </script>
+            <arg name="env">
+                <value>IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+            </arg>
+            <arg name="vlan1">
+                <value>999</value>
+            </arg>
+            <arg name="vlan2">
+                <value>1001</value>
+            </arg>
+            <arg name="method" type="mcast_method"/>
+            <arg name="parent_rcv_first">
+                <value>FALSE</value>
+            </arg>
+            <arg name="vlan1_rcv_first">
+                <value>TRUE</value>
+            </arg>
+            <arg name="vlan2_rcv_first">
+                <value>FALSE</value>
+            </arg>
+            <arg name="parent_rcv_second">
+                <value>TRUE</value>
+            </arg>
+            <arg name="vlan1_rcv_second">
+                <value>FALSE</value>
+            </arg>
+            <arg name="vlan2_rcv_second">
+                <value>FALSE</value>
+            </arg>
+            <arg name="use_zc" type="boolean">
+              <value reqs="ONLOAD_ZC_RECV">TRUE</value>
+              <value>FALSE</value>
+            </arg>
+            <arg name="sock_func" type="socket_function"/>
+        </run>
+
+        <run>
+            <script name="mcast_vlan" track_conf="nohistory">
+                <req id="SOCK_DGRAM"/>
+                <req id="NO_VLAN"/>
+                <!-- Linux doesn't support vlan over ipvlan. ST-2001-->
+                <req id="NO_IPVLAN"/>
+                <req id="CREATE_NET_IF"/>
+            </script>
+            <arg name="env">
+                <value>IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+            </arg>
+            <arg name="vlan1">
+                <value>999</value>
+            </arg>
+            <arg name="vlan2">
+                <value>1001</value>
+            </arg>
+            <arg name="method" type="mcast_method"/>
+
+            <arg name="parent_rcv_first">
+                <value>FALSE</value>
+            </arg>
+            <arg name="vlan1_rcv_first">
+                <value>TRUE</value>
+            </arg>
+            <arg name="vlan2_rcv_first">
+                <value>TRUE</value>
+            </arg>
+            <arg name="parent_rcv_second">
+                <value>TRUE</value>
+            </arg>
+            <arg name="vlan1_rcv_second">
+                <value>TRUE</value>
+            </arg>
+            <arg name="vlan2_rcv_second">
+                <value>FALSE</value>
+            </arg>
+            <arg name="use_zc" type="boolean">
+              <value reqs="ONLOAD_ZC_RECV">TRUE</value>
+              <value>FALSE</value>
+            </arg>
+            <arg name="sock_func" type="socket_function"/>
+        </run>
+
+        <run>
+            <script name="mcast_vlan_two_sockets" track_conf="nohistory">
+                <req id="FORK"/>
+                <req id="SOCK_DGRAM"/>
+                <req id="NO_VLAN"/>
+                <!-- Linux doesn't support vlan over ipvlan. ST-2001-->
+                <req id="NO_IPVLAN"/>
+                <req id="CREATE_NET_IF"/>
+                <req id="MULTICAST_RECV"/>
+            </script>
+            <arg name="env">
+                <value>IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+            </arg>
+            <arg name="vlan1">
+                <value>999</value>
+            </arg>
+            <arg name="vlan2">
+                <value>1001</value>
+            </arg>
+            <arg name="method" type="mcast_method"/>
+            <arg name="first_sock_vlan" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="second_sock_vlan" list="">
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="first_sock_rcv" type="boolean" list="1">
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="second_sock_rcv" type="boolean" list="1">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="forkexec" type="boolean"/>
+            <arg name="use_zc">
+                <value>FALSE</value>
+            </arg>
+            <arg name="set_bindtodevice" type="boolean">
+                <value>FALSE</value>
+                <value reqs="SO_BINDTODEVICE">TRUE</value>
+            </arg>
+            <arg name="action_after_send">
+                <value>none</value>
+            </arg>
+            <arg name="sock_func" type="socket_function"/>
+        </run>
+        <run>
+            <script name="mcast_vlan_two_sockets" track_conf="nohistory">
+                <req id="FORK"/>
+                <req id="SOCK_DGRAM"/>
+                <req id="NO_VLAN"/>
+                <!-- Linux doesn't support vlan over ipvlan. ST-2001-->
+                <req id="NO_IPVLAN"/>
+                <req id="CREATE_NET_IF"/>
+                <req id="MULTICAST_RECV"/>
+            </script>
+            <arg name="env">
+                <value>IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+            </arg>
+            <arg name="vlan1">
+                <value>999</value>
+            </arg>
+            <arg name="vlan2">
+                <value>1001</value>
+            </arg>
+            <arg name="method" type="mcast_method"/>
+            <arg name="first_sock_vlan" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="second_sock_vlan" list="">
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="first_sock_rcv" type="boolean" list="1">
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="second_sock_rcv" type="boolean" list="1">
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="forkexec" type="boolean"/>
+            <arg name="use_zc">
+                <value reqs="ONLOAD_ZC_RECV">TRUE</value>
+            </arg>
+            <arg name="set_bindtodevice" type="boolean">
+                <value>FALSE</value>
+                <value reqs="SO_BINDTODEVICE">TRUE</value>
+            </arg>
+            <arg name="action_after_send">
+                <value>none</value>
+            </arg>
+            <arg name="sock_func" type="socket_function"/>
+        </run>
+        <run>
+            <script name="mcast_vlan_two_sockets" track_conf="nohistory">
+                <req id="FORK"/>
+                <req id="SOCK_DGRAM"/>
+                <req id="NO_VLAN"/>
+                <!-- Linux doesn't support vlan over ipvlan. ST-2001-->
+                <req id="NO_IPVLAN"/>
+                <req id="CREATE_NET_IF"/>
+                <req id="MULTICAST_RECV"/>
+            </script>
+            <arg name="env">
+                <value>IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+            </arg>
+            <arg name="vlan1">
+                <value>999</value>
+            </arg>
+            <arg name="vlan2">
+                <value>1001</value>
+            </arg>
+            <arg name="method" type="mcast_method"/>
+            <arg name="first_sock_vlan" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="second_sock_vlan" list="">
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="first_sock_rcv" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="second_sock_rcv" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="forkexec" type="boolean"/>
+            <arg name="use_zc">
+                <value reqs="ONLOAD_ZC_RECV">TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="set_bindtodevice" type="boolean">
+                <value>FALSE</value>
+                <value reqs="SO_BINDTODEVICE">TRUE</value>
+            </arg>
+            <arg name="action_after_send">
+                <value>drop</value>
+                <value>close</value>
+            </arg>
+            <arg name="sock_func" type="socket_function"/>
+        </run>
+
+        <run>
+          <script name="conn_two_socks_same_addr">
+            <req id="FORK"/>
+            <req id="SO_REUSEADDR"/>
+            <req id="MULTICAST_RECV"/>
+          </script>
+          <arg name="env" ref="env.peer2peer_mcast"/>
+          <arg name="data_len">
+            <value>120</value>
+          </arg>
+          <arg name="join_method" type="mcast_method"/>
+          <arg name="call_exec">
+            <value>FALSE</value>
+            <value reqs="NO_REUSE_STACK">TRUE</value>
+          </arg>
+          <!-- This list is used to exclude one iteration:
+               wildcard + ZC recv + onload_socket_unicast_nonaccel.
+               See SF bug 70481 for more details.
+            -->
+          <arg name="loc_wildcard" list="">
+            <value>FALSE</value>
+            <value>FALSE</value>
+            <value>FALSE</value>
+            <value>FALSE</value>
+            <value>TRUE</value>
+            <value>TRUE</value>
+            <value>TRUE</value>
+          </arg>
+          <arg name="use_zc" list="">
+            <value>FALSE</value>
+            <value>FALSE</value>
+            <value reqs="ONLOAD_ZC_RECV">TRUE</value>
+            <value reqs="ONLOAD_ZC_RECV">TRUE</value>
+            <value>FALSE</value>
+            <value>FALSE</value>
+            <value reqs="ONLOAD_ZC_RECV">TRUE</value>
+          </arg>
+          <arg name="sock_func" type="socket_function" list="">
+            <value>socket</value>
+            <value reqs="ONLOAD_ONLY,ONLOAD_NONACCEL">onload_socket_unicast_nonaccel</value>
+            <value>socket</value>
+            <value reqs="ONLOAD_ONLY,ONLOAD_NONACCEL">onload_socket_unicast_nonaccel</value>
+            <value>socket</value>
+            <value reqs="ONLOAD_ONLY,ONLOAD_NONACCEL">onload_socket_unicast_nonaccel</value>
+            <value>socket</value>
+          </arg>
+        </run>
+
+        <run>
+            <script name="mcast_bond" track_conf="nohistory">
+              <!-- ON-7873 and ON-7874 -->
+              <req id="NO_BOND"/>
+              <req id="CREATE_NET_IF"/>
+              <!-- ON-12687 -->
+              <req id="NO_SCALABLE_ACTIVE_PASSIVE"/>
+              <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" ref="env.peer2peer_mcast.two_links"/>
+            <arg name="mode">
+                <value reqs="BOND">bond1</value>
+                <value reqs="BOND">bond4</value>
+                <value reqs="TEAM">team1</value>
+                <value reqs="TEAM">team4</value>
+            </arg>
+          <arg name="method" type="mcast_method"/>
+          <arg name="sock_func" type="socket_function"/>
+        </run>
+
+        <run>
+          <script name="mcast_send_via_l5" track_conf="nohistory">
+            <req id="ONLOAD_ONLY"/>
+            <req id="IF_DOWN_UP"/>
+          </script>
+          <arg name="env" ref="env.peer2peer_mcast"/>
+          <arg name="use_route" type="boolean"/>
+          <arg name="connect_iut" type="boolean"/>
+          <arg name="loop_disable" type="boolean"/>
+          <arg name="mtu">
+              <value>1500</value>
+              <value reqs="JUMBO_FRAME,NO_VLAN">5000</value>
+              <value reqs="JUMBO_FRAME,NO_VLAN">8000</value>
+          </arg>
+        </run>
+
+        <run>
+            <script name="mcast_vlan_alien_packet" track_conf="nohistory">
+                <req id="SOCK_DGRAM"/>
+                <req id="NO_VLAN"/>
+                <!-- Linux doesn't support vlan over ipvlan. ST-2001-->
+                <req id="NO_IPVLAN"/>
+                <req id="CREATE_NET_IF"/>
+            </script>
+            <arg name="env">
+                <value>IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+            </arg>
+            <arg name="vlan">
+                <value>999</value>
+            </arg>
+            <arg name="sock_func" type="socket_function"/>
+        </run>
+
+        <run>
+            <script name="mcast_non_joined_socket" track_conf="nohistory">
+                <req id="SOCK_DGRAM"/>
+                <req id="SO_REUSEADDR"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_mcast"/>
+            </arg>
+            <arg name="sock_func" type="socket_function"/>
+        </run>
+
+        <run>
+          <script name="send_zero_ttl">
+            <req id="SOCK_DGRAM"/>
+            <req id="IP_MULTICAST_LOOP"/>
+            <req id="NO_REUSE_STACK"/>
+            <req id="HW_TX_MCAST_LOOPBACK"/>
+            <req id="SO_REUSEADDR"/>
+          </script>
+          <arg name="env">
+            <value>IUT{{{'pco_iut1':IUT},{'pco_iut2':IUT},{'pco_iut3':IUT},addr:'mcast_addr':inet:multicast,addr:'iut_addr':inet:unicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+          </arg>
+          <arg name="ip_multicast_loop" type="boolean"/>
+          <arg name="ip_multicast_ttl" type="boolean"/>
+          <arg name="wildcard" type="boolean"/>
+          <arg name="method" type="mcast_method">
+            <value>add_drop</value>
+          </arg>
+        </run>
+      </session>
+
+      <arg name="force_loop" type="boolean">
+        <value>FALSE</value>
+        <value reqs="ONLOAD_ONLY,NO_SAFE">TRUE</value>
+      </arg>
+    </run>
+
+    <run>
+      <script name="ip_multicast_loop_default" track_conf="silent">
+        <req id="HW_TX_MCAST_LOOPBACK"/>
+      </script>
+      <arg name="env" ref="env.iut_only"/>
+      <arg name="env_option">
+        <value>none</value>
+        <value reqs="ONLOAD_ONLY">EF_FORCE_SEND_MULTICAST</value>
+        <value reqs="ONLOAD_ONLY">EF_MULTICAST_LOOP_OFF</value>
+        <value reqs="ONLOAD_ONLY">EF_MCAST_RECV_HW_LOOP</value>
+      </arg>
+      <arg name="env_option_value">
+        <value>0</value>
+        <value>1</value>
+      </arg>
+      <arg name="expected_value">
+        <value>1</value>
+      </arg>
+      <arg name="sock_func" type="socket_function"/>
+    </run>
+
+    <run>
+      <script name="ip_multicast_loop_default" track_conf="silent">
+        <req id="HW_TX_MCAST_LOOPBACK"/>
+      </script>
+      <arg name="env" ref="env.iut_only"/>
+      <arg name="env_option">
+        <value reqs="ONLOAD_ONLY">EF_MCAST_SEND</value>
+      </arg>
+      <arg name="env_option_value">
+        <value>0</value>
+        <value>1</value>
+        <value>2</value>
+        <value>3</value>
+      </arg>
+      <arg name="expected_value">
+        <value>1</value>
+      </arg>
+      <arg name="sock_func" type="socket_function"/>
+    </run>
+
+    <run>
+      <session>
+        <arg name="ef_multicast_loop_off">
+          <value>FALSE</value>
+          <value>FALSE</value>
+          <value>FALSE</value>
+          <value>FALSE</value>
+          <value>FALSE</value>
+          <value>TRUE</value>
+          <value>TRUE</value>
+        </arg>
+        <arg name="method" type="mcast_method">
+          <value>add_drop</value>
+        </arg>
+        <arg name="ip_multicast_loop">
+          <value>-1</value>
+        </arg>
+        <arg name="pkt_len">
+          <value>512</value>
+        </arg>
+        <arg name="mtu">
+          <value>0</value>
+        </arg>
+
+        <run name="ip_multicast_loop_ef">
+          <script name="ip_multicast_loop">
+            <req id="IP_MULTICAST_LOOP"/>
+            <req id="SOCK_DGRAM"/>
+            <req id="NO_REUSE_STACK"/>
+            <req id="HW_TX_MCAST_LOOPBACK"/>
+            <req id="NO_SAFE"/>
+            <req id="SO_REUSEADDR"/>
+            <req id="MULTICAST_RECV"/>
+            <req id="IF_DOWN_UP"/>
+          </script>
+          <arg name="env">
+            <value ref="env.peer2peer_mcast"/>
+          </arg>
+          <arg name="sockets_map">
+            <value>one_proc</value>
+          </arg>
+          <arg name="ef_mcast_recv_hw_loop_p1" type="boolean"/>
+          <arg name="ef_mcast_recv_hw_loop_p2" type="boolean">
+            <value>TRUE</value>
+          </arg>
+          <arg name="ef_mcast_recv_hw_loop_p3" type="boolean">
+            <value>TRUE</value>
+          </arg>
+          <arg name="share_stack" type="boolean">
+            <value>FALSE</value>
+          </arg>
+          <arg name="sock_func" type="socket_function"/>
+        </run>
+
+        <run name="ip_multicast_loop_ef">
+          <script name="ip_multicast_loop">
+            <req id="IP_MULTICAST_LOOP"/>
+            <req id="SOCK_DGRAM"/>
+            <req id="NO_REUSE_STACK"/>
+            <req id="HW_TX_MCAST_LOOPBACK"/>
+            <req id="NO_SAFE"/>
+            <req id="SO_REUSEADDR"/>
+            <req id="MULTICAST_RECV"/>
+            <req id="IF_DOWN_UP"/>
+          </script>
+          <arg name="env">
+            <value ref="env.peer2peer_mcast"/>
+          </arg>
+          <arg name="sockets_map">
+            <value>receivers_in_second_proc</value>
+            <value>one_receiver_in_another_proc</value>
+            <value>receivers_in_different_proc</value>
+          </arg>
+          <arg name="ef_mcast_recv_hw_loop_p1" type="boolean"/>
+          <arg name="ef_mcast_recv_hw_loop_p2" type="boolean"/>
+          <arg name="ef_mcast_recv_hw_loop_p3" type="boolean">
+            <value>TRUE</value>
+          </arg>
+          <arg name="share_stack" type="boolean"/>
+          <arg name="sock_func" type="socket_function"/>
+        </run>
+      </session>
+    </run>
+
+    <run>
+      <session>
+        <arg name="ef_multicast_loop_off">
+          <value>FALSE</value>
+        </arg>
+        <arg name="method" type="mcast_method">
+          <value>add_drop</value>
+        </arg>
+        <arg name="ip_multicast_loop">
+          <value>0</value>
+          <value>1</value>
+        </arg>
+        <arg name="share_stack" type="boolean">
+          <value>FALSE</value>
+        </arg>
+        <arg name="pkt_len" list="len">
+          <value>512</value>
+          <value>1500</value> <!-- IP-fragmented -->
+          <value>2500</value> <!-- SG-fragmented (i.e. > 2K bytes,
+                                   see ST-238) -->
+          <value>3500</value> <!-- IP-and-SG-fragmented -->
+        </arg>
+        <arg name="mtu" list="len">
+          <value>0</value>
+          <value>1300</value>
+          <value>3000</value>
+          <value>3000</value>
+        </arg>
+
+        <run>
+          <script name="ip_multicast_loop">
+            <req id="IP_MULTICAST_LOOP"/>
+            <req id="SOCK_DGRAM"/>
+            <req id="NO_REUSE_STACK"/>
+            <req id="HW_TX_MCAST_LOOPBACK"/>
+            <req id="NO_SAFE"/>
+            <req id="SO_REUSEADDR"/>
+            <req id="MULTICAST_RECV"/>
+            <req id="IF_DOWN_UP"/>
+          </script>
+          <arg name="env">
+            <value ref="env.peer2peer_mcast"/>
+          </arg>
+          <arg name="sockets_map">
+            <value>one_proc</value>
+          </arg>
+          <arg name="ef_mcast_recv_hw_loop_p1">
+            <value>TRUE</value>
+          </arg>
+          <arg name="ef_mcast_recv_hw_loop_p2" type="boolean">
+            <value>TRUE</value>
+          </arg>
+          <arg name="ef_mcast_recv_hw_loop_p3" type="boolean">
+            <value>TRUE</value>
+          </arg>
+          <arg name="sock_func" type="socket_function"/>
+        </run>
+
+        <run>
+          <script name="ip_multicast_loop">
+            <req id="IP_MULTICAST_LOOP"/>
+            <req id="SOCK_DGRAM"/>
+            <req id="NO_REUSE_STACK"/>
+            <req id="HW_TX_MCAST_LOOPBACK"/>
+            <req id="NO_SAFE"/>
+            <req id="SO_REUSEADDR"/>
+            <req id="MULTICAST_RECV"/>
+            <req id="IF_DOWN_UP"/>
+          </script>
+          <arg name="env">
+            <value ref="env.peer2peer_mcast"/>
+          </arg>
+          <arg name="sockets_map">
+            <value>receivers_in_second_proc</value>
+            <value>one_receiver_in_another_proc</value>
+          </arg>
+          <arg name="ef_mcast_recv_hw_loop_p1">
+            <value>TRUE</value>
+          </arg>
+          <arg name="ef_mcast_recv_hw_loop_p2">
+            <value>TRUE</value>
+          </arg>
+          <arg name="ef_mcast_recv_hw_loop_p3" type="boolean">
+            <value>TRUE</value>
+          </arg>
+          <arg name="sock_func" type="socket_function"/>
+        </run>
+      </session>
+    </run>
+
+    <run>
+      <script name="mcast_option_different_states">
+        <req id="IP_MULTICAST_LOOP"/>
+        <req id="SOCK_DGRAM"/>
+        <req id="HW_TX_MCAST_LOOPBACK"/>
+        <req id="NO_REUSE_STACK"/>
+        <req id="NO_SAFE"/>
+        <req id="SO_REUSEADDR"/>
+      </script>
+      <arg name="env">
+        <value>IUT{{{'pco_iut1':IUT},{'pco_iut2':IUT},addr:'mcast_addr':inet:multicast,addr:'iut_addr':inet:unicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+      </arg>
+      <arg name="state">
+        <value>fresh</value>
+        <value>binded</value>
+        <value>joined</value>
+      </arg>
+      <arg name="order">
+        <value>ttl_first</value>
+        <value>loop_first</value>
+        <value>if_first</value>
+      </arg>
+      <arg name="method" type="mcast_method">
+        <value>add_drop</value>
+      </arg>
+      <arg name="ip_multicast_loop" type="boolean"/>
+      <arg name="ip_multicast_ttl" type="boolean"/>
+      <arg name="sock_func" type="socket_function"/>
+    </run>
+
+    <run>
+      <script name="mcast_onload_handover" track_conf="nohistory">
+        <req id="ONLOAD_ONLY"/>
+        <req id="NO_REUSE_STACK"/>
+        <req id="ONLOAD_FD_STAT"/>
+      </script>
+      <arg name="env" list="">
+        <value ref="env.peer2peer_mcast"/>
+        <value ref="env.peer2peer_mcast_tst"/>
+      </arg>
+      <arg name="acc_if" type="boolean" list="">
+        <value>TRUE</value>
+        <value>FALSE</value>
+      </arg>
+      <arg name="bind_wildcard" type="boolean"/>
+      <arg name="method" type="mcast_common_method"/>
+      <arg name="sock_func" type="socket_function"/>
+      <arg name="handover">
+        <value>0</value>
+        <value>1</value>
+        <value>2</value>
+      </arg>
+    </run>
+
+    <run>
+        <script name="mcast_unicast_inaddr_any">
+            <req id="SOCK_DGRAM"/>
+        </script>
+        <arg name="env">
+            <value ref="env.peer2peer_mcast"/>
+        </arg>
+        <arg name="sock_func" type="socket_function"/>
+        <arg name="proto_def" type="boolean"/>
+    </run>
+
+    <run>
+        <script name="mcast_bind_if">
+            <req id="SOCK_DGRAM"/>
+        </script>
+        <arg name="env">
+            <value reqs="TWO_INDEP_IFS" ref="env.peer2peer_mcast.two_links"/>
+        </arg>
+        <arg name="sock_func" type="socket_function"/>
+    </run>
+
+    <run>
+        <script name="iomux_multicast" track_conf="silent"/>
+        <arg name="env">
+            <value ref="env.peer2peer_mcast"/>
+            <value ref="env.peer2peer_mcast_lo"/>
+        </arg>
+        <arg name="iomux" type="iomux_with_oo_epoll"/>
+        <arg name="method" type="mcast_common_method"/>
+        <arg name="sock_func" type="socket_function"/>
+        <arg name="blocking" type="boolean"/>
+    </run>
+  </session>
+</package>

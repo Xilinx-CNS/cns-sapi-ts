@@ -1,0 +1,3642 @@
+# SPDX-License-Identifier: Apache-2.0
+# (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved.
+groups:
+- group: sockapi-ts
+  summary: Socket API Test Suite
+  objective: ''
+  groups:
+  - group: aio
+    summary: Asynchronous Input/Output
+    objective: ''
+    tests:
+    - test: aio_cancel_alldone
+      summary: Cancel completed request
+
+    - test: aio_cancel_inprogress
+      summary: Cancel request in progress
+
+    - test: aio_cancel_many
+      summary: Cancel all requests corresponding to socket
+
+    - test: aio_cancel_read
+      summary: Cancel read request
+
+    - test: aio_cancel_thread
+      summary: Cancel request posted from other thread/process
+
+    - test: aio_cancel_write
+      summary: Cancel write request
+
+    - test: aio_error
+      summary: Asynchronous error processing
+
+    - test: aio_fork
+      summary: Call aio_error() and aio_ruturn() for request posted from other process
+
+    - test: aio_fsync_bad_op
+      summary: Pass incorrect operation to aio_fsync()
+
+    - test: aio_fsync_socket
+      summary: Call aio_fsync() for socket
+
+    - test: aio_read
+      summary: aio_read() usecase
+
+    - test: aio_read_blk_read
+      summary: Simultaneous use AIO and blocking read
+
+    - test: aio_read_ignore_opcode
+      summary: Check that lio_opcode is ignored by aio_read()
+
+    - test: aio_read_many_reqs
+      summary: Many AIO read requests on one socket
+
+    - test: aio_read_many_socks
+      summary: Many AIO read requests on different sockets
+
+    - test: aio_ret_failed
+      summary: aio_error() and aio_return() for failed request
+
+    - test: aio_ret_no_aio_error
+      summary: aio_return() without aio_error() for completed request
+
+    - test: aio_suspend
+      summary: Suspending on asynchronous event(s)
+
+    - test: aio_suspend_cblist_dummy
+      summary: Pass cblist containing only NULL control blocks to aio_suspend()
+
+    - test: aio_suspend_cblist_with_holes
+      summary: Pass cblist with holes to aio_suspend()
+
+    - test: aio_suspend_completed
+      summary: aio_suspend() for completed request
+
+    - test: aio_suspend_file
+      summary: Suspending on asynchronous events on socket and file
+
+    - test: aio_suspend_forever
+      summary: aio_suspend() with NULL timeout
+
+    - test: aio_suspend_not_posted
+      summary: aio_suspend() for not posted request
+
+    - test: aio_suspend_signal
+      summary: Interrupt aio_suspend() by signal
+
+    - test: aio_suspend_thread
+      summary: Wait request posted from other thread/process
+
+    - test: aio_suspend_timeout
+      summary: Pass negative and zero timeout to aio_suspend()
+
+    - test: aio_write
+      summary: aio_write() usecase
+
+    - test: aio_write_blk_write
+      summary: Simultaneous use AIO and blocking write
+
+    - test: aio_write_ignore_opcode
+      summary: Check that lio_opcode is ignored by aio_write()
+
+    - test: aio_write_many_reqs
+      summary: Many AIO write requests on one socket
+
+    - test: aio_write_many_socks
+      summary: Many AIO write requests on different sockets
+
+    - test: bnb_cblist_nent
+      summary: Boundary values of list parameters for aio_suspend() and lio_listio()
+
+    - test: close_sock
+      summary: Close the socket during AIO request processing
+
+    - test: garbage_cb
+      summary: AIO request with cb filled by garbage
+
+    - test: invalid_fd
+      summary: Pass invalid file descriptors to aio functions
+
+    - test: kill_process
+      summary: Kill process before completion of AIO request
+
+    - test: lio_listio_bad_mode
+      summary: lio_listio() with incorrect mode
+
+    - test: lio_listio_cblist_dummy
+      summary: Pass cblist containing only dummy control blocks
+
+    - test: lio_listio_cblist_with_holes
+      summary: Pass cblist with holes to lio_listio()
+
+    - test: lio_listio_file
+      summary: Post asynchronous requests on socket and file using lio_listio()
+
+    - test: lio_listio_nowait
+      summary: Posting several asynchronous requests
+
+    - test: lio_listio_too_many
+      summary: Pass too long cblist to lio_listio()
+
+    - test: lio_listio_wait
+      summary: Call lio_listio(LIO_WAIT) for successful requests
+
+    - test: lio_listio_wait_canceled
+      summary: Cancel a request posted by lio_listio(LIO_WAIT)
+
+    - test: lio_listio_wait_failed
+      summary: Call lio_listio(LIO_WAIT) for failed requests
+
+    - test: lio_listio_wait_signal
+      summary: Interrupt lio_listio(LIO_WAIT) by signal.
+
+    - test: nested_requests
+      summary: Initiate the AIO request from the completion callback
+
+    - test: not_posted_cb
+      summary: Status/result of non-posted request
+
+    - test: notify_callback
+      summary: AIO request completion notification using callback
+
+    - test: notify_diff_callbacks
+      summary: Different callbacks for different requests
+
+    - test: notify_diff_signals
+      summary: Different signals for different requests
+
+    - test: notify_diff_types
+      summary: Different notification types for different requests
+
+    - test: notify_signal
+      summary: AIO request completion notification using signal
+
+    - test: notify_thread
+      summary: Notification of the thread by the signal
+
+    - test: one_buf
+      summary: Using one buffer for several AIO requests
+
+    - test: post_twice
+      summary: Post the request twice
+
+    - test: stress
+      summary: Post many aio requests for many sockets from different threads
+
+    - test: too_many_req
+      summary: Post too many AIO requests
+
+  - group: arp
+    summary: ARP Table
+    objective: ''
+    tests:
+    - test: arp_change
+      summary: Send some data after changing MAC on recipient
+
+    - test: arp_flooding
+      summary: ARP table flooding
+
+    - test: arp_packet_pool_empty
+      summary: ARP packet pool empty
+
+    - test: arp_table_full
+      summary: Fill ARP table with many entries, check whether this disrupts network
+        traffic
+
+    - test: broadcast
+      summary: Resolution of broadcast addresses
+
+    - test: common_broadcast
+      summary: Resolution of broadcast addresses
+
+    - test: different_subnets
+      summary: ARP entries for hosts from different subnets in ARP table
+
+    - test: gateway_addr
+      summary: ARP resolution and gateway
+
+    - test: if_ll_addr_1
+      summary: Change MAC address after socket creation
+
+    - test: if_ll_addr_2
+      summary: Change MAC address after connection establishment
+
+    - test: if_scope_check
+      summary: ARP entry interface scope check
+
+    - test: incomplete_entry
+      summary: Incomplete entry in ARP cache
+
+    - test: invalid_arp_entry_timeout
+      summary: Invalid ARP entries are not reinforced by socket operations
+
+    - test: invalid_arp_request
+      summary: Invalid arp request shouldn't touch ARP table
+
+    - test: many_addresses
+      summary: ARP resolving while there are a few IP addresses in use
+
+    - test: new_broadcast_arp
+      summary: ARP resolution uses changed hardware broadcast address for processing
+
+    - test: no_outgoing_traffic
+      summary: Local communication between two sockets
+
+    - test: permanent_entry_untouched_by_reply
+      summary: ARP reply does not change permanent ARP table entry
+
+    - test: permanent_entry_untouched_by_request
+      summary: Permanent ARP entry remains untouched by receiving ARP request
+
+    - test: tcp_udp_reinforce
+      summary: TCP/UDP connection reinforces ARP entry
+
+    - test: udp_send_unavailable_arp
+      summary: Send a UDP packet to a destination with unresolvable ARP.
+      ref: arp-udp_send_unavailable_arp
+
+    - test: sa_first_arp_request
+      summary: Source address in the first resolution of ARP request
+      ref: arp-sa_first_arp_request
+
+  - group: attacks
+    summary: Attacks and vulnerabilities
+    objective: ''
+    groups:
+    - group: ethernet
+      summary: Ethernet and ARP attacks
+      objective: ''
+      tests:
+      - test: oversized
+        summary: Oversized frames
+
+      - test: own_arp
+        summary: ARP packets for host MAC address
+
+      - test: padding
+        summary: Padding of short frames
+
+      - test: zero_src_mac
+        summary: Zero source MAC address
+
+    - group: icmp
+      summary: ICMP-based attacks
+      objective: ''
+      tests:
+      - test: icmp_flood
+        summary: Flood of ICMP packets
+
+      - test: icmp_forged_acknum
+        summary: Send ICMP packet with forged ack number
+
+      - test: icmp_pmtu
+        summary: Degrade TCP connection by PMTU decreasing to illegal value
+
+      - test: icmp_reduced_mtu
+        summary: Send ICMP packet with reduced Path MTU.
+
+      - test: tcp_break
+        summary: Break TCP connection using ICMP errors
+
+      - test: tcp_degrade
+        summary: Degrade TCP connection using ICMP Source Quench
+
+    - group: ip
+      summary: IP packets processing
+      objective: ''
+      tests:
+      - test: bonk
+        summary: Fragments with oversized offsets
+
+      - test: frag_duplicate
+        summary: Duplicated fragments
+
+      - test: frag_flood
+        summary: Flood of fragmented packets
+
+      - test: frag_lost
+        summary: Flood of large packets with lost fragments
+
+      - test: frag_reorder
+        summary: Re-ordered fragments
+
+      - test: teardrop
+        summary: Fragments with overlapped offsets
+
+    - group: tcp
+      summary: TCP-based attacks
+      objective: ''
+      tests:
+      - test: flood
+        summary: Flood of TCP packets with fake SEQN/ACKN
+
+      - test: land
+        summary: TCP SYN packets with same src/dst addresses/ports
+
+      - test: overlapped
+        summary: Overlapped TCP fragments
+
+      - test: reorder
+        summary: Reordered TCP fragments
+
+      - test: syn_cookies
+        summary: Test for tcp syncookies
+
+      - test: syn_flood
+        summary: TCP SYN flood
+
+      - test: syn_spoof
+        summary: TCP SYN spoofing
+
+    - group: udp
+      summary: UDP-based attacks
+      objective: ''
+      tests:
+      - test: flood
+        summary: Flood of UDP packets with different dst/src addresses/ports
+
+      - test: land
+        summary: UDP packets with same src/dst addresses/ports
+
+  - group: basic
+    summary: Advanced usage of basic Socket API
+    objective: ''
+    tests:
+    - test: accept_multiple
+      summary: Socket accepting ability robustness
+
+    - test: accept_order
+      summary: Accepting connections order.
+
+    - test: bind_reuse
+      summary: Bind to used port
+
+    - test: bind_sockaddr_recv
+      summary: Influence of bind address argument on receive behaviour
+
+    - test: bind_sockaddr_send
+      summary: Influence of bind address argument on send behaviour
+
+    - test: bind_two_nets
+      summary: Bind function in two nets on one link environment
+
+    - test: chroot_socket
+      summary: socket() after chroot()
+
+    - test: close_bound
+      summary: Close bound socket
+
+    - test: close_created
+      summary: Close just created socket
+
+    - test: close_listen_pending
+      summary: Close listening socket with pending connections
+
+    - test: close_listening
+      summary: Close listening socket
+
+    - test: close_on_exec
+      summary: Usage of fcntl, socket and accept4 functionality for handling close-on-exec
+
+    - test: close_sock_oth_thread
+      summary: Close socket in another thread
+
+    - test: connect_after_fault
+      summary: connect() when server temporarily
+
+    - test: connect_failed_func
+      summary: Call function after failed connect
+
+    - test: connect_influence_sendto
+      summary: Influence on sendto() of connect() called on socket of the SOCK_DGRAM
+        type
+
+    - test: connect_interrupted
+      summary: Check behaviour/influence of the socket after interrupted TCP connect()
+
+    - test: connections_on_aliases
+      summary: Creation of the several connections on aliases
+
+    - test: data_before_accept
+      summary: Check possibility to obtain the data sent before TCP connection was
+        accepted
+
+    - test: default_bind_connect
+      summary: Default bind() during connect()
+
+    - test: default_bind_listen
+      summary: Default binding during listen()
+
+    - test: default_bind_sendto
+      summary: Default binding during sendto()
+
+    - test: derived_bind
+      summary: ''
+
+    - test: derived_bindtodevice
+      summary: ''
+
+    - test: derived_connect
+      summary: ''
+
+    - test: dgram_bind_connect_addr
+      summary: Bind UDP socket to loopback address and try to connect to unicast address
+
+    - test: dgram_bind_connect_names
+      summary: getsockname()/getpeername() after bind() and connnect() of datagram
+        socket
+
+    - test: dgram_crd_bound_lb
+      summary: Connect/reconnect/disconnect of datagram socket bound to loopback address
+
+    - test: dgram_crd_bound_wc
+      summary: Connect/reconnect/disconnect of datagram socketbound to wildcard address
+
+    - test: dgram_crd_unbound
+      summary: Connect/reconnect/disconnect of not bound datagram socket
+
+    - test: exec_bound
+      summary: Exec robustness for bound socket
+
+    - test: exec_conn
+      summary: Exec robustness for connected sockets
+
+    - test: exec_created
+      summary: Exec robustness for just created socket
+
+    - test: exec_dup
+      summary: Fork and dup correctness.
+
+    - test: exec_fork_multiple
+      summary: Robustness after calling of the multiple exec()/fork() procedures
+
+    - test: exec_fork_multithread
+      summary: Performing fork()/exec() calls in multithread environment
+
+    - test: exec_fork_traffic
+      summary: Robustness established TCP connection and performing the multiple exec()/fork()
+        procedures under traffic
+
+    - test: exec_listening
+      summary: Exec robustness for listening sockets
+
+    - test: fork_bound
+      summary: Fork robustness for bound socket
+
+    - test: fork_conn_dgm
+      summary: Fork robustness for connected datagram sockets
+
+    - test: fork_conn_str
+      summary: Fork robustness for connected stream sockets
+
+    - test: fork_created
+      summary: Fork robustness for just created socket
+
+    - test: fork_kill
+      summary: Use of the connection after parent's death
+
+    - test: fork_listening
+      summary: Fork robustness for listening sockets
+
+    - test: fork_nb_receive
+      summary: Fork during intensive non-block receive operations
+
+    - test: fork_share_sock
+      summary: Check sharing a socket between processes using a unix domain socket
+
+    - test: get_sock_peer_name_dgm
+      summary: The getsockname()/getpeername() for datagram sockets
+
+    - test: get_sock_peer_name_str
+      summary: The getsockname()/getpeername() for stream sockets
+
+    - test: listen_accept_close
+      summary: Connecting to closed listening socket
+
+    - test: listen_backlog_values
+      summary: Influence of backlog parameter
+
+    - test: listen_shutdown_connect
+      summary: Call connect after shutdown on listening socket
+
+    - test: listen_shutdown_listen
+      summary: Check a possibility to repair socket to the listening state after shutdown
+
+    - test: listen_shutdown_pending
+      summary: Check that client will receive RST in the case if listening socket
+        is shutdowned on read
+
+    - test: listen_shutdown_wr
+      summary: Check that nothing happens on SHUT_WR for listening socket
+
+    - test: many_listen_connect_lo
+      summary: Connect() vs close() on peer listening socket race condition
+
+    - test: many_pipes
+      summary: Write/read operations with different pipes
+
+    - test: many_sockets
+      summary: Create a very large sockets number
+
+    - test: mtu_usage
+      summary: Checking MTU usage and jumbo frames
+
+    - test: pipe_become_writable
+      summary: Writability of the pipe after overfilling
+
+    - test: pipe_big_buffer_read
+      summary: Read operation on the pipe with big buffer
+
+    - test: pipe_big_buffer_write
+      summary: Write operation on the pipe with big buffer
+
+    - test: pipe_close_on_exec
+      summary: Usage of fcntl and pipe2 functionality for handling close-on-exec on
+        pipe
+
+    - test: pipe_close_read
+      summary: Reading from the pipe with closed write end
+
+    - test: pipe_close_write
+      summary: Writing to the pipe with closed read end
+
+    - test: pipe_merge_buf
+      summary: Read data from the pipe using big buffer after several write calls
+
+    - test: pipe_read_nonblock
+      summary: Read operation on non-blocking pipes.
+
+    - test: pipe_rw_rnd_len
+      summary: Read and write operations on pipe with randomly generated buffer lenghts
+
+    - test: pipe_socket_interact
+      summary: Opening and closing sockets and pipes
+
+    - test: pipe_write_and_close
+      summary: Blocking read, write and close.
+
+    - test: pipe_write_block
+      summary: Write operation on blocking pipes.
+
+    - test: pipe_write_nonblock
+      summary: Write operation on non-blocking pipes.
+
+    - test: pipe_writev_readv
+      summary: Writev/readv operations on pipe
+
+    - test: popen_multithread_flood
+      summary: '@b popen() in multithreading'
+
+    - test: rst_before_accept
+      summary: Behaviour in the case if RST is got before accept()
+
+    - test: shutdown_dgm_all
+      summary: Local read/write shutdown of datagram socket
+
+    - test: shutdown_dgm_rd
+      summary: Local read shutdown of datagram socket
+
+    - test: shutdown_dgm_wr
+      summary: Local write shutdown of datagram socket
+
+    - test: shutdown_peer
+      summary: Check behaviour after shutdown on peer of connected stream socket
+
+    - test: shutdown_stream_read_write
+      summary: Local shutdown of stream socket
+
+    - test: shutdown_write_read
+      summary: Local shutdown on socket
+
+    - test: sock_exec_many
+      summary: Check that stack fd is cloexec
+
+    - test: socket_peer_rst
+      summary: Peer returns RST TCP segment on close() if received buffer has not
+        been read
+
+    - test: splice_nonblock
+      summary: The splice() operation on nonblocking pipe and socket
+
+    - test: stat_mode
+      summary: Stat family calls on various objects
+
+    - test: state_trans_client
+      summary: State transitions for TCP client socket type
+
+    - test: state_trans_server
+      summary: State transitions for TCP server socket type
+
+    - test: state_trans_udp
+      summary: State transitions for datagram socket
+
+    - test: tcp_server_crashes_timeout
+      summary: TCP client returns with timeout when TCP server crashes
+
+    - test: tcp_server_reboot
+      summary: TCP server behavior after reboot in the case of arrival segments received
+        from old client
+
+    - test: tcp_udp_two_threads
+      summary: Manipulate with UDP socket when TCP socket is busy in another thread
+
+    - test: terminate_waitpid
+      summary: '@b waitpid() after termination by @b exit() call or a signal'
+
+    - test: threaded_busy_socket
+      summary: Exercise multithreading with busy socket
+
+    - test: threaded_listen
+      summary: Open passive connection with charged multithreading
+
+    - test: threaded_nblock_conn
+      summary: Non-blocking connect and data transmission with multithreading
+
+    - test: threaded_udp
+      summary: Datagrams transmission with loaded threads
+
+    - test: threads_client
+      summary: Stream client socket in multiple threads
+
+    - test: threads_dgm
+      summary: Datagram sockets in multiple threads
+
+    - test: threads_server
+      summary: Stream server socket in multiple threads
+
+    - test: threads_shutdown_diff_sock
+      summary: Shutdown on socket when two other threads or processes call the same
+        function for two other sockets in blocking mode
+
+    - test: threads_shutdown_listening
+      summary: Shutdown on listening socket shared by many threads
+
+    - test: threads_shutdown_unblock
+      summary: Shutdown on socket shared by many threads
+
+    - test: two_accept_blocked
+      summary: Behaviour of the accept() blocked in different child processes on the
+        same server socket
+
+    - test: udp_connect
+      summary: UDP sockets re-connect
+
+    - test: vfork_check_hang
+      summary: Check that parent process hangs after vfork()
+
+    - test: vfork_func_exec
+      summary: async-safe function after vfork() but before execve()
+
+    - test: vfork_open_close_exec
+      summary: open()/close()/dup() after vfork() but before execve()
+
+    - test: vfork_sig_exec
+      summary: sigaction()/sigpcrocmask()/signal()/siginterrupt() after vfork() but
+        before execve()
+
+    - test: wildcard_server_passive_opening
+      summary: Creation of the several connections requested through different host
+        addresses
+
+    - test: ipv6_recv_ip
+      summary: IPv6 socket receives IPv4 and IPv6 traffic
+
+    - test: ipv6_send_ip
+      summary: Sending data from IPv6 socket to IPv6 and IPv4 destinations
+
+    - test: ipv6_ipv4_reuse
+      summary: Creating IPv6 sockets after closing IPv4 sockets of the same type or
+        vice versa
+
+    - test: kill_lock_stack
+      summary: Killing locked onload stack
+
+    - test: reuseport_bind_zero_port
+      summary: Bind a socket to zero port with and without SO_REUSEPORT.
+      ref: basic-bind_zero_port
+
+    - test: threads_system
+      summary: Call system() in multithreaded application
+      ref: basic-threads_system
+
+    - test: socket_via_af_unix_read
+      summary: Pass a socket between proccesses via AF_UNIX socket and read data using it.
+      ref: basic-socket_via_af_unix_read
+
+    - test: socket_via_af_unix_write
+      summary: Pass a socket between proccesses via AF_UNIX socket and send data using it.
+      ref: basic-socket_via_af_unix_write
+
+    - test: pipe_via_af_unix
+      summary: Pass a pipe FD between proccesses via AF_UNIX socket and read/write data using it.
+      ref: basic-pipe_via_af_unix
+
+    - test: listen_via_af_unix
+      summary: Pass a listening socket between proccesses via AF_UNIX socket and accept connections using it.
+      ref: basic-listen_via_af_unix
+
+    - test: pthread_cancellation_point
+      summary: Test that cancellation point for thread works correctly
+      ref: basic-pthread_cancellation_point
+
+  - group: checksum
+    summary: IP/TCP/UDP checksum tests
+    objective: ''
+    tests:
+    - test: tcp_bad_csum_open
+      summary: Sending TCP segments with bad checksum while establishing a connection
+      ref: checksum-tcp_bad_csum_open
+
+    - test: tcp_bad_csum_conn
+      summary: Sending TCP segments with bad checksum via established connection
+      objective: Send ACK segment with invalid checksum and check that IUT ignores it
+      params:
+      - param: env
+        description: Testing environment
+        values:
+        - "@ref arg_types_env_peer2peer"
+      - param: data
+        description: Send bad ACK segment with/without data
+        values:
+        - "FALSE"
+        - "TRUE"
+      - param: header
+        description: Protocol header to corrupt checksum in
+        values:
+        - ip
+        - tcp
+      - param: csum_val
+        description: Value to set as a checksum
+        values:
+        - bad
+        - zero
+      steps:
+      - Establish TCP connection between IUT socket and CSAP socket emulation on Tester
+      - If @p data is @c TRUE:
+        - Send @c ACK with data with incorrect checksum from CSAP
+        - Check that IUT socket is not readable
+        - Send @c ACK with another data with correct checksum from CSAP
+        - Check that IUT is readable
+        - Receive data on IUT and compare it with the sent one
+      - If @p data is @c FALSE:
+        - Send some data from IUT
+        - Send @c ACK with invalid checksum from CSAP
+        - Check that IUT re-transmits the segment
+        - Send @c ACK with valid checksum from CSAP
+        - Receive data on CSAP and compare it with the sent one
+
+    - test: tcp_bad_csum_close
+      summary: Sending TCP segments with bad checksum while closing a connection
+      objective: Send FIN, RST segments with invalid checksum and check that IUT ignores it
+      params:
+      - param: env
+        description: Testing environment
+        values:
+        - "@ref arg_types_env_peer2peer"
+      - param: segment
+        description: What segment to send with invalid checksum
+        values:
+        - FIN
+        - RST
+      - param: header
+        description: Protocol header to corrupt checksum in
+        values:
+        - ip
+        - tcp
+      - param: csum_val
+        description: Value to set as a checksum
+        values:
+        - bad
+        - zero
+      steps:
+      - Establish TCP connection between IUT socket and CSAP socket emulation on Tester
+      - Call non-blocking @b recv() RPC on IUT
+      - Send TCP segment with invalid checksum from CSAP according to parameters
+      - Check that @b recv() is still blocked
+      - Send the same TCP segment with valid checksum
+      - Check that @b recv() is unblocked
+      - If @p segment is @c RST:
+        - Check that @b recv() fails with @c ECONNRESET
+      - If @p segment is @c FIN:
+        - Check that @b recv() return zero
+      - Check that connection is fully closed
+
+  - group: bnbvalue
+    summary: Bad and boundary values
+    objective: ''
+    tests:
+    - test: addr_family_inapprop_bind
+      summary: Using inappropriate address family while passing address structure
+        in bind() function
+
+    - test: addr_family_inapprop_connect
+      summary: Using inappropriate address family while passing address structure
+        in connect() function
+
+    - test: addr_len_getname
+      summary: Passing address buffer whose size is different from the size of address
+        structure of a particular domain to getsockname() and getpeername() functions
+
+    - test: addr_len_inapprop_bind
+      summary: Using inappropriate address length value with bind()
+
+    - test: addr_len_inapprop_connect
+      summary: Using inappropriate address length value with connect() function
+
+    - test: addr_len_inapprop_recv_short
+      summary: Using too short address length value with receiving functions
+
+    - test: addr_len_inapprop_recvfrom_long
+      summary: Passing bigger length than the size of address structure in recvfrom()
+        functions
+
+    - test: addr_len_inapprop_recvmsg_long
+      summary: Using a long address length value in recvmsg()-like functions
+
+    - test: addr_len_inapprop_sendmsg
+      summary: Using inappropriate address length value with sendmsg(), sendmmsg()
+        or onload_zc_send() functions
+
+    - test: addr_len_inapprop_sendto
+      summary: Using inappropriate address length value with sendto() function
+
+    - test: bond_bind_remove
+      summary: Removing bond when there is a socket bound to it
+
+    - test: descr_inapprop
+      summary: Using inappropriate descriptor in Socket API calls
+
+    - test: descr_nonexist
+      summary: Using non existing descriptor in Socket API calls
+
+    - test: dgram_empty
+      summary: Empty datagram send/recieve
+
+    - test: func_accept_addr_null
+      summary: Using NULL pointer while passing address structure and address length
+        in accept() function
+
+    - test: func_accept_dgram
+      summary: Usage of accept() function with connection-less sockets
+
+    - test: func_accept_stream_client
+      summary: Using accept() function with connection-oriented client sockets
+
+    - test: func_bind_addr_null
+      summary: Using NULL pointer while passing address structure in bind() function
+
+    - test: func_bind_after_accept
+      summary: Using bind() function after accept()
+
+    - test: func_bind_after_connect
+      summary: Using bind() function after connect()
+
+    - test: func_bind_after_implicit_bind_udp
+      summary: Using bind() function after connect()/sendto() called on socket SOCK_STREAM
+        type
+
+    - test: func_bind_after_listen
+      summary: Using bind() function after listen()
+
+    - test: func_bind_notassigned_addr
+      summary: Usage bind() function with network address not assigned to the system
+
+    - test: func_bind_twice
+      summary: Usage bind() function more than once on the same socket
+
+    - test: func_connect_addr_null
+      summary: Using NULL pointer while passing address structure in connect() function
+
+    - test: func_connect_after_listen
+      summary: Using connect() function after listen()
+
+    - test: func_connect_inapprop_addr
+      summary: Using wildcard address and zero port in connect() function with connection-oriented
+        sockets
+
+    - test: func_connect_str_unspec_af
+      summary: Using connect() function after listen() specifying AF_UNSPEC as the
+        value of address family field in sockaddr structure
+
+    - test: func_connect_twice
+      summary: Usage connect() function more than one with connection-oriented sockets
+
+    - test: func_epoll_create
+      summary: Using epoll_create() function with incorrect size
+
+    - test: func_epoll_ctl_add
+      summary: Using epoll_ctl(EPOLL_CTL_ADD) twice with the same file descriptor
+
+    - test: func_epoll_ctl_bad_epfd
+      summary: Using epoll_ctl() function with bad epfd
+
+    - test: func_epoll_ctl_bad_fd
+      summary: Using epoll_ctl() function with bad fd
+
+    - test: func_epoll_ctl_bad_fd_type
+      summary: Using epoll_ctl() function with bad fd type
+
+    - test: func_epoll_ctl_bad_op
+      summary: Using epoll_ctl() function with bad operation
+
+    - test: func_epoll_ctl_mod_del
+      summary: Modifying or deleting descriptor that is not in epfd
+
+    - test: func_epoll_ctl_null_events
+      summary: Using epoll_ctl() with NULL events
+
+    - test: func_epoll_wait_bad_epfd
+      summary: Using epoll_wait() function with bad epfd
+
+    - test: func_epoll_wait_bad_maxevents
+      summary: Using epoll_wait() with non-positive maxevents
+
+    - test: func_execve_null
+      summary: execve() with @c NULL as argv and envp
+
+    - test: func_getname
+      summary: Inappropriate usage of getsockname() and getpeername() functions
+
+    - test: func_getname_addr_null_dgram
+      summary: Using NULL pointer while passing address structure and address length
+        in getpeername() and getsockname() functions with SOCK_DGRAM sockets
+
+    - test: func_getname_addr_null_stream
+      summary: Using NULL pointer while passing address structure and address length
+        in getpeername() and getsockname() functions with SOCK_STREAM sockets
+
+    - test: func_getsockopt
+      summary: Inappropriate usage of getsockopt() function
+
+    - test: func_io_after_listen
+      summary: Usage of send/recv() functions on listening socket
+
+    - test: func_ioctl_null
+      summary: IOCTL requests in case of NULL argument
+
+    - test: func_ioctl_unknown
+      summary: IOCTL requests in case of invalid ioctl number
+
+    - test: func_listen_after_connect
+      summary: Using of listen() function after connect()
+
+    - test: func_listen_dgram
+      summary: Usage of listen() function with connectionless sockets
+
+    - test: func_listen_twice
+      summary: Usage listen() function more than once on the same socket
+
+    - test: func_pipe
+      summary: Calling pipe()/pipe2() with incorrect arguments
+
+    - test: func_pipe_wrong_fd
+      summary: IO from wrong pipe end
+
+    - test: func_poll_fd_negative
+      summary: Using poll() function with pollfd entries whose fd member set to a
+        negative value
+
+    - test: func_poll_nentries
+      summary: nfds parameter of poll() function
+
+    - test: func_poll_nval
+      summary: Using poll() function with incorrect descriptor
+
+    - test: func_poll_zero_evt
+      summary: Using poll() function with structures where events field is set to
+        zero
+
+    - test: func_pselect_ppoll_negative_timeout
+      summary: Using pselect() and ppoll() functions with negative timeout
+
+    - test: func_recvfrom_addr_null_dgram
+      summary: Using NULL pointer while passing address structure and address length
+        in recvfrom() function with SOCK_DGRAM sockets
+
+    - test: func_recvfrom_addr_null_stream
+      summary: Using NULL pointer while passing address structure and address length
+        in recvfrom() function with SOCK_STREAM sockets
+
+    - test: func_recvmmsg_all_zeros
+      summary: Using recvmmsg() function with NULL mmsghdr, zero vlen and zero timeout
+
+    - test: func_recvmmsg_negative_timeout
+      summary: Using recvmmsg() function with negative timeout
+
+    - test: func_recvmsg_ctrunc
+      summary: Passing short buffer under ancillary data in recvmsg() function
+
+    - test: func_select_all_zeros
+      summary: Using select() function with all fdsets set to NULL and zero timeout
+
+    - test: func_select_inapprop_maxfd
+      summary: Using select() function with inappropriate value of maxfd parameter
+
+    - test: func_select_many_descrs
+      summary: Using maximum number of descriptors with select() function
+
+    - test: func_select_negative_timeout
+      summary: Using select() function with negative timeout
+
+    - test: func_select_pselect_neg_fdnum
+      summary: Using select() and pselect() function with negative value of maxfd
+        parameter
+
+    - test: func_send_addr_null_stream_conn
+      summary: Using NULL pointer while passing address structure in sendto()-like
+        function with connected SOCK_STREAM sockets
+
+    - test: func_send_addr_null_stream_not_conn
+      summary: Using NULL pointer while passing address structure in sendto()-like
+        function with not connected SOCK_STREAM sockets
+
+    - test: func_send_too_long_dgram
+      summary: Behaviour of send() function on attempt to send too long datagram
+
+    - test: func_sendmsg_addr_null_dgram
+      summary: Using NULL pointer while passing address structure in sendmsg() or
+        sendmmsg() function with SOCK_DGRAM sockets
+
+    - test: func_sendto_addr_null_dgram
+      summary: Using NULL pointer while passing address structure in sendto() function
+        with SOCK_DGRAM sockets
+
+    - test: func_setsockopt
+      summary: Inappropriate usage of setsockopt() function
+
+    - test: func_shutdown_before_connect
+      summary: Using shutdown() function with not connected sockets
+
+    - test: func_shutdown_incorrect_how
+      summary: Using shutdown() with inappropriate value of how parameter
+
+    - test: func_socket
+      summary: Passing inappropriate parameters to socket() function
+
+    - test: func_socket_pipe_too_many
+      summary: Limit on the number of opened sockets or pipes
+
+    - test: func_sockopt_boolean
+      summary: Checking for boolean socket options setting
+
+    - test: func_sockopt_get_integer
+      summary: Checking for getting of integer socket options
+
+    - test: func_sockopt_level_name
+      summary: Usage of getsockopt() and setsockopt() functions with unknown level
+        and option name
+
+    - test: func_sockopt_set_integer
+      summary: Checking for setting of integer socket options
+
+    - test: incorrect_address_length
+      summary: Behavior of the sendto(), sendmsg() and sendmmsg() functions if an
+        incorrect length of the target address parameter passed
+
+    - test: incorrect_family
+      summary: Behavior of sendmsg(), sendmmsg() and sendto() functions when address
+        with incorrect family passed
+
+    - test: incorrect_iovec_pointer
+      summary: Behavior of recvmsg()/readv()/writev()/sendmsg()/template_send() functions
+        if NULL passed as a pointer to the iovec structures
+
+    - test: iomux_notmasked_signals
+      summary: Using iomux functions with signal mask that contains signals that cannot
+        be caught
+
+    - test: many_sock_on_server
+      summary: Many sockets on server
+
+    - test: msg_controllen_inapprop
+      summary: NULL msg_control and/or zero msg_controllen
+
+    - test: pipe_sock_func
+      summary: Using socket functions with pipe
+
+    - test: pipe_sock_recv
+      summary: Using socket receiving data functions with pipe
+
+    - test: pipe_sock_send
+      summary: Using socket sending data functions with pipe
+
+    - test: read_zero_bytes
+      summary: Reading zero bytes from fd
+
+    - test: recv_oob_dgram
+      summary: Behavior of receiving functions on socket of SOCK_DGRAM type
+        if flag MSG_OOB passed
+
+    - test: rx_buf_len_zero_connected
+      summary: Using zero length receive buffer on connected socket
+
+    - test: send_oob_dgram
+      summary: Behavior of the sending functions on socket of SOCK_DGRAM
+        type if flag MSG_OOB is passed
+
+    - test: sig_err_handler
+      summary: Setting signal handler to SIG_ERR
+
+    - test: tx_buf_len_connected
+      summary: Using different combinations of buffer and buffer length parameters
+        with transmit functions on connected socket
+
+    - test: tx_buf_len_not_connected
+      summary: Using different combinations of buffer and buffer length parameters
+        with transmit functions on not connected socket
+
+    - test: unbound
+      summary: Behavior of unbound socket
+
+    - test: extra_large_packet
+      summary: Try to send/receive extra large packet via TCP/UDP connection.
+      ref: bnbvalue-extra_large_packet
+
+    - test: ipv4_mapped_in_ipv6
+      summary: Receive IPv6 packet with IPv4-mapped addresses
+
+    - test: ipv4_mapped_connect_ipv6
+      summary: Bind IPv6 socket to IPv4-mapped address and connect to normal IPv6
+        address or vice versa
+
+    - test: send_connect_zero_addr
+      summary: send and connect to all-zero address
+
+    - test: protected_signal
+      summary: Setting signal handler to libc-protected signal
+      ref: bnbvalue-protected_signal
+
+    - test: file_max_overflow
+      summary: Trying to create more FDs than file-max allows
+      ref: bnbvalue-file_max_overflow
+
+    - test: chk_too_big_len
+      summary: Too big length and _chk() functions
+      ref: bnbvalue-chk_too_big_len
+
+  - group: bpf
+    summary: BPF/XDP tests
+    objective: ''
+    tests:
+    - test: tcp_flags
+      summary: Retreiving TCP flags of incoming packets in XDP program
+      ref: bpf-tcp_flags
+
+    - test: one_rule_filter
+      summary: Filtering by one rule
+      ref: bpf-one_rule_filter
+
+    - test: xdp_lpm_rule
+      summary: Filtering by the longest prefix match rule
+      ref: bpf-xdp_lpm_rule
+
+    - test: xdp_perf_event
+      summary: XDP performance events handling
+      ref: bpf-xdp_perf_event
+
+    - test: xdp_prog_load
+      summary: Loading XDP programs with different types of maps and XDP return values
+      ref: bpf-xdp_prog_load
+
+    - test: xdp_maps_functions
+      summary: Update and delete elements from map
+      ref: bpf-xdp_maps_functions
+
+  - group: epoll
+    summary: epoll functionality
+    objective: ''
+    tests:
+    - test: create_close_many
+      summary: Repeat epoll_create() and then close() many times
+
+    - test: create_close_wait
+      summary: Call epoll_wait() with epfd with closed socket.
+
+    - test: ctl_handover_wait
+      summary: Epoll file descriptor with handover socket
+
+    - test: derived_epoll
+      summary: Exec/fork/dup robustness for epoll sockets
+
+    - test: derived_epoll_add
+      summary: Adding socket to epfd from one process while epoll_wait(epfd) is running
+        on another process
+
+    - test: derived_epoll_del
+      summary: Deleting socket from epfd from one process while epoll_wait(epfd) is
+        running on another process
+
+    - test: derived_epoll_mod
+      summary: Modifying events in epfd from one process while epoll_wait(epfd) is
+        running on another process
+
+    - test: edge_level_triggered_both
+      summary: File descriptors in ET and LT mode both with events in one epfd
+
+    - test: edge_level_triggered_et_only
+      summary: File descriptors in ET and LT mode in one epfd with events only for
+        the ET descriptor
+
+    - test: edge_level_triggered_mod
+      summary: On-the-fly edge-triggered mode modification
+
+    - test: edge_triggered_listen
+      summary: Listen and connected sockets with ET flag in one epfd
+
+    - test: edge_triggered_out
+      summary: TCP and UDP OUT event report in edge-triggered mode
+
+    - test: edge_triggered_refresh
+      summary: The behaviour of epoll_ctl() function in edge-triggered mode
+
+    - test: epfd_in_itself
+      summary: Epoll file descriptor in itself.
+
+    - test: epoll_close_on_exec
+      summary: FD_CLOEXEC fcntl flag with epoll file descriptor
+
+    - test: epoll_ctl_del_after_exec
+      summary: Check epoll behaviour when socket is deleted from empty epoll set after
+        exec()
+
+    - test: epoll_ctl_early
+      summary: Check epoll behaviour when socket is added
+
+    - test: epoll_dead_circle
+      summary: Call two epoll_wait() functions with fd of each other in their epfd's.
+
+    - test: epoll_evnt_queue
+      summary: Epoll event queue.
+
+    - test: epoll_nbio_tcpconnect
+      summary: Fail of non-blocking TCP connection
+
+    - test: epoll_one_shot
+      summary: Epoll functions with EPOLLONESHOT (or EPOLLET in same situation) flag
+
+    - test: epoll_one_shot_out
+      summary: OUT event with different timeout values and ET mode
+
+    - test: epoll_one_shot_pipe
+      summary: Using epoll functions with pipe and EPOLLONESHOT or EPOLLET flag
+
+    - test: epoll_reused_descriptor
+      summary: Check that reused file descriptor is properly handled by epoll.
+
+    - test: few_in_events
+      summary: A few IN events when data is read incompletely
+
+    - test: ioctl_on_epfd
+      summary: Epoll file descriptor in ioctl function.
+
+    - test: multi_level_iomux
+      summary: I/O multiplexing function with epoll fd
+
+    - test: multiple_same_epfd
+      summary: Multiple epoll_wait() calls with the same epfds.
+
+    - test: strange_op_on_epfd
+      summary: Call functions on epfd which uses fd but not epfd.
+
+    - test: tcp_ack_no_event
+      summary: No event for TCP ACKs.
+
+    - test: tcp_listen
+      summary: Epoll event on a listener socket after a connection attempt
+
+    - test: tcp_shutdown
+      summary: epoll behavior after shutdown(WR)
+
+    - test: wait_epollet_wait
+      summary: Modifying epfd with descriptor with EPOLLET flag between epoll_wait
+        calls
+
+    - test: epollet_early_shot
+      summary: Edge-triggered epoll discharged before binding
+      ref: epoll-epollet_early_shot
+
+    - test: epfd_change_stack
+      summary: Changing home stack of epoll fd
+      ref: epoll-epfd_change_stack
+
+    - test: epoll_ctl_thread
+      summary: Contentious epoll_ctl() calls from threads.
+      ref: epoll-epoll_ctl_thread
+
+    - test: maxevents_two_stacks
+      summary: maxevents and mixed epoll set
+      ref: epoll-maxevents_two_stacks
+
+    - test: event_order
+      summary: maxevents and epoll set order
+      ref: epoll-event_order
+
+    - test: small_maxevents
+      summary: Small maxevents and a lot of polled FDs
+      ref: epoll-small_maxevents
+
+  - group: fcntl
+    summary: FCNTL Requests
+    objective: ''
+    tests:
+    - test: async_data
+      summary: Usage of O_ASYNC request on connected sockets
+
+    - test: async_postponed
+      summary: Checking correctness of siginfo for posponed signals
+
+    - test: fcntl_after_shutdown
+      summary: Call fcntl() on the socket after shutdown()
+
+    - test: fcntl_async_connect_tcp
+      summary: Usage of fcntl() functionality with connect() on TCP socket
+
+    - test: fcntl_async_listen
+      summary: Usage of fcntl() functionality on listening TCP socket
+
+    - test: fcntl_async_udp
+      summary: Usage of fcntl() functionality on UDP socket
+
+    - test: fcntl_flags_dup
+      summary: Usage of fcntl functionality for duplicating of a socket descriptor
+        and nonblocking mode control
+
+    - test: fcntl_flags_dup_pipe
+      summary: Usage of fcntl functionality for duplicating of a pipe and nonblocking
+        mode control
+
+    - test: fcntl_getfl
+      summary: fcntl(F_GETFL) conformance
+
+    - test: fcntl_getfl_pipe
+      summary: fcntl(F_GETFL) conformance for pipe
+
+    - test: fcntl_on_accepted
+      summary: Inheritance of FD_CLOEXEC, O_NONBLOCK or O_ASYNC to accepted socket.
+
+    - test: fcntl_pipe_sz
+      summary: Usage of F_SETPIPE_SZ and F_GETPIPE_SZ requests on pipes
+
+    - test: fcntl_pipe_sz_many
+      summary: Usage of F_SETPIPE_SZ and F_GETPIPE_SZ requests on many pipes
+
+    - test: setgetown
+      summary: Check socket owner's PID
+
+  - group: ifcfg
+    summary: Network interface related tests
+    objective: ''
+    tests:
+    - test: if_add_addr_after_listen
+      summary: Accept connection to a new IP address using an existing listener socket
+
+    - test: if_addr_assign_order
+      summary: Add IP address before or after bringing interface up
+
+    - test: if_bind_on_down_if
+      summary: Bind socket to an address of a down interface
+
+    - test: if_down_nodelay
+      summary: Send data via a down interface setting TCP_NODELAY
+
+    - test: if_loopback_conn
+      summary: TCP loopback connection in various environment
+
+    - test: if_remove_addr_after_bind_dgram
+      summary: Remove IP address after UDP socket binding, try to send a datagram
+
+    - test: if_remove_addr_after_bind_stream
+      summary: Remove IP address after TCP socket binding, try to connect the socket
+
+    - test: if_remove_addr_after_connect
+      summary: Remove IP address while there are connected sockets, try to send data
+
+    - test: if_remove_addr_after_listen
+      summary: Remove IP address while there is a listener socket
+
+    - test: if_remove_addr_after_many_conns
+      summary: Remove IP address while there are a few established TCP connections,
+        send data
+
+    - test: if_source_addr_dgram
+      summary: Source address selection by UDP socket when a few local addresses are
+        assigned to the interface
+
+    - test: if_source_addr_stream
+      summary: Source address selection by TCP socket when a few local addresses are
+        assigned to the interface
+
+    - test: if_up_down
+      summary: Interface down/up during data transmission
+
+    - test: if_up_down_influence
+      summary: Put interface down does not affect other interfaces
+
+    - test: if_bind_down_use_other_if
+      summary: Bind socket to an address on a "downed" interface, send packets via
+        another interface
+
+    - test: recv_wrong_mac
+      summary: Receive a packet with wrong MAC
+
+    - test: if_addr_add_remove_recv
+      summary: Sending or connecting to a newly added or removed address
+
+  - group: ioctls
+    summary: IOCTL Requests
+    objective: ''
+    tests:
+    - test: ethtool_reset
+      summary: Using of ETHTOOL_RESET request
+
+    - test: fionbio
+      summary: Usage of FIONBIO request with receive functions
+
+    - test: fionbio_accept
+      summary: Using of accept() function with enabled FIONBIO request
+
+    - test: fionbio_connect
+      summary: Using of connect() function with enabled FIONBIO request
+
+    - test: fionbio_thread_unblock_accept
+      summary: FIONBIO from thread when accept() operation is blocked
+
+    - test: fionbio_thread_unblock_connect
+      summary: FIONBIO from thread when connect() operation is blocked
+
+    - test: fionbio_thread_unblock_recv
+      summary: FIONBIO from thread when recv() operation is blocked
+
+    - test: fionbio_thread_unblock_send
+      summary: FIONBIO from thread when send() operation is blocked
+
+    - test: fionread_listening
+      summary: Behaviour of FIONREAD request on listening socket
+
+    - test: fionread_oob
+      summary: Behaviour of FIONREAD request with sockets of the SOCK_STREAM type
+        if OOB data sent
+
+    - test: fionread_pipe
+      summary: Usage of FIONREAD on pipe fds
+
+    - test: fionread_syn_sent
+      summary: Usage of FIONREAD/SIOCINQ request on TCP sockets in SYN-SENT state.
+
+    - test: fionread_tcp
+      summary: Usage of FIONREAD request with sockets of the SOCK_STREAM type
+
+    - test: fionread_udp
+      summary: Usage of FIONREAD and SIOCINQ requests with connectionless sockets
+
+    - test: oob_marker_moves
+      summary: OOB marker is moved by new data
+
+    - test: siocatmark
+      summary: Usage of SIOCATMARK request
+
+    - test: siocatmark_oobinline
+      summary: SIOCATMARK for sockets with SO_OOBINLINE enabled
+
+    - test: siocethtool_glink
+      summary: Usage of @c SIOCETHTOOL request with @c ETHTOOL_GLINK command
+
+    - test: siocethtool_gpermaddr
+      summary: Usage of @c SIOCETHTOOL request with @c ETHTOOL_GPERMADDR command
+
+    - test: siocgifaddr
+      summary: Usage of SIOCGIFADDR request
+
+    - test: siocgifaddr_no_addr
+      summary: Usage of SIOCGIFADDR-like requests for interface without address
+
+    - test: siocgifbrdaddr
+      summary: Usage of SIOCGIFBRDADDR request
+
+    - test: siocgifconf
+      summary: Usage of SIOCGIFCONF request
+
+    - test: siocgifhwaddr
+      summary: Usage of SIOCGIFHWADDR request
+
+    - test: siocgifnameindex
+      summary: Usage of SIOCGIFNAME/SIOCGIFINDEX requests
+
+    - test: siocgstamp
+      summary: Usage of SIOCGSTAMP/SIOCGSTAMPNS request and SO_TIMESTAMP and SO_TIMESTAMPNS
+        options
+
+    - test: siocgstamp_null
+      summary: SIOCGSTAMP IOCTL request in case of NULL argument
+
+    - test: siocgstamp_two_senders
+      summary: SIOCGSTAMP[,NS] IOCTL request and SO_TIMESTAMP[,NS] in case of two
+        senders
+
+    - test: siocif_ifr_name_nonexist
+      summary: Usage of SIOCSIF... and SIOCGIF requests with non-existing interface
+        name
+
+    - test: siocifflags
+      summary: Usage of SIOCGIFFLAGS and SIOCSIFFLAGS requests
+
+    - test: siocifmtu
+      summary: Usage of SIOCGIFMTU and SIOCSIFMTU requests
+
+    - test: siocifnetmask
+      summary: Usage of SIOCGIFNETMASK and SIOCSIFNETMASK requests
+
+    - test: siocpgrp
+      summary: Usage of SIOCGPGRP and SIOCSPGRP requests
+
+    - test: siocsif_inval_sa_family
+      summary: Usage of SIOCSIF... requests with incorrect sa_family field
+
+    - test: siocsif_no_perm
+      summary: Usage of SIOCSIF... requests with non priveleged permissions
+
+  - group: iomux
+    summary: Input/Output multiplexing
+    objective: ''
+    tests:
+    - test: fork_robust
+      summary: Robustness against fork() call
+
+    - test: iomux_after_connect
+      summary: Check I/O multiplexer during non-blocking TCP connect() call
+
+    - test: iomux_one_pipe
+      summary: Check iomux function with one pipe
+
+    - test: iomux_sigmask
+      summary: Support of sigmask in pselect()/ppoll()/epoll_pwait()
+
+    - test: iomux_splice_rd
+      summary: The splice() operation and iomux function on pipe read end
+
+    - test: iomux_splice_two_sockets
+      summary: I/O multiplexing functions with splice and two sockets
+
+    - test: iomux_splice_wr
+      summary: The splice() operation and iomux function on pipe read end
+
+    - test: iomux_timeout
+      summary: IOMUX function times out
+
+    - test: many_sockets
+      summary: The iomux functionality for large number of sockets from different
+        processes
+
+    - test: mix_fds
+      summary: Mixture of different file descriptors
+
+    - test: multiple_iomux_nonblock_sock
+      summary: Calling I/O multiplexer multiple times on nonblocking socket
+
+    - test: nb_accept_read
+      summary: Non-blocking accept and read with iomux
+
+    - test: notconn
+      summary: Using iomux() function with not connected socket
+
+    - test: oob
+      summary: Out-of-band data support
+
+    - test: pair_bidir_perf
+      summary: Bidirectional performance with two nodes
+
+    - test: peer_close
+      summary: Calling iomux function when peer close connection
+
+    - test: peer_close_before_accept
+      summary: Peer close connection before accept on server
+
+    - test: peer_shut_rd
+      summary: Peer shuts down reading
+
+    - test: peer_shut_rdwr
+      summary: Peer shuts down reading and writing
+
+    - test: peer_shut_wr
+      summary: Peer shuts down writing
+
+    - test: pending_error
+      summary: IOMUX function return "ready" if pending error exists on the socket
+
+    - test: pollpri
+      summary: Behavior of iomux functions when out-of-band data is received
+
+    - test: rdhup
+      summary: Testing the RDHUP event
+
+    - test: read_write_nbio
+      summary: Check that iomux functions works correctly in case of receiving 1-bytes
+        packets
+
+    - test: ret_count_peer_close
+      summary: Return count when peer close connection
+
+    - test: ret_count_rd_wr
+      summary: Read and write events return count
+
+    - test: sock_shut_rd
+      summary: Socket was shut down for reading
+
+    - test: sock_shut_rdwr
+      summary: Socket was shut down for reading and writing
+
+    - test: sock_shut_wr
+      summary: Socket was shut down for writing
+
+    - test: tcp_usecases
+      summary: The iomux functionality on BSD compatible sockets
+
+    - test: thread_close_sock
+      summary: Socket is closed from another thread
+
+    - test: thread_shut_sock
+      summary: Socket is shutdowned from another thread
+
+    - test: timeout_update
+      summary: Update of timeout argument
+
+    - test: trio_bidir_perf
+      summary: Bidirectional performance with three nodes
+
+    - test: two_sockets
+      summary: I/O multiplexing functions with two sockets
+
+    - test: udp_send_flooding
+      summary: Overfill outgoing UDP buffer
+
+    - test: udp_zero_dgram
+      summary: Zero-length packet handling by iomux functions
+
+    - test: write_timeout
+      summary: Write event and timeout
+
+    - test: ack_with_data
+      summary: ACK with data during TCP connection establishing
+      ref: iomux-ack_with_data
+
+    - test: iomux_wrong_event
+      summary: Wrong event handling
+      ref: iomux-iomux_wrong_event
+
+    - test: iomux_handle_wrong_event
+      summary: iomux() receives and ignores wrong event
+      objective: Check that @b iomux() ignores wrong event
+      params:
+      - param: event_type
+        description: Type of event to create on socket
+        values:
+        - '@c POLLIN'
+        - '@c POLLOUT'
+      - param: before_wait
+        description: Create @p event_type before or after @b iomux_wait()
+        values:
+        - '@c TRUE'
+        - '@c FALSE'
+      - param: iomux_timeout
+        description: Check that iomux exits after timeout or create the desired event
+          and check that iomux reports it
+        values:
+        - '@c TRUE'
+        - '@c FALSE'
+      - param: sock_type
+        description: Socket type
+        values:
+        - '@c SOCK_STREAM'
+        - '@c SOCK_DGRAM'
+      - param: tcp_listen
+        description: Use TCP listening socket or not
+        values:
+        - '@c TRUE'
+        - '@c FALSE'
+      steps:
+      - When @p sock_type is @c SOCK_STREAM and @p tcp_listen is @c TRUE use TCP listen
+      - Create connection between two sockets
+      - Call @b iomux_wait() with one of (@c POLLIN, @c POLLOUT, @c POLLHUP) event
+        chosen randomly
+      - Create event according to @p event_type and @p before_wait on socket
+      - Check that the iomux is waiting
+      - Finish test according to @p iomux_timeout
+
+  - group: level5
+    summary: Level5-specific test cases
+    objective: ''
+    groups:
+    - group: bpf
+      summary: Onload specific BPF tests
+      objective: ''
+      tests:
+      - test: xdp_attach_to_stack
+        summary: Attach XDP program to Onload stack
+        ref: level5-bpf-xdp_attach_to_stack
+
+      - test: xdp_one_stack_two_ifs
+        summary: Attach XDP program the stack+iface pair
+        ref: level5-bpf-xdp_one_stack_two_ifs
+
+      - test: xdp_two_stacks
+        summary: Attach multiple XDP programs to multiple stacks
+        ref: level5-bpf-xdp_two_stacks
+
+      - test: xdp_same_stack
+        summary: Attach two XDP programs to same stack/interface pair
+        ref: level5-bpf-xdp_same_stack
+
+    - group: ext_stackname
+      summary: Onload extensions tests where global EF_NAME is not applicable
+      objective: ''
+      tests:
+      - test: bind_move_fd
+        summary: Call @b onload_move_fd() on a socket after @b bind()
+
+      - test: close_init_stack_after_fork
+        summary: Check that initial Onload stack is closed after fork()
+
+      - test: dont_acc_and_set_stackname
+        summary: Interaction between @b onload_set_stackname and @c EF_DONT_ACCELERATE
+
+      - test: ef_fork_netif
+        summary: '@c EF_FORK_NETIF and it''s interaction with @b fork() call'
+
+      - test: fcntl_move_fd
+        summary: Call @b onload_move_fd() on a socket after @b fcntl()
+
+      - test: ioctl_move_fd
+        summary: Call @b onload_move_fd() on a socket after @b ioctl()
+
+      - test: listen_move_fd
+        summary: Try to call @b onload_move_fd() on a listening socket
+
+      - test: move_epoll_fd
+        summary: Call @b onload_move_fd() on an epoll fd
+
+      - test: move_fd_other_user
+        summary: Try move socket fd to the stack owned by another user
+
+      - test: move_unsupp_fd
+        summary: Call @b onload_move_fd() on an unsupported fd
+
+      - test: pipe_move_fd
+        summary: Call @b onload_move_fd() on a pipe fd
+
+      - test: problematic_rxq_move_fd
+        summary: Try to call @b onload_move_fd() on a socket with problematic RXQ
+
+      - test: save_move_restore
+        summary: Using @b onload_move_fd() together with @b onload_stackname_restore()
+
+      - test: set_stackname_caller_dead
+        summary: Validity of certain scopes if the caller died
+
+      - test: set_stackname_move_fd
+        summary: Checking that @b onload_move_fd() works after calling @b onload_set_stackname()
+          with various parameters
+
+      - test: set_stackname_nochange_restore
+        summary: Scope @c ONLOAD_SCOPE_NOCHANGE interaction with @b onload_stackname_save()/@b
+          onload_stackname_restore() calls
+
+      - test: set_stackname_null
+        summary: '@b onload_set_stackname with NULL (DONT_ACCELERATE) stackname'
+
+      - test: set_stackname_null_restore
+        summary: '@c ONLOAD_DONT_ACCELERATE stack name interaction with @b onload_stackname_save()/@b
+          onload_stackname_restore() calls'
+
+      - test: set_stackname_restore_non_saved
+        summary: Try to call @b onload_stackname_restore() more times than @b onload_stockname_save()
+
+      - test: set_stackname_save_restore
+        summary: Testing of @b onload_stackname_save()/@b onload_stackname_restore()
+
+      - test: set_stackname_scope_global
+        summary: '@c ONLOAD_SCOPE_GLOBAL versus fork/thread/setuid'
+
+      - test: set_stackname_scope_nochange
+        summary: Check that scope 'nochange' is handled properly by @b onload_set_stackname
+
+      - test: set_stackname_scope_process
+        summary: Scope @c ONLOAD_SCOPE_PROCESS interaction with @b fork() call
+
+      - test: set_stackname_scope_process_ignore
+        summary: Check that stack in scope process ignores irrelevant changes.
+
+      - test: set_stackname_scope_thread
+        summary: '@c ONLOAD_SCOPE_THREAD for multi-threaded applications'
+
+      - test: set_stackname_scope_user
+        summary: '@c ONLOAD_SCOPE_USER and it''s interaction with @b setuid() call'
+
+      - test: set_stackname_scope_user_threads
+        summary: '@c ONLOAD_SCOPE_USER in case of multi-threaded process.'
+
+      - test: set_stackname_scope_who
+        summary: '@p who parameter effect on stacknames in all scopes'
+
+      - test: setsockopt_move_fd
+        summary: Call @b onload_move_fd() on a socket after @b setsockopt()
+
+      - test: shutdown_move_fd
+        summary: Try to call @b onload_move_fd() on a TCP socket after connection
+          shutdown
+
+      - test: sighandler_move_fd
+        summary: Calling @b onload_move_fd() from a sigal handler
+
+      - test: sock_ping_pong
+        summary: Moving a socket to a different stack several times
+
+      - test: stack_nochange_move_fd
+        summary: Call @b onload_move_fd() that has no effect
+
+      - test: tcp_conn_move_fd
+        summary: Try to call @b onload_move_fd() on a socket just after TCP connection
+          establishment
+
+      - test: tcp_conn_move_fd_in_pkt_flow
+        summary: Call @b onload_move_fd() on a socket just after TCP connection
+          establishment with incoming packet flow
+
+      - test: tcp_overfill_queue_move_fd
+        summary: Try to call @b onload_move_fd() on a TCP socket with ovefilled send
+          or receive queue
+
+      - test: unbound_udp_move_fd
+        summary: Call @b onload_move_fd() on an unbound UDP socket fd
+
+      - test: unsupp_socket_move_fd
+        summary: Call @b onload_move_fd() on an unsupported socket fd
+
+      - test: linger_move_fd
+        summary: Call @b onload_move_fd() on TCP socket with enabled SO_LINGER
+        ref: level5-ext_stackname-linger_move_fd
+
+    - group: extension
+      summary: Onload extensions
+      objective: ''
+      tests:
+      - test: delegated_api
+        summary: onload_delegated_* API usage
+
+      - test: dont_accelerate
+        summary: '@c EF_DONT_ACCELERATE environment variable handling'
+
+      - test: is_present
+        summary: onload_is_present() functionality
+
+      - test: msg_warm
+        summary: Test MSG_WARM innocuity
+
+      - test: msg_warm_concurrent
+        summary: Concurrent sending from two sockets and ONLOAD_MSG_WARM
+
+      - test: msg_warm_conn_problem
+        summary: Using MSG_WARM while there is a connection problem
+
+      - test: msg_warm_fill_send_buf
+        summary: Using MSG_WARM while send buffer is not empty
+
+      - test: msg_warm_large_buf
+        summary: Send large buffer with ONLOAD_MSG_WARM
+
+      - test: msg_warm_send_flow
+        summary: Send data flow and occasionally use ONLOAD_MSG_WARM
+
+      - test: msg_warm_zc_send
+        summary: onload_zc_send() with ONLOAD_MSG_WARM
+
+      - test: od_no_ack
+        summary: OD send without ACK
+
+      - test: od_overfill_sndbuf
+        summary: Overfill send buffer with OD send API
+
+      - test: onload_zc_recv_large
+        summary: Receiving large packets with onload_zc_recv() function
+
+      - test: onload_zc_send
+        summary: onload_zc_send() operation on the SOCK_STREAM socket
+
+      - test: oo_epoll
+        summary: onload_ordered_epoll_wait() main functionality
+
+      - test: oo_epoll_dont_read
+        summary: Call a number of Onload epoll in a row without data reading
+
+      - test: oo_epoll_read
+        summary: Onload extension epoll after data reading
+
+      - test: oo_epoll_seg_reordering
+        summary: Onload ordered epoll with reordered data
+
+      - test: template_abort
+        summary: Call abort while an Onload template is sending
+
+      - test: template_abort_bnb
+        summary: Onload templates abort with bad arguments
+
+      - test: template_alloc_bnb
+        summary: Onload templates allocation with bad arguments
+
+      - test: template_close
+        summary: Buffers release after socket closing
+
+      - test: template_hide_ack
+        summary: Dont reply ACKs to sent data and template
+
+      - test: template_mult
+        summary: Allocate and pass a few templates
+
+      - test: template_overfill
+        summary: Onload templates with overfilled buffers
+
+      - test: template_send
+        summary: Send template after calling usual send()
+
+      - test: template_signal
+        summary: Call Onload template functions from signal handler
+
+      - test: template_update
+        summary: Test updating templates
+
+      - test: template_update_bnb
+        summary: Onload templates update with bad arguments
+
+      - test: udp_rx_filter_simple
+        summary: Using UDP-RX filter to capture traffic
+
+      - test: od_send_peer_close
+        summary: Behavior of ODS functions when peer closes its socket
+        ref: level5-extension-od_send_peer_close
+
+      - test: zc_hlrx_pkts
+        summary: Receiving data with Onload ZC HLRX API
+        ref: level5-extension-zc_hlrx_pkts
+
+      - test: zc_send_mixed_bufs
+        summary: Pass to onload_zc_send() array of buffers allocated in different ways
+        ref: level5-extension-zc_send_mixed_bufs
+
+      - test: onload_zc_recv_keep
+        summary: onload_zc_recv() with ONLOAD_ZC_KEEP
+        ref: level5-extension-onload_zc_recv_keep
+
+      - test: zc_recv_oob
+        summary: Receiving OOB data with onload_zc_recv()
+        ref: level5-extension-zc_recv_oob
+
+      - test: zc_send_msg_more
+        summary: onload_zc_send() and MSG_MORE flag
+        ref: level5-extension-zc_send_msg_more
+
+      - test: zc_send_user_buf_overfill
+        summary: Overfill send buffer with onload_zc_send() using registered buffers
+        ref: level5-extension-zc_send_user_buf_overfill
+
+      - test: msg_onepkt
+        summary: Test ONLOAD_MSG_ONEPKT flag
+        ref: level5-extension-msg_onepkt
+
+    - group: fd_caching
+      summary: Onload FD caching tests
+      objective: ''
+      tests:
+      - test: fd_cache_dup
+        summary: Test sockets dup with caching
+
+      - test: fd_cache_exec
+        summary: FD caching through execve
+
+      - test: fd_cache_fork
+        summary: FD cachin with fork
+
+      - test: fd_cache_limits
+        summary: Onload FD caching limits
+
+      - test: fd_cache_linger
+        summary: FD caching with SO_LINGER option
+
+      - test: fd_cache_opt
+        summary: Socket option inheritance after reincarnation
+
+      - test: fd_cache_reuse
+        summary: Exercise cached sockets reusing
+
+      - test: fd_cache_wild
+        summary: FD caching with using wildcard addresses and two interfaces
+
+      - test: fd_cache_inherit_flag
+        summary: Inheritance of fd flags after socket reincarnation
+        ref: level5-fd_caching-fd_cache_inherit_flag
+
+      - test: fd_cache_listener_closing
+        summary: Close listener socket with a few accepted sockets in different states
+
+      - test: fd_cache_nonblock_sync
+        summary: Sync of nonblocking state through cache
+
+      - test: fd_cache_ipv4_ipv6
+        summary: Reusing IPv4 sockets as IPv6 sockets and vice versa
+
+      - test: fd_cache_shutdown_reuse
+        summary: Shutdown socket and try reuse it
+
+    - group: interop
+      summary: L5 stack/system stack interoperabilty test
+      objective: ''
+      tests:
+      - test: close_accept
+        summary: Usage of system close() call on accepting socket
+
+      - test: close_after_close
+        summary: Usage of system close() call on just closed socket
+
+      - test: close_connected_socket
+        summary: Usage of system close() call on connected socket
+
+      - test: close_create_socket
+        summary: Usage of system close() call on just created/bound socket
+
+      - test: close_fdopen_fclose
+        summary: Usage of system close() call with fdclose() call
+
+      - test: close_iomux
+        summary: Usage of system close call on socket with active iomux function
+
+      - test: close_linger_close
+        summary: ''
+
+      - test: close_listening_socket
+        summary: Usage of system close() call on listening socket
+
+      - test: close_read
+        summary: Usage of system close call on reading socket
+
+      - test: close_shutdown_socket
+        summary: Usage of system close() call on fully shutdown socket
+
+      - test: close_udp_readable_socket
+        summary: Usage of system close() call on readable UDP
+
+      - test: fcntl_nonblock
+        summary: Interoperability of libc and L5 implementations of fcntl() O_NONBLOCK
+          and socket()/accept4()/pipe2() (SOCK|O)_NONBLOCK flags
+
+      - test: nonblock
+        summary: Interoperability of libc I/O functions and O_NONBLOCK fcntl() flag
+          or SOCK_NONBLOCK socket()/accept4() flag on L5 socket
+
+      - test: nonblock_handover
+        summary: Setting nonblock flag on L5 socket and then handover it
+
+      - test: onload_msg_recv_os_inline
+        summary: Check that ONLOAD_MSG_RECV_OS_INLINE flag works
+
+      - test: pipe_close_pipe
+        summary: Usage of system close() call with pipe
+
+      - test: recv_only
+        summary: Usage of system receive calls with L5 socket
+
+      - test: send_only
+        summary: Usage of system transmit calls with L5 socket
+
+      - test: sock_with_flags_acc
+        summary: Check that socket created with flags is accelerated
+
+    - group: out_of_resources
+      summary: L5 stack/system stack run out of hardware resources test
+      objective: ''
+      tests:
+      - test: oof_multicast_gradual
+        summary: HW filters exhaustion by joining to lots of multicast groups
+
+      - test: out_of_hw_filters_tcp
+        summary: Hardware filters exhaustion caused by bind() and connect() operations
+          on TCP sockets
+
+      - test: out_of_hw_filters_tcp_listen
+        summary: Hardware filters exhaustion caused by listen() operation on TCP sockets
+
+      - test: out_of_hw_filters_udp_bind_connect
+        summary: Hardware filters exhaustion caused by bind() and connect() operations
+          on UDP sockets
+
+      - test: out_of_hw_filters_udp_recvfrom
+        summary: Hardware filters exhaustion caused by recvfrom(INADDR_ANY) operation
+          on UDP sockets
+
+      - test: out_of_multicast_filters
+        summary: Multicast filters exhaustion caused by joining to many groups
+
+      - test: out_of_netifs
+        summary: Netifs resource exhaustion caused by calling socket() and exec()
+          operations many times
+
+      - test: out_of_stacks
+        summary: Too many stacks and packets in them
+
+      - test: out_of_packets
+        summary: Sending hangs due to lack of packet buffers
+
+      - test: data_flows_few_pkts
+        summary: Sending/receiving with a few packet buffers
+
+    - group: ulv
+      summary: User-Level Vulnerabilities
+      objective: ''
+      tests:
+      - test: netload
+        summary: Load IP stack while corrupting data structures
+
+  - group: libinit
+    summary: Library _init() function tests
+    objective: ''
+    tests:
+    - test: non_socket_tests
+      summary: _init() function tests without sockets
+
+    - test: socket_recv_tests
+      summary: _init() function tests using sockets, test lib on receiving side.
+
+    - test: socket_send_tests
+      summary: _init() function tests using sockets, test lib on sending side.
+
+  - group: multicast
+    summary: Multicasting support in Socket API
+    objective: ''
+    tests:
+    - test: bind_join_order
+      summary: Joining group and bind() different orders.
+
+    - test: bindtodevice_vs_ip_multicast_if
+      summary: Interation between SO_BINDTODEVICE and IP_MULTICAST_IF
+
+    - test: conn_two_socks_same_addr
+      summary: Connect two sockets joined to multicasting group to the same address
+
+    - test: default_if_for_join
+      summary: IP_ADD_MEMBERSHIP behaviour in case of wildcard local address and zero
+        interface index.
+
+    - test: imr_ifindex_vs_imr_address
+      summary: IP_ADD_MEMBERSHIP behaviour with incorrect ip_mreqn parameter.
+
+    - test: ip_add_drop_membership
+      summary: Usage of IP_ADD_MEMBERSHIP/IP_DROP_MEMBERSHIP socket options
+
+    - test: ip_add_membership_inval
+      summary: Inappropriate usage of IP_ADD_MEMBERSHIP socket option
+
+    - test: ip_drop_membership_inval
+      summary: Inappropriate usage of IP_DROP_MEMBERSHIP socket option
+
+    - test: ip_multicast_if
+      summary: Usage of IP_MULTICAST_IF socket option
+
+    - test: ip_multicast_if_no_route
+      summary: Usage of IP_MULTICAST_IF socket option without matching route results
+
+    - test: ip_multicast_if_optlen
+      summary: Test IP_MULTICAST_IF socket option with different optlen values
+
+    - test: ip_multicast_loop
+      summary: Multicast loopback usage
+
+    - test: ip_multicast_loop_default
+      summary: Default value for IP_MULTICAST_LOOP option.
+
+    - test: ip_multicast_ttl
+      summary: Usage of IP_MULTICAST_TTL socket option and IP_RECVTTL socket option
+        for multicast packets
+
+    - test: join_leave_different_param
+      summary: Joining group and leaving it with slightly changed parameters.
+
+    - test: many_stacks_one_group
+      summary: Milticast replication test
+
+    - test: mcast_bcast_port_unreach
+      summary: ICMP Unreachable for multicast/broadcast packets.
+
+    - test: mcast_bind_if
+      summary: Outgoing interface for multicast datagrams depends on bound address
+
+    - test: mcast_bind_recv
+      summary: Receive datagrams with socket bound to multicast address or to INADDR_ANY.
+
+    - test: mcast_bind_send
+      summary: Unicast address for outgoing datagram.
+
+    - test: mcast_bond
+      summary: Checking multicast data receiving via bond interface
+
+    - test: mcast_fragmented_mac
+      summary: Fragmented multicast packet header information.
+
+    - test: mcast_invisible
+      summary: Receiving multicast traffic on L5 interface.
+
+    - test: mcast_mac_via_gw
+      summary: MAC address when sending via gateway.
+
+    - test: mcast_multiple_groups
+      summary: Receiving multicast traffic from two different multicast groups simultaneously.
+
+    - test: mcast_non_joined_socket
+      summary: IP multicasting with joined and
+
+    - test: mcast_on_tcp
+      summary: Multicast-related options on TCP socket.
+
+    - test: mcast_option_different_states
+      summary: Setting IP_MULTICAST_* options in different states
+
+    - test: mcast_recv
+      summary: Receiving multicast traffic on two proccess using EF_NAME on L5 interface.
+
+    - test: mcast_recv_two_socks
+      summary: Two sockets from different stacks joined to the same multicast address
+
+    - test: mcast_route
+      summary: Routing for multicast datagrams.
+
+    - test: mcast_send_via_l5
+      summary: Sending multicast traffic on L5 interface.
+
+    - test: mcast_src_address
+      summary: Source address for multicasting datagram choice.
+
+    - test: mcast_two_sockets
+      summary: Two sockets joined to the same multicast group
+
+    - test: mcast_unicast_inaddr_any
+      summary: Multicast/unicast datagrams acceleration
+
+    - test: mcast_vlan
+      summary: IP multicasting with VLANs
+
+    - test: mcast_vlan_alien_packet
+      summary: IP multicasting with VLAN
+
+    - test: mcast_vlan_two_sockets
+      summary: IP multicasting with VLANs
+
+    - test: multi_socks_two_stacks
+      summary: Four sockets from two different stacks joined to the same and different
+        multicast addresses
+
+    - test: multiple_membership
+      summary: Multiple membership in multicasting group
+
+    - test: outgoing_if
+      summary: Outgoing interface for multicasting choice.
+
+    - test: recv_zero_ttl
+      summary: Receiving multicast packets with zero TTL
+
+    - test: send_all_host_group
+      summary: Receiving multicast traffic sent to all-hosts group, on non-joined
+        socket.
+
+    - test: send_zero_ttl
+      summary: Sending multicast packets with zero TTL
+
+    - test: source_join
+      summary: IP_ADD/DROP_SOURCE_MEMBERSHIP usecases
+
+    - test: three_pairs_three_stacks
+      summary: Multicast packets receiving from three pairs of stacks from three different
+        stacks
+
+    - test: mcast_onload_handover
+      summary: Handover socket via setting EF_MCAST_JOIN_HANDOVER
+
+    - test: iomux_multicast
+      summary: iomux() reports events during multicast
+      ref: multicast-iomux_multicast
+
+  - group: pmtu
+    summary: Testing of internal send buffers reorganization after path MTU changes.
+    objective: ''
+    tests:
+    - test: steps
+      summary: Checking TCP behaviour in the case of mtu changing on the next hop
+        and send buffer is filled by a complex sending scenario
+
+  - group: reuseport
+    summary: SO_REUSEPORT socket option tests
+    objective: ''
+    tests:
+    - test: mcast_reuseport
+      summary: SO_REUSEPORT option with multicast addresses
+
+    - test: move_fd_reuseport
+      summary: Try to use move_fd after setting SO_REUSEPORT
+
+    - test: reuseport_after_bind
+      summary: Enable SO_REUSEPORT after bind
+
+    - test: reuseport_connect
+      summary: Connect twice to one address from reused address
+
+    - test: reuseport_del_addr
+      summary: Removing bind address of sockets with SO_REUSEPORT
+
+    - test: reuseport_del_addr_connect
+      summary: Use SO_REUSEPORT, remove address, call connect, restore address, terminate
+        process.
+
+    - test: reuseport_iomux
+      summary: Port sharing with blocking iomux
+
+    - test: reuseport_lacp_slave_up
+      summary: SO_REUSEPORT and changing state of LACP aggregation slaves
+
+    - test: reuseport_load_tcp
+      summary: Connection requests distribution with SO_REUSEPORT
+
+    - test: reuseport_load_udp
+      summary: Datagrams distribution with SO_REUSEPORT
+
+    - test: reuseport_rcvtimeo
+      summary: Connections distribution on listener sockets with option SO_RCVTIMEO
+
+    - test: reuseport_reset_if
+      summary: SO_REUSEPORT working after NIC reset
+
+    - test: reuseport_tcp_time_wait
+      summary: Test SO_REUSEPORT option with TCP socket in TIME_WAIT state
+
+    - test: reuseport_tcp_wild
+      summary: TCP connections distribution with SO_REUSEPORT and wildcards
+
+    - test: reuseport_threaded_iomux
+      summary: Using sockets with a shared port in different iomux functions
+
+    - test: reuseport_two_interfaces
+      summary: Test SO_REUSEPORT option working on two interfaces
+
+    - test: reuseport_udp_dst
+      summary: Datagrams delivering with two shared addresses
+
+    - test: reuseport_udp_wild
+      summary: Datagrams delivering with SO_REUSEPORT and wildcards
+
+    - test: reuseport_uids
+      summary: Port sharing by different users
+
+    - test: reuseport_vs_reuseaddr
+      summary: SO_REUSEADDR does not grant privileges to use the same address
+
+    - test: socket_closing
+      summary: Socket close  after bind or listen and then new sockets
+
+    - test: cluster_restart_all_orphaned
+      summary: Recreating clustered stack while all sockets are orphaned
+      ref: reuseport-cluster_restart_all_orphaned
+
+    - test: cluster_restart_one_killed
+      summary: Recreating clustered stack after killing one of processes
+      ref: reuseport-cluster_restart_one_killed
+
+    - test: cluster_restart_one_closed
+      summary: Recreating clustered stack after sockets closing
+      ref: reuseport-cluster_restart_one_closed
+
+    - test: tcp_active_passive_mix
+      summary: Mixing active and passive connections
+      objective: Establish a few TCP connections actively and passively reusing the
+        same address:port.
+      params:
+      - param: wildcard
+        description: Listener sockets binding address type.
+        values:
+        - false: specific address
+        - true: INADRR_ANY
+      steps:
+      - Establish connection actively:
+        - create listener socket on tester side;
+        - socket();
+        - setsockopt(SO_REUSEPORT, 1);
+        - bind to an address in dependence on @p wildcard;
+        - connect to the tester socket.
+      - Create listener socket:
+        - socket();
+        - setsockopt(SO_REUSEPORT, 1);
+        - bind to an address in dependence on @p wildcard;
+        - listen().
+      - Establish new connection actively.
+      - Create the second listener socket on IUT.
+      - Establish new connection actively:
+        - Note, that binding another one socket fails for Onload with ENOSPC by design.
+          This should be handled in the test.
+      - Accept connections using both IUT listeners.
+      - Check data transmission on all established connections.
+
+    - test: tcp_close_listener
+      summary: Closing listener and accepted sockets in different order
+      ref: reuseport-tcp_close_listener
+
+    - test: several_clusters
+      summary: Coexistence of a few TCP and UDP clusters
+      ref: reuseport-several_clusters
+
+  - group: route
+    summary: Route Table
+    objective: ''
+    tests:
+    - test: conn_changed_gw
+      summary: Changing route to the peer after connecting sockets
+
+    - test: pbr_criterion
+      summary: Use various criteria for policy based routing
+
+    - test: pbr_metric
+      summary: Policy based routes with specified metrics
+
+    - test: pbr_oif_gw
+      summary: Using outgoing interface rule to determine gateway
+
+    - test: pbr_oif_src
+      summary: Using outgoing interface rule to determine source address
+
+    - test: pbr_prefix
+      summary: Prefix value in policy based routes
+
+    - test: pbr_rule_combined
+      summary: Combining two rule criteria
+
+    - test: pbr_rule_from
+      summary: Binding role in source based routing
+
+    - test: pbr_rules_order
+      summary: Route rules order
+
+    - test: pbr_tos
+      summary: Policy based routing with TOS (ip rule tos)
+
+    - test: pbr_tos_two_rules
+      summary: Using of two TOS to split traffic
+
+    - test: rt_choose_by_tos
+      summary: IP packet routing using TOS (ip route tos)
+
+    - test: rt_default
+      summary: Default route
+
+    - test: rt_if_by_dst_dr
+      summary: Determining outgoing interface based on destination address - case
+        of direct route
+
+    - test: rt_if_by_dst_gw
+      summary: Determining outgoing interface based on destination address - case
+        of indirect route
+
+    - test: rt_many_subnets_via_gw
+      summary: Routing decision in case of many routes to different subnetworks
+
+    - test: rt_metric
+      summary: Routing decision depends on route metric
+
+    - test: rt_prefix_len_flexible
+      summary: Routing decision depends on route netmask
+
+    - test: rt_prefix_vs_metric
+      summary: Priority of the route netmask and route metric
+
+    - test: rt_same_addr_if_down_up
+      summary: Using the same IP address on two interfaces
+
+    - test: rt_same_addr_if_down_up_one_sock
+      summary: Pass traffic through two interfaces with the same IP address using
+        one socket
+
+    - test: rt_src_addr
+      summary: Route source address
+
+    - test: rt_src_other_if
+      summary: Route source address on another interface
+
+    - test: tcp_loopback_alien
+      summary: Accepting connections on an IP believed to be loopback
+
+    - test: rt_src_based
+      summary: Source based routing
+
+    - test: multipath_balancing
+      summary: Load balancing across paths of a multipath route
+
+    - test: multipath_add_del
+      summary: Adding/removing paths of a multipath route
+
+    - test: multipath_del_add_same_conns
+      summary: Rechecking existing connections after removing/restoring a path of
+        a multipath route
+
+    - test: rt_switched_tos
+      summary: Routing with/without TOS
+      ref: route-rt_switched_tos
+
+    - test: asymmetric
+      summary: Asymmetric routing
+      ref: route-asymmetric
+
+    - test: rt_hoplimit
+      summary: Route hoplimit attribute
+      ref: route-rt_hoplimit
+
+    - test: retransmit_change_route
+      summary: Change route to peer during retransmission
+      ref: route-retransmit_change_rote
+
+    - test: if_change_netns
+      summary: Using interface after moving it to/from a network namespace
+      ref: route-if_change_netns
+
+  - group: sendfile
+    summary: Socket API Test Suite
+    objective: ''
+    tests:
+    - test: f2f_serial
+      summary: sendfile() behavior on using of the serial device as out file
+
+    - test: f2s_concurrent
+      summary: Usage of sendfile() to preform concurrent copying files to sockets
+
+    - test: f2s_context
+      summary: Copying two source files to common destination socket
+
+    - test: f2s_flooder
+      summary: Performing 'file to socket' sendfile() operations while some TCP traffic
+        exists
+
+    - test: f2s_flooder2one
+      summary: Performing 'file to socket' sendfile() operation together with some
+        TCP traffic to the common socket
+
+    - test: f2s_nonblocking
+      summary: Usage of sendfile() on socket set to non-blocking mode
+
+    - test: f2s_sendfile2one
+      summary: Performing 'file to socket' sendfile() operation together with backward
+        TCP traffic to the common socket
+
+    - test: f2s_sndtimeo
+      summary: Behaviour of sendfile() if SO_SNDTIMEO option set on socket
+
+    - test: file2file
+      summary: Usage of sendfile() to perform one file to another copy
+
+    - test: file2socket
+      summary: Usage of sendfile() to preform file to socket copy
+
+    - test: files2file_socket
+      summary: The copying to the file and socket at the same time
+
+    - test: illegal_params
+      summary: sendfile() behavior on using of illegal parameters
+
+    - test: illegal_socket_states
+      summary: Socket descriptor in illegal state as sendfile() 'out_fd' parameter
+
+    - test: io_descriptors
+      summary: sendfile() behavior on using of the in/out descriptors for files opened
+        in inappropriate modes
+
+    - test: largefile2socket
+      summary: Usage of sendfile() to perform large file (file size > 2Gb, 4Gb) to
+        socket copy
+
+    - test: mtu_sendfile
+      summary: Checking sendfile() behavior in the case of mtu changing on the next
+        hop
+
+    - test: offset_params
+      summary: sendfile() behavior on using of illegal offset parameter
+
+  - group: sendrecv
+    summary: Advanced usage of send/receive functions
+    objective: ''
+    tests:
+    - test: blk_recv_two_threads
+      summary: Blocking recv() called in different threads on the same socket before
+        data is arrived
+
+    - test: dgram_iov_recv
+      summary: I/O vector receive operations with datagram sockets
+
+    - test: dgram_iov_send
+      summary: I/O vector send operations with datagram sockets
+
+    - test: many_recv_threads
+      summary: Sharing of the one socket by several threads for receive
+
+    - test: oob_overwritten
+      summary: OOB data delivering
+
+    - test: oob_span
+      summary: Check spanning of OOB data bytes on receiver side
+
+    - test: peer_close
+      summary: Behaviour of send/receive functions when peer closes its socket
+
+    - test: recv_data_after_peer_close
+      summary: Receive data after peer close
+
+    - test: recv_dgram_small_buf
+      summary: Receive datagram with smaller buffer
+
+    - test: recv_dgram_wild
+      summary: Receive operations with datagram sockets
+
+    - test: recv_dontwait
+      summary: Support of MSG_DONTWAIT flag for receiving
+
+    - test: recv_dontwait_peer_close
+      summary: MSG_DONTWAIT flag when peer closes its socket
+
+    - test: recv_oob_absent
+      summary: Behavior of the TCP socket if the process ask for out-of-band data
+        that has not been sent yet
+
+    - test: recv_peek_block
+      summary: MSG_PEEK does not affect blocking
+
+    - test: recv_peek_dgram
+      summary: MSG_PEEK flag does not mix datagrams
+
+    - test: recv_peek_dontwait
+      summary: MSG_PEEK and MSG_DONTWAIT flags together
+
+    - test: recv_peek_many
+      summary: MSG_PEEK may be used many times
+
+    - test: recv_peek_many_iovec
+      summary: MSG_PEEK flag works properly with many iovec
+
+    - test: recv_peek_stream
+      summary: MSG_PEEK for stream socket
+
+    - test: recv_peek_stream_flow
+      summary: Receiving a flow of data using MSG_PEEK
+
+    - test: recv_waitall_dgram
+      summary: MSG_WAITALL flag for datagram sockets
+
+    - test: recv_waitall_stream
+      summary: MSG_WAITALL flag for stream sockets
+
+    - test: recv_zero_dgram
+      summary: Zero-length packet handling by receive functions
+
+    - test: recvmmsg
+      summary: The recvmmsg() operations on the SOCK_DGRAM socket
+
+    - test: recvmsg_peek_trunc
+      summary: Check recvmsg() function with MSG_PEEK flag
+
+    - test: recvmsg_trunc
+      summary: MSG_TRUNC is returned by recvmsg()
+
+    - test: send_dgram_ip4_to_ip6_sock
+      summary: Sending a datagram from IPv6 socket to IPv4 address.
+
+    - test: send_dontroute
+      summary: Support of MSG_DONTROUTE flag
+
+    - test: send_dontwait
+      summary: Support of MSG_DONTWAIT flag for sending
+
+    - test: send_more_dgram
+      summary: Test MSG_MORE flag work with UDP sockets.
+
+    - test: send_more_nodelay_stream
+      summary: MSG_MORE sendmsg() flag and socket option TCP_NODELAY
+
+    - test: send_more_stream
+      summary: MSG_MORE sendmsg() flag
+
+    - test: send_nosignal
+      summary: SIGPIPE and sender MSG_NOSIGNAL flag
+
+    - test: send_oob_data
+      summary: Reading OOB byte without reading ordinary data
+
+    - test: send_recv_shutdown
+      summary: Terminating of sending/receiving via TCP connection by shutdown(RDWR)
+        from another process or thread
+
+    - test: send_to_incomplete
+      summary: Sharing of the one socket by several threads for different socket operations
+
+    - test: sendmsg_pktinfo
+      summary: Using IP_PKTINFO/IPV6_PKTINFO with sendmsg() or sendmmsg() to set outgoing interface
+
+    - test: sendmsg_pktinfo_src
+      summary: Using IP_PKTINFO/IPV6_PKTINFO with sendmsg()/sendmmsg() to set source address
+
+    - test: stream_iov_recv
+      summary: I/O vector receive operations with stream sockets
+
+    - test: stream_iov_send
+      summary: I/O vector transmit operations with stream sockets
+
+    - test: two_thrds_simult
+      summary: 'TCP over IPv4: Simultaneous usage of a socket from two threads for
+        send/receive operations'
+
+    - test: largebuff_via_splice
+      summary: Test splice() with large buffer size
+
+    - test: fill_huge_rcvbuf
+      summary: Overfill huge receive buffer and read all data
+
+  - group: services
+    summary: Common services
+    objective: ''
+    tests:
+    - test: ftp_client
+      summary: FTP client functionality
+
+    - test: ftp_file
+      summary: Enhanced file downloading via FTP
+
+    - test: ftp_many
+      summary: FTP PUT/GET in one control connection
+
+    - test: ftp_put_get
+      summary: FTP PUT and GET commands processing by FTP server
+
+    - test: ifconfig_a
+      summary: ifconfig with option "-a"
+
+    - test: ifconfig_get
+      summary: Retrieving interface information via ifconfig.
+
+    - test: ifconfig_set
+      summary: Configuring interfaces via "ifconfig"
+
+    - test: ifconfig_stat
+      summary: Retrieving statistics via ifconfig.
+
+    - test: netstat
+      summary: '"netstat" functionality.'
+
+    - test: ssh_client
+      summary: SSH client use case
+
+    - test: ssh_complex
+      summary: SSH complex functionality
+
+    - test: ssh_port_fwd_clnt
+      summary: SSH port forwarding on the client side
+
+    - test: ssh_port_fwd_srv
+      summary: SSH port forwarding on the server side
+
+    - test: ssh_server
+      summary: SSH server use case
+
+    - test: ssh_x_fwd_clnt
+      summary: SSH X forwarding on the client side
+
+    - test: ssh_x_fwd_srv
+      summary: SSH X forwarding on the server side
+
+    - test: x_client
+      summary: X client use case
+
+    - test: x_server
+      summary: X server/client interaction
+
+  - group: signal
+    summary: Signals + Socket API
+    objective: ''
+    tests:
+    - test: accept_interrupted_signal
+      summary: Check that accept() can be interrupted by signal.
+
+    - test: close_interrupted_signal
+      summary: Check that close() can be interrupted by signal.
+
+    - test: connect_interrupted_signal
+      summary: Check that blocking connect() can be interrupted by signal.
+
+    - test: default_signal
+      summary: Check that default signal handler is SIG_DFL
+
+    - test: inherited_signal
+      summary: Inheritence of the signal handlers after fork()
+
+    - test: iomux_interrupted_signal
+      summary: Check that I/O multiplexer can be interrupted by signal.
+
+    - test: iomux_pending_signal
+      summary: Check iomux behaviour when both an event and a signal are ready before
+        the call.
+
+    - test: multithread_signal
+      summary: Check that signal sended to a specific thread is delivered to and only
+        to this thread
+
+    - test: out_of_packet
+      summary: Check signal handling in out of packet condition
+
+    - test: read_interrupted_signal
+      summary: Check that reading function can be interrupted by signal.
+
+    - test: sa_nocldstop
+      summary: SA_NOCLDSTOP flag
+
+    - test: sa_nocldwait
+      summary: SA_NOCLDWAIT flag
+
+    - test: sa_nodefer
+      summary: SA_NODEFER flag
+
+    - test: sa_onstack
+      summary: SA_ONSTACK flag
+
+    - test: sa_resethand
+      summary: SA_RESETHAND flag
+
+    - test: sa_resethand_reinstall
+      summary: SA_RESETHAND handler installing another signal handler
+
+    - test: sendfile_interrupted_signal
+      summary: Check that sendfile() function can be interrupted by signal.
+
+    - test: signal_handler_close
+      summary: Behavior of close() called by signal handler
+
+    - test: signal_stacks_closed
+      summary: Test signal handlers when all stacks are closed
+
+    - test: write_interrupted_signal
+      summary: Check that write() can be interrupted by signal.
+
+    - test: write_interrupted_signal_udp
+      summary: Interrupt a datagram transmission by signal
+
+    - test: splice_interrupted_signal
+      summary: Check that splice() can be interrupted by signal.
+      ref: signal-splice_interrupted_signal
+
+  - group: sockopts
+    summary: Socket options
+    objective: ''
+    tests:
+    - test: acceptconn
+      summary: Usage of SO_ACCEPTCONN socket option
+
+    - test: bindtodevice_bond
+      summary: Checking data receiving via bond interface
+
+    - test: bindtodevice_connect
+      summary: Connecting TCP socket bound to an interface
+
+    - test: bindtodevice_dgram
+      summary: Usage of SO_BINDTODEVICE socket option with socket of type SOCK_DGRAM
+
+    - test: bindtodevice_dstunreach
+      summary: Sending datagram to the receiver bound to another interface
+
+    - test: bindtodevice_mtu
+      summary: Changing of MTU for bound socket
+
+    - test: bindtodevice_no_route
+      summary: Usage of SO_BINDTODEVICE socket option without matching route results
+
+    - test: bindtodevice_send
+      summary: Bind socket to an interface and try to send data to destination rootable
+        via another interface
+
+    - test: bindtodevice_stream
+      summary: Usage of SO_BINDTODEVICE socket option with socket of type SOCK_STREAM
+
+    - test: bindtodevice_vlan
+      summary: Usage of SO_BINDTODEVICE with VLAN/MACVLAN/IPVLAN
+
+    - test: bindtodevice_vs_bind
+      summary: Behaviour of socket bound to an interface and to an address on other
+        interface simultaneously.
+
+    - test: broadcast
+      summary: Usage of SO_BROADCAST socket option
+
+    - test: broadcast_no_fragment
+      summary: Broadcast datagrams should not be fragmented
+
+    - test: default_bufs
+      summary: System wide default values preset for receive and send buffers lengths.
+
+    - test: default_opts
+      summary: System wide default values preset of
+
+    - test: dontroute
+      summary: Usage of SO_DONTROUTE socket option
+
+    - test: errind_conn_disable
+      summary: SO_DGRAM_ERRIND on connected socket after setsockopt
+
+    - test: errind_conn_not_conn
+      summary: Behaviour of SO_DGRAM_ERRIND option value after connect
+
+    - test: errind_not_conn
+      summary: Enabling/disabling SO_DGRAM_ERRIND option on not connected socket
+
+    - test: error
+      summary: Usage of SO_ERROR socket option
+
+    - test: error_errqueue
+      summary: Affecting error queue on SO_ERROR socket option
+
+    - test: error_errqueue_disabled
+      summary: Any ICMP error message should be discarded while IP_RECVERR option
+        is disabled
+
+    - test: error_errqueue_flush
+      summary: Flushing socket error queue by disabling IP_RECVERR socket option
+
+    - test: error_errqueue_shutdown
+      summary: Socket error queue reading after shutdown
+
+    - test: error_errqueue_tcp
+      summary: TCP socket state is not affected by ICMP error messages
+
+    - test: error_icmp_rcv
+      summary: Usage of SO_ERROR socket option for detecting of incoming ICMP error
+        messages
+
+    - test: error_icmp_recvmmsg
+      summary: Usage of SO_ERROR socket option after reporting the pending error from
+        recvmmsg function
+
+    - test: error_rst
+      summary: Function getsockopt(SO_ERROR) after RST received
+
+    - test: error_send_recv_icmp
+      summary: Reporting ICMP errors by send, receive and iomux functions
+
+    - test: error_tcp
+      summary: TCP socket state is not affected by ICMP error messages
+
+    - test: get_supported
+      summary: Checking for support of the @b getsockopt operation
+
+    - test: inherit_derived
+      summary: Checking inhereting socket options after fork and exec
+
+    - test: inherited_option
+      summary: Inheritance of options from socket
+
+    - test: ip_mtu_discover_tcp
+      summary: Path MTU discovery on SOCK_STREAM socket
+
+    - test: ip_mtu_discover_udp
+      summary: Path MTU discovery on SOCK_DGRAM socket
+
+    - test: ip_mtu_inapprop_state
+      summary: Get IP_MTU socket option in inappropriate state
+
+    - test: ip_pktinfo
+      summary: Usage of IP_PKTINFO (IPV6_RECVPKTINFO) socket option
+
+    - test: ipv6_ipv4_pktinfo
+      summary: Using IP_PKTINFO/IPV6_RECVPKTINFO on IPv6 socket receiving IPv4 packets
+
+    - test: ip_pktoptions
+      summary: Usage of IP_PKTOPTIONS socket option
+
+    - test: ip_recverr
+      summary: Usage of IP_RECVERR linux-specific socket option
+
+    - test: ip_recvopts
+      summary: Usage of IP_OPTIONS and IP_RECVOPTS socket options with connectionless
+        sockets
+
+    - test: ip_tos_tcp
+      summary: Linux-specific IP_TOS option behaviour on TCP socket.
+
+    - test: udp_ttl_tos
+      summary: Usage of IP_TTL/IP_TOS/IPV6_UNICAST_HOPS/IPV6_TCLASS and IP_RECVTTL/IP_RECVTOS/IPV6_RECVHOPLIMIT/IPV6_RECVTCLASS
+        socket options with connectionless sockets
+
+    - test: keepalive
+      summary: Usage of SO_KEEPALIVE socket option
+
+    - test: keepalive_enforce
+      summary: Influence of SO_KEEPALIVE functionality on a state of probing socket
+
+    - test: keepalive_failed
+      summary: iomux function breaks out with read event if keepalive failed
+
+    - test: keepalive_flooder
+      summary: Robustness of SO_KEEPALIVE option on connected TCP sockets
+
+    - test: last_pending_error
+      summary: Correct behaviour of SO_ERROR socket option
+
+    - test: linger_listening_close
+      summary: Usage of SO_LINGER socket option for listening socket
+
+    - test: max_bufs
+      summary: Using of native system wide maximums for receive and send buffers
+
+    - test: mtu_changing
+      summary: Checking TCP behaviour in the case of mtu changing on the next hop
+
+    - test: oobinline_recv_oob
+      summary: OOB data can not be got by recv() with MSG_OOB flag if SO_OOBINLINE
+        set on socket
+
+    - test: rcvbuf_dgram
+      summary: Usage of SO_RCVBUF socket option with connectionless sockets
+
+    - test: rcvbuf_stream
+      summary: Influence SO_RCVBUF option on actual receive buffer size
+
+    - test: rcvlowat_dgram
+      summary: Usage of SO_RCVLOWAT socket option with datagram sockets
+
+    - test: rcvlowat_recv
+      summary: The behaviour of receive functions on stream sockets with SO_RCVLOWAT
+        option
+
+    - test: rcvlowat_stream
+      summary: Usage of SO_RCVLOWAT socket option with stream sockets
+
+    - test: rcvtimeo
+      summary: Usage of SO_RCVTIMEO socket option
+
+    - test: rcvtimeo_accept
+      summary: Usage of SO_RCVTIMEO socket option with accept()
+
+    - test: rcvtimeo_recvmmsg
+      summary: Usage of SO_RCVTIMEO socket with recvmmsg() function option
+
+    - test: reuseaddr_2msl
+      summary: Check that there is not a possibility for address reusing for 2MSL
+        interval if SO_REUSEADDR options is not applied to the socket
+
+    - test: reuseaddr_shutdown
+      summary: Possibility of binding to the same address after shutdown() call on
+        listening socket with SO_REUSEADDR.
+
+    - test: reuseaddr_tcp_1
+      summary: With TCP it is not allowed to have a completely duplicate binding even
+        if SO_REUSEADDR socket option is enabled
+
+    - test: reuseaddr_tcp_2
+      summary: Usage of SO_REUSEADDR socket option with TCP client sockets
+
+    - test: reuseaddr_tcp_3
+      summary: Usage of SO_REUSEADDR socket option for binding TCP sockets to the
+        same port but different network addresses
+
+    - test: reuseaddr_tcp_4
+      summary: Usage of SO_REUSEADDR socket option with TCP server sockets
+
+    - test: reuseaddr_tcp_5
+      summary: ''
+
+    - test: set_supported
+      summary: Checking for support of the @b setsockopt operation
+
+    - test: sndbuf_dgram
+      summary: Usage of SO_SNDBUF socket option with connectionless sockets
+
+    - test: sndbuf_stream
+      summary: Influence SO_SNDBUF option on actual send buffer size
+
+    - test: sndlowat
+      summary: Usage of SO_SNDLOWAT socket option with connection-oriented sockets
+
+    - test: sndtimeo
+      summary: Usage of SO_SNDTIMEO socket option with stream sockets
+
+    - test: sndtimeo_connect
+      summary: Behaviour of connect() if  SO_SNDTIMEO socket option is set on socket
+
+    - test: so_priority_and_tos
+      summary: SO_PRIORITY and IP_TOS socket options interaction.
+
+    - test: so_protocol
+      summary: SO_PROTOCOL option
+
+    - test: tcp_cork
+      summary: TCP_CORK functionality
+
+    - test: tcp_cork_aux
+      summary: TCP_CORK socket option used with TCP_MAXSEG or sendfile()
+
+    - test: tcp_cork_nodelay
+      summary: TCP_CORK and TCP_NODELAY behaviour
+
+    - test: tcp_defer_accept_close
+      summary: TCP_DEFER_ACCEPT and closing connection before accept()
+
+    - test: tcp_defer_accept_simple
+      summary: TCP_DEFER_ACCEPT functionality
+
+    - test: tcp_info_state
+      summary: tcpi_state field reporting TCP socket state in tcp_info structure
+
+    - test: tcp_maxseg
+      summary: TCP_MAXSEG socket option behaviour on not connected socket and on the
+        connected one.
+
+    - test: tcp_maxseg_and_pmtu
+      summary: TCP_MAXSEG socket option behaviour when the MTU of the route is changed.
+
+    - test: tcp_nodelay
+      summary: Usage of TCP_NODELAY socket option
+
+    - test: tcp_quickack
+      summary: Usage of TCP_QUICKACK socket option
+
+    - test: tcp_user_timeout
+      summary: Usage of TCP_USER_TIMEOUT socket option
+
+    - test: tcpinfo_optlen
+      summary: Checking receipt of the partial @b tcp_info
+
+    - test: type
+      summary: Usage of SO_TYPE socket option
+
+    - test: udp_cork
+      summary: UDP_CORK functionality
+
+    - test: zero_optlen
+      summary: Zero length of option value.
+
+    - test: setbuf_force
+      summary: Usage of SO_SNDBUFFORCE/SO_RCVBUFFORCE options.
+
+    - test: ipv6_only_bind
+      summary: IPV6_V6ONLY option and bind()
+
+    - test: ipv6_tclass
+      summary: Setting traffic class with IPV6_TCLASS option
+
+    - test: ipv6_tclass_tos
+      summary: Using IPV6_TCLASS and IP_TOS on the same socket
+
+    - test: ip_tos
+      summary: Setting DSCP (Type Of Service) with IP_TOS option
+
+    - test: auto_flowlabels
+      summary: Usage of auto_flowlabels system parameter and IPV6_AUTOFLOWLABEL socket
+        option
+
+    - test: pktinfo_ip4_ip6_alternate
+      summary: Receiving in turns IP_PKTINFO and IPV6_PKTINFO control messages
+
+    - test: tcp_info_ca_state
+      summary: Send packets in tcp session and check that tcp_info_ca_state is correct
+      ref: sockopts-tcp_info_ca_state
+
+    - test: tcp_info_last_data_sent_ack_recv
+      summary: Check tcpi_last_data_sent and tcpi_last_ack_recv values reported by TCP_INFO option
+      ref: sockopts-tcp_info_last_data_sent_ack_recv
+
+    - test: tcp_info_snd_adv_mss
+      summary: Check tcpi_snd_mss and tcpi_advmss values reported by TCP_INFO option
+      ref: sockopts-tcp_info_snd_adv_mss
+
+    - test: tcp_info_rtt
+      summary: Check tcpi_rtt and tcpi_rttval fields
+      ref: sockopts-tcp_info_rtt
+
+    - test: fill_reduce_rcvbuf
+      summary: Changing size of receive buffer after filling it
+      ref: sockopts-fill_reduce_rcvbuf
+
+  - group: tcp
+    summary: TCP protocol special cases
+    objective: ''
+    tests:
+    - test: close_no_ack
+      summary: Connection closing with broken conncetivity
+
+    - test: close_send_buf
+      summary: Close socket with non-empty send buffer.
+
+    - test: close_send_buf_no_ack
+      summary: Close socket while there is unacked sent data.
+
+    - test: close_linger
+      summary:  Closing TCP socket with set-on linger option
+
+    - test: close_linger_lo
+      summary:  Closing TCP socket with set-on linger option with loopback connection
+
+    - test: closing_time_wait
+      summary: Closing TCP socket in TIME_WAIT state
+
+    - test: connect_impossible
+      summary: Not satisfied connect()
+
+    - test: connect_impossible_icmp
+      summary: ICMP destination unreachable is sent in answer to SYN
+
+    - test: connect_nb_impossible
+      summary: Functions behaviour after unsatisfied connect()
+
+    - test: connect_nb_impossible_icmp
+      summary: Functions behaviour after ICMP destination unreachable sent
+
+    - test: connect_shutdown_connect
+      summary: Re-connect after aborted attempt
+
+    - test: connection_timeout_data
+      summary: Read data after the connection drop by retransmits
+
+    - test: default_tcp_orphan_retries
+      summary: Default FIN-ACK retransmit number
+
+    - test: fin_data
+      summary: FIN packet processing with data
+
+    - test: initial_rto
+      summary: Compair SYN-ACK and SYN initial RTO
+
+    - test: invalid_ack
+      summary: Invalid ACK processing
+
+    - test: ip_fragments
+      summary: TCP message splitted to IP fragments
+
+    - test: listen_backlog_max
+      summary: Maximum number of half-opened connections
+
+    - test: listener_closing_states
+      summary: Closing listener socket when the accepted one is in different states
+
+    - test: many_listeners
+      summary: Create a lot of listener sockets using scalable filters
+
+    - test: non_accepted_closed
+      summary: Non accepted TCP socket is closed
+
+    - test: out_of_socks_tcp_loopback
+      summary: Testing of TCP loopback connection in case of many created TCP sockets
+
+    - test: overfill_close
+      summary: Close TCP socket while buffers are overfilled
+
+    - test: packet_ack_drop
+      summary: Packet retransmission in TCP connection
+
+    - test: peer_large_window
+      summary: Peer declares large window and goes away
+
+    - test: recv_unblock_fin
+      summary: Read (iomux) call unblocking with FIN.
+
+    - test: rtt_calc
+      summary: Check that TCP connection correctly calculates RTT
+
+    - test: send_block_unblock
+      summary: TCP send() blocking and un-blocking
+
+    - test: shutdown_data
+      summary: Incoming data packet after calling shutdown
+
+    - test: shutdown_fin
+      summary: ''
+
+    - test: shutdown_rst
+      summary: ''
+
+    - test: shutdown_states
+      summary: Calling shutdown() in different states of TCP socket
+
+    - test: syn_ack_distrib
+      summary: Check SYN-ACK retransmits distribution
+
+    - test: syn_recv_fin_wait1
+      summary: TCP_SYN_RECV -> TCP_FIN_WAIT1 transition
+
+    - test: syn_recv_peer_shutdown
+      summary: SYN-RECV -> CLOSE-WAIT transition
+
+    - test: syn_sent_func
+      summary: Check socket functions behavior in SYN-SENT state
+
+    - test: tcp_close_timeout
+      summary: Connection closing timeouts without UL
+
+    - test: tcp_cork_vs_nodelay
+      summary: Combined using of options TCP_NODELAY and TCP_CORK
+
+    - test: tcp_flooder_mult
+      summary: Bidirectional data transmission between two peers
+
+    - test: tcp_fork_distrib
+      summary: Connection requests distribution between two processes
+
+    - test: tcp_handle_rst
+      summary: TCP socket handling RST flag received from peer
+
+    - test: tcp_last_data
+      summary: Check tcpi_last_* fields in tcp_info.
+
+    - test: tcp_loopback
+      summary: Testing of TCP connection between sockets on the same host
+
+    - test: tcp_small_segment
+      summary: Small segment receiving
+
+    - test: tcp_small_window
+      summary: Operability when peer announces small TCP window
+
+    - test: tcp_state_hang
+      summary: Check whether socket can hang in some state after receiving ACK with
+        incorrect sequence number
+
+    - test: tcp_timeout
+      summary: TCP socket handling retries timeout
+
+    - test: tcp_window_update
+      summary: Packets transmission after incresing the window size from 0
+
+    - test: tcp_zero_window
+      summary: Zero window probes correctness
+
+    - test: tcp_zero_window_ext
+      summary: Closing TCP socket despite zero window
+
+    - test: fin_out_of_window
+      summary: FIN arrives when TCP window is filled
+
+    - test: last_ack_connect
+      summary: New connection when the previous one is in LAST_ACK state
+
+    - test: syn_sent_fin_ack
+      summary: Receiving FIN-ACK in SYN_SENT state
+
+    - test: last_ack_recv_pkt
+      summary: Receiving various packets in LAST_ACK state
+
+    - test: ts_recv_values
+      summary: Receiving various timestamp values
+
+    - test: two_syns_one_ts
+      summary: Receiving two SYNs (SYN-ACKs) with timestamp set in only one of them
+
+    - test: syn_ack_ts_corrupted
+      summary: Timestamp in sent SYN-ACK is lost
+
+    - test: check_recv_truncate
+      summary: Discarding received data with MSG_TRUNC
+      ref: tcp-check_recv_truncate
+
+    - test: syn_bad_addr
+      summary: Receiving SYN with incorrect source address
+      ref: tcp-syn_bad_addr
+
+    - test: tcp_handle_syn
+      summary: TCP socket handling SYN flag received from peer
+      ref: tcp-tcp_handle_syn
+
+    - test: same_tuple_new_isn
+      summary: TCP ISN selection for a new connection with the same addresses/ports
+      ref: tcp-same_tuple_new_isn
+
+    - test: diff_tuple_diff_isn
+      summary: TCP ISN selection for TCP connections with different addresses/ports
+      ref: tcp-diff_tuple_diff_isn
+
+    - test: tcp_handle_fin
+      summary: Receiving incorrect FIN from peer
+      ref: tcp-tcp_handle_fin
+
+    - test: overfill_shutdown_reduce_pmtu
+      summary: Overfill send buffer, shutdown connection, reduce MTU, receive all data on peer
+      ref: tcp-overfill_shutdown_reduce_pmtu
+
+    - test: syn_resend
+      summary: Passive connection establishment with broken connectivity
+      ref: tcp-syn_resend
+
+    - test: zero_window_after_shrink
+      summary: Handling of shrinking to zero window
+      ref: tcp-zero_window_after_shrink
+
+    - test: fit_window_after_shrink
+      summary: Handling of shrinking to the window that fits already received data
+      ref: tcp-fit_window_after_shrink
+
+    - test: ack_out_of_window
+      summary: ACK arrives in a packet spanning the end of TCP window
+      ref: tcp-ack_out_of_window
+
+    - test: ts_send
+      summary: TCP timestamps in sent packets
+      ref: tcp-ts_send
+
+    - test: rst_send_partial
+      summary: send() behaviour after receiving RST packet
+      ref: tcp-rst_send_partial
+
+  - group: timestamps
+    summary: Timestamps testing
+    objective: ''
+    tests:
+    - test: siocshwtstamp
+      summary: Usage of SIOCSHWTSTAMP request and SO_TIMESTAMPING option
+
+    - test: siocshwtstamp_tx
+      summary: Usage of SIOCSHWTSTAMP request and SO_TIMESTAMPING option for TX
+
+    - test: ts_env
+      summary: Check env influence to timestamps retrieving
+
+    - test: ts_fin
+      summary: FIN packet timestamps
+
+    - test: ts_flow
+      summary: Transmit data flow checking timestamps monotonic
+
+    - test: ts_opt_tsonly
+      summary: Timestamping flag SOF_TIMESTAMPING_OPT_TSONLY usage
+
+    - test: ts_queued_packets
+      summary: Read queued packets after timestamps disabling
+
+    - test: ts_read
+      summary: Retrieve timestamps in blocking and non-blocking modes
+
+    - test: ts_recvmsg_trunc
+      summary: Receiving truncated data with hardware timestamps
+
+    - test: ts_select_err_queue
+      summary: Flag SO_SELECT_ERR_QUEUE usage
+
+    - test: ts_states
+      summary: Enable timestamps in different socket state
+
+    - test: ts_tcp_re
+      summary: TX TCP timestamps with retransmissions
+
+    - test: ts_tx_ack
+      summary: Timestamping flag SOF_TIMESTAMPING_TX_ACK usage
+
+    - test: ts_tx_opt_id
+      summary: Timestamping flag SOF_TIMESTAMPING_OPT_ID usage
+
+    - test: ts_tx_shut_rd
+      summary: TX timestamps retrieving after shutdown(RD)
+
+    - test: ts_tx_shut_wr
+      summary: TX timestamps retrieving after shutdown(WR)
+
+    - test: ts_msg_onepkt
+      summary: Retrieve TCP RX timestamps with ONLOAD_MSG_ONEPKT flag
+
+  - group: udp
+    summary: UDP connections and round-trip
+    objective: ''
+    tests:
+    - test: bad_udp_csum
+      summary: Receiving packets with bad or zero UDP layer checksum
+
+    - test: recv_connect
+      summary: Connect UDP socket with non-empty recv queue
+
+    - test: reuseaddr_connect
+      summary: Datagrams spreading with SO_REUSEADDR
+
+    - test: round_trip_1
+      summary: test 1 on timely round trip
+
+    - test: share_remove_addr
+      summary: Remove address shared by several UDP sockets
+
+    - test: udp_checksum
+      summary: UDP checksum test
+
+    - test: udp_fork_distrib
+      summary: Datagrams distribution between two processes
+
+    - test: udp_send_flow
+      summary: Send datagrams flow
+
+    - test: varied_send
+      summary: Send datagrams of various size in varied ways.
+
+    - test: close_tx_active
+      summary: Close UDP socket with TX queue is active.
+      ref: udp-close_tx_active
+
+    - test: check_double_bind
+      summary: check UDP traffic after double bind
+      ref: udp-check_double_bind
+
+    - test: receive_before_and_after_connect
+      summary: Test UDP receive before and after connect()
+      objective: Check that the socket receives and accelerates everything we expect
+      params:
+      - param: env
+        description: Testing environment
+        values:
+        - '@ref arg_types_env_peer2peer_two_iut'
+        - '@ref arg_types_env_peer2peer_two_iut_ipv6'
+      - param: wildcard
+        description: First socket is bound to INADRR_ANY
+        values:
+        - '@c TRUE'
+        - '@c FALSE'
+      steps:
+      - Create IUT SOCK_DGRAM socket
+      - Create TST SOCK_DGRAM socket
+      - Bind IUT socket to address:port, where address is IUT address or wildcard
+        in dependence on @p wildcard
+      - Generate 4 different combinations address:port for TST source address
+      - Send 8 packets to IUT from TST:4 combinations TST address and 2 combinations
+        IUT address
+      - Check that receives everything in dependence on parameter @p wildcard and
+        does not receive everything else
+
+    - test: recv_from_multiple_sources
+      summary: Receiving datagrams from multiple sources
+      ref: udp-recv_from_multiple_sources
+
+    - test: recv_from_multiple_sources_two_ifs
+      summary: Receiving datagrams from multiple sources over two interfaces
+      ref: udp-recv_from_multiple_sources_two_ifs
+
+  - group: usecases
+    summary: Main use cases of Socket API
+    objective: ''
+    tests:
+    - test: get_setsockopt
+      summary: The getsockopt()/setsockopt() operations on BSD compatible sockets
+
+    - test: getsockname_getpeername
+      summary: The getsockname()/getpeername() operations on BSD compatible sockets
+
+    - test: if_nameindex
+      summary: The name <-> index conversations
+
+    - test: ioctl
+      summary: The IOCTL operation on BSD compatible sockets
+
+    - test: multi_clients_handler
+      summary: Usage of fork() functionality to manage multiple connections
+
+    - test: multiple_listen
+      summary: Multiple listen() calls
+
+    - test: pipe
+      summary: Reliability of pipe() operation
+
+    - test: read_write
+      summary: The read()/write() operations on the SOCK_STREAM socket
+
+    - test: readv_writev
+      summary: Standard readv()/writev() I/O operations on the SOCK_STREAM socket
+
+    - test: send_recv
+      summary: The send()/recv() operations on the SOCK_STREAM socket
+
+    - test: sendmmsg
+      summary: sendmmsg() operation on a socket
+
+    - test: sendmsg_recvmsg
+      summary: The sendmsg()/recvmsg() operations on the SOCK_DGRAM socket
+
+    - test: sendto_recvfrom
+      summary: The sendto()/recvfrom() operations on the SOCK_DGRAM socket
+
+    - test: server
+      summary: Classical server functionality involved main socket operations
+
+    - test: shutdown
+      summary: The shutdown() function for full-duplex connection (server side activation)
+
+    - test: shutdown_rd
+      summary: The shutdown(SHUT_RD) function for full-duplex connection
+
+    - test: shutdown_rdwr
+      summary: The shutdown(SHUT_RDWR) function for full-duplex connection
+
+    - test: shutdown_wr
+      summary: The shutdown(SHUT_WR) function for full-duplex connection
+
+    - test: socket_close
+      summary: The socket()/close() functions
+
+    - test: splice
+      summary: The splice() operation on BSD compatible sockets
+
+    - test: ipv6_del_ll_addrs_transmit
+      summary: Transmitting data after removal of link-local IPv6 addresses and neighbor
+        entries
+

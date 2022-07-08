@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<test name="checksum" type="package">
+  <objective>IP/TCP/UDP checksum tests</objective>
+  <notes/>
+  <iter result="PASSED">
+    <notes/>
+    <test name="tcp_bad_csum_open" type="script">
+      <objective>Send ACK or SYNACK segments with invalid checksum and check that IUT ignores it</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="csum_val"/>
+        <arg name="env"/>
+        <arg name="protocol"/>
+        <arg name="segment">SYNACK</arg>
+        <notes/>
+        <results tags="af_xdp" key="11837">
+          <result value="FAILED">
+            <verdict>IUT sent ACK in response to segment with invalid checksum and successfully established TCP connection</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="csum_val"/>
+        <arg name="env"/>
+        <arg name="protocol"/>
+        <arg name="segment">SYN</arg>
+        <notes/>
+        <results tags="af_xdp" key="11837">
+          <result value="FAILED">
+            <verdict>IUT sent SYN-ACK in response to segment with invalid checksum and successfully established TCP connection</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+  </iter>
+</test>

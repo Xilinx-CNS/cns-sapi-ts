@@ -1,0 +1,50 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup pmtu Path MTU
+@ingroup sockapi
+@{
+
+Test suite on handling path MTU changes and internal send buffers
+reorganization algorithms.
+
+Tests reproduce various situations when path MTU is changed and send buffers are
+filled by various kind of data (send, sendfile or write/writev file operations
+defined for socket file descriptor).
+
+Each test operates only one TCP connectioin using one/two thread to simplify
+test logic.
+
+There are three sides involved in interoperations:
+ - TST (tester) side;
+ - IUT side.
+ - GW (gateway) side.
+
+Tests on path MTU changes supposes that the IUT plays the role of a sender
+and the TST is a receiver. The Gateway plays the role of gateway between
+the IUT and the TST. The Gateway is used for changing path MTU of the
+connection.
+
+Testing of internal send buffers reorganization after path MTU changes
+in the following way:
+- different ways of filling send buffers (send, sendfile, write file operation);
+- different sizes of data used for filling send buffers;
+- different sizes of MTU used for buffer reorganization;
+- multithread usage;
+- behaviour and robustness after @b fork().
+
+@author Alexander Kukuta <Alexander.Kukuta@oktetlabs.ru>
+@author Alexandra Kossovsky <Alexandra.Kossovsky@oktetlabs.ru>
+
+
+@prologue
+    @ref pmtu-prologue
+
+@par Conformance tests:
+
+-# @ref pmtu-steps
+
+@}
+
+*/

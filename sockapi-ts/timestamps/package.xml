@@ -1,0 +1,917 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+    <description>Timestamps testing</description>
+
+    <author mailto="Andrey.Dmitrov@oktetlabs.ru"/>
+
+    <req id="SFC_SFPTPD" sticky="true"/>
+    <req id="HW_PTP_RX_TIMESTAMP"/>
+    <req id="RECV_FLAG"/>
+    <!-- Important! For running tests in pure linux SFC net driver should be
+         patched by this http://reviewboard.uk.solarflarecom.com/r/11516/ -->
+    <session>
+        <run name="sync_testing">
+          <session track_conf="nohistory">
+
+            <prologue>
+                <script name="prologue"/>
+                <arg name="env" ref="env.peer2peer"/>
+            </prologue>
+            <epilogue>
+                <script name="epilogue"/>
+                <arg name="env" ref="env.iut_only"/>
+            </epilogue>
+
+            <run>
+                <script name="siocshwtstamp">
+                  <req id="SIOCSHWTSTAMP"/>
+                  <req id="HW_PTP_RX_TIMESTAMP"/>
+                  <req id="MSG_CONTROL"/>
+                </script>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram">
+                  <value>SOCK_DGRAM</value>
+                  <value reqs="ONLOAD_ONLY">SOCK_STREAM</value>
+                </arg>
+                <arg name="call_ioctl" type="boolean">
+                  <value>FALSE</value>
+                </arg>
+                <arg name="none_ioctl" type="boolean">
+                  <value>FALSE</value>
+                </arg>
+                <arg name="use_raw_hw_ts" type="boolean"/>
+                <arg name="use_sys_hw_ts" type="boolean"/>
+                <arg name="use_sw_ts" type="boolean"/>
+            </run>
+
+            <run>
+                <script name="siocshwtstamp">
+                  <req id="SIOCSHWTSTAMP"/>
+                  <req id="HW_PTP_RX_TIMESTAMP"/>
+                  <req id="MSG_CONTROL"/>
+                </script>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram">
+                  <value>SOCK_DGRAM</value>
+                  <value reqs="ONLOAD_ONLY">SOCK_STREAM</value>
+                </arg>
+                <arg name="call_ioctl" type="boolean">
+                  <value>TRUE</value>
+                </arg>
+                <arg name="none_ioctl" type="boolean"/>
+                <arg name="use_raw_hw_ts" type="boolean">
+                  <value>TRUE</value>
+                </arg>
+                <arg name="use_sys_hw_ts" type="boolean">
+                  <value>TRUE</value>
+                </arg>
+                <arg name="use_sw_ts" type="boolean">
+                  <value>TRUE</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="siocshwtstamp_tx">
+                  <req id="SIOCSHWTSTAMP"/>
+                  <req id="HW_PTP_TX_TIMESTAMP"/>
+                  <req id="MSG_CONTROL"/>
+                </script>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram" list="st">
+                    <value>SOCK_DGRAM</value>
+                    <value>SOCK_STREAM</value>
+                    <value reqs="ONLOAD_ONLY">SOCK_STREAM</value>
+                </arg>
+                <arg name="use_onload_stream" list="st">
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value reqs="ONLOAD_ONLY">TRUE</value>
+                </arg>
+                <arg name="ioctl_tx">
+                  <value>HWTSTAMP_TX_NONE</value>
+                </arg>
+                <arg name="use_hw_tx" type="boolean"/>
+                <arg name="use_raw_hw_ts" type="boolean"/>
+                <arg name="use_sys_hw_ts" type="boolean"/>
+                <arg name="use_sw_ts" type="boolean"/>
+                <arg name="use_tx_sched" type="boolean">
+                    <value>FALSE</value>
+                    <value reqs="SOF_TIMESTAMPING_TX_SCHED">TRUE</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="siocshwtstamp_tx">
+                  <req id="SIOCSHWTSTAMP"/>
+                  <req id="HW_PTP_TX_TIMESTAMP"/>
+                  <req id="MSG_CONTROL"/>
+                </script>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram">
+                    <value>SOCK_STREAM</value>
+                </arg>
+                <arg name="use_onload_stream">
+                    <value>FALSE</value>
+                    <value reqs="ONLOAD_ONLY">TRUE</value>
+                </arg>
+                <arg name="ioctl_tx">
+                  <value>HWTSTAMP_TX_OFF</value>
+                  <value>HWTSTAMP_TX_ONESTEP_SYNC</value>
+                  <value>HWTSTAMP_TX_ON</value>
+                </arg>
+                <arg name="use_hw_tx" type="boolean">
+                    <value>TRUE</value>
+                </arg>
+                <arg name="use_raw_hw_ts" type="boolean">
+                    <value>TRUE</value>
+                </arg>
+                <arg name="use_sys_hw_ts" type="boolean">
+                    <value>TRUE</value>
+                </arg>
+                <arg name="use_sw_ts" type="boolean">
+                    <value>TRUE</value>
+                </arg>
+                <arg name="use_tx_sched" type="boolean">
+                    <value>FALSE</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="ts_read"/>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram">
+                    <value>SOCK_STREAM</value>
+                </arg>
+                <arg name="onload_ext" type="ts_tx_onload_ext"/>
+                <arg name="tx" type="ts_direction_tx"/>
+                <arg name="blocking" type="boolean"/>
+                <arg name="length">
+                  <value>1000</value>
+                </arg>
+                <arg name="num">
+                  <value>1</value>
+                </arg>
+                <arg name="func" type="recv_func_with_ctl">
+                  <value>recvmmsg</value>
+                  <value>onload_zc_recv</value>
+                </arg>
+                <arg name="iomux" type="iomux_with_oo_epoll">
+                  <value>poll</value>
+                </arg>
+                <arg name="select_err_queue" type="select_err_queue_bool">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="opt_before_bind" type="boolean"/>
+            </run>
+
+            <run>
+                <script name="ts_read"/>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram">
+                    <value>SOCK_STREAM</value>
+                </arg>
+                <arg name="onload_ext" type="ts_tx_onload_ext"/>
+                <arg name="tx" type="ts_direction_tx">
+                    <!-- Only tx=TRUE is checked because
+                         onload_zc_hlrx_recv_copy() retrieves
+                         control messages only with MSG_ERRQUEUE
+                         flag -->
+                    <value>TRUE</value>
+                </arg>
+                <arg name="blocking" type="boolean"/>
+                <arg name="length">
+                  <value>1000</value>
+                </arg>
+                <arg name="num">
+                  <value>1</value>
+                </arg>
+                <arg name="func" type="recv_func_with_ctl_hlrx">
+                  <value>onload_zc_hlrx_recv_copy</value>
+                </arg>
+                <arg name="iomux" type="iomux_with_oo_epoll">
+                  <value>poll</value>
+                </arg>
+                <arg name="select_err_queue" type="select_err_queue_bool">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="opt_before_bind" type="boolean"/>
+            </run>
+
+            <run>
+                <script name="ts_read"/>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram">
+                    <value>SOCK_STREAM</value>
+                </arg>
+                <arg name="onload_ext" type="ts_tx_onload_ext"/>
+                <arg name="tx" type="ts_direction_tx"/>
+                <arg name="blocking" type="boolean"/>
+                <arg name="length">
+                  <value>1000</value>
+                </arg>
+                <arg name="num">
+                  <value>3</value>
+                </arg>
+                <arg name="func" type="recv_func_with_ctl">
+                  <value>recvmsg</value>
+                </arg>
+                <arg name="iomux" type="iomux_with_oo_epoll"/>
+                <arg name="select_err_queue" type="select_err_queue_bool"/>
+                <arg name="opt_before_bind" type="boolean"/>
+            </run>
+
+            <run>
+                <script name="ts_read">
+                </script>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram">
+                    <value>SOCK_DGRAM</value>
+                </arg>
+                <arg name="onload_ext" type="ts_tx_onload_ext">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="tx" type="ts_direction_tx"/>
+                <arg name="blocking" type="boolean"/>
+                <arg name="length">
+                  <value>1000</value>
+                </arg>
+                <arg name="num">
+                  <value>3</value>
+                </arg>
+                <arg name="func" type="recv_func_with_ctl"/>
+                <arg name="iomux" type="iomux_with_oo_epoll"/>
+                <arg name="select_err_queue" type="select_err_queue_bool"/>
+                <arg name="opt_before_bind" type="boolean"/>
+            </run>
+
+            <run>
+                <script name="ts_read">
+                </script>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram">
+                    <value>SOCK_DGRAM</value>
+                </arg>
+                <arg name="onload_ext" type="ts_tx_onload_ext">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="tx" type="ts_direction_tx">
+                    <!-- Only tx=TRUE is checked because
+                         onload_zc_hlrx_recv_copy() retrieves
+                         control messages only with MSG_ERRQUEUE
+                         flag -->
+                    <value>TRUE</value>
+                </arg>
+                <arg name="blocking" type="boolean"/>
+                <arg name="length">
+                  <value>1000</value>
+                </arg>
+                <arg name="num">
+                  <value>3</value>
+                </arg>
+                <arg name="func" type="recv_func_with_ctl_hlrx">
+                  <value>onload_zc_hlrx_recv_copy</value>
+                </arg>
+                <arg name="iomux" type="iomux_with_oo_epoll"/>
+                <arg name="select_err_queue" type="select_err_queue_bool"/>
+                <arg name="opt_before_bind" type="boolean"/>
+            </run>
+
+            <run>
+                <script name="ts_flow" track_conf="nohistory">
+                    <req id="IF_DOWN_UP"/>
+                </script>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram"/>
+                <arg name="tx" type="ts_direction_tx">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="onload_ext" type="ts_tx_onload_ext">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="length_min" list="">
+                  <value>1</value>
+                  <value>1</value>
+                  <value reqs="RECV_IP_FRAG">1500</value>
+                  <value>1500</value>
+                  <value reqs="RECV_IP_FRAG">20000</value>
+                </arg>
+                <arg name="length_max" list="">
+                  <value>1000</value>
+                  <value>1000</value>
+                  <value>9000</value>
+                  <value>8800</value>
+                  <value>40000</value>
+                </arg>
+                <arg name="mtu" list="">
+                  <value>1500</value>
+                  <value reqs="JUMBO_FRAME">8900</value>
+                  <value>1500</value>
+                  <value reqs="JUMBO_FRAME">8900</value>
+                  <value reqs="JUMBO_FRAME">8900</value>
+                </arg>
+                <arg name="total" list="">
+                  <value>50000</value>
+                  <value>50000</value>
+                  <value>500000</value>
+                  <value>500000</value>
+                  <value>500000</value>
+                </arg>
+                <arg name="enable_ts">
+                  <value>20000</value>
+                </arg>
+                <arg name="iomux" type="iomux_with_oo_epoll"/>
+            </run>
+
+            <run>
+                <script name="ts_flow" track_conf="nohistory">
+                    <req id="IF_DOWN_UP"/>
+                </script>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="tx" type="ts_direction_tx">
+                    <value>TRUE</value>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram" list="st">
+                    <value>SOCK_DGRAM</value>
+                    <value>SOCK_STREAM</value>
+                    <value>SOCK_STREAM</value>
+                </arg>
+                <arg name="onload_ext" type="ts_tx_onload_ext" list="st">
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                </arg>
+                <arg name="length_min" list="">
+                  <value>1</value>
+                  <value>1</value>
+                  <value reqs="RECV_IP_FRAG">1500</value>
+                  <value>1500</value>
+                  <value reqs="RECV_IP_FRAG">20000</value>
+                </arg>
+                <arg name="length_max" list="">
+                  <value>2000</value>
+                  <value>1000</value>
+                  <value>9000</value>
+                  <value>8800</value>
+                  <value>40000</value>
+                </arg>
+                <arg name="mtu" list="">
+                  <value>1500</value>
+                  <value reqs="JUMBO_FRAME">8900</value>
+                  <value>1500</value>
+                  <value reqs="JUMBO_FRAME">8900</value>
+                  <value reqs="JUMBO_FRAME">8900</value>
+                </arg>
+                <arg name="total" list="">
+                  <value>50000</value>
+                  <value>50000</value>
+                  <value>500000</value>
+                  <value>500000</value>
+                  <value>500000</value>
+                </arg>
+                <arg name="enable_ts">
+                  <value>20000</value>
+                </arg>
+                <arg name="iomux" type="iomux_with_oo_epoll"/>
+            </run>
+
+            <run>
+                <script name="ts_tcp_re" track_conf="silent">
+                  <req id="HW_PTP_TX_TIMESTAMP"/>
+                </script>
+                <arg name="env">
+                  <value reqs="ENV-2PEERS">{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},'gw'{{'pco_gw':tester},addr:'gw_iut_addr':inet:unicast,addr:'iut_alien_link_addr':ether:alien}},{'gw'{addr:'gw_tst_addr':inet:unicast,addr:'tst_alien_link_addr':ether:alien},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+                </arg>
+                <arg name="iomux" type="iomux_with_oo_epoll"/>
+                <arg name="use_tx_ack" type="boolean" list="">
+                    <value>FALSE</value>
+                    <value reqs="SOF_TIMESTAMPING_TX_ACK">TRUE</value>
+                    <value>FALSE</value>
+                </arg>
+                <arg name="onload_ext" type="ts_tx_onload_ext" list="">
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                </arg>
+                <arg name="select_err_queue" type="select_err_queue_bool"/>
+            </run>
+
+            <run>
+                <script name="ts_states"/>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram">
+                  <value>SOCK_DGRAM</value>
+                </arg>
+                <arg name="tx" type="ts_direction_tx">
+                  <value>TRUE</value>
+                </arg>
+                <arg name="sendto" type="boolean"/>
+                <arg name="state">
+                  <value>fresh</value>
+                  <value>bind</value>
+                  <value>connect</value>
+                </arg>
+                <arg name="onload_ext" type="ts_tx_onload_ext">
+                    <value>FALSE</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="ts_states"/>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram">
+                  <value>SOCK_DGRAM</value>
+                </arg>
+                <arg name="tx" type="ts_direction_tx">
+                  <value>FALSE</value>
+                </arg>
+                <arg name="sendto" type="boolean">
+                  <value>FALSE</value>
+                </arg>
+                <arg name="state">
+                  <value>fresh</value>
+                  <value>bind</value>
+                  <value>connect</value>
+                </arg>
+                <arg name="onload_ext" type="ts_tx_onload_ext">
+                    <value>FALSE</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="ts_states"/>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram">
+                  <value>SOCK_STREAM</value>
+                </arg>
+                <arg name="tx" type="ts_direction_tx"/>
+                <arg name="sendto" type="boolean">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="state">
+                  <value>fresh</value>
+                  <value>bind</value>
+                  <value>connect</value>
+                  <value>listen</value>
+                  <value>accept</value>
+                </arg>
+                <arg name="onload_ext" type="ts_tx_onload_ext"/>
+            </run>
+
+            <run>
+                <script name="ts_queued_packets"/>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram" list="st">
+                    <value>SOCK_DGRAM</value>
+                    <value>SOCK_DGRAM</value>
+                    <value>SOCK_STREAM</value>
+                    <value>SOCK_STREAM</value>
+                    <value>SOCK_STREAM</value>
+                </arg>
+                <arg name="tx" type="ts_direction_tx" list="st">
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                    <value>TRUE</value>
+                </arg>
+                <arg name="onload_ext" type="ts_tx_onload_ext" list="st">
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                </arg>
+                <arg name="length">
+                  <value>1000</value>
+                </arg>
+                <arg name="send_num">
+                  <value>5</value>
+                </arg>
+                <arg name="send_after_disabling" type="boolean"/>
+                <arg name="iomux" type="iomux_with_oo_epoll"/>
+                <arg name="select_err_queue" type="select_err_queue_bool"/>
+            </run>
+
+            <run>
+                <script name="ts_fin"/>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="tx" type="ts_direction_tx" list="st">
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                    <value>TRUE</value>
+                </arg>
+                <arg name="onload_ext" type="ts_tx_onload_ext" list="st">
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                </arg>
+                <arg name="data" type="boolean"/>
+                <arg name="iomux" type="iomux_with_oo_epoll"/>
+            </run>
+
+            <run>
+                <script name="ts_select_err_queue">
+                    <req id="SO_SELECT_ERR_QUEUE"/>
+                </script>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram" list="st">
+                    <value>SOCK_DGRAM</value>
+                    <value>SOCK_DGRAM</value>
+                    <value>SOCK_DGRAM</value>
+                    <value>SOCK_STREAM</value>
+                    <value>SOCK_STREAM</value>
+                    <value>SOCK_STREAM</value>
+                    <value>SOCK_STREAM</value>
+                </arg>
+                <arg name="tx" type="ts_direction_tx" list="st">
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                    <value>TRUE</value>
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                    <value>TRUE</value>
+                    <value>TRUE</value>
+                </arg>
+                <arg name="onload_ext" type="ts_tx_onload_ext" list="st">
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                </arg>
+                <arg name="iomux" type="iomux"/>
+            </run>
+
+            <run>
+                <script name="ts_opt_tsonly">
+                    <req id="SOF_TIMESTAMPING_OPT_TSONLY"/>
+                    <req id="HW_PTP_TX_TIMESTAMP"/>
+                </script>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram" list="st">
+                    <value>SOCK_DGRAM</value>
+                    <value>SOCK_STREAM</value>
+                    <value>SOCK_STREAM</value>
+                </arg>
+                <arg name="onload_ext" type="ts_tx_onload_ext" list="st">
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="ts_tx_opt_id" track_conf="nohistory">
+                    <req id="SOF_TIMESTAMPING_OPT_ID"/>
+                    <req id="HW_PTP_TX_TIMESTAMP"/>
+                    <req id="IP_RECVERR"/>
+                    <req id="IF_DOWN_UP"/>
+                </script>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram" list="st">
+                    <value>SOCK_DGRAM</value>
+                    <value>SOCK_STREAM</value>
+                    <value>SOCK_STREAM</value>
+                </arg>
+                <arg name="onload_ext" type="ts_tx_onload_ext" list="st">
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                </arg>
+                <arg name="packets_num">
+                    <value>3</value>
+                </arg>
+                <arg name="length_min" list="">
+                  <value>1</value>
+                  <value>1</value>
+                  <value>1500</value>
+                  <value>1500</value>
+                  <value>40000</value>
+                </arg>
+                <arg name="length_max" list="">
+                  <value>1000</value>
+                  <value>1000</value>
+                  <value>8400</value>
+                  <value>8400</value>
+                  <value>40000</value>
+                </arg>
+                <arg name="mtu" list="">
+                  <value>1500</value>
+                  <value reqs="JUMBO_FRAME">8500</value>
+                  <value>1500</value>
+                  <value reqs="JUMBO_FRAME">8500</value>
+                  <value reqs="JUMBO_FRAME">8500</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="ts_tx_ack">
+                    <req id="SOF_TIMESTAMPING_TX_ACK"/>
+                    <req id="HW_PTP_TX_TIMESTAMP"/>
+                </script>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram"/>
+                <arg name="tx_ack" type="boolean">
+                    <value>FALSE</value>
+                    <value reqs="SOF_TIMESTAMPING_TX_ACK">TRUE</value>
+                </arg>
+                <arg name="opt_cmsg" type="boolean">
+                    <value>FALSE</value>
+                    <value reqs="SOF_TIMESTAMPING_OPT_CMSG">TRUE</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="ts_tx_shut_rd">
+                    <req id="HW_PTP_TX_TIMESTAMP"/>
+                </script>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="iomux" type="iomux"/>
+                <arg name="sock_type" type="sock_stream_dgram" list="st">
+                    <value>SOCK_DGRAM</value>
+                    <value>SOCK_STREAM</value>
+                    <value>SOCK_STREAM</value>
+                </arg>
+                <arg name="onload_ext" type="ts_tx_onload_ext" list="st">
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="ts_tx_shut_wr">
+                    <req id="HW_PTP_TX_TIMESTAMP"/>
+                </script>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="iomux" type="iomux"/>
+                <arg name="sock_type" type="sock_stream_dgram" list="st">
+                    <value>SOCK_DGRAM</value>
+                    <value>SOCK_STREAM</value>
+                    <value>SOCK_STREAM</value>
+                </arg>
+                <arg name="onload_ext" type="ts_tx_onload_ext" list="st">
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                </arg>
+                <arg name="shutdown_how">
+                    <value>SHUT_WR</value>
+                    <value>SHUT_RDWR</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="ts_recvmsg_trunc"/>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="msg_data">
+                    <value>zero_iovs</value>
+                    <value>small_space</value>
+                    <value>ok</value>
+                </arg>
+                <arg name="msg_trunc" type="boolean"/>
+                <arg name="msg_ctrunc" type="boolean"/>
+                <arg name="control_null" type="boolean"/>
+                <arg name="control_len">
+                    <value>zero</value>
+                    <value>small</value>
+                    <value>ok</value>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram" list="st">
+                    <value>SOCK_DGRAM</value>
+                    <value>SOCK_DGRAM</value>
+                    <value>SOCK_STREAM</value>
+                    <value>SOCK_STREAM</value>
+                    <value>SOCK_STREAM</value>
+                </arg>
+                <arg name="tx" type="ts_direction_tx" list="st">
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                    <value>TRUE</value>
+                </arg>
+                <arg name="onload_ext" type="ts_tx_onload_ext" list="st">
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="ts_env">
+                  <req id="ONLOAD_ONLY"/>
+                  <req id="NO_REUSE_STACK"/>
+                </script>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram"/>
+                <arg name="sync" type="boolean">
+                  <value>TRUE</value>
+                </arg>
+                <arg name="length">
+                  <value>1000</value>
+                </arg>
+                <arg name="num">
+                  <value>2</value>
+                </arg>
+                <arg name="tx" type="ts_direction_tx">
+                  <value>TRUE</value>
+                </arg>
+                <arg name="ef_timestamping_reporting">
+                  <value>0</value>
+                  <value>1</value>
+                </arg>
+                <arg name="ef_tx_timestamping">
+                  <value>0</value>
+                  <value>1</value>
+                  <value>2</value>
+                  <value>3</value>
+                </arg>
+                <arg name="ef_rx_timestamping">
+                  <value>0</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="ts_env">
+                  <req id="ONLOAD_ONLY"/>
+                  <req id="NO_REUSE_STACK"/>
+                </script>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram"/>
+                <arg name="sync" type="boolean">
+                  <value>TRUE</value>
+                </arg>
+                <arg name="length">
+                  <value>1000</value>
+                </arg>
+                <arg name="num">
+                  <value>2</value>
+                </arg>
+                <arg name="tx" type="ts_direction_tx">
+                  <value>FALSE</value>
+                </arg>
+                <arg name="ef_timestamping_reporting">
+                  <value>0</value>
+                  <value>1</value>
+                </arg>
+                <arg name="ef_tx_timestamping">
+                  <value>0</value>
+                </arg>
+                <arg name="ef_rx_timestamping">
+                  <value>0</value>
+                  <value>1</value>
+                  <value>2</value>
+                  <value>3</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="ts_msg_onepkt">
+                  <req id="ONLOAD_ONLY"/>
+                </script>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                  <value ref="env.peer2peer_ipv6"/>
+                </arg>
+            </run>
+
+          </session>
+        </run>
+
+<!--
+The following session is runned without sfptpd and NIC sync.
+-->
+        <run name="no_sync_testing">
+          <session>
+            <run>
+                <script name="ts_env">
+                  <req id="ONLOAD_ONLY"/>
+                  <req id="NO_REUSE_STACK"/>
+                </script>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram"/>
+                <arg name="sync" type="boolean">
+                  <value>FALSE</value>
+                </arg>
+                <arg name="length">
+                  <value>1000</value>
+                </arg>
+                <arg name="num">
+                  <value>2</value>
+                </arg>
+                <arg name="tx" type="ts_direction_tx">
+                  <value>TRUE</value>
+                </arg>
+                <arg name="ef_timestamping_reporting">
+                  <value>0</value>
+                  <value>1</value>
+                </arg>
+                <arg name="ef_tx_timestamping">
+                  <value>0</value>
+                  <value>1</value>
+                  <value>2</value>
+                  <value>3</value>
+                </arg>
+                <arg name="ef_rx_timestamping">
+                  <value>0</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="ts_env">
+                  <req id="ONLOAD_ONLY"/>
+                  <req id="NO_REUSE_STACK"/>
+                </script>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram"/>
+                <arg name="sync" type="boolean">
+                  <value>FALSE</value>
+                </arg>
+                <arg name="length">
+                  <value>1000</value>
+                </arg>
+                <arg name="num">
+                  <value>2</value>
+                </arg>
+                <arg name="tx" type="ts_direction_tx">
+                  <value>FALSE</value>
+                </arg>
+                <arg name="ef_timestamping_reporting">
+                  <value>0</value>
+                  <value>1</value>
+                </arg>
+                <arg name="ef_tx_timestamping">
+                  <value>0</value>
+                </arg>
+                <arg name="ef_rx_timestamping">
+                  <value>0</value>
+                  <value>1</value>
+                  <value>2</value>
+                  <value>3</value>
+                </arg>
+            </run>
+          </session>
+        </run>
+    </session>
+</package>

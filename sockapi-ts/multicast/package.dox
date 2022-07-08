@@ -1,0 +1,54 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/** 
+
+@defgroup multicast Multicasting in IP
+@ingroup sockapi
+@{
+
+The test package contains complex tests on operating with multicast
+packets by IPv4 protocol: sending/receiving and routing.
+
+Socket options related to multicasting are tested.
+
+@author Ivan Soloducha <Ivan.Soloducha@oktetlabs.ru>
+
+
+@par Tests:
+
+-# Basic multicasting tests:
+    -# @ref multicast-ip_add_drop_membership
+    -# @ref multicast-mcast_bind_recv
+    -# @ref multicast-send_all_host_group
+-# Tests for multicast socket options:
+    -# @ref multicast-ip_multicast_loop
+    -# @ref multicast-ip_multicast_if
+    -# @ref multicast-ip_multicast_ttl
+-# Bnbvalue tests:    
+    -# @ref multicast-ip_add_membership_inval
+    -# @ref multicast-ip_drop_membership_inval
+    -# @ref multicast-multiple_membership
+    -# @ref multicast-ip_multicast_if_optlen
+    -# @ref multicast-imr_ifindex_vs_imr_address
+    -# @ref multicast-mcast_on_tcp
+-# Tests for multicasting and routing interactions:
+    -# @ref multicast-mcast_route
+    -# @ref multicast-default_if_for_join
+    -# @ref multicast-outgoing_if
+-# L5-specific tests:
+    -# @ref multicast-mcast_invisible
+    -# @ref multicast-mcast_onload_handover
+-# Other tests:
+    -# @ref multicast-bind_join_order
+    -# @ref multicast-mcast_bcast_port_unreach
+    -# @ref multicast-mcast_fragmented_mac
+    -# @ref multicast-mcast_bind_send
+    -# @ref multicast-mcast_src_address
+    -# @ref multicast-source_join
+    -# @ref multicast-mcast_unicast_inaddr_any
+    -# @ref multicast-mcast_bind_if
+    -# @ref muilticast-iomux_multicast
+
+@}
+ 
+*/

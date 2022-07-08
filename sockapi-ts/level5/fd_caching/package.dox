@@ -1,0 +1,37 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup level5-fd_caching FD caching implementation tests
+@ingroup level5
+@{
+
+The FD caching support delays the close of accepted socket in order
+to reuse it in a new established connection. The FDs are cached on
+the appropriate listening socket.
+
+The purpose of the test package is to test FD caching support
+implementation.
+
+@author Andrey Dmitrov <Andrey.Dmitrov@oktetlabs.ru>
+
+@par Tests:
+
+-# @ref fd_caching-fd_cache_limits
+-# @ref fd_caching-fd_cache_reuse
+-# @ref fd_caching-fd_cache_fork
+-# @ref fd_caching-fd_cache_wild
+-# @ref fd_caching-fd_cache_dup
+-# @ref fd_caching-fd_cache_linger
+-# @ref fd_caching-fd_cache_exec
+-# @ref fd_caching-fd_cache_opt
+-# @ref fd_caching-fd_cache_inherit_flag
+-# @ref fd_caching-fd_cache_reused_opt
+-# @ref fd_caching-fd_cache_shutdown_reuse
+-# @ref fd_caching-fd_cache_listener_closing
+-# @ref fd_caching-fd_cache_nonblock_sync
+-# @ref fd_caching-fd_cache_ipv4_ipv6
+
+@}
+
+*/

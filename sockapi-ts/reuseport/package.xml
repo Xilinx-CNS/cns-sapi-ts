@@ -1,0 +1,1111 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+    <description>SO_REUSEPORT socket option tests</description>
+
+    <author mailto="Andrey.Dmitrov@oktetlabs.ru"/>
+
+    <req id="SO_REUSEPORT"/>
+    <req id="NO_REUSE_PCO"/>
+    <session>
+        <run name="scal_mode_0_2">
+          <session track_conf="silent">
+
+            <arg name="scalable_filters_enable"/>
+
+            <prologue>
+              <script name="reuseport_prologue"/>
+              <arg name="env" ref="env.peer2peer"/>
+            <arg name="ef_cluster_size">
+              <value>2</value>
+            </arg>
+            </prologue>
+
+            <epilogue>
+              <script name="reuseport_epilogue"/>
+              <arg name="env" ref="env.iut_only"/>
+            </epilogue>
+
+            <run>
+                <script name="reuseport_del_addr_connect">
+                    <!-- ON-7331 -->
+                    <req id="OOL1606"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer"/>
+                </arg>
+            </run>
+
+            <run>
+                <script name="reuseport_two_interfaces">
+                    <req id="NO_BOND"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer.two_links"/>
+                </arg>
+                <arg name="thread_process">
+                    <value>none</value>
+                    <value>thread</value>
+                    <value>process</value>
+                </arg>
+
+                <arg name="min_packet_size" list="">
+                    <value>1</value>
+                    <value reqs="RECV_IP_FRAG">5000</value>
+                </arg>
+
+                <arg name="max_packet_size" list="">
+                    <value>1200</value>
+                    <value>10000</value>
+                </arg>
+
+                <arg name="packets_num" list="">
+                    <value>100</value>
+                    <value>20</value>
+                </arg>
+
+                <arg name="reuseport_first" type="boolean"/>
+                <arg name="reuseport_second" type="boolean"/>
+
+                <arg name="sock_type" type="sock_stream_dgram"/>
+            </run>
+
+            <run>
+                <script name="reuseport_vs_reuseaddr">
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram"/>
+                <arg name="reuseport_first" type="boolean"/>
+                <arg name="reuseaddr_first" type="boolean"/>
+                <arg name="reuseaddr_second" type="boolean"/>
+                <arg name="wild_first" type="boolean"/>
+                <arg name="wild_second" type="boolean"/>
+            </run>
+
+            <run>
+                <script name="reuseport_tcp_time_wait"/>
+                <arg name="env">
+                    <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="reuseport_second" type="boolean"/>
+                <arg name="close_connection" type="boolean"/>
+            </run>
+
+            <run>
+              <script name="reuseport_connect">
+                <req id="SO_REUSEPORT_TST1"/>
+              </script>
+              <arg name="env">
+                <value ref="env.peer2peer"/>
+              </arg>
+              <arg name="sock_type" type="sock_stream_dgram" list="">
+                <value>SOCK_STREAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+              </arg>
+              <arg name="server" type="boolean" list="">
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+              </arg>
+              <arg name="wildcard" type="boolean"/>
+            </run>
+
+            <run>
+              <script name="reuseport_reset_if" track_conf="silent|sync">
+                <req id="RESET_NIC"/>
+                <req id="IF_DOWN_UP"/>
+              </script>
+              <arg name="env">
+                <value ref="env.peer2peer"/>
+              </arg>
+              <arg name="sock_type" type="sock_stream_dgram"/>
+              <arg name="mode" type="eth_reset"/>
+              <arg name="position">
+                <value>after_bind</value>
+                <value>after_connetion</value>
+              </arg>
+            </run>
+
+            <run>
+                <script name="reuseport_load_tcp" track_conf="silent"/>
+                <arg name="env">
+                    <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="use_ef_force" type="boolean">
+                    <value>FALSE</value>
+                    <value reqs="ONLOAD_ONLY">TRUE</value>
+                </arg>
+                <arg name="listeners_num" list="skip">
+                  <value>10</value>
+                <!-- On 32-bit kernels we can get OOM killer -->
+                  <value reqs="KERNEL_64,SO_REUSEPORT_MANY_SOCKS">64</value>
+                  <value>10</value>
+                </arg>
+                <arg name="skip" list="skip">
+                  <value>0</value>
+                  <value>0</value>
+                  <value>2</value>
+                </arg>
+                <arg name="clients_num" list="skip">
+                  <value>0</value>
+                  <value>2000</value>
+                  <value>1000</value>
+                </arg>
+                <arg name="thread_process">
+                  <value>none</value>
+                  <value>thread</value>
+                  <value>process</value>
+                </arg>
+            </run>
+
+            <run>
+                <!-- The "nohistory" mode is required to correctly update the
+                    EF_CLUSTER_SIZE variable after the test is completed -->
+                <script name="reuseport_load_udp" track_conf="nohistory"/>
+                <arg name="env">
+                    <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="use_ef_force" type="boolean">
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                </arg>
+                <arg name="src_addr_num" list="">
+                    <value>40</value>
+                </arg>
+                <arg name="sockets_num" list="">
+                  <value reqs="SO_REUSEPORT_MANY_SOCKS">64</value>
+                  <value>10</value>
+                  <value>10</value>
+                </arg>
+                <arg name="packets_num" list="">
+                  <value>3000</value>
+                  <value>1000</value>
+                  <value>1000</value>
+                </arg>
+                <arg name="packet_min" list="">
+                  <value>1</value>
+                  <value>1</value>
+                  <value reqs="RECV_IP_FRAG">5000</value>
+                </arg>
+                <arg name="packet_max" list="">
+                  <value>1000</value>
+                  <value>1000</value>
+                  <value>10000</value>
+                </arg>
+                <arg name="thread_process">
+                  <value>none</value>
+                  <value>thread</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="reuseport_load_udp"  track_conf="nohistory"/>
+                <arg name="env">
+                    <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="use_ef_force" type="boolean">
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                </arg>
+                <arg name="src_addr_num" list = "">
+                    <value>1</value>
+                    <value>40</value>
+                </arg>
+                <arg name="sockets_num">
+                  <value>10</value>
+                </arg>
+                <arg name="packets_num">
+                  <value>1000</value>
+                </arg>
+                <arg name="packet_min">
+                  <value>1</value>
+                </arg>
+                <arg name="packet_max">
+                  <value>1000</value>
+                </arg>
+                <arg name="thread_process" list = "">
+                  <value>none</value>
+                  <value>process</value>
+                </arg>
+            </run>
+
+            <run>
+              <script name="reuseport_uids">
+                <req id="SETUID"/>
+              </script>
+              <arg name="env">
+                <value>{{{'pco_iut1':IUT},{'pco_iut2':IUT},addr:'iut_addr':inet:unicast}}</value>
+              </arg>
+              <arg name="sock_type" type="sock_stream_dgram"/>
+            </run>
+
+            <run>
+              <script name="reuseport_iomux" track_conf="silent">
+                <req id="OOL1502"/>
+              </script>
+              <arg name="env">
+                <value ref="env.two_nets.iut_first"/>
+              </arg>
+              <arg name="listeners_num">
+                <value>4</value>
+              </arg>
+              <arg name="iomux" type="iomux"/>
+              <arg name="same_tst" type="boolean" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+              </arg>
+              <arg name="same_port" type="boolean" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+              </arg>
+            </run>
+
+            <run>
+              <script name="reuseport_threaded_iomux" track_conf="silent">
+                <req id="OOL1502"/>
+              </script>
+              <arg name="env">
+                <value ref="env.two_nets.iut_first"/>
+              </arg>
+              <arg name="listeners_num">
+                <value>4</value>
+              </arg>
+              <arg name="iomux" type="iomux"/>
+              <arg name="same_tst" type="boolean" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+              </arg>
+              <arg name="same_port" type="boolean" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+              </arg>
+            </run>
+
+            <run>
+              <script name="reuseport_rcvtimeo" track_conf="silent">
+                <req id="SO_RCVTIMEO"/>
+                <req id="OOL1502"/>
+              </script>
+              <arg name="env">
+                <value ref="env.two_nets.iut_first"/>
+              </arg>
+              <arg name="listeners_num">
+                <value>4</value>
+              </arg>
+              <arg name="same_tst" type="boolean" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+              </arg>
+              <arg name="same_port" type="boolean" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+              </arg>
+            </run>
+
+            <run>
+              <script name="reuseport_udp_wild" track_conf="silent">
+                <req id="OOL1502"/>
+                <req id="SO_REUSEADDR"/>
+              </script>
+              <arg name="env">
+                <value ref="env.two_nets.two_iut"/>
+              </arg>
+              <arg name="second_wcard" type="boolean"/>
+              <arg name="third_iut" type="boolean"/>
+              <arg name="iomux" type="iomux"/>
+            </run>
+
+            <run>
+              <script name="reuseport_udp_dst" track_conf="silent">
+                <req id="OOL1502"/>
+              </script>
+              <arg name="env">
+                <value ref="env.peer2peer_two_iut"/>
+              </arg>
+              <arg name="iomux" type="iomux"/>
+              <arg name="first_wcard" type="boolean"/>
+              <arg name="second_wcard" type="boolean"/>
+            </run>
+
+            <run>
+              <script name="mcast_reuseport">
+                <req id="IP_MULTICAST_LOOP"/>
+                <req id="SOCK_DGRAM"/>
+              </script>
+              <arg name="env">
+                <value ref="env.peer2peer_mcast"/>
+              </arg>
+                <arg name="reuseport_first" type="boolean"/>
+                <arg name="reuseport_second" type="boolean"/>
+                <arg name="method" type="mcast_method"/>
+            </run>
+
+            <run>
+                <script name="move_fd_reuseport"/>
+                <arg name="env" ref="env.peer2peer"/>
+                <arg name="sock_type" type="sock_stream_dgram" list="">
+                    <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+                    <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+                    <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+                    <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+                    <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+                    <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+                    <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+                    <value reqs="SOCK_DGRAM">SOCK_DGRAM</value>
+                    <value reqs="SOCK_DGRAM">SOCK_DGRAM</value>
+                    <value reqs="SOCK_DGRAM">SOCK_DGRAM</value>
+                    <value reqs="SOCK_DGRAM">SOCK_DGRAM</value>
+                </arg>
+                <arg name="socket_state" list="">
+                  <value>fresh</value>
+                  <value>setsockopt</value>
+                  <value>bind</value>
+                  <value>tcp_listen</value>
+                  <value>tcp_accept</value>
+                  <value>tcp_accept_new</value>
+                  <value>connect</value>
+                  <value>fresh</value>
+                  <value>setsockopt</value>
+                  <value>bind</value>
+                  <value>connect</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="socket_closing" track_conf="silent">
+                    <req id="OOL1502"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram" list="">
+                    <value>SOCK_STREAM</value>
+                    <value>SOCK_STREAM</value>
+                    <value>SOCK_DGRAM</value>
+                </arg>
+                <arg name="close_after_listen" type="boolean" list="">
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                    <value>FALSE</value>
+                </arg>
+                <arg name="wild" type="boolean"/>
+            </run>
+
+            <run>
+                <script name="reuseport_del_addr">
+                    <!-- ON-7366 -->
+                    <req id="OOL1606"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram">
+                    <value>SOCK_DGRAM</value>
+                    <value>SOCK_STREAM</value>
+                </arg>
+                <arg name="set_reuseport" type="boolean"/>
+                <arg name="single_process" type="boolean"/>
+                <arg name="remove_addr">
+                    <value>1</value>
+                    <value>2</value>
+                    <value>3</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="reuseport_after_bind">
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram"/>
+                <arg name="wildcard" type="boolean"/>
+            </run>
+
+            <run>
+                <script name="reuseport_tcp_wild">
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="first_wild" type="boolean"/>
+                <arg name="second_wild" type="boolean"/>
+                <arg name="same_port" type="boolean">
+                    <value>FALSE</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="reuseport_tcp_wild">
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="first_wild" type="boolean" list="">
+                    <value>TRUE</value>
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                </arg>
+                <arg name="second_wild" type="boolean" list="">
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                </arg>
+                <arg name="same_port" type="boolean">
+                    <value>TRUE</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="reuseport_lacp_slave_up" track_conf="nohistory">
+                    <req id="NO_BOND"/>
+                    <!-- Onload does not support bond-over-complicated.
+                         This test adds bond-over-IUT, so IUT must
+                         be simple. -->
+                    <req id="NO_VLAN"/>
+                    <req id="CREATE_NET_IF"/>
+                    <req id="IF_DOWN_UP"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer.two_links"/>
+                </arg>
+                <arg name="team" type="boolean"/>
+                <arg name="first_slave" type="boolean"/>
+                <arg name="sock_first" type="boolean"/>
+                <arg name="sock_type" type="sock_stream_dgram"/>
+            </run>
+
+            <run>
+                <script name="cluster_restart_all_orphaned">
+                    <req id="ONLOAD_ONLY"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer_gw"/>
+                </arg>
+                <arg name="tp" type="thread_process"/>
+                <arg name="ef_cluster_restart">
+                    <value>0</value>
+                    <value reqs="CLUSTER_RESTART">1</value>
+                </arg>
+                <arg name="state">
+                    <value>TCP_FIN_WAIT1</value>
+                    <value>TCP_FIN_WAIT2</value>
+                    <value>TCP_CLOSING</value>
+                    <value>TCP_LAST_ACK</value>
+                    <value>TCP_TIME_WAIT</value>
+                </arg>
+                <arg name="wildcard" type="boolean"/>
+                <arg name="kill_iut" type="boolean"/>
+                <arg name="close_listeners" type="boolean"/>
+            </run>
+
+            <run>
+                <script name="cluster_restart_one_killed">
+                    <req id="ONLOAD_ONLY"/>
+                    <req id="CLUSTER_RESTART"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer_gw"/>
+                </arg>
+                <arg name="wildcard" type="boolean"/>
+                <arg name="state">
+                    <value>TCP_FIN_WAIT1</value>
+                    <value>TCP_FIN_WAIT2</value>
+                    <value>TCP_CLOSING</value>
+                    <value>TCP_LAST_ACK</value>
+                    <value>TCP_TIME_WAIT</value>
+                </arg>
+                <arg name="first_close">
+                    <value>alive</value>
+                    <value>listener</value>
+                    <value>accepted</value>
+                </arg>
+                <arg name="second_close_listener" type="boolean"/>
+                <arg name="second_close_accepted" type="boolean"/>
+                <arg name="new_bind_first" type="boolean"/>
+            </run>
+
+            <run>
+                <script name="cluster_restart_one_closed">
+                    <req id="ONLOAD_ONLY"/>
+                    <req id="CLUSTER_RESTART"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer_gw"/>
+                </arg>
+                <arg name="wildcard" type="boolean"/>
+                <arg name="second_state">
+                    <value>TCP_FIN_WAIT1</value>
+                    <value>TCP_FIN_WAIT2</value>
+                    <value>TCP_CLOSING</value>
+                    <value>TCP_LAST_ACK</value>
+                    <value>TCP_TIME_WAIT</value>
+                </arg>
+                <arg name="first_close">
+                    <value>alive</value>
+                    <value>listener</value>
+                    <value>accepted</value>
+                </arg>
+                <arg name="second_close_listener" type="boolean"/>
+                <arg name="tp" type="thread_process" list="">
+                    <value>none</value>
+                    <value>thread</value>
+                    <value>thread</value>
+                    <value>process</value>
+                    <value>process</value>
+                </arg>
+                <arg name="new_bind_first" type="boolean" list="">
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                    <value>FALSE</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="tcp_close_listener"/>
+                <arg name="env">
+                    <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="wildcard" type="boolean"/>
+                <arg name="first_listener_early" type="boolean"/>
+                <arg name="second_listener_early" type="boolean"/>
+                <arg name="listeners_closing_order" type="boolean"/>
+                <arg name="orphaned" type="boolean"/>
+                <arg name="same_port" type="boolean"/>
+                <arg name="ef_cluster_restart">
+                    <value>0</value>
+                    <value reqs="CLUSTER_RESTART">1</value>
+                </arg>
+                <arg name="tp" type="thread_process"/>
+            </run>
+
+            <run>
+                <script name="several_clusters">
+                    <req id="NO_ONE_CLUSTER"/>
+                    <req id="IF_DOWN_UP"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="clusters_num">
+                    <value>4</value>
+                </arg>
+                <arg name="bind_to">
+                    <value>specific</value>
+                    <value>wildcard</value>
+                    <value>random</value>
+                </arg>
+                <arg name="tp" type="thread_process">
+                    <value>none</value>
+                </arg>
+                <arg name="personal_thread" type="boolean">
+                    <value>FALSE</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="several_clusters">
+                    <!-- 'Thread' and 'process' iterations are disabled
+                     according to SF bug 82133 -->
+                    <req id="BROKEN"/>
+                    <req id="NO_ONE_CLUSTER"/>
+                <req id="IF_DOWN_UP"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="clusters_num">
+                    <value>4</value>
+                </arg>
+                <arg name="bind_to">
+                    <value>specific</value>
+                    <value>wildcard</value>
+                    <value>random</value>
+                </arg>
+                <arg name="tp" type="thread_process">
+                    <value>thread</value>
+                    <value>process</value>
+                </arg>
+                <arg name="personal_thread" type="boolean"/>
+            </run>
+
+          </session>
+
+          <arg name="scalable_filters_enable">
+              <value reqs="NO_SCALABLE">0</value>
+              <value reqs="ONLOAD_ONLY,SCALABLE,SCALABLE_RSS,SCALABLE_FILTERS_ENABLE_WORKER">2</value>
+          </arg>
+        </run>
+
+        <!-- Iterations which contain two and more TCP reuseport listeners in one process
+             are excluded from session with scalable_filters_enable=1  (ON-8603). -->
+        <run name="scal_mode_1">
+          <session track_conf="silent">
+
+            <arg name="scalable_filters_enable"/>
+
+            <prologue>
+              <script name="reuseport_prologue"/>
+              <arg name="env" ref="env.peer2peer"/>
+            <arg name="ef_cluster_size">
+              <value>2</value>
+            </arg>
+            </prologue>
+
+            <epilogue>
+              <script name="reuseport_epilogue"/>
+              <arg name="env" ref="env.iut_only"/>
+            </epilogue>
+
+            <run>
+                <script name="reuseport_two_interfaces">
+                    <req id="NO_BOND"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer.two_links"/>
+                </arg>
+                <arg name="thread_process">
+                    <value>none</value>
+                    <value>thread</value>
+                    <value>process</value>
+                </arg>
+
+                <arg name="min_packet_size" list="">
+                    <value>1</value>
+                    <value reqs="RECV_IP_FRAG">5000</value>
+                </arg>
+
+                <arg name="max_packet_size" list="">
+                    <value>1200</value>
+                    <value>10000</value>
+                </arg>
+
+                <arg name="packets_num" list="">
+                    <value>100</value>
+                    <value>20</value>
+                </arg>
+
+                <arg name="reuseport_first" type="boolean"/>
+                <arg name="reuseport_second" type="boolean"/>
+
+                <arg name="sock_type" type="sock_stream_dgram">
+                  <value>SOCK_DGRAM</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="reuseport_two_interfaces">
+                    <req id="NO_BOND"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer.two_links"/>
+                </arg>
+                <arg name="thread_process">
+                    <value>none</value>
+                    <value>thread</value>
+                    <value>process</value>
+                </arg>
+
+                <arg name="min_packet_size" list="">
+                    <value>1</value>
+                    <value reqs="RECV_IP_FRAG">5000</value>
+                </arg>
+
+                <arg name="max_packet_size" list="">
+                    <value>1200</value>
+                    <value>10000</value>
+                </arg>
+
+                <arg name="packets_num" list="">
+                    <value>100</value>
+                    <value>20</value>
+                </arg>
+
+                <arg name="reuseport_first" type="boolean">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="reuseport_second" type="boolean">
+                    <value>FALSE</value>
+                </arg>
+
+                <arg name="sock_type" type="sock_stream_dgram">
+                  <value>SOCK_STREAM</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="reuseport_vs_reuseaddr">
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram"/>
+                <arg name="reuseport_first" type="boolean"/>
+                <arg name="reuseaddr_first" type="boolean"/>
+                <arg name="reuseaddr_second" type="boolean"/>
+                <arg name="wild_first" type="boolean"/>
+                <arg name="wild_second" type="boolean"/>
+            </run>
+
+            <run>
+              <script name="reuseport_connect">
+                <req id="SO_REUSEPORT_TST1"/>
+              </script>
+              <arg name="env">
+                <value ref="env.peer2peer"/>
+              </arg>
+              <arg name="sock_type" type="sock_stream_dgram" list="">
+                <value>SOCK_DGRAM</value>
+              </arg>
+              <arg name="server" type="boolean" list="">
+                <value>FALSE</value>
+              </arg>
+              <arg name="wildcard" type="boolean"/>
+            </run>
+
+            <run>
+                <!-- The "nohistory" mode is required to correctly update the
+                    EF_CLUSTER_SIZE variable after the test is completed -->
+                <script name="reuseport_load_udp" track_conf="nohistory"/>
+                <arg name="env">
+                    <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="use_ef_force" type="boolean">
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                </arg>
+                <arg name="src_addr_num" list="">
+                    <value>40</value>
+                </arg>
+                <arg name="sockets_num" list="">
+                  <value reqs="SO_REUSEPORT_MANY_SOCKS">64</value>
+                  <value>10</value>
+                  <value>10</value>
+                </arg>
+                <arg name="packets_num" list="">
+                  <value>3000</value>
+                  <value>1000</value>
+                  <value>1000</value>
+                </arg>
+                <arg name="packet_min" list="">
+                  <value>1</value>
+                  <value>1</value>
+                  <value reqs="RECV_IP_FRAG">5000</value>
+                </arg>
+                <arg name="packet_max" list="">
+                  <value>1000</value>
+                  <value>1000</value>
+                  <value>10000</value>
+                </arg>
+                <arg name="thread_process">
+                  <value>none</value>
+                  <value>thread</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="reuseport_load_udp"  track_conf="nohistory"/>
+                <arg name="env">
+                    <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="use_ef_force" type="boolean">
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                </arg>
+                <arg name="src_addr_num" list = "">
+                    <value>1</value>
+                    <value>40</value>
+                </arg>
+                <arg name="sockets_num">
+                  <value>10</value>
+                </arg>
+                <arg name="packets_num">
+                  <value>1000</value>
+                </arg>
+                <arg name="packet_min">
+                  <value>1</value>
+                </arg>
+                <arg name="packet_max">
+                  <value>1000</value>
+                </arg>
+                <arg name="thread_process" list = "">
+                  <value>none</value>
+                  <value>process</value>
+                </arg>
+            </run>
+
+            <run>
+              <script name="reuseport_uids">
+                <req id="SETUID"/>
+              </script>
+              <arg name="env">
+                <value>{{{'pco_iut1':IUT},{'pco_iut2':IUT},addr:'iut_addr':inet:unicast}}</value>
+              </arg>
+              <arg name="sock_type" type="sock_stream_dgram"/>
+            </run>
+
+            <run>
+              <script name="reuseport_threaded_iomux" track_conf="silent">
+                <req id="OOL1502"/>
+              </script>
+              <arg name="env">
+                <value ref="env.two_nets.iut_first"/>
+              </arg>
+              <arg name="listeners_num">
+                <value>4</value>
+              </arg>
+              <arg name="iomux" type="iomux"/>
+              <arg name="same_tst" type="boolean" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+              </arg>
+              <arg name="same_port" type="boolean" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+              </arg>
+            </run>
+
+            <run>
+              <script name="reuseport_rcvtimeo" track_conf="silent">
+                <req id="SO_RCVTIMEO"/>
+                <req id="OOL1502"/>
+              </script>
+              <arg name="env">
+                <value ref="env.two_nets.iut_first"/>
+              </arg>
+              <arg name="listeners_num">
+                <value>4</value>
+              </arg>
+              <arg name="same_tst" type="boolean" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+              </arg>
+              <arg name="same_port" type="boolean" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+              </arg>
+            </run>
+
+            <run>
+              <script name="reuseport_udp_wild" track_conf="silent">
+                <req id="OOL1502"/>
+                <req id="SO_REUSEADDR"/>
+              </script>
+              <arg name="env">
+                <value ref="env.two_nets.two_iut"/>
+              </arg>
+              <arg name="second_wcard" type="boolean"/>
+              <arg name="third_iut" type="boolean"/>
+              <arg name="iomux" type="iomux"/>
+            </run>
+
+            <run>
+              <script name="reuseport_udp_dst" track_conf="silent">
+                <req id="OOL1502"/>
+              </script>
+              <arg name="env">
+                <value ref="env.peer2peer_two_iut"/>
+              </arg>
+              <arg name="iomux" type="iomux"/>
+              <arg name="first_wcard" type="boolean"/>
+              <arg name="second_wcard" type="boolean"/>
+            </run>
+
+            <run>
+              <script name="mcast_reuseport">
+                <req id="IP_MULTICAST_LOOP"/>
+                <req id="SOCK_DGRAM"/>
+              </script>
+              <arg name="env">
+                <value ref="env.peer2peer_mcast"/>
+              </arg>
+                <arg name="reuseport_first" type="boolean"/>
+                <arg name="reuseport_second" type="boolean"/>
+                <arg name="method" type="mcast_method"/>
+            </run>
+
+            <run>
+                <script name="move_fd_reuseport"/>
+                <arg name="env" ref="env.peer2peer"/>
+                <arg name="sock_type" type="sock_stream_dgram" list="">
+                    <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+                    <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+                    <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+                    <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+                    <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+                    <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+                    <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+                    <value reqs="SOCK_DGRAM">SOCK_DGRAM</value>
+                    <value reqs="SOCK_DGRAM">SOCK_DGRAM</value>
+                    <value reqs="SOCK_DGRAM">SOCK_DGRAM</value>
+                    <value reqs="SOCK_DGRAM">SOCK_DGRAM</value>
+                </arg>
+                <arg name="socket_state" list="">
+                  <value>fresh</value>
+                  <value>setsockopt</value>
+                  <value>bind</value>
+                  <value>tcp_listen</value>
+                  <value>tcp_accept</value>
+                  <value>tcp_accept_new</value>
+                  <value>connect</value>
+                  <value>fresh</value>
+                  <value>setsockopt</value>
+                  <value>bind</value>
+                  <value>connect</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="socket_closing" track_conf="silent">
+                    <req id="OOL1502"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram" list="">
+                    <value>SOCK_DGRAM</value>
+                </arg>
+                <arg name="close_after_listen" type="boolean" list="">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="wild" type="boolean"/>
+            </run>
+
+            <run>
+                <script name="reuseport_del_addr">
+                    <!-- ON-7366 -->
+                    <req id="OOL1606"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram">
+                    <value>SOCK_DGRAM</value>
+                </arg>
+                <arg name="set_reuseport" type="boolean"/>
+                <arg name="single_process" type="boolean"/>
+                <arg name="remove_addr">
+                    <value>1</value>
+                    <value>2</value>
+                    <value>3</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="reuseport_del_addr">
+                    <!-- ON-7366 -->
+                    <req id="OOL1606"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram">
+                    <value>SOCK_STREAM</value>
+                </arg>
+                <arg name="set_reuseport" type="boolean" list="">
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                </arg>
+                <arg name="single_process" type="boolean" list="">
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                    <value>FALSE</value>
+                </arg>
+                <arg name="remove_addr">
+                    <value>1</value>
+                    <value>2</value>
+                    <value>3</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="reuseport_after_bind">
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram">
+                    <value>SOCK_DGRAM</value>
+                </arg>
+                <arg name="wildcard" type="boolean"/>
+            </run>
+
+            <run>
+                <script name="cluster_restart_one_closed">
+                    <req id="ONLOAD_ONLY"/>
+                    <req id="CLUSTER_RESTART"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer_gw"/>
+                </arg>
+                <arg name="wildcard" type="boolean"/>
+                <arg name="second_state">
+                    <value>TCP_FIN_WAIT1</value>
+                    <value>TCP_FIN_WAIT2</value>
+                    <value>TCP_CLOSING</value>
+                    <value>TCP_LAST_ACK</value>
+                    <value>TCP_TIME_WAIT</value>
+                </arg>
+                <arg name="first_close">
+                    <value>alive</value>
+                    <value>listener</value>
+                    <value>accepted</value>
+                </arg>
+                <arg name="second_close_listener" type="boolean"/>
+                <arg name="tp" type="thread_process">
+                    <value>process</value>
+                </arg>
+                <arg name="new_bind_first" type="boolean"/>
+            </run>
+
+            <run>
+                <script name="tcp_close_listener"/>
+                <arg name="env">
+                    <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="wildcard" type="boolean"/>
+                <arg name="first_listener_early" type="boolean"/>
+                <arg name="second_listener_early" type="boolean"/>
+                <arg name="listeners_closing_order" type="boolean"/>
+                <arg name="orphaned" type="boolean"/>
+                <arg name="same_port" type="boolean"/>
+                <arg name="ef_cluster_restart">
+                    <value>0</value>
+                    <value reqs="CLUSTER_RESTART">1</value>
+                </arg>
+                <arg name="tp" type="thread_process">
+                    <value>process</value>
+                </arg>
+            </run>
+
+
+          </session>
+
+          <arg name="scalable_filters_enable">
+              <value reqs="ONLOAD_ONLY,SCALABLE">1</value>
+          </arg>
+        </run>
+    </session>
+</package>
+

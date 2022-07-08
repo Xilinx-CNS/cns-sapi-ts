@@ -1,0 +1,1017 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+
+    <description>Signals + Socket API</description>
+
+    <author mailto="Alexandra.Kossovsky@oktetlabs.ru"/>
+
+    <req id="SIGNALS" sticky="true"/>
+
+    <session>
+
+        <enum name="sigaction_func">
+            <value>sigaction</value>
+            <value>sigaction_siginfo</value>
+            <value reqs="BSD_SIGNAL">bsd_signal_pre_siginterrupt</value>
+            <value reqs="BSD_SIGNAL">bsd_signal_post_siginterrupt</value>
+            <value reqs="SIGNAL">signal_pre_siginterrupt</value>
+            <value reqs="SIGNAL">signal_post_siginterrupt</value>
+        </enum>
+
+        <enum name="signal_func">
+            <value reqs="SIGNAL">signal</value>
+            <value reqs="BSD_SIGNAL">bsd_signal</value>
+            <value reqs="SYSV_SIGNAL">sysv_signal</value>
+            <value reqs="__SYSV_SIGNAL">__sysv_signal</value>
+        </enum>
+
+        <enum name="env.iut_only_killer">
+                <value>IUT{{{'pco_iut':IUT},{'pco_killer':tester}}}</value>
+        </enum>
+        <enum name="env.peer2peer_iut_killer">
+                <value>IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-TST-LINK">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+              <value reqs="ENV-LOOPBACK">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</value>
+        </enum>
+
+         <run>
+            <script name="multithread_signal">
+            </script>
+            <arg name="func_sig" type="sigaction_func">
+                <value>sigaction</value>
+            </arg>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="threads_num">
+                <value>50</value>
+            </arg>
+            <arg name="thread_to_send">
+                <value>1</value>
+                <value>23</value>
+                <value>50</value>
+            </arg>
+            <arg name="sig_to_send">
+                <value>SIGUSR1</value>
+            </arg>
+            <arg name="socket_before_handler" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="default_signal"/>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="sig">
+                <value>SIGUSR1</value>
+            </arg>
+        </run>
+        <run>
+            <script name="inherited_signal">
+                <req id="FORK"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="check_before_socket" type="boolean"/>
+            <arg name="func_sig" type="sigaction_func">
+                <value>sigaction</value>
+                <value reqs="BSD_SIGNAL">bsd_signal_pre_siginterrupt</value>
+                <value reqs="BSD_SIGNAL">bsd_signal_post_siginterrupt</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="close_interrupted_signal">
+                <req id="SOCK_STREAM"/>
+                <req id="SO_LINGER"/>
+            </script>
+            <arg name="func_sig" type="sigaction_func">
+                <value>sigaction</value>
+            </arg>
+            <arg name="restart" type="boolean"/>
+            <arg name="env" type="env.peer2peer_iut_killer"/>
+        </run>
+       
+        <run>
+            <script name="read_interrupted_signal"/>
+            <arg name="sock_type" type="sock_stream_dgram" list="">
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="func" type="recv_func_with_sys"/>
+            <arg name="func_sig" type="sigaction_func">
+                <value>sigaction</value>
+            </arg>
+            <arg name="restart" type="boolean"/>
+            <arg name="additional">
+                <value>-</value>
+                <value>second_signal</value>
+                <value reqs="SO_RCVTIMEO">timeout</value>
+            </arg>
+            <arg name="env" list="">
+                <value>IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value>IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-TST-LINK">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-TST-LINK">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-TST-LINK">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-LOOPBACK">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-LOOPBACK">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</value>
+            </arg>
+            <arg name="use_wildcard" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="signal_before_fd" type="boolean"/>
+            <arg name="multithread" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="test_pipe">
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="read_interrupted_signal">
+                <req id="PIPE"/>
+            </script>
+            <arg name="func" type="recv_func_with_sys">
+                <value reqs="READ_WRITE">read</value>
+                <value reqs="RECV_IOV,READV_WRITEV">readv</value>
+            </arg>
+            <arg name="func_sig" type="sigaction_func">
+                <value>sigaction</value>
+            </arg>
+            <arg name="restart" type="boolean"/>
+            <arg name="additional">
+                <value>-</value>
+                <value>second_signal</value>
+            </arg>
+            <arg name="env" type="env.iut_only_killer"/>
+            <arg name="signal_before_fd" type="boolean"/>
+            <arg name="multithread" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="test_pipe">
+                <value>TRUE</value>
+            </arg>
+            <arg name="use_wildcard">
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="read_interrupted_signal"/>
+            <arg name="func" type="recv_func_with_sys">
+                <value reqs="READ_WRITE">read</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram" list="">
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="env" list="">
+                <value>IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value>IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-TST-LINK">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-TST-LINK">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-TST-LINK">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-LOOPBACK">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-LOOPBACK">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</value>
+            </arg>
+            <arg name="use_wildcard" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="func_sig" type="sigaction_func"/>
+            <arg name="restart" type="boolean"/>
+            <arg name="additional">
+                <value>-</value>
+                <value reqs="SO_RCVTIMEO">timeout</value>
+            </arg>
+            <arg name="signal_before_fd" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="multithread" type="boolean">
+                <value reqs="THREADS">TRUE</value>
+            </arg>
+            <arg name="test_pipe">
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="read_interrupted_signal">
+                <req id="PIPE"/>
+            </script>
+            <arg name="func" type="recv_func_with_sys">
+                <value reqs="READ_WRITE">read</value>
+                <value reqs="RECV_IOV,READV_WRITEV">readv</value>
+            </arg>
+            <arg name="func_sig" type="sigaction_func"/>
+            <arg name="restart" type="boolean"/>
+            <arg name="additional">
+                <value>-</value>
+            </arg>
+            <arg name="env" type="env.iut_only_killer"/>
+            <arg name="signal_before_fd" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="multithread" type="boolean">
+                <value reqs="THREADS">TRUE</value>
+            </arg>
+            <arg name="test_pipe">
+                <value>TRUE</value>
+            </arg>
+            <arg name="use_wildcard">
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="connect_interrupted_signal" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+                <req id="TEST_HARNESS_SANITY"/>
+                <req id="CONNECT_INTERRUPTED"/>
+            </script>
+            <arg name="func_sig" type="sigaction_func">
+                <value>sigaction</value>
+            </arg>
+            <arg name="restart" type="boolean"/>
+            <arg name="additional">
+                <value>-</value>
+                <value>second_signal</value>
+                <value reqs="SO_SNDTIMEO">timeout</value>
+            </arg>
+            <arg name="env">
+                <value reqs="ENV-GW">IUT{'iut_host'{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},'gw'{{'pco_gw':tester},addr:'gw1_addr':inet:unicast}},{'gw'{addr:'gw2_addr':inet:unicast,addr:'alien_link_addr':ether:alien,if:'gw2_if'},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+                <value reqs="ENV-TST-GW,ENV-TST-LINK">tester{'iut_host'{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},'gw'{{'pco_gw':tester},addr:'gw1_addr':inet:unicast}},{'gw'{addr:'gw2_addr':inet:unicast,addr:'alien_link_addr':ether:alien,if:'gw2_if'},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="accept_interrupted_signal">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="func_sig" type="sigaction_func"/>
+            <arg name="restart" type="boolean"/>
+            <arg name="additional">
+                <value>-</value>
+                <value>second_signal</value>
+                <value reqs="SO_RCVTIMEO">timeout</value>
+            </arg>
+            <arg name="env" list="">
+                <value>IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-TST-LINK">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-TST-LINK">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-LOOPBACK">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</value>
+            </arg>
+            <arg name="use_wildcard" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="accept_interrupted_signal">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="func_sig" type="signal_func" list="">
+                <value>sysv_signal</value>
+                <value>__sysv_signal</value>
+                <value>bsd_signal</value>
+                <value>signal</value>
+            </arg>
+            <arg name="restart" type="boolean" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="additional">
+                <value>-</value>
+                <value>second_signal</value>
+                <value reqs="SO_RCVTIMEO">timeout</value>
+            </arg>
+            <arg name="env" list="">
+                <value>IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-TST-LINK">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-TST-LINK">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-LOOPBACK">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</value>
+            </arg>
+            <arg name="use_wildcard" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="write_interrupted_signal">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="func" type="send_func_with_sys_no_delegated"/>
+            <arg name="func_sig" type="sigaction_func">
+                <value>sigaction</value>
+            </arg>
+            <arg name="restart" type="boolean"/>
+            <arg name="additional">
+                <value>-</value>
+                <value>second_signal</value>
+                <value reqs="SO_SNDTIMEO">timeout</value>
+            </arg>
+            <arg name="env" type="env.peer2peer_iut_killer"/>
+            <arg name="small_buffers">
+                <value>FALSE</value>
+                <value reqs="SO_SNDBUF,SO_RCVBUF">TRUE</value>
+            </arg>
+            <arg name="multithread" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="test_pipe">
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="write_interrupted_signal">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="func" type="send_func_with_sys">
+                <value reqs="SEND_FLAG,SEND_RECV">send</value>
+            </arg>
+            <arg name="func_sig" type="sigaction_func">
+                <value>sigaction</value>
+            </arg>
+            <arg name="restart" type="boolean"/>
+            <arg name="additional">
+                <value>-</value>
+                <value reqs="SO_SNDTIMEO">timeout</value>
+            </arg>
+            <arg name="env" type="env.peer2peer_iut_killer"/>
+            <arg name="small_buffers">
+                <value>FALSE</value>
+                <value reqs="SO_SNDBUF,SO_RCVBUF">TRUE</value>
+            </arg>
+            <arg name="multithread" type="boolean">
+                <value reqs="THREADS">TRUE</value>
+            </arg>
+            <arg name="test_pipe">
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="write_interrupted_signal">
+                <req id="PIPE"/>
+            </script>
+            <arg name="func" type="send_func_with_sys">
+                <value reqs="READ_WRITE">write</value>
+                <value reqs="SEND_IOV,READV_WRITEV">writev</value>
+            </arg>
+            <arg name="func_sig" type="sigaction_func">
+                <value>sigaction</value>
+            </arg>
+            <arg name="restart" type="boolean"/>
+            <arg name="additional" list="">
+                <value>-</value>
+                <value>second_signal</value>
+                <value>-</value>
+            </arg>
+            <arg name="env" type="env.iut_only_killer"/>
+            <arg name="small_buffers">
+                <value>FALSE</value>
+            </arg>
+            <arg name="multithread" type="boolean" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value reqs="THREADS">TRUE</value>
+            </arg>
+            <arg name="test_pipe">
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="sendfile_interrupted_signal">
+                <req id="SOCK_STREAM"/>
+                <req id="SENDFILE"/>
+            </script>
+            <arg name="func_sig" type="sigaction_func">
+                <value>sigaction</value>
+            </arg>
+            <arg name="restart" type="boolean"/>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+            </arg>
+            <arg name="additional">
+                <value>-</value>
+                <value>second_signal</value>
+                <value reqs="SO_SNDTIMEO">timeout</value>
+            </arg>
+            <arg name="file_length" list="">
+                <value>512</value>
+                <value>524288</value>
+            </arg>
+            <arg name="small_buffers" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="iomux_pending_signal"/>
+            <arg name="sock_type" type="sock_stream_dgram" list="wild">
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="env" list="wild">
+                <value>IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value>IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-TST-LINK">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-TST-LINK">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-TST-LINK">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-LOOPBACK">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-LOOPBACK">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</value>
+            </arg>
+            <arg name="use_wildcard" list="wild">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="iomux" type="iomux" list="et">
+                <value reqs="SELECT,PSELECT">pselect</value>
+                <value reqs="POLL,PPOLL">ppoll</value>
+                <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+                <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+            </arg>
+            <arg name="use_epollet" list="et">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="func_sig" type="sigaction_func">
+                <!-- Perhaps it makes no sense to try different
+                     functions in this test -->
+                <value>sigaction</value>
+            </arg>
+            <arg name="sig_to_send">
+                <value>SIGUSR1</value>
+            </arg>
+            <arg name="timeout">
+                <value>1</value>
+                <value>0</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="iomux_interrupted_signal"/>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="iomux" type="iomux_with_oo_epoll"/>
+            <arg name="func_sig" type="sigaction_func">
+                <value>sigaction</value>
+            </arg>
+            <arg name="restart" type="boolean"/>
+            <arg name="env" list="">
+                <value>IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-TST-LINK">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-TST-LINK">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-LOOPBACK">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</value>
+            </arg>
+            <arg name="use_wildcard" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="test_pipe">
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="iomux_interrupted_signal">
+                <req id="SIGNALS"/>
+            </script>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="env" list="">
+                <value>IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value>IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value>IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-TST-LINK">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-TST-LINK">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-TST-LINK">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-TST-LINK">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-LOOPBACK">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-LOOPBACK">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-LOOPBACK">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</value>
+            </arg>
+            <arg name="sock_type_add" list="">
+              <value>active</value>
+              <value>passive</value>
+              <value>listen</value>
+              <value>active</value>
+              <value>passive</value>
+              <value>listen</value>
+              <value>listen</value>
+              <value>active</value>
+              <value>passive</value>
+              <value>listen</value>
+            </arg>
+            <arg name="use_wildcard" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="iomux" type="iomux_with_oo_epoll"/>
+            <arg name="func_sig" type="sigaction_func">
+                <value>sigaction</value>
+            </arg>
+            <arg name="restart" type="boolean"/>
+            <arg name="test_pipe">
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="iomux_interrupted_signal"/>
+            <arg name="iomux" type="iomux_with_oo_epoll"/>
+            <arg name="func_sig" type="sigaction_func">
+                <value>sigaction</value>
+            </arg>
+            <arg name="restart" type="boolean"/>
+            <arg name="env" type="env.iut_only_killer"/>
+            <arg name="test_pipe">
+                <value reqs="PIPE">TRUE</value>
+            </arg>
+            <arg name="use_wildcard">
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+          <session track_conf="nohistory">
+            <arg name="sig_func">
+                <value>sigaction</value>
+            </arg>
+            <arg name="restart" type="boolean"/>
+            <arg name="close_aux">
+              <value>TRUE</value>
+            </arg>
+            <arg name="close_func">
+              <value>close</value>
+            </arg>
+
+          <run>
+            <script name="signal_handler_close" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value reqs="ENV-2PEERS">{'iut_host'{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,if:'iut_if'},'gw'{{'pco_gw':tester},addr:'gw_iut_addr':inet:unicast}},{'gw'{addr:'gw_tst_addr':inet:unicast,addr:'alien_link_addr':ether:alien},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+            </arg>
+            <arg name="func">
+                <value>connect</value>
+            </arg>
+            <arg name="test_pipe">
+                <value>FALSE</value>
+            </arg>
+          </run>
+          <run>
+            <script name="signal_handler_close" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+            </arg>
+            <arg name="func">
+                <value>send</value>
+                <value reqs="SENDFILE">sendfile</value>
+                <value>recv</value>
+                <value>accept</value>
+                <value reqs="SELECT">select</value>
+                <value reqs="SELECT,PSELECT">pselect</value>
+                <value reqs="POLL">poll</value>
+                <value reqs="POLL,PPOLL">ppoll</value>
+                <value reqs="EPOLL">epoll</value>
+                <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+                <value reqs="SO_LINGER">close</value>
+                <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND">onload_zc_send</value>
+                <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND,ONLOAD_ZC_SEND_USER_BUF">onload_zc_send_user_buf</value>
+            </arg>
+            <arg name="test_pipe">
+                <value>FALSE</value>
+            </arg>
+          </run>
+
+          <run>
+            <script name="signal_handler_close" track_conf="silent">
+                <req id="PIPE"/>
+                <req id="NO_REUSE_STACK"/>
+            </script>
+            <arg name="env" type="env.iut_only_killer"/>
+            <arg name="func">
+                <value reqs="READ_WRITE">read</value>
+                <value reqs="RECV_IOV,READV_WRITEV">readv</value>
+                <value reqs="READ_WRITE">write</value>
+                <value reqs="SEND_IOV,READV_WRITEV">writev</value>
+                <value reqs="SELECT">select</value>
+                <value reqs="SELECT,PSELECT">pselect</value>
+                <value reqs="POLL">poll</value>
+                <value reqs="POLL,PPOLL">ppoll</value>
+                <value reqs="EPOLL">epoll</value>
+                <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+            </arg>
+            <arg name="test_pipe">
+                <value>TRUE</value>
+            </arg>
+          </run>
+          </session>
+        </run>
+
+        <run>
+          <session track_conf="nohistory">
+            <arg name="sig_func">
+              <value>sigaction</value>
+            </arg>
+            <arg name="restart" type="boolean"/>
+
+            <run>
+              <script name="signal_handler_close" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+                <req id="FDS_NON_MT_SAFE"/>
+                <!-- ON-12279 -->
+                <req id="SF_BLACKLIST"/>
+              </script>
+              <arg name="env">
+                <value reqs="ENV-2PEERS">{'iut_host'{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,if:'iut_if'},'gw'{{'pco_gw':tester},addr:'gw_iut_addr':inet:unicast}},{'gw'{addr:'gw_tst_addr':inet:unicast,addr:'alien_link_addr':ether:alien},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+              </arg>
+              <arg name="func">
+                <value>connect</value>
+              </arg>
+              <arg name="close_aux">
+                <value>FALSE</value>
+              </arg>
+              <arg name="close_func">
+                <value>close</value>
+                <value>dup2</value>
+                <value>shutdown</value>
+              </arg>
+              <arg name="test_pipe">
+                  <value>FALSE</value>
+              </arg>
+            </run>
+            <run>
+              <script name="signal_handler_close" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+                <req id="FDS_NON_MT_SAFE"/>
+                <!-- ON-12279 -->
+                <req id="SF_BLACKLIST"/>
+              </script>
+              <arg name="env">
+                <value>{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+              </arg>
+              <arg name="func">
+                <value>send</value>
+                <value reqs="SENDFILE">sendfile</value>
+                <value>recv</value>
+                <value>accept</value>
+                <value reqs="SELECT">select</value>
+                <value reqs="SELECT,PSELECT">pselect</value>
+                <value reqs="POLL">poll</value>
+                <value reqs="POLL,PPOLL">ppoll</value>
+                <value reqs="EPOLL">epoll</value>
+                <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+                <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND">onload_zc_send</value>
+                <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND,ONLOAD_ZC_SEND_USER_BUF">onload_zc_send_user_buf</value>
+              </arg>
+              <arg name="close_aux">
+                <value>FALSE</value>
+              </arg>
+              <arg name="close_func">
+                <value>close</value>
+                <value>dup2</value>
+                <value>shutdown</value>
+              </arg>
+              <arg name="test_pipe">
+                  <value>FALSE</value>
+              </arg>
+            </run>
+            <run>
+              <script name="signal_handler_close" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+                <req id="FDS_NON_MT_SAFE"/>
+                <!-- ON-12279 -->
+                <req id="SF_BLACKLIST"/>
+              </script>
+              <arg name="env">
+                <value>{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+              </arg>
+              <arg name="func">
+                <value reqs="SO_LINGER">close</value>
+              </arg>
+              <arg name="close_aux">
+                <value>FALSE</value>
+              </arg>
+              <arg name="close_func">
+                <value>close</value>
+                <value>dup2</value>
+              </arg>
+              <arg name="test_pipe">
+                  <value>FALSE</value>
+              </arg>
+            </run>
+
+            <run>
+              <script name="signal_handler_close" track_conf="silent">
+                <req id="PIPE"/>
+                <req id="FDS_NON_MT_SAFE"/>
+                <!-- ON-12279 -->
+                <req id="SF_BLACKLIST"/>
+              </script>
+              <arg name="env" type="env.iut_only_killer"/>
+              <arg name="func">
+                  <value reqs="READ_WRITE">read</value>
+                  <value reqs="RECV_IOV,READV_WRITEV">readv</value>
+                  <value reqs="READ_WRITE">write</value>
+                  <value reqs="SEND_IOV,READV_WRITEV">writev</value>
+                  <value reqs="SELECT">select</value>
+                  <value reqs="SELECT,PSELECT">pselect</value>
+                  <value reqs="POLL">poll</value>
+                  <value reqs="POLL,PPOLL">ppoll</value>
+                  <value reqs="EPOLL">epoll</value>
+                  <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+              </arg>
+              <arg name="sig_func">
+                <value>sigaction</value>
+              </arg>
+              <arg name="restart" type="boolean"/>
+              <arg name="close_aux">
+                <value>FALSE</value>
+              </arg>
+              <arg name="close_func">
+                <value>close</value>
+                <value>dup2</value>
+              </arg>
+              <arg name="test_pipe">
+                  <value>TRUE</value>
+              </arg>
+            </run>
+          </session>
+        </run>
+
+        <!-- The test can fail because getting of out of packet condition
+             is unstable. -->
+        <run>
+            <script name="out_of_packet" track_conf="silent">
+                <req id="SOCK_DGRAM"/>
+                <req id="ONLOAD_ONLY"/>
+                <req id="FORK"/>
+                <req id="NO_PHYS_MODE"/>
+                <req id="NO_REUSE_STACK"/>
+                <req id="NO_SAFE"/>
+                <req id="KERNEL_64"/>
+                <req id="SO_RCVBUF"/>
+                <req id="SO_SNDTIMEO"/>
+                <!-- See OL 8114 for details. Alexandra N. Kossovsky:
+                     Falcon/Siena has pretty few buftable entries, so they
+                     come to the end. On EF10 we use 1M buftable entries
+                     (even if huge pages are not used!). I am afraid host
+                     memory will come to the end first -->
+                <req id="OUT_OF_BUFFERS"/>
+            </script>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+            </arg>
+            <arg name="install_sighandler" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="restart" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+          <session>
+            <arg name="env" ref="env.peer2peer_two_iut"/>
+            <arg name="socket_after_sigaction" type="boolean"/>
+            <arg name="drop_stack" type="boolean"/>
+
+            <run>
+                <script name="sa_resethand"/>
+                <arg name="sig_to_send">
+                    <value>SIGUSR1</value>
+                </arg>
+                <arg name="set_flag" type="boolean"/>
+                <arg name="func_sig">
+                    <value>sigaction</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="sa_resethand_reinstall"/>
+                <arg name="env">
+                    <value>{{{'pco_iut':IUT},{'pco_killer':tester}}}</value>
+                </arg>
+                <arg name="sig_to_send">
+                    <value>SIGUSR1</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="sa_onstack"/>
+                <arg name="sig_to_send">
+                    <value>SIGUSR1</value>
+                </arg>
+                <arg name="set_alt_stack" type="boolean"/>
+                <arg name="set_flag" type="boolean"/>
+            </run>
+
+            <run>
+                <script name="sa_nodefer"/>
+                <arg name="sig_to_send">
+                    <value>SIGUSR1</value>
+                </arg>
+                <arg name="set_flag" type="boolean"/>
+                <arg name="func_sig">
+                    <value>sigaction</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="sa_nocldstop"/>
+                <arg name="sig_to_send">
+                    <value>SIGSTOP</value>
+                    <value>SIGTSTP</value>
+                    <value>SIGTTIN</value>
+                    <value>SIGTTOU</value>
+                </arg>
+                <arg name="set_flag" type="boolean"/>
+            </run>
+
+            <run>
+                <script name="sa_nocldwait"/>
+                <arg name="sig_to_send">
+                    <value>SIGSTOP</value>
+                    <value>SIGTSTP</value>
+                    <value>SIGTTIN</value>
+                    <value>SIGTTOU</value>
+                </arg>
+                <arg name="set_flag" type="boolean"/>
+            </run>
+
+          </session>
+        </run>
+
+        <run>
+            <script name="signal_stacks_closed">
+            </script>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast}}</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="write_interrupted_signal_udp" track_conf="nohistory">
+                <req id="SOCK_DGRAM"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" ref="env.two_nets.two_iut"/>
+            <arg name="change_route" type="boolean">
+              <value>FALSE</value>
+            </arg>
+            <arg name="func_sig" type="sigaction_func">
+                <value>sigaction</value>
+            </arg>
+            <arg name="func" type="send_func_with_sys">
+                <value>write</value>
+                <value>sys_write</value>
+                <value>writev</value>
+                <value>sys_writev</value>
+                <value>send</value>
+                <value>sendto</value>
+                <value>sendmsg</value>
+                <value>sendmmsg</value>
+            </arg>
+            <arg name="length_min" list="">
+              <value>1</value>
+              <value>1</value>
+              <value>1500</value>
+              <value>1500</value>
+              <value>20000</value>
+            </arg>
+            <arg name="length_max" list="">
+              <value>1000</value>
+              <value>1000</value>
+              <value>8900</value>
+              <value>8900</value>
+              <value>40000</value>
+            </arg>
+            <arg name="mtu" list="">
+              <value>1500</value>
+              <value reqs="JUMBO_FRAME">9000</value>
+              <value>1500</value>
+              <value reqs="JUMBO_FRAME">9000</value>
+              <value reqs="JUMBO_FRAME">9000</value>
+            </arg>
+            <arg name="restart" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="write_interrupted_signal_udp" track_conf="nohistory">
+                <req id="SOCK_DGRAM"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" ref="env.two_nets.two_iut"/>
+            <arg name="change_route" type="boolean">
+              <value reqs="OOL1509">TRUE</value>
+            </arg>
+            <arg name="func_sig" type="sigaction_func">
+                <value>sigaction</value>
+            </arg>
+            <arg name="func" type="send_func_with_sys">
+                <value>write</value>
+                <value>sys_write</value>
+                <value>writev</value>
+                <value>sys_writev</value>
+                <value>send</value>
+                <value>sendto</value>
+                <value>sendmsg</value>
+                <value>sendmmsg</value>
+            </arg>
+            <arg name="length_min" list="">
+              <value>1</value>
+              <value>1500</value>
+            </arg>
+            <arg name="length_max" list="">
+              <value>1000</value>
+              <value>8900</value>
+            </arg>
+            <arg name="mtu">
+              <value>0</value>
+            </arg>
+            <arg name="restart" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="splice_interrupted_signal">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env" type="env.peer2peer_iut_killer"/>
+            <arg name="func_sig" type="sigaction_func">
+                <value>sigaction</value>
+            </arg>
+            <arg name="restart" type="boolean"/>
+            <arg name="set_move" type="boolean"/>
+            <arg name="additional">
+                <value>-</value>
+                <value>second_signal</value>
+            </arg>
+            <arg name="to_socket" type="boolean"/>
+            <arg name="block_on_read" type="boolean"/>
+        </run>
+    </session>
+
+</package>

@@ -1,0 +1,168 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup sockopts Socket Options
+@ingroup sockapi
+@{
+
+This packet is intended to test socket options of type @c SOL_SOCKET,
+@c SOL_IP, @c SOL_IPV6, and @c SOL_TCP. The tests include:
+    - possibility to get an option value;
+    - possibility to set an option value;
+    - inheritance of options from listening socket by accepted;
+    - inheritance on duplicated sockets and after @b execve();
+    - an option semantic testing.
+
+The following options are tested:
+    - @c SO_ACCEPTCONN;
+    - @c SO_BINDTODEVICE;
+    - @c SO_BROADCAST;
+    - @c SO_DEBUG;
+    - @c SO_DONTROUTE;
+    - @c SO_ERROR;
+    - @c SO_KEEPALIVE;
+    - @c SO_LINGER;
+    - @c SO_OOBINLINE;
+    - @c SO_PRIORITY;
+    - @c SO_RCVBUF;
+    - @c SO_RCVLOWAT;
+    - @c SO_RCVTIMEO;
+    - @c SO_REUSEADDR;
+    - @c SO_SNDBUF;
+    - @c SO_SNDLOWAT;
+    - @c SO_SNDTIMEO;
+    - @c SO_TYPE;
+    - @c IP_HDRINCL;
+    - @c IP_OPTIONS;
+    - @c IP_PKTINFO;
+    - @c IP_RECVERR;
+    - @c IP_RECVOPTS;
+    - @c IP_RECVTOS;
+    - @c IP_RECVTTL;
+    - @c IP_RETOPTS;
+    - @c IP_TOS;
+    - @c IP_TTL;
+    - @c IP_MTU;
+    - @c IP_MTU_DISCOVER;
+    - @c TCP_MAXSEG;
+    - @c TCP_NODELAY;
+    - @c TCP_CORK;
+    - @c TCP_KEEPIDLE;
+    - @c TCP_KEEPINTVL;
+    - @c TCP_KEEPCNT;
+    - @c TCP_INFO;
+    - @c TCP_DEFER_ACCEPT.
+
+The following Linux-specific options are tested:
+    - @c UDP_CORK.
+
+All multicast-related socket options are tested in a separate package.
+
+@author Oleg Kravtsov <Oleg.Kravtsov@oktetlabs.ru>
+
+
+@par Items:
+- Generic
+      -# @ref sockopts-get_supported
+      -# @ref sockopts-set_supported
+      -# @ref sockopts-inherited_option
+      -# @ref sockopts-inherit_derived
+      -# @ref sockopts-zero_optlen
+
+- @c SOL_SOCKET
+      -# @ref sockopts-acceptconn
+      -# @ref sockopts-bindtodevice_dgram
+      -# @ref sockopts-bindtodevice_stream
+      -# @ref sockopts-bindtodevice_dstunreach
+      -# @ref sockopts-bindtodevice_send
+      -# @ref sockopts-bindtodevice_connect
+      -# @ref sockopts-bindtodevice_vs_bind
+      -# @ref sockopts-bindtodevice_mtu
+      -# @ref sockopts-bindtodevice_no_route
+      -# @ref sockopts-bindtodevice_vlan
+      -# @ref sockopts-broadcast
+      -# @ref sockopts-dontroute
+      -# @ref sockopts-error
+      -# @ref sockopts-last_pending_error
+      -# @ref sockopts-error_send_recv_icmp
+      -# @ref sockopts-error_recv_icmp_unblock
+      -# @ref sockopts-error_errqueue
+      -# @ref sockopts-error_icmp_rcv
+      -# @ref sockopts-error_errqueue_flush
+      -# @ref sockopts-error_errqueue_shutdown
+      -# @ref sockopts-keepalive
+      -# @ref sockopts-keepalive_enforce
+      -# @ref sockopts-keepalive_failed
+      -# @ref sockopts-linger_listening_close
+      -# @ref sockopts-oobinline_recv_oob
+      -# @ref sockopts-rcvbuf
+      -# @ref sockopts-rcvbuf_stream
+      -# @ref sockopts-fill_reduce_rcvbuf
+      -# @ref sockopts-rcvlowat_stream
+      -# @ref sockopts-rcvlowat_dgram
+      -# @ref sockopts-rcvlowat_recv
+      -# @ref sockopts-rcvtimeo
+      -# @ref sockopts-reuseaddr_tcp_1
+      -# @ref sockopts-reuseaddr_tcp_2
+      -# @ref sockopts-reuseaddr_tcp_3
+      -# @ref sockopts-reuseaddr_tcp_4
+      -# @ref sockopts-reuseaddr_tcp_5
+      -# @ref sockopts-reuseaddr_2msl
+      -# @ref sockopts-sndbuf
+      -# @ref sockopts-sndbuf_stream
+      -# @ref sockopts-sndlowat
+      -# @ref sockopts-sndtimeo
+      -# @ref sockopts-sndtimeo_connect
+      -# @ref sockopts-rcv_snd_zero_timeo
+      -# @ref sockopts-type
+      -# @ref sockopts-broadcast_no_fragment
+      -# @ref sockopts-default_bufs
+      -# @ref sockopts-max_bufs
+      -# @ref sockopts-error_rst
+      -# @ref sockopts-errind_conn_not_conn
+      -# @ref sockopts-errind_conn_disable
+      -# @ref sockopts-errind_not_conn
+      -# @ref sockopts-setbuf_force
+
+- @c SOL_IP
+      -# @ref sockopts-udp_ttl_tos
+      -# @ref sockopts-ip_recvopts
+      -# @ref sockopts-ip_pktinfo
+      -# @ref sockopts-ipv6_ipv4_pktinfo
+      -# @ref sockopts-pktinfo_ip4_ip6_alternate
+      -# @ref sockopts-ip_recverr
+      -# @ref sockopts-ip_mtu_discover_tcp
+      -# @ref sockopts-ip_mtu_discover_udp
+      -# @ref sockopts-ip_mtu_inapprop_state
+      -# @ref sockopts-so_priority_and_tos
+      -# @ref sockopts-ip_tos_tcp
+      -# @ref sockopts-ip_tos
+
+- @c IPPROTO_IPV6:
+      -# @ref sockopts-ipv6_only_bind
+      -# @ref sockopts-ipv6_tclass
+      -# @ref sockopts-ipv6_tclass_tos
+      -# @ref sockopts-auto_flowlabels
+      -# @ref sockopts-ipv6_tos_tclass_cmsg
+
+- @c SOL_TCP
+      -# @ref sockopts-tcp_nodelay
+      -# @ref sockopts-tcp_cork
+      -# @ref sockopts-tcp_cork_nodelay
+      -# @ref sockopts-tcp_maxseg
+      -# @ref sockopts-tcp_maxseg_with_cork
+      -# @ref sockopts-tcp_maxseg_and_pmtu
+      -# @ref sockopts-tcp_defer_accept_simple
+      -# @ref sockopts-tcp_defer_accept_rst
+
+- Linux specific options
+      -# @ref sockopts-udp_cork
+      -# @ref sockopts-tcpinfo_optlen
+      -# @ref sockopts-tcp_info_last_data_sent_ack_recv
+      -# @ref sockopts-tcp_info_snd_adv_mss
+      -# @ref sockopts-tcp_info_retransmits
+      -# @ref sockopts-tcp_info_rtt
+
+@}
+*/

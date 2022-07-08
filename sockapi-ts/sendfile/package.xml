@@ -1,0 +1,650 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+    
+    <description>Socket API Test Suite</description>
+    
+    <author mailto="Igor.Vasiliev@oktetlabs.ru"/>
+
+    <req id="SENDFILE" sticky="true"/>
+
+    <session>
+        <var name="file_length_def">
+            <value>12345678</value>
+        </var>
+        <var name="timeout_def">
+            <value>20</value>
+        </var>
+
+        <run>
+            <script name="illegal_params"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="file_length">
+                <value>3476</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="illegal_socket_states">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="state">
+                <value>clear</value>
+                <value>bound</value>
+                <value>listening</value>
+                <value>shutdown</value>
+                <value>closed</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="io_descriptors"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="file_length">
+                <value>4376</value>
+            </arg>
+            <arg name="dev_name">
+                <value>/dev/null</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="offset_params"/>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+            </arg>
+            <arg name="file_length">
+                <value>5555</value>
+            </arg>
+            <arg name="offset" list="">
+                <value>-1</value>
+                <value>0</value>
+                <value>0</value>
+                <value>4000</value>
+                <value>4000</value>
+                <value>5555</value>
+                <value>5555</value>
+                <value>5556</value>
+            </arg>
+            <arg name="to_send" list="">
+                <value>5555</value>
+                <value>5555</value>
+                <value>1559</value>
+                <value>1555</value>
+                <value>1</value>
+                <value>0</value>
+                <value>1</value>
+                <value>0</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="file2file"/>
+            <arg name="file_length" ref="file_length_def"/>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},{'pco_tst':tester}}}</value>
+            </arg>
+            <arg name="use_sendfile" type="boolean">
+                <value>TRUE</value>
+            </arg>
+        </run>
+        <run>
+            <script name="file2file"/>
+            <arg name="file_length">
+                <value>4096</value>
+            </arg>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},{'pco_tst':tester}}}</value>
+            </arg>
+            <arg name="use_sendfile" type="boolean">
+                <value reqs="SPLICE">FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="files2file_socket">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="time2run" ref="timeout_def"/>
+            <arg name="length1">
+                <value>2819200</value>
+            </arg>
+            <arg name="length2">
+                <value>1345600</value>
+            </arg>
+            <arg name="env">
+                <value>IUT{{{'pco_iut':IUT,'iut_aux':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-TST-LINK">tester{{{'pco_iut':IUT,'iut_aux':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT,'iut_aux':IUT},{'pco_tst':IUT},addr:'iut_addr':inet:unicast}},'tst_addr'='iut_addr'</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="f2f_serial"/>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="file_length">
+                <value>1</value>
+            </arg>
+            <arg name="dev_name" list="">
+                <value>/dev/null</value>
+                <value reqs="ONLOAD_ONLY">/dev/onload</value>
+                <value reqs="ONLOAD_ONLY">/dev/efge0</value>
+            </arg>
+            <arg name="exp_errno" list="">
+                <value>0</value>
+                <value>EINVAL</value>
+                <value>EINVAL</value>
+            </arg>
+            <arg name="use_sendfile" type="boolean">
+                <value>TRUE</value>
+                <value reqs="SPLICE">FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="file2socket"/>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="performance" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="file_length">
+                <value ref="file_length_def"/>
+            </arg>
+            <arg name="timeout" ref="timeout_def"/>
+            <arg name="offset">
+                <value reqs="V5_SANITY">0</value>
+                <value>1</value>
+                <value>2</value>
+                <value>3</value>
+                <value>4095</value>
+            </arg>
+            <arg name="send_length">
+                <value>-1</value>
+            </arg>
+            <arg name="use_sendfile">
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="file2socket"/>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="performance" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="file_length">
+                <value>4096</value>
+            </arg>
+            <arg name="timeout" ref="timeout_def"/>
+            <arg name="offset">
+                <value>0</value>
+                <value>1</value>
+                <value>2</value>
+                <value>3</value>
+                <value>4095</value>
+            </arg>
+            <arg name="send_length">
+                <value>-1</value>
+            </arg>
+            <arg name="use_sendfile">
+                <value reqs="SPLICE">FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="file2socket"/>
+            <arg name="env">
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="performance" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="file_length" list="">
+                <value ref="file_length_def"/>
+                <value>4096</value>
+            </arg>
+            <arg name="timeout" ref="timeout_def"/>
+            <arg name="offset">
+                <value>0</value>
+                <value>1</value>
+                <value>2</value>
+                <value>3</value>
+                <value>4095</value>
+            </arg>
+            <arg name="send_length">
+                <value>-1</value>
+            </arg>
+            <arg name="use_sendfile" list="">
+                <value>TRUE</value>
+                <value reqs="SPLICE">FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <session>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                  <value ref="env.peer2peer_tst"/>
+                  <value ref="env.peer2peer_lo"/>
+                  <value ref="env.peer2peer_ipv6"/>
+                  <value ref="env.peer2peer_tst_ipv6"/>
+                  <value ref="env.peer2peer_lo_ipv6"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram">
+                    <value>SOCK_STREAM</value>
+                </arg>
+                <arg name="performance" type="boolean">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="use_sendfile" type="boolean">
+                    <value>TRUE</value>
+                </arg>
+
+                <run>
+                    <script name="file2socket"/>
+                    <arg name="file_length" ref="file_length_def"/>
+                    <arg name="offset">
+                        <value>4095</value>
+                    </arg>
+                    <arg name="send_length">
+                        <value>2</value>
+                    </arg>
+                    <arg name="timeout">
+                        <value>3</value>
+                    </arg>
+                </run>
+                <run>
+                    <script name="file2socket"/>
+                    <arg name="file_length">
+                        <value>4097</value>
+                        <value>4096</value>
+                        <value>4095</value>
+                    </arg>
+                    <arg name="offset">
+                        <value>4095</value>
+                    </arg>
+                    <arg name="send_length">
+                        <value>2</value>
+                    </arg>
+                    <arg name="timeout">
+                        <value>3</value>
+                    </arg>
+                </run>
+                <run>
+                    <script name="file2socket"/>
+                    <arg name="performance" type="boolean">
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="file_length">
+                        <value>1048576</value>
+                        <value>4194304</value>
+                        <value>16777216</value>
+                        <value>67108864</value>
+                        <value>268435456</value>
+                    </arg>
+                    <arg name="offset">
+                        <value>0</value>
+                    </arg>
+                    <arg name="send_length">
+                        <value>-1</value>
+                    </arg>
+                    <arg name="timeout">
+                        <value>60</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="file2socket"/>
+                    <arg name="file_length">
+                        <value>16385</value>
+                    </arg>
+                    <arg name="offset" list="">
+                        <value>0</value>
+                        <value>0</value>
+                        <value>8193</value>
+                        <value>8193</value>
+                    </arg>
+                    <arg name="send_length" list="">
+                        <value>16386</value>
+                        <value>32768</value>
+                        <value>8193</value>
+                        <value>32768</value>
+                    </arg>
+                    <arg name="timeout">
+                        <value>3</value>
+                    </arg>
+                </run>
+            </session>
+            <arg name="file_length_def"/>
+            <arg name="timeout_def"/>
+        </run>
+
+        <run>
+            <script name="file2socket">
+                <req id="SENDFILE_DGRAM"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="file_length">
+                <value>1000</value>
+            </arg>
+            <arg name="offset">
+                <value>0</value>
+            </arg>
+            <arg name="send_length">
+                <value>-1</value>
+            </arg>
+            <arg name="timeout">
+                <value>5</value>
+            </arg>
+            <arg name="performance" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="use_sendfile" type="boolean">
+                <value>TRUE</value>
+                <value reqs="SPLICE">FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="largefile2socket"/>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="sparse_offset" list="">
+                <value>2147483648</value>
+                <value>4294967296</value>
+            </arg>
+            <arg name="payload_length">
+                <value>16385</value>
+            </arg>
+            <arg name="send_offset">
+                <value>0</value>
+                <value>-1</value>
+                <value>-4097</value>
+                <value>4096</value>
+            </arg>
+            <arg name="send_length">
+                <value>-1</value>
+            </arg>
+            <arg name="timeout">
+                <value>5</value>
+            </arg>
+            <arg name="performance" type="boolean">
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="largefile2socket"/>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="sparse_offset" list="">
+                <value>6442450944</value>
+            </arg>
+            <arg name="payload_length">
+                <value>1</value>
+            </arg>
+            <arg name="send_offset">
+                <value>-2147489792</value>
+                <value>-4294973440</value>
+                <value>-16384</value>
+            </arg>
+            <arg name="send_length">
+                <value>16384</value>
+            </arg>
+            <arg name="timeout">
+                <value>5</value>
+            </arg>
+            <arg name="performance" type="boolean">
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="largefile2socket"/>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="sparse_offset" list="">
+                <value>5000000000</value>
+            </arg>
+            <arg name="payload_length">
+                <value>16385</value>
+            </arg>
+            <arg name="send_offset">
+                <value>-4097</value>
+            </arg>
+            <arg name="send_length">
+                <value>20000</value>
+                <value>32768</value>
+            </arg>
+            <arg name="timeout">
+                <value>5</value>
+            </arg>
+            <arg name="performance" type="boolean">
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="largefile2socket"/>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="sparse_offset" list="">
+                <value>5000000000</value>
+            </arg>
+            <arg name="payload_length">
+                <value>1</value>
+            </arg>
+            <arg name="send_offset">
+                <value>-500000000</value>
+            </arg>
+            <arg name="send_length">
+                <value>500000001</value>
+            </arg>
+            <arg name="timeout">
+                <value>60</value>
+            </arg>
+            <arg name="performance" type="boolean">
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="f2s_concurrent">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="time2run" ref="timeout_def"/>
+            <arg name="length1" list="len_list">
+                <value ref="file_length_def"/>
+                <value>4096</value>
+            </arg>
+            <arg name="length2" list="len_list">
+                <value ref="file_length_def"/>
+                <value>4096</value>
+            </arg>
+            <arg name="use_sendfile" list="len_list">
+                <value>TRUE</value>
+                <value reqs="SPLICE">FALSE</value>
+            </arg>
+            <arg name="use_fork" type="boolean" list="">
+                <value>FALSE</value>
+                <value reqs="FORK">TRUE</value>
+            </arg>
+            <arg name="env" list="">
+                <value>{{{'pco_iut1':IUT,'pco_iut2':IUT},addr:'iut1_addr':inet:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},addr:'tst1_addr':inet:unicast,addr:'tst2_addr':inet:unicast}}</value>
+                <value>{{{'pco_iut1':IUT},addr:'iut1_addr':inet:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},addr:'tst1_addr':inet:unicast,addr:'tst2_addr':inet:unicast}}</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="f2s_context">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="time2run" ref="timeout_def"/>
+            <arg name="file_length" list="len_list">
+                <value ref="file_length_def"/>
+                <value>4096</value>
+            </arg>
+            <arg name="use_sendfile" list="len_list">
+                <value>TRUE</value>
+                <value reqs="SPLICE">FALSE</value>
+            </arg>
+            <arg name="use_fork" type="boolean" list="">
+                <value>FALSE</value>
+                <value reqs="FORK">TRUE</value>
+            </arg>
+            <arg name="env" list="">
+                <value>{{{'pco_iut':IUT,'iut_aux':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="f2s_nonblocking">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+            </arg>
+            <arg name="time2run">
+                <value>15</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="f2s_sndtimeo">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+            </arg>
+            <arg name="sndtimeo">
+                <value>1</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="f2s_flooder">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="time2run" ref="timeout_def"/>
+            <arg name="file_length" ref="file_length_def"/>
+            <arg name="use_fork" type="boolean" list="">
+                <value>FALSE</value>
+                <value reqs="FORK">TRUE</value>
+            </arg>
+            <arg name="env" list="">
+                <value>{{{'pco_iut':IUT,'iut_aux':IUT},addr:'iut1_addr':inet:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},addr:'tst1_addr':inet:unicast,addr:'tst2_addr':inet:unicast}}</value>
+                <value>{{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},addr:'tst1_addr':inet:unicast,addr:'tst2_addr':inet:unicast}}</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="f2s_flooder2one">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="time2run" ref="timeout_def"/>
+            <arg name="file_length" ref="file_length_def"/>
+            <arg name="use_fork" type="boolean" list="">
+                <value>FALSE</value>
+                <value reqs="FORK">TRUE</value>
+            </arg>
+            <arg name="env" list="">
+                <value>{{{'pco_iut':IUT,'iut_aux':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="f2s_sendfile2one">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="time2run" ref="timeout_def"/>
+            <arg name="file_length" ref="file_length_def"/>
+            <arg name="use_fork" type="boolean" list="">
+                <value>FALSE</value>
+                <value reqs="FORK">TRUE</value>
+            </arg>
+            <arg name="env" list="">
+                <value>{{{'pco_iut':IUT,'iut_aux':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="mtu_sendfile" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+                <req id="SENDFILE_MTU"/>
+                <req id="ENV-GW"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="retr_queue" type="boolean">
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="env">
+                <value reqs="ENV-TST-LINK">{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},'gw'{{'pco_gw':tester},addr:'gw1_addr':inet:unicast}},{'gw'{addr:'gw2_addr':inet:unicast,addr:'alien_link_addr':ether:alien,if:'gw2_if'},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+            </arg>
+        </run>
+
+    </session>
+</package>

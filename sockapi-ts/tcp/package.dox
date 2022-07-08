@@ -1,0 +1,79 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup tcp TCP protocol special cases
+@ingroup sockapi
+@{
+
+This tast package contains tests for special cases of TCP protocol, such as
+ICMP and routing table handling, small and zero window, fragmentation of 
+TCP packets, etc.
+
+@author Alexandra.Kossovsky@oktetlabs.ru
+
+@par Tests:
+
+-# @ref tcp-connect_impossible
+-# @ref tcp-connect_nb_impossible
+-# @ref tcp_small_window
+-# @ref tcp_zero_window
+-# @ref tcp-ip_fragments
+-# @ref tcp-shutdown_fin
+-# @ref tcp-shutdown_rst
+-# @ref tcp-connect_impossible_icmp
+-# @ref tcp-connect_nb_impossible_icmp
+-# @ref tcp-listen_backlog_max
+-# @ref tcp-tcp_zero_window_ext
+-# @ref tcp-tcp_window_update
+-# @ref tcp-fin_out_of_window
+-# @ref tcp-tcp_close_timeout
+-# @ref tcp-syn_ack_distrib
+-# @ref tcp-peer_large_window
+-# @ref tcp-initial_rto
+-# @ref tcp-closing_time_wait
+-# @ref tcp-listener_closing_states
+-# @ref tcp-fin_data
+-# @ref tcp-tcp_fork_distrib
+-# @ref tcp-close_no_ack
+-# @ref tcp-shutdown_data
+-# @ref tcp-close_linger
+-# @ref tcp-close_linger_lo
+-# @ref tcp-default_tcp_orphan_retries
+-# @ref tcp-tcp_last_data
+-# @ref tcp-connection_timeout_data
+-# @ref tcp-overfill_close
+-# @ref tcp-syn_recv_peer_shutdown
+-# @ref tcp-close_send_buf
+-# @ref tcp-send_block_unblock
+-# @ref tcp-tcp_state_hang
+-# @ref tcp-close_send_buf_no_ack
+-# @ref tcp-recv_unblock_fin
+-# @ref tcp-invalid_ack
+-# @ref tcp-tcp_cork_vs_nodelay
+-# @ref tcp-connect_shutdown_connect
+-# @ref tcp-many_listeners
+-# @ref tcp-last_ack_connect
+-# @ref tcp-syn_sent_fin_ack
+-# @ref tcp-syn_sent_func
+-# @ref tcp-last_ack_recv_pkt
+-# @ref tcp-ts_recv_values
+-# @ref tcp-syn_ack_ts_corrupted
+-# @ref tcp-check_recv_truncate
+-# @ref tcp-syn_bad_addr
+-# @ref tcp-tcp_handle_syn
+-# @ref tcp-tcp_handle_fin
+-# @ref tcp-same_tuple_new_isn
+-# @ref tcp-diff_tuple_diff_isn
+-# @ref tcp-overfill_shutdown_reduce_pmtu
+-# @ref tcp-out_of_socks_tcp_loopback
+-# @ref tcp-syn_resend
+-# @ref tcp-zero_window_after_shrink
+-# @ref tcp-fit_window_after_shrink
+-# @ref tcp-ack_out_of_window
+-# @ref tcp-ts_send
+-# @ref tcp-rst_send_partial
+
+@}
+
+*/

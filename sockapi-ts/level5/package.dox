@@ -1,0 +1,21 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup level5 Level5-specific test cases
+@ingroup sockapi
+@{
+
+@par Items:
+
+-# @ref level5-bpf
+-# @ref level5-interop
+-# @ref level5-fd_caching
+-# @ref level5-out_of_resources
+-# @ref level5-ulv
+-# @ref level5-extension
+-# @ref level5-ext_stackname
+
+@}
+
+*/

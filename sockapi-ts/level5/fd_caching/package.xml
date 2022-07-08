@@ -1,0 +1,353 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+
+    <description>Onload FD caching tests</description>
+
+    <author mailto="Andrey.Dmitrov@oktetlabs.ru"/>
+
+    <req id="FD_CACHING" sticky="true"/>
+    <req id="SOCK_STREAM" sticky="true"/>
+    <req id="ONLOAD_ONLY" sticky="true"/>
+
+    <session track_conf="silent">
+        <run>
+            <script name="fd_cache_limits">
+                <req id="RPC_RESTART"/>
+                <req id="NO_REUSE_PCO"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="ef_socket_cache_max" list="cache">
+                <value>10</value>
+                <value>-1</value>
+                <value>10</value>
+                <value>5</value>
+            </arg>
+            <arg name="ef_per_socket_cache_max" list="cache">
+                <value>-1</value>
+                <value>10</value>
+                <value>5</value>
+                <value>10</value>
+            </arg>
+            <arg name="soft_rlimit">
+                <value>-1</value>
+            </arg>
+            <arg name="hard_rlimit">
+                <value>-1</value>
+            </arg>
+            <arg name="open_way">
+                <value reqs="TCP_ACTIVE">active</value>
+                <value>passive</value>
+                <value reqs="TCP_ACTIVE">both</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="fd_cache_limits">
+                <req id="RPC_RESTART"/>
+                <req id="NO_REUSE_PCO"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="ef_socket_cache_max">
+                <value>110</value>
+            </arg>
+            <arg name="ef_per_socket_cache_max">
+                <value>110</value>
+            </arg>
+            <arg name="hard_rlimit" list="rlimit">
+                <value>200</value>
+                <value>-1</value>
+                <value>100</value>
+            </arg>
+            <arg name="soft_rlimit" list="rlimit">
+                <value reqs="SMALL_RLIMIT_NOFILE">100</value>
+                <value reqs="SMALL_RLIMIT_NOFILE">100</value>
+                <value>-1</value>
+            </arg>
+            <arg name="open_way">
+                <value reqs="TCP_ACTIVE">active</value>
+                <value>passive</value>
+                <value reqs="TCP_ACTIVE">both</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="fd_cache_reuse" track_conf="silent">
+                <req id="KERNEL_64"/>
+                <req id="RPC_RESTART"/>
+                <req id="NO_REUSE_PCO"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_two_iut"/>
+                <value ref="env.peer2peer_two_iut_ipv6"/>
+            </arg>
+            <arg name="ef_socket_cache_max">
+                <value>512</value>
+            </arg>
+            <arg name="ef_per_socket_cache_max">
+                <value>256</value>
+            </arg>
+            <arg name="thread_process" list="">
+                <value>none</value>
+                <value>thread</value>
+                <value>process</value>
+                <value>none</value>
+            </arg>
+            <arg name="listener_num" list="cache">
+                <value>2</value>
+                <value>5</value>
+            </arg>
+            <arg name="iter_num">
+                <value>3</value>
+            </arg>
+            <arg name="disable_caching" type="boolean" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="active" type="socket_tcp_boolean" list="cache">
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <session>
+                <arg name="env">
+                    <value ref="env.peer2peer_two_iut"/>
+                    <value ref="env.peer2peer_two_iut_ipv6"/>
+                </arg>
+
+                <run>
+                    <script name="fd_cache_ipv4_ipv6" track_conf="silent"/>
+                     <arg name="env">
+                        <value ref="env.p2p_ip4_ip6"/>
+                    </arg>
+                    <arg name="sockets_num">
+                        <value>100</value>
+                    </arg>
+                    <arg name="active" type="socket_tcp_boolean" list="">
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="set_bindtodevice" type="boolean" list="">
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="first_ipv4" type="boolean"/>
+                    <arg name="second_ipv4" type="boolean"/>
+                </run>
+
+                <run>
+                    <script name="fd_cache_listener_closing"/>
+                    <arg name="shutdown_how">
+                        <value>SHUT_RD</value>
+                        <value>SHUT_WR</value>
+                        <value>SHUT_RDWR</value>
+                        <value>SHUT_NONE</value>
+                    </arg>
+                    <arg name="cache_socket" type="boolean"/>
+                </run>
+
+                <run>
+                    <script name="fd_cache_fork">
+                        <!-- All sorts of bad behaviour are possible after forking, OL does not test such cases. -->
+                        <req id="SF_BLACKLIST"/>
+                    </script>
+                    <arg name="sockets_num">
+                        <value>10</value>
+                    </arg>
+                    <arg name="position">
+                        <value>before_listen</value>
+                        <value>after_listen</value>
+                        <value>opened</value>
+                        <value>closed</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="fd_cache_wild"/>
+                    <arg name="env">
+                        <value ref="env.peer2peer.two_links"/>
+                        <value ref="env.peer2peer.two_links_ipv6"/>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="fd_cache_dup"/>
+                    <arg name="dup_way">
+                        <value>dup</value>
+                        <value>dup2</value>
+                        <value>dup3</value>
+                        <value>f_dupfd</value>
+                        <value>f_dupfd_cloexec</value>
+                        <!-- Bug 49023 -->
+                        <value reqs="SF_BLACKLIST">unix</value>
+                    </arg>
+                    <arg name="state" list="">
+                        <value>listener</value>
+                        <value>established</value>
+                        <value>established</value>
+                        <value>closed</value>
+                        <value>closed</value>
+                    </arg>
+                    <arg name="active" type="socket_tcp_boolean" list="">
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="fd_cache_linger"/>
+                    <arg name="listener" type="boolean" list="">
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="linger" type="boolean" list="">
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="overfill" type="boolean"/>
+                    <arg name="active" type="socket_tcp_boolean" list="">
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="fd_cache_exec">
+                        <!-- It's necessary to restart RPCs after this
+                             test to avoid problems with exec() -->
+                        <req id="NO_REUSE_PCO"/>
+                    </script>
+                    <arg name="cloexec" type="boolean"/>
+                    <arg name="close_after_exec" type="boolean"/>
+                </run>
+
+                <run>
+                    <script name="fd_cache_opt">
+                        <req ref="opt_name"/>
+                    </script>
+                    <arg name="opt_name">
+                      <value>SO_KEEPALIVE</value>
+                      <value>TCP_KEEPCNT</value>
+                      <value>TCP_KEEPIDLE</value>
+                      <value>TCP_KEEPINTVL</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="fd_cache_inherit_flag">
+                        <req id="TCP_ACTIVE"/>
+                    </script>
+                    <arg name="sock_flag">
+                        <value reqs="O_NONBLOCK">O_NONBLOCK</value>
+                        <value reqs="F_GETFD,F_SETFD">FD_CLOEXEC</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="fd_cache_nonblock_sync"/>
+                    <arg name="use_libc" type="boolean"/>
+                    <arg name="check_first" type="boolean"/>
+                    <arg name="nonblock_first" type="boolean">
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="nonblock_func">
+                        <value>fcntl</value>
+                        <value>ioctl</value>
+                        <value reqs="ACCEPT4,SOCK_NONBLOCK">accept4</value>
+                    </arg>
+                    <arg name="func">
+                        <value>read</value>
+                        <value>readv</value>
+                        <value>write</value>
+                        <value>writev</value>
+                    </arg>
+                </run>
+                <run>
+                    <script name="fd_cache_nonblock_sync"/>
+                    <arg name="use_libc" type="boolean"/>
+                    <arg name="check_first" type="boolean"/>
+                    <arg name="nonblock_first" type="boolean">
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="nonblock_func">
+                        <value reqs="ACCEPT4,SOCK_NONBLOCK">accept4</value>
+                    </arg>
+                    <arg name="func">
+                        <value>read</value>
+                        <value>readv</value>
+                        <value>write</value>
+                        <value>writev</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="fd_cache_reused_opt">
+                        <req id="TCP_ACTIVE"/>
+                        <req ref="opt_name"/>
+                    </script>
+                    <arg name="opt_name">
+                      <value>SO_KEEPALIVE</value>
+                      <value>TCP_KEEPCNT</value>
+                      <value>TCP_KEEPIDLE</value>
+                      <value>TCP_KEEPINTVL</value>
+                      <value>TCP_MAXSEG</value>
+                      <value>SO_LINGER_ZERO</value>
+                      <value>SO_LINGER_NON_ZERO</value>
+                      <value>SO_BINDTODEVICE</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="fd_cache_shutdown_reuse"/>
+                    <arg name="shutdown_how">
+                        <value>SHUT_RD</value>
+                        <value>SHUT_WR</value>
+                        <value>SHUT_RDWR</value>
+                    </arg>
+                    <arg name="close_tst" type="boolean"/>
+                    <arg name="close_iut" type="boolean" list="">
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="close_iut_later" type="boolean" list="">
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="cache_socket" type="boolean">
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                    </arg>
+                </run>
+
+            </session>
+        </run>
+
+    </session>
+</package>

@@ -1,0 +1,1151 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+
+    <description>Socket API Test Suite</description>
+
+    <author mailto="Andrew.Rybchenko@oktetlabs.ru"/>
+
+<!--- @page arg_types Test argument types
+@defgroup arg_types Test argument types
+@{
+Definition and description of argument types.
+-->
+
+    <!-- All the tester requirements are described in
+         `sockapi-ts/doc/dox_resources/tester_requirements.dox` -->
+
+    <!-- Don't roll back configuration changes using history after general
+         epilogue. Configurator can fail to apply changes using history
+         when it reverts a tricky configuration for example with namespaces.
+         Some necessary cleanup activity is done in the epilogue and it should
+         not be repeated by Configurator. -->
+    <session track_conf="nohistory">
+        <enum name="sock_stream_dgram">
+            <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+            <value reqs="SOCK_DGRAM">SOCK_DGRAM</value>
+        </enum>
+        <enum name="socket_type_all">
+            <value reqs="SOCK_DGRAM">udp</value>
+            <value reqs="SOCK_DGRAM">udp_notconn</value>
+            <value reqs="SOCK_STREAM,TCP_ACTIVE">tcp_active</value>
+            <value reqs="SOCK_STREAM">tcp_passive</value>
+            <value reqs="SOCK_STREAM">tcp_passive_close</value>
+        </enum>
+        <enum name="socket_type">
+            <value reqs="SOCK_DGRAM">udp</value>
+            <value reqs="SOCK_STREAM,TCP_ACTIVE">tcp_active</value>
+            <value reqs="SOCK_STREAM">tcp_passive</value>
+            <value reqs="SOCK_STREAM">tcp_passive_close</value>
+        </enum>
+        <enum name="socket_tcp">
+            <value reqs="SOCK_STREAM,TCP_ACTIVE">tcp_active</value>
+            <value reqs="SOCK_STREAM">tcp_passive</value>
+            <value reqs="SOCK_STREAM">tcp_passive_close</value>
+        </enum>
+        <enum name="socket_tcp_active_passive">
+            <value reqs="SOCK_STREAM,TCP_ACTIVE">tcp_active</value>
+            <value reqs="SOCK_STREAM">tcp_passive_close</value>
+        </enum>
+        <enum name="socket_tcp_boolean">
+            <value>FALSE</value>
+            <value reqs="TCP_ACTIVE">TRUE</value>
+        </enum>
+        <enum name="socket_udp_tcp">
+            <value reqs="SOCK_DGRAM">udp_notconn</value>
+            <value reqs="SOCK_DGRAM">udp</value>
+            <value reqs="SOCK_STREAM,TCP_ACTIVE">tcp_active</value>
+            <value reqs="SOCK_STREAM">tcp_passive_close</value>
+        </enum>
+        <enum name="socket_domain">
+            <value>PF_INET</value>
+            <value reqs="IP6,IP6_ONLOAD">PF_INET6</value>
+        </enum>
+        <enum name="iomux">
+          <value reqs="SELECT">select</value>
+          <value reqs="SELECT,PSELECT">pselect</value>
+          <value reqs="POLL">poll</value>
+          <value reqs="POLL,PPOLL">ppoll</value>
+          <value reqs="EPOLL">epoll</value>
+          <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+        </enum>
+        <enum name="iomux_with_oo_epoll">
+          <value reqs="SELECT">select</value>
+          <value reqs="SELECT,PSELECT">pselect</value>
+          <value reqs="POLL">poll</value>
+          <value reqs="POLL,PPOLL">ppoll</value>
+          <value reqs="EPOLL">epoll</value>
+          <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+          <value reqs="ONLOAD_ONLY,EPOLL,SF_WODA,NO_EF_UL_EPOLL_ZERO,NO_EF_UL_EPOLL_TWO">oo_epoll</value>
+        </enum>
+        <enum name="iomux_with_recv">
+          <value reqs="SELECT">select</value>
+          <value reqs="SELECT,PSELECT">pselect</value>
+          <value reqs="POLL">poll</value>
+          <value reqs="POLL,PPOLL">ppoll</value>
+          <value reqs="EPOLL">epoll</value>
+          <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+          <value reqs="ONLOAD_ONLY,EPOLL,SF_WODA,NO_EF_UL_EPOLL_ZERO,NO_EF_UL_EPOLL_TWO">oo_epoll</value>
+          <value>recv</value>
+        </enum>
+        <enum name="epoll_flags">
+          <value reqs="EPOLLET">et</value>
+          <value reqs="EPOLLONESHOT">oneshot</value>
+          <value>none</value>
+        </enum>
+        <enum name="epoll_wait_calls">
+          <value reqs="EPOLL">epoll</value>
+          <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+          <value reqs="ONLOAD_ONLY,EPOLL,SF_WODA,NO_EF_UL_EPOLL_ZERO,NO_EF_UL_EPOLL_TWO">oo_epoll</value>
+        </enum>
+        <enum name="epoll_wait_ext">
+          <value reqs="EPOLL">epoll</value>
+          <value reqs="ONLOAD_ONLY,EPOLL,SF_WODA,NO_EF_UL_EPOLL_ZERO,NO_EF_UL_EPOLL_TWO">oo_epoll</value>
+        </enum>
+
+        <enum name="mcast_method">
+          <value reqs="IP_ADD_MEMBERSHIP">add_drop</value>
+          <value reqs="MCAST_JOIN_GROUP">join_leave</value>
+        </enum>
+        <enum name="mcast_source_method">
+          <value reqs="IP_ADD_SOURCE_MEMBERSHIP">source_add_drop</value>
+          <value reqs="MCAST_JOIN_SOURCE_GROUP">source_join_leave</value>
+        </enum>
+        <enum name="mcast_common_method">
+          <value reqs="IP_ADD_MEMBERSHIP">add_drop</value>
+          <value reqs="MCAST_JOIN_GROUP">join_leave</value>
+          <value reqs="IP_ADD_SOURCE_MEMBERSHIP">source_add_drop</value>
+          <value reqs="MCAST_JOIN_SOURCE_GROUP">source_join_leave</value>
+        </enum>
+        <enum name="linger_bool">
+          <value reqs="SO_LINGER">TRUE</value>
+          <value>FALSE</value>
+        </enum>
+        <enum name="zf_bool">
+          <value reqs="ZF_SPECIFIC">TRUE</value>
+          <value reqs="ZF_INCOMPATIBLE">FALSE</value>
+        </enum>
+
+<!--- @section arg_types_env Environment description
+Every test has argument @b env written in YACC which describes location of IUT
+and Tester RPC servers, interfaces and addresses.
+ -->
+
+<!--- @subsection arg_types_env_iut_only env.iut_only
+Create IUT RPC server only.
+-->
+        <var name="env.iut_only" global="true">
+            <value>{{{'pco_iut':IUT}}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_iut_ucast env.iut_ucast
+IUT RPC server with issued IPv4 address.
+-->
+        <var name="env.iut_ucast" global="true">
+            <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_iut_ucast_ipv6 env.iut_ucast_ipv6
+IUT RPC server with issued IPv6 address.
+-->
+        <var name="env.iut_ucast_ipv6" global="true">
+            <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_iut_wild env.iut_wild
+IUT RPC server with issued wildcard IPv4 address.
+-->
+        <var name="env.iut_wild" global="true">
+            <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:wildcard}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_iut_wild_ipv6 env.iut_wild_ipv6
+IUT RPC server with issued wildcard IPv6 address.
+-->
+        <var name="env.iut_wild_ipv6" global="true">
+            <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr':inet6:wildcard}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_peer2peer env.peer2peer
+IUT and tester are located on two different hosts which are connected directly
+using @b SFC NICs. IPv4 addresses are issued for testing.
+-->
+        <var name="env.peer2peer" global="true">
+            <value>'net':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'wild_addr':inet:wildcard,addr:'alien_addr':inet:alien,if:'iut_if',addr:'iut_lladdr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if',addr:'tst_lladdr':ether:unicast,addr:'alien_link_addr':ether:alien,addr:'tst_alien_addr':inet:alien,addr:'tst_fake_addr':inet:fake}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_peer2peer_2addr env.peer2peer_2addr
+iut and tester are located on two different hosts which are connected directly
+using @b sfc nics. ipv4 addresses are issued for testing. Two addresses are
+allocated on both IUT and Tester sides.
+-->
+        <var name="env.peer2peer_2addr" global="true">
+        <value>'net':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast,addr:'wild_addr':inet:wildcard,addr:'alien_addr':inet:alien,if:'iut_if',addr:'iut_lladdr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst_addr1':inet:unicast,addr:'tst_addr2':inet:unicast,if:'tst_if',addr:'tst_lladdr':ether:unicast,addr:'alien_link_addr':ether:alien,addr:'tst_alien_addr':inet:alien,addr:'tst_fake_addr':inet:fake}}</value>
+        </var>
+
+        <!--- @subsection arg_types_env_peer2peer_ipv6 env.peer2peer_ipv6
+IUT and tester are located on two different hosts which are connected directly
+using @b SFC NICs. IPv6 addresses are issued for testing.
+-->
+        <var name="env.peer2peer_ipv6" global="true">
+            <!-- IPv6 is not implemented in onload -->
+            <value reqs="IP6,IP6_ONLOAD">'net':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast,addr:'wild_addr':inet6:wildcard,addr:'alien_addr':inet6:alien,if:'iut_if',addr:'iut_lladdr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet6:unicast,if:'tst_if',addr:'tst_lladdr':ether:unicast,addr:'alien_link_addr':ether:alien,addr:'tst_alien_addr':inet6:alien,addr:'tst_fake_addr':inet6:fake}}</value>
+        </var>
+
+        <!--- @subsection arg_types_env_peer2peer_2addr_ipv6 env.peer2peer_2addr_ipv6
+IUT and tester are located on two different hosts which are connected directly
+using @b SFC NICs. IPv6 addresses are issued for testing. Two addresses are
+allocated on both IUT and Tester sides.
+-->
+        <var name="env.peer2peer_2addr_ipv6" global="true">
+            <!-- IPv6 is not implemented in onload -->
+            <value reqs="IP6,IP6_ONLOAD">'net':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast,addr:'wild_addr':inet6:wildcard,addr:'alien_addr':inet6:alien,if:'iut_if',addr:'iut_lladdr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst_addr1':inet6:unicast,addr:'tst_addr2':inet6:unicast,if:'tst_if',addr:'tst_lladdr':ether:unicast,addr:'alien_link_addr':ether:alien,addr:'tst_alien_addr':inet6:alien,addr:'tst_fake_addr':inet6:fake}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_two_nets_iut_both env.two_nets.iut_both
+IUT RPC server is located on one host and two testers are located on another
+one. Both IUT interfaces are connected to testers directly using @b SFC NICs.
+IPv4 addresses are issued for testing.
+-->
+        <var name="env.two_nets.iut_both" global="true">
+            <value reqs="ENV-2PEERS-IUT">'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'alien_addr':inet:alien,addr:'alien_gw':inet:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tester_1'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net2':IUT{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tester_2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_two_nets_iut_both_ipv6 env.two_nets.iut_both_ipv6
+IUT RPC server is located on one host and two testers are located on another
+one. Both IUT interfaces are connected to testers directly using @b SFC NICs.
+IPv6 addresses are issued for testing.
+-->
+        <var name="env.two_nets.iut_both_ipv6" global="true">
+            <value reqs="ENV-2PEERS-IUT,IP6.IP6_ONLOAD">'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'alien_addr':inet6:alien,addr:'alien_gw':inet6:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tester_1'{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net2':IUT{'iut_host'{addr:'iut_addr2':inet6:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tester_2'{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_two_nets_iut_first env.two_nets.iut_first
+IUT and two testers are located on different hosts. The first IUT interface is
+connected to one of tester directly using @b SFC NIC, but the second interface
+is connected to another tester using @b non-SFC NIC. IPv4 addresses are issued
+for testing.
+-->
+        <var name="env.two_nets.iut_first" global="true">
+            <value reqs="ENV-2PEERS">'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'alien_addr':inet:alien,addr:'alien_gw':inet:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tester_1'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net2':tester{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tester_2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_two_nets_iut_first_ipv6 env.two_nets.iut_first_ipv6
+IUT and two testers are located on different hosts. The first IUT interface is
+connected to one of tester directly using @b SFC NIC, but the second interface
+is connected to another tester using @b non-SFC NIC. IPv6 addresses are issued
+for testing.
+-->
+        <var name="env.two_nets.iut_first_ipv6" global="true">
+            <value reqs="ENV-2PEERS,IP6,IP6_ONLOAD">'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'alien_addr':inet6:alien,addr:'alien_gw':inet6:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tester_1'{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net2':tester{'iut_host'{addr:'iut_addr2':inet6:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tester_2'{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_two_nets_iut_first env.two_nets.iut_first
+Two IUT and two tester RPC servers are located on different hosts. The first
+IUT interface is connected to one of tester directly using @b SFC NIC, but the
+second interface is connected to another tester using @b non-SFC NIC. IPv4
+addresses are issued for testing.
+-->
+        <var name="env.two_nets.two_iut" global="true">
+            <value reqs="ENV-2PEERS">'net1':IUT{'iut_host'{{'pco_iut':IUT},{'pco_iut2':IUT},addr:'iut_addr1':inet:unicast,addr:'alien_addr':inet:alien,addr:'alien_gw':inet:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tester_1'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net2':tester{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tester_2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_two_nets_iut_second env.two_nets.iut_second
+IUT and two testers are located on different hosts. The first IUT interface is
+connected to one of tester using @b non-SFC NIC, but the second interface is
+connected to another tester directly using @b SFC NIC. IPv4 addresses are
+issued for testing.
+-->
+        <var name="env.two_nets.iut_second" global="true">
+            <value reqs="ENV-2PEERS,SECOND_IF_ACCELERATED">'net1':tester{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'alien_addr':inet:alien,addr:'alien_gw':inet:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tester_1'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net2':IUT{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tester_2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_two_nets_iut_second_ipv6 env.two_nets.iut_second_ipv6
+IUT and two testers are located on different hosts. The first IUT interface is
+connected to one of tester using @b non-SFC NIC, but the second interface is
+connected to another tester directly using @b SFC NIC. IPv6 addresses are
+issued for testing.
+-->
+        <var name="env.two_nets.iut_second_ipv6" global="true">
+            <value reqs="ENV-2PEERS,SECOND_IF_ACCELERATED,IP6,IP6_ONLOAD">'net1':tester{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'alien_addr':inet6:alien,addr:'alien_gw':inet6:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tester_1'{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net2':IUT{'iut_host'{addr:'iut_addr2':inet6:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tester_2'{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_peer2peer_two_links env.peer2peer.two_links
+IUT host is connected directly to Tester host via both IUT interfaces, IPV4
+addresses are allocated.
+-->
+        <var name="env.peer2peer.two_links" global="true">
+            <value reqs="ENV-2LINKS-IUT">'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'alien_addr':inet:alien,addr:'alien_gw':inet:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net2':IUT{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}},'pco_tst1'='pco_tst','pco_tst2'='pco_tst'</value>
+        </var>
+
+<!--- @subsection arg_types_env_peer2peer_two_links_ipv6 env.peer2peer.two_links_ipv6
+IUT host is connected directly to Tester host via both IUT interfaces, IPV6
+addresses are allocated.
+-->
+        <var name="env.peer2peer.two_links_ipv6" global="true">
+            <value reqs="ENV-2LINKS-IUT,IP6,IP6_ONLOAD">'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'alien_addr':inet6:alien,addr:'alien_gw':inet6:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst1_addr':inet6:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net2':IUT{'iut_host'{addr:'iut_addr2':inet6:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst2_addr':inet6:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}},'pco_tst1'='pco_tst','pco_tst2'='pco_tst'</value>
+        </var>
+
+<!--- @subsection arg_types_env_peer2peer_tst env.peer2peer_tst
+IUT and tester are located on two different hosts which are connected directly
+using @b non-SFC NICs. IPv6 addresses are issued for testing.
+-->
+        <var name="env.peer2peer_tst" global="true">
+            <value reqs="ENV-TST-LINK">'net':tester{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'wild_addr':inet:wildcard,if:'iut_if',addr:'iut_lladdr':ether:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if',addr:'tst_lladdr':ether:unicast,addr:'alien_link_addr':ether:alien,addr:'tst_alien_addr':inet:alien,addr:'tst_fake_addr':inet:fake}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_peer2peer_2addr_tst env.peer2peer_2add_tst
+IUT and tester are located on two different hosts which are connected directly
+using @b non-SFC NICs. IPv4 addresses are issued for testing. Two addresses
+are allocated on both IUT and Tester sides.
+-->
+        <var name="env.peer2peer_2addr_tst" global="true">
+            <value reqs="ENV-TST-LINK">'net':tester{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast,addr:'wild_addr':inet:wildcard,if:'iut_if',addr:'iut_lladdr':ether:unicast},{{'pco_tst':tester},addr:'tst_addr1':inet:unicast,addr:'tst_addr2':inet:unicast,if:'tst_if',addr:'tst_lladdr':ether:unicast,addr:'alien_link_addr':ether:alien,addr:'tst_alien_addr':inet:alien,addr:'tst_fake_addr':inet:fake}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_peer2peer_tst_ipv6 env.peer2peer_tst_ipv6
+IUT and tester are located on two different hosts which are connected directly
+using @b non-SFC NICs. IPv6 addresses are issued for testing.
+-->
+        <var name="env.peer2peer_tst_ipv6" global="true">
+            <!-- IPv6 is not implemented in onload -->
+            <value reqs="ENV-TST-LINK,IP6,IP6_ONLOAD">'net':tester{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast,addr:'wild_addr':inet6:wildcard,if:'iut_if',addr:'iut_lladdr':ether:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast,if:'tst_if',addr:'tst_lladdr':ether:unicast,addr:'alien_link_addr':ether:alien,addr:'tst_alien_addr':inet6:alien,addr:'tst_fake_addr':inet6:fake}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_peer2peer_2addr_tst_ipv6 env.peer2peer_2addr_tst_ipv6
+IUT and tester are located on two different hosts which are connected directly
+using @b non-SFC NICs. IPv6 addresses are issued for testing. Two addresses
+are allocated on both IUT and Tester sides.
+-->
+        <var name="env.peer2peer_2addr_tst_ipv6" global="true">
+            <!-- IPv6 is not implemented in onload -->
+            <value reqs="ENV-TST-LINK,IP6,IP6_ONLOAD">'net':tester{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast,addr:'wild_addr':inet6:wildcard,if:'iut_if',addr:'iut_lladdr':ether:unicast},{{'pco_tst':tester},addr:'tst_addr1':inet6:unicast,addr:'tst_addr2':inet6:unicast,if:'tst_if',addr:'tst_lladdr':ether:unicast,addr:'alien_link_addr':ether:alien,addr:'tst_alien_addr':inet6:alien,addr:'tst_fake_addr':inet6:fake}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_peer2peer_lo env.peer2peer_lo
+IUT and tester are located on the same host and connected using @b loopback
+interface. IPv4 addresses are issued for testing.
+<br>Unicast addresses are used to prevent the handover.
+-->
+        <var name="env.peer2peer_lo" global="true">
+            <value reqs="ENV-LOOPBACK">'net':IUT{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'iut_lladdr':ether:unicast}},'tst_addr'='iut_addr','tst_if'='iut_if','tst_lladdr'='iut_lladdr'</value>
+        </var>
+
+<!--- @subsection arg_types_env_peer2peer_2addr_lo env.peer2peer_2addr_lo
+IUT and tester are located on the same host and connected using @b loopback
+interface. IPv4 addresses are issued for testing. Two unicast addresses are
+allocated on IUT.
+<br>Unicast addresses are used to prevent the handover.
+-->
+        <var name="env.peer2peer_2addr_lo" global="true">
+            <value reqs="ENV-LOOPBACK">'net':IUT{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast,if:'iut_if',addr:'iut_lladdr':ether:unicast}},'tst_addr1'='iut_addr1','tst_addr2'='iut_addr2','tst_if'='iut_if','tst_lladdr'='iut_lladdr'</value>
+        </var>
+
+<!--- @subsection arg_types_env_peer2peer_lo_ipv6 env.peer2peer_lo_ipv6
+IUT and tester are located on the same host and connected using @b loopback
+interface. IPv6 addresses are issued for testing.
+<br>Unicast addresses are used to prevent the handover.
+-->
+        <var name="env.peer2peer_lo_ipv6" global="true">
+            <!-- IPv6 is not implemented in onload -->
+            <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">'net':IUT{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr':inet6:unicast,if:'iut_if',addr:'iut_lladdr':ether:unicast}},'tst_addr'='iut_addr','tst_if'='iut_if','tst_lladdr'='iut_lladdr'</value>
+        </var>
+
+<!--- @subsection arg_types_env_peer2peer_2addr_lo_ipv6 env.peer2peer_2addr_lo_ipv6
+IUT and tester are located on the same host and connected using @b loopback
+interface. IPv6 addresses are issued for testing. Two unicast addresses are
+allocated on IUT.
+<br>Unicast addresses are used to prevent the handover.
+-->
+        <var name="env.peer2peer_2addr_lo_ipv6" global="true">
+            <!-- IPv6 is not implemented in onload -->
+            <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">'net':IUT{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast,if:'iut_if',addr:'iut_lladdr':ether:unicast}},'tst_addr1'='iut_addr1','tst_addr2'='iut_addr2','tst_if'='iut_if','tst_lladdr'='iut_lladdr'</value>
+        </var>
+
+<!--- @subsection arg_types_env_peer2peer_fake env.peer2peer_fake
+IUT and tester are located on two different hosts which are connected directly
+using @b SFC NICs. Fake IPv4 addresses are issued for testing. This
+environment is used for IP_TRANSPARENT testing.
+-->
+        <var name="env.peer2peer_fake" global="true">
+            <value reqs="ENV-IUT-FAKE-ADDR,IP_TRANSPARENT">'net':IUT{{{'pco_iut':IUT},addr:'gw_addr':inet:unicast,addr:'wild_addr':inet:wildcard,if:'iut_if',addr:'iut_lladdr':ether:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if',addr:'tst_lladdr':ether:unicast}},{{addr:'iut_addr':inet:fake}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_peer2peer_fake_ipv6 env.peer2peer_fake_ipv6
+IUT and tester are located on two different hosts which are connected directly
+using @b SFC NICs. Fake IPv6 addresses are issued for testing. This
+environment is used for IP_TRANSPARENT testing.
+-->
+        <var name="env.peer2peer_fake_ipv6" global="true">
+            <!-- IPv6 is not implemented in onload -->
+            <value reqs="ENV-IUT-FAKE-ADDR,IP_TRANSPARENT,IP6,IP6_ONLOAD">'net':IUT{{{'pco_iut':IUT},addr:'gw_addr':inet6:unicast,addr:'wild_addr':inet6:wildcard,if:'iut_if',addr:'iut_lladdr':ether:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast,if:'tst_if',addr:'tst_lladdr':ether:unicast}},{{addr:'iut_addr':inet6:fake}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_peer2peer_two_iut env.two_peer2peer_two_iut
+Two IUT RPC servers are located on one host and one tester is located on another
+one. IUT interface is connected to tester directly using @b SFC NICs.
+-->
+        <var name="env.peer2peer_two_iut" global="true">
+            <value>'net':IUT{{{'pco_iut':IUT},{'pco_iut2':IUT},addr:'iut_addr':inet:unicast,addr:'wild_addr':inet:wildcard,if:'iut_if',addr:'iut_lladdr':ether:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if',addr:'alien_link_addr':ether:alien,addr:'tst_lladdr':ether:unicast}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_peer2peer_two_iut_ipv6 env.two_peer2peer_two_iut_ipv6
+Two IUT RPC servers are located on one host and one tester is located on another
+one. IUT interface is connected to tester directly using @b SFC NICs.
+-->
+        <var name="env.peer2peer_two_iut_ipv6" global="true">
+            <!-- IPv6 is not implemented in onload -->
+            <value reqs="IP6,IP6_ONLOAD">'net':IUT{{{'pco_iut':IUT},{'pco_iut2':IUT},addr:'iut_addr':inet6:unicast,addr:'wild_addr':inet6:wildcard,if:'iut_if',addr:'iut_lladdr':ether:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast,if:'tst_if',addr:'alien_link_addr':ether:alien,addr:'tst_lladdr':ether:unicast}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_peer2peer_mcast env.peer2peer_mcast
+IUT and tester are located on two different hosts which are connected directly
+using @b SFC NICs. IUT has a multicast address.
+-->
+        <var name="env.peer2peer_mcast" global="true">
+            <value>'net':IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_peer2peer_mcast_lo env.peer2peer_mcast_lo
+IUT and Tester are on the same host, IUT has a multicast IPv4 address.
+-->
+        <var name="env.peer2peer_mcast_lo" global="true">
+            <value reqs="ENV-LOOPBACK">'net':IUT{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if'}},'tst_addr'='iut_addr','tst_if'='iut_if'</value>
+        </var>
+
+
+<!--- @subsection arg_types_env_peer2peer_mcast_ipv6 env.peer2peer_mcast_ipv6
+IUT and tester are located on two different hosts which are connected directly
+using @b SFC NICs. IUT has a multicast address.
+-->
+        <var name="env.peer2peer_mcast_ipv6" global="true">
+            <!-- IPv6 is not implemented in onload -->
+            <value reqs="IP6,IP6_ONLOAD">'net':IUT{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast,addr:'mcast_addr':inet6:multicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast,if:'tst_if'}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_peer2peer_mcast_lo_ipv6 env.peer2peer_mcast_lo_ipv6
+IUT and Tester are on the same host, IUT has a multicast IPv6 address.
+-->
+        <var name="env.peer2peer_mcast_lo_ipv6" global="true">
+            <value reqs="IP6,IP6_ONLOAD,ENV-LOOPBACK">'net':IUT{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr':inet6:unicast,addr:'mcast_addr':inet6:multicast,if:'iut_if'}},'tst_addr'='iut_addr','tst_if'='iut_if'</value>
+        </var>
+
+<!--- @subsection arg_types_env_peer2peer_mcast_tst env.peer2peer_mcast_tst
+IUT and tester are located on two different hosts which are connected directly
+using @b non-SFC NICs. IUT has a multicast address.
+-->
+        <var name="env.peer2peer_mcast_tst" global="true">
+            <value reqs="ENV-TST-LINK">tester{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_peer2peer_mcast_tst_ipv6 env.peer2peer_mcast_tst_ipv6
+IUT and tester are located on two different hosts which are connected directly
+using @b non-SFC NICs. IUT has a multicast address.
+-->
+        <var name="env.peer2peer_mcast_tst_ipv6">
+            <!-- IPv6 is not implemented in onload -->
+            <value reqs="ENV-TST-LINK,IP6,IP6_ONLOAD">tester{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast,addr:'mcast_addr':inet6:multicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast,if:'tst_if'}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_peer2peer_gw env.peer2peer_gw
+IUT and tester RPC servers are located on two different hosts similar to
+arg_types_env_peer2peer, but there is gateway host between IUT and tester. So
+that there are more opportunities to control traffic flow.
+-->
+        <var name="env.peer2peer_gw" global="true">
+            <value reqs="ENV-GW">'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'iut_lladdr':ether:unicast},'GW'{{'pco_gw':tester},addr:'gw_iut_addr':inet:unicast,if:'gw_iut_if',addr:'gw_fake_addr':inet:fake,addr:'gw_iut_lladdr':ether:unicast}},'net2':tester{'GW'{addr:'gw_tst_addr':inet:unicast,if:'gw_tst_if',addr:'alien_link_addr':ether:alien,addr:'gw_tst_lladdr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if',addr:'tst_lladdr':ether:unicast,addr:'tst_alien_addr':inet:alien,addr:'tst_fake_addr':inet:fake}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_peer2peer_gw_ipv6 env.peer2peer_gw_ipv6
+IUT and tester RPC servers are located on two different hosts similar to
+arg_types_env_peer2peer_ipv6, but there is gateway host between IUT and tester. So
+that there are more opportunities to control traffic flow.
+-->
+        <var name="env.peer2peer_gw_ipv6" global="true">
+            <!-- IPv6 is not implemented in onload -->
+            <value reqs="ENV-GW,IP6,IP6_ONLOAD">'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast,if:'iut_if',addr:'iut_lladdr':ether:unicast},'GW'{{'pco_gw':tester},addr:'gw_iut_addr':inet6:unicast,if:'gw_iut_if',addr:'gw_fake_addr':inet6:fake,addr:'gw_iut_lladdr':ether:unicast}},'net2':tester{'GW'{addr:'gw_tst_addr':inet6:unicast,if:'gw_tst_if',addr:'alien_link_addr':ether:alien,addr:'gw_tst_lladdr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet6:unicast,if:'tst_if',addr:'tst_lladdr':ether:unicast,addr:'tst_alien_addr':inet6:alien,addr:'tst_fake_addr':inet6:fake}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_peer2peer_two_iut_gw env.peer2peer_two_iut_gw
+Two IUT and tester RPC servers are located on two different hosts similar to
+arg_types_env_peer2peer_two_iut, but there is gateway host between IUT and tester. So
+that there are more opportunities to control traffic flow.
+-->
+        <var name="env.peer2peer_two_iut_gw" global="true">
+            <value reqs="ENV-GW">'net1':IUT{'iut_host'{{'pco_iut':IUT},{'pco_iut2':IUT},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'iut_lladdr':ether:unicast},'GW'{{'pco_gw':tester},addr:'gw_iut_addr':inet:unicast,if:'gw_iut_if',addr:'gw_fake_addr':inet:fake,addr:'gw_iut_lladdr':ether:unicast}},'net2':tester{'GW'{addr:'gw_tst_addr':inet:unicast,if:'gw_tst_if',addr:'alien_link_addr':ether:alien,addr:'gw_tst_lladdr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if',addr:'tst_lladdr':ether:unicast,addr:'tst_alien_addr':inet:alien,addr:'tst_fake_addr':inet:fake}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_peer2peer_two_iut_gw_ipv6 env.peer2peer_two_iut_gw_ipv6
+Two IUT and tester RPC servers are located on two different hosts similar to
+arg_types_env_peer2peer_two_iut_ipv6, but there is gateway host between IUT and tester. So
+that there are more opportunities to control traffic flow.
+-->
+        <var name="env.peer2peer_two_iut_gw_ipv6" global="true">
+            <value reqs="ENV-GW,IP6,IP6_ONLOAD">'net1':IUT{'iut_host'{{'pco_iut':IUT},{'pco_iut2':IUT},addr:'iut_addr':inet6:unicast,if:'iut_if',addr:'iut_lladdr':ether:unicast},'GW'{{'pco_gw':tester},addr:'gw_iut_addr':inet6:unicast,if:'gw_iut_if',addr:'gw_fake_addr':inet6:fake,addr:'gw_iut_lladdr':ether:unicast}},'net2':tester{'GW'{addr:'gw_tst_addr':inet6:unicast,if:'gw_tst_if',addr:'alien_link_addr':ether:alien,addr:'gw_tst_lladdr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet6:unicast,if:'tst_if',addr:'tst_lladdr':ether:unicast,addr:'tst_alien_addr':inet6:alien,addr:'tst_fake_addr':inet6:fake}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_peer2peer_tst_gw env.peer2peer_tst_gw
+IUT and tester RPC servers are located on two different hosts similar to
+arg_types_env_peer2peer_tst, but there is gateway host between IUT and tester. So
+that there are more opportunities to control traffic flow.
+-->
+        <var name="env.peer2peer_tst_gw" global="true">
+            <value reqs="ENV-GW,ENV-TST-LINK">'net1':tester{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'iut_lladdr':ether:unicast},'GW'{{'pco_gw':tester},addr:'gw_iut_addr':inet:unicast,if:'gw_iut_if',addr:'gw_fake_addr':inet:fake,addr:'gw_iut_lladdr':ether:unicast}},'net2':tester{'GW'{addr:'gw_tst_addr':inet:unicast,if:'gw_tst_if',addr:'alien_link_addr':ether:alien,addr:'gw_tst_lladdr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if',addr:'tst_lladdr':ether:unicast,addr:'tst_alien_addr':inet:alien,addr:'tst_fake_addr':inet:fake}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_peer2peer_tst_gw_ipv6 env.peer2peer_tst_gw_ipv6
+IUT and tester RPC servers are located on two different hosts similar to
+arg_types_env_peer2peer_tst, but there is gateway host between IUT and tester. So
+that there are more opportunities to control traffic flow.
+-->
+        <var name="env.peer2peer_tst_gw_ipv6" global="true">
+            <!-- IPv6 is not implemented in onload -->
+            <value reqs="ENV-GW,ENV-TST-LINK,IP6,IP6_ONLOAD">'net1':tester{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast,if:'iut_if',addr:'iut_lladdr':ether:unicast},'GW'{{'pco_gw':tester},addr:'gw_iut_addr':inet6:unicast,if:'gw_iut_if',addr:'gw_fake_addr':inet6:fake,addr:'gw_iut_lladdr':ether:unicast}},'net2':tester{'GW'{addr:'gw_tst_addr':inet6:unicast,if:'gw_tst_if',addr:'alien_link_addr':ether:alien,addr:'gw_tst_lladdr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet6:unicast,if:'tst_if',addr:'tst_lladdr':ether:unicast,addr:'tst_alien_addr':inet6:alien,addr:'tst_fake_addr':inet6:fake}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_p2p_ip6ip4mapped env.p2p_ip6ip4mapped
+IUT and tester are located on two different hosts which are connected directly
+using @b SFC NICs. IPv6 mapped to IPv4 addresses are issued for testing.
+-->
+        <var name="env.p2p_ip6ip4mapped" global="true">
+            <value reqs="IP6,IP6_IP4MAPPED">'net':IUT{{{'pco_iut':IUT},addr:'iut_addr':inet6:ip4mapped_uc,addr:'iut_lladdr':ether:unicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet6:ip4mapped_uc,addr:'tst_lladdr':ether:unicast,if:'tst_if'}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_p2p_ip6linklocal env.p2p_ip6linklocal
+IUT and tester are located on two different hosts which are connected directly
+using @b SFC NICs. IPv6 link local addresses are issued for testing.
+-->
+        <var name="env.p2p_ip6linklocal" global="true">
+            <value reqs="IP6,IP6_ONLOAD,IP6_LINKLOCAL">'net':IUT{{{'pco_iut':IUT},addr:'iut_addr':inet6:linklocal,addr:'iut_lladdr':ether:unicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet6:linklocal,addr:'tst_lladdr':ether:unicast,if:'tst_if'}}</value>
+        </var>
+
+
+<!--- @subsection arg_types_env_p2p_ip6linklocal env.p2p_ip6linklocal
+IUT and tester are located on two different hosts which are connected directly
+using @b SFC NICs. IPv6 link local addresses are issued for testing.
+-->
+        <var name="env.p2p_tst_ip6linklocal" global="true">
+            <value reqs="ENV-TST-LINK,IP6,IP6_ONLOAD,IP6_LINKLOCAL">'net':tester{{{'pco_iut':IUT},addr:'iut_addr':inet6:linklocal,addr:'iut_lladdr':ether:unicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet6:linklocal,addr:'tst_lladdr':ether:unicast,if:'tst_if'}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_p2p_ip6 env.p2p_ip6
+IUT and tester are located on two different hosts which are connected directly
+using @b SFC NICs. IPv6 addresses are issued for testing.
+-->
+        <var name="env.p2p_ip6" global="true">
+            <value reqs="IP6,IP6_FULL">'net':IUT{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast,addr:'iut_lladdr':ether:unicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast,addr:'tst_lladdr':ether:unicast,if:'tst_if'}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_p2p_ip4_ip6 env.p2p_ip4_ip6
+IUT and tester are located on two different hosts which are connected directly
+using @b SFC NICs. IPv4 and IPv6 addresses are issued for testing.
+track_conf="silent" should be set for tests using this environment as it
+requests more addresses than allocated by sockapi-ts/prologue, so in
+cleanup Configurator will see configuration differences.
+-->
+        <var name="env.p2p_ip4_ip6" global="true">
+            <value reqs="IP6,IP6_FULL,IP6_ONLOAD">'net':IUT{{{'pco_iut':IUT},addr:'iut_addr6':inet6:unicast,addr:'iut_addr':inet:unicast,addr:'iut_lladdr':ether:unicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr6':inet6:unicast,addr:'tst_addr':inet:unicast,addr:'tst_lladdr':ether:unicast,if:'tst_if',addr:'alien_link_addr':ether:alien,addr:'tst_fake_addr6':inet6:fake,addr:'tst_fake_addr':inet:fake}}</value>
+        </var>
+
+<!--- @subsection arg_types_env_twothr2peer env.twothr2peer
+Set of environmets which iterates similar to defined envs listed below but
+auxiliary IUT thread is created at start:
+    - @ref arg_types_env_peer2peer
+    - @ref arg_types_env_peer2peer_lo
+-->
+        <enum name="env.twothr2peer">
+            <value reqs="THREADS">{{{'pco_iut':IUT,'pco_iut2':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},'pco_iut1'='pco_iut'</value>
+            <value reqs="ENV-LOOPBACK,THREADS">{{{'pco_iut':IUT,'pco_iut2':IUT},{'pco_tst':IUT},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}},'pco_iut1'='pco_iut'</value>
+        </enum>
+
+<!--- @subsection arg_types_env_twothr2peer_ipv6 env.twothr2peer_ipv6
+Set of environmets which iterates similar to defined envs listed below but
+auxiliary IUT thread is created at start:
+    - @ref arg_types_env_peer2peer_ipv6
+    - @ref arg_types_env_peer2peer_lo_ipv6
+-->
+        <enum name="env.twothr2peer_ipv6">
+            <value reqs="THREADS,IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_iut2':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast}},'pco_iut1'='pco_iut'</value>
+            <value reqs="ENV-LOOPBACK,THREADS,IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_iut2':IUT},{'pco_tst':IUT},addr:'iut_addr':inet6:unicast,addr:'tst_addr':inet6:unicast}},'pco_iut1'='pco_iut'</value>
+        </enum>
+
+<!--- @subsection arg_types_env_two_nets env.two_nets
+Set of environmets:
+    - @ref arg_types_env_two_nets_iut_both
+    - @ref arg_types_env_two_nets_iut_first
+    - @ref arg_types_env_two_nets_iut_second
+-->
+        <enum name="env.two_nets">
+          <value ref="env.two_nets.iut_both"/>
+          <value ref="env.two_nets.iut_first"/>
+          <value ref="env.two_nets.iut_second"/>
+        </enum>
+
+<!--- @subsection arg_types_env_two_nets_ipv6 env.two_nets_ipv6
+Set of environmets:
+    - @ref arg_types_env_two_nets_iut_both_ipv6
+    - @ref arg_types_env_two_nets_iut_first_ipv6
+    - @ref arg_types_env_two_nets_iut_second_ipv6
+-->
+        <enum name="env.two_nets_ipv6">
+          <value ref="env.two_nets.iut_both_ipv6"/>
+          <value ref="env.two_nets.iut_first_ipv6"/>
+          <value ref="env.two_nets.iut_second_ipv6"/>
+        </enum>
+
+<!--- @subsection arg_types_env_two_nets_all env.two_nets_all
+Set of environments:
+    - @ref arg_types_env_two_nets_iut_both
+    - @ref arg_types_env_two_nets_iut_first
+    - @ref arg_types_env_two_nets_iut_second
+    - @ref arg_types_env_two_nets_iut_both_ipv6
+    - @ref arg_types_env_two_nets_iut_first_ipv6
+    - @ref arg_types_env_two_nets_iut_second_ipv6
+-->
+        <enum name="env.two_nets_all">
+          <value ref="env.two_nets.iut_both"/>
+          <value ref="env.two_nets.iut_first"/>
+          <value ref="env.two_nets.iut_second"/>
+          <value ref="env.two_nets.iut_both_ipv6"/>
+          <value ref="env.two_nets.iut_first_ipv6"/>
+          <value ref="env.two_nets.iut_second_ipv6"/>
+        </enum>
+
+<!--- @subsection arg_types_env_peer2peer_all_ipv4_ipv6 env.peer2peer_all_ipv4_ipv6
+Set of environmets:
+    - @ref arg_types_env_peer2peer
+    - @ref arg_types_env_peer2peer_tst
+    - @ref arg_types_env_peer2peer_lo
+    - @ref arg_types_env_peer2peer_ipv6
+    - @ref arg_types_env_peer2peer_tst_ipv6
+    - @ref arg_types_env_peer2peer_lo_ipv6
+-->
+        <enum name="env.peer2peer_all_ipv4_ipv6">
+          <value ref="env.peer2peer"/>
+          <value ref="env.peer2peer_tst"/>
+          <value ref="env.peer2peer_lo"/>
+          <value ref="env.peer2peer_ipv6"/>
+          <value ref="env.peer2peer_tst_ipv6"/>
+          <value ref="env.peer2peer_lo_ipv6"/>
+        </enum>
+
+<!--- @subsection arg_types_env_peer2peer_all_ipv4 env.peer2peer_all_ipv4
+Set of environmets:
+    - @ref arg_types_env_peer2peer
+    - @ref arg_types_env_peer2peer_tst
+    - @ref arg_types_env_peer2peer_lo
+-->
+        <enum name="env.peer2peer_all_ipv4">
+          <value ref="env.peer2peer"/>
+          <value ref="env.peer2peer_tst"/>
+          <value ref="env.peer2peer_lo"/>
+        </enum>
+
+<!--- @subsection arg_types_env_peer2peer_all_ipv6 env.peer2peer_all_ipv6
+Set of environmets:
+    - @ref arg_types_env_peer2peer_ipv6
+    - @ref arg_types_env_peer2peer_tst_ipv6
+    - @ref arg_types_env_peer2peer_lo_ipv6
+-->
+        <enum name="env.peer2peer_all_ipv6">
+          <value ref="env.peer2peer_ipv6"/>
+          <value ref="env.peer2peer_tst_ipv6"/>
+          <value ref="env.peer2peer_lo_ipv6"/>
+        </enum>
+
+        <enum name="objtype">
+            <value>TCP</value>
+            <value>UDP</value>
+            <value reqs="PIPE">pipe</value>
+            <!-- fixme: ask kostik -->
+            <!-- <value reqs="EPOLL">epoll</value> -->
+        </enum>
+
+        <enum name="syscall_bool">
+            <value reqs="ONLOAD_ONLY,OOL_INTEROP">TRUE</value>
+            <value>FALSE</value>
+        </enum>
+
+        <enum name="ts_direction_tx">
+            <value reqs="HW_PTP_RX_TIMESTAMP">FALSE</value>
+            <value reqs="HW_PTP_TX_TIMESTAMP">TRUE</value>
+        </enum>
+
+        <enum name="cache_socket_type">
+            <value>FALSE</value>
+            <value reqs="ONLOAD_ONLY,FD_CACHING,RPC_RESTART">TRUE</value>
+        </enum>
+
+        <enum name="ts_tx_onload_ext">
+            <value>FALSE</value>
+            <value reqs="ONLOAD_ONLY">TRUE</value>
+        </enum>
+
+        <enum name="select_err_queue_bool">
+            <value>FALSE</value>
+            <value reqs="SO_SELECT_ERR_QUEUE">TRUE</value>
+        </enum>
+
+<!--- @subsection arg_types_send_func send_func
+Sending functions
+-->
+        <enum name="send_func">
+            <value reqs="READ_WRITE">write</value>
+            <value reqs="SEND_IOV,READV_WRITEV">writev</value>
+            <value reqs="SEND_FLAG,SEND_RECV">send</value>
+            <value reqs="SEND_FLAG,SEND_ADDR,SENDTO_RECVFROM">sendto</value>
+            <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMSG_RECVMSG">sendmsg</value>
+            <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMMSG">sendmmsg</value>
+            <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND">onload_zc_send</value>
+            <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND,ONLOAD_ZC_SEND_USER_BUF">onload_zc_send_user_buf</value>
+            <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_IOV,SF_TEMPLATE_SEND,UL_64">template_send</value>
+            <value reqs="ONLOAD_ONLY,SEND_FLAG,SF_ODS,SF_ODS_COMPL">od_send</value>
+            <value reqs="ONLOAD_ONLY,SEND_FLAG,SF_ODS,SF_ODS_RAW">od_send_raw</value>
+        </enum>
+
+<!--- @subsection arg_types_send_func_with_sys send_func_with_sys
+Sending functions (including libc versions)
+-->
+        <enum name="send_func_with_sys">
+            <value reqs="READ_WRITE">write</value>
+            <value reqs="READ_WRITE,ONLOAD_ONLY,OOL_INTEROP">sys_write</value>
+            <value reqs="SEND_IOV,READV_WRITEV">writev</value>
+            <value reqs="SEND_IOV,READV_WRITEV,ONLOAD_ONLY,OOL_INTEROP">sys_writev</value>
+            <value reqs="SEND_FLAG,SEND_RECV">send</value>
+            <value reqs="SEND_FLAG,SEND_ADDR,SENDTO_RECVFROM">sendto</value>
+            <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMSG_RECVMSG">sendmsg</value>
+            <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMMSG">sendmmsg</value>
+            <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND">onload_zc_send</value>
+            <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND,ONLOAD_ZC_SEND_USER_BUF">onload_zc_send_user_buf</value>
+           <value reqs="ONLOAD_ONLY,SEND_IOV,SF_TEMPLATE_SEND,UL_64">template_send</value>
+           <value reqs="ONLOAD_ONLY,SEND_FLAG,SF_ODS,SF_ODS_COMPL">od_send</value>
+           <value reqs="ONLOAD_ONLY,SEND_FLAG,SF_ODS,SF_ODS_RAW">od_send_raw</value>
+        </enum>
+
+<!--- @subsection arg_types_send_func_with_sys_no_delegated send_func_with_sys_no_delegated
+Same as @ref send_func_with_sys but without delegated sending functions
+-->
+        <enum name="send_func_with_sys_no_delegated">
+            <value reqs="READ_WRITE">write</value>
+            <value reqs="READ_WRITE,ONLOAD_ONLY,OOL_INTEROP">sys_write</value>
+            <value reqs="SEND_IOV,READV_WRITEV">writev</value>
+            <value reqs="SEND_IOV,READV_WRITEV,ONLOAD_ONLY,OOL_INTEROP">sys_writev</value>
+            <value reqs="SEND_FLAG,SEND_RECV">send</value>
+            <value reqs="SEND_FLAG,SEND_ADDR,SENDTO_RECVFROM">sendto</value>
+            <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMSG_RECVMSG">sendmsg</value>
+            <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMMSG">sendmmsg</value>
+            <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND">onload_zc_send</value>
+            <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND,ONLOAD_ZC_SEND_USER_BUF">onload_zc_send_user_buf</value>
+           <value reqs="ONLOAD_ONLY,SEND_IOV,SF_TEMPLATE_SEND,UL_64">template_send</value>
+        </enum>
+
+<!--- @subsection arg_types_send_func_with_flags send_func_with_flags
+Sending functions accepting flags
+-->
+        <enum name="send_func_with_flags">
+            <value reqs="SEND_FLAG,SEND_RECV">send</value>
+            <value reqs="SEND_FLAG,SEND_ADDR,SENDTO_RECVFROM">sendto</value>
+            <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMSG_RECVMSG">sendmsg</value>
+            <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMMSG">sendmmsg</value>
+            <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND">onload_zc_send</value>
+            <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND,ONLOAD_ZC_SEND_USER_BUF">onload_zc_send_user_buf</value>
+            <value reqs="ONLOAD_ONLY,SEND_FLAG,SF_ODS,SF_ODS_COMPL">od_send</value>
+            <value reqs="ONLOAD_ONLY,SEND_FLAG,SF_ODS,SF_ODS_RAW">od_send_raw</value>
+        </enum>
+
+<!--- @subsection arg_types_send_func_with_iov send_func_with_iov
+Sending functions accepting iovec structures
+-->
+        <enum name="send_func_with_iov">
+            <value reqs="SEND_IOV,READV_WRITEV,ONLOAD_ONLY,OOL_INTEROP">writev</value>
+            <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMSG_RECVMSG">sendmsg</value>
+            <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMMSG">sendmmsg</value>
+            <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND">onload_zc_send</value>
+            <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND,ONLOAD_ZC_SEND_USER_BUF">onload_zc_send_user_buf</value>
+           <value reqs="ONLOAD_ONLY,SEND_IOV,SF_TEMPLATE_SEND,UL_64">template_send</value>
+        </enum>
+
+<!--- @subsection arg_types_send_func_with_iov_sys send_func_with_iov_sys
+Sending functions accepting iovec structures (including libc writev())
+-->
+        <enum name="send_func_with_iov_sys">
+            <value reqs="SEND_IOV,READV_WRITEV">writev</value>
+            <value reqs="SEND_IOV,READV_WRITEV,ONLOAD_ONLY,OOL_INTEROP">sys_writev</value>
+            <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMSG_RECVMSG">sendmsg</value>
+            <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMMSG">sendmmsg</value>
+            <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND">onload_zc_send</value>
+            <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND,ONLOAD_ZC_SEND_USER_BUF">onload_zc_send_user_buf</value>
+           <value reqs="ONLOAD_ONLY,SEND_IOV,SF_TEMPLATE_SEND,UL_64">template_send</value>
+        </enum>
+
+<!--- @subsection arg_types_send_func_with_ctl send_func_with_ctl
+Sending functions accepting control data
+-->
+        <enum name="send_func_with_ctl">
+            <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMSG_RECVMSG">sendmsg</value>
+            <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMMSG">sendmmsg</value>
+            <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND">onload_zc_send</value>
+            <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND,ONLOAD_ZC_SEND_USER_BUF">onload_zc_send_user_buf</value>
+        </enum>
+
+<!--- @subsection arg_types_send_func_with_addr send_func_with_addr
+Sending functions allowing to specify destination address
+-->
+        <enum name="send_func_with_addr">
+            <value reqs="SEND_FLAG,SEND_ADDR,SENDTO_RECVFROM">sendto</value>
+            <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMSG_RECVMSG">sendmsg</value>
+            <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMMSG">sendmmsg</value>
+            <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND">onload_zc_send</value>
+            <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND,ONLOAD_ZC_SEND_USER_BUF">onload_zc_send_user_buf</value>
+        </enum>
+
+<!--- @subsection arg_types_recv_func recv_func
+Receiving functions
+-->
+        <enum name="recv_func">
+            <value reqs="READ_WRITE">read</value>
+            <value reqs="RECV_IOV,READV_WRITEV">readv</value>
+            <value reqs="RECV_FLAG,SEND_RECV">recv</value>
+            <value reqs="RECV_FLAG,RECV_ADDR,SENDTO_RECVFROM">recvfrom</value>
+            <value reqs="RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,SENDMSG_RECVMSG">recvmsg</value>
+            <value reqs="RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,RECVMMSG">recvmmsg</value>
+            <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,ONLOAD_ZC_RECV">onload_zc_recv</value>
+            <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_CTL,RECV_IOV,ONLOAD_ZC_HLRX">onload_zc_hlrx_recv_zc</value>
+            <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_CTL,RECV_IOV,ONLOAD_ZC_HLRX,ONLOAD_ZC_HLRX_COPY">onload_zc_hlrx_recv_copy</value>
+        </enum>
+
+<!--- @subsection arg_types_recv_func_with_sys recv_func_with_sys
+Receiving functions (including libc versions)
+-->
+        <enum name="recv_func_with_sys">
+            <value reqs="READ_WRITE">read</value>
+            <value reqs="READ_WRITE,ONLOAD_ONLY,OOL_INTEROP">sys_read</value>
+            <value reqs="RECV_IOV,READV_WRITEV">readv</value>
+            <value reqs="RECV_IOV,READV_WRITEV,ONLOAD_ONLY,OOL_INTEROP">sys_readv</value>
+            <value reqs="RECV_FLAG,SEND_RECV">recv</value>
+            <value reqs="RECV_FLAG,RECV_ADDR,SENDTO_RECVFROM">recvfrom</value>
+            <value reqs="RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,SENDMSG_RECVMSG">recvmsg</value>
+            <value reqs="RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,RECVMMSG">recvmmsg</value>
+            <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,ONLOAD_ZC_RECV">onload_zc_recv</value>
+            <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_CTL,RECV_IOV,ONLOAD_ZC_HLRX">onload_zc_hlrx_recv_zc</value>
+            <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_CTL,RECV_IOV,ONLOAD_ZC_HLRX,ONLOAD_ZC_HLRX_COPY">onload_zc_hlrx_recv_copy</value>
+        </enum>
+
+<!--- @subsection arg_types_recv_func_with_flags recv_func_with_flags
+Receiving functions accepting flags
+-->
+        <enum name="recv_func_with_flags">
+            <value reqs="RECV_FLAG,SEND_RECV">recv</value>
+            <value reqs="RECV_FLAG,RECV_ADDR,SENDTO_RECVFROM">recvfrom</value>
+            <value reqs="RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,SENDMSG_RECVMSG">recvmsg</value>
+            <value reqs="RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,RECVMMSG">recvmmsg</value>
+            <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,ONLOAD_ZC_RECV">onload_zc_recv</value>
+            <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_CTL,RECV_IOV,ONLOAD_ZC_HLRX">onload_zc_hlrx_recv_zc</value>
+            <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_CTL,RECV_IOV,ONLOAD_ZC_HLRX,ONLOAD_ZC_HLRX_COPY">onload_zc_hlrx_recv_copy</value>
+        </enum>
+
+<!--- @subsection arg_types_recv_func_with_iov recv_func_with_iov
+Receiving functions accepting iovec structures
+-->
+        <enum name="recv_func_with_iov">
+            <value reqs="RECV_IOV,READV_WRITEV">readv</value>
+            <value reqs="RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,SENDMSG_RECVMSG">recvmsg</value>
+            <value reqs="RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,RECVMMSG">recvmmsg</value>
+            <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,ONLOAD_ZC_RECV">onload_zc_recv</value>
+            <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_CTL,RECV_IOV,ONLOAD_ZC_HLRX,ONLOAD_ZC_HLRX_COPY">onload_zc_hlrx_recv_copy</value>
+            <!-- No onload_zc_hlrx_recv_zc() here because it does not fill
+                 iovec array like recvmsg(), it rather returns references to
+                 obtained ZC buffers. -->
+        </enum>
+
+<!--- @subsection arg_types_recv_func_with_iov_sys recv_func_with_iov_sys
+Receving functions accepting iovec structures (including libc readv())
+-->
+        <enum name="recv_func_with_iov_sys">
+            <value reqs="RECV_IOV,READV_WRITEV">readv</value>
+            <value reqs="RECV_IOV,READV_WRITEV,ONLOAD_ONLY,OOL_INTEROP">sys_readv</value>
+            <value reqs="RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,SENDMSG_RECVMSG">recvmsg</value>
+            <value reqs="RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,RECVMMSG">recvmmsg</value>
+            <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,ONLOAD_ZC_RECV">onload_zc_recv</value>
+            <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_CTL,RECV_IOV,ONLOAD_ZC_HLRX,ONLOAD_ZC_HLRX_COPY">onload_zc_hlrx_recv_copy</value>
+            <!-- No onload_zc_hlrx_recv_zc() here because it does not fill
+                 iovec array like recvmsg(), it rather returns references to
+                 obtained ZC buffers. -->
+        </enum>
+
+<!--- @subsection arg_types_recv_func_with_msg recv_func_with_msg
+Receiving functions to which msghdr may be passed.
+-->
+        <enum name="recv_func_with_msg">
+            <value reqs="RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,SENDMSG_RECVMSG">recvmsg</value>
+            <value reqs="RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,RECVMMSG">recvmmsg</value>
+            <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,ONLOAD_ZC_RECV">onload_zc_recv</value>
+            <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_CTL,RECV_IOV,ONLOAD_ZC_HLRX">onload_zc_hlrx_recv_zc</value>
+            <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_CTL,RECV_IOV,ONLOAD_ZC_HLRX,ONLOAD_ZC_HLRX_COPY">onload_zc_hlrx_recv_copy</value>
+        </enum>
+
+<!--- @subsection arg_types_recv_func_with_ctl recv_func_with_ctl
+Receiving functions retrieving control data
+-->
+        <enum name="recv_func_with_ctl">
+            <value reqs="RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,SENDMSG_RECVMSG">recvmsg</value>
+            <value reqs="RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,RECVMMSG">recvmmsg</value>
+            <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,ONLOAD_ZC_RECV">onload_zc_recv</value>
+        </enum>
+
+<!--- @subsection arg_types_recv_func_with_ctl_hlrx recv_func_with_ctl_hlrx
+Receiving functions retrieving control data, including
+onload_zc_hlrx_recv_copy().
+
+A separate enum is created because onload_zc_hlrx_recv_copy()
+supports retrieval of control data only with MSG_ERRQUEUE.
+-->
+        <enum name="recv_func_with_ctl_hlrx">
+            <value reqs="RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,SENDMSG_RECVMSG">recvmsg</value>
+            <value reqs="RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,RECVMMSG">recvmmsg</value>
+            <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,ONLOAD_ZC_RECV">onload_zc_recv</value>
+            <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_CTL,RECV_IOV,ONLOAD_ZC_HLRX,ONLOAD_ZC_HLRX_COPY">onload_zc_hlrx_recv_copy</value>
+        </enum>
+
+<!--- @subsection arg_types_recv_func_with_addr recv_func_with_addr
+Receiving functions retrieving source address
+-->
+        <enum name="recv_func_with_addr">
+            <value reqs="RECV_FLAG,RECV_ADDR,SENDTO_RECVFROM">recvfrom</value>
+            <value reqs="RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,SENDMSG_RECVMSG">recvmsg</value>
+            <value reqs="RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,RECVMMSG">recvmmsg</value>
+            <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,ONLOAD_ZC_RECV">onload_zc_recv</value>
+            <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_CTL,RECV_IOV,RECV_ADDR,ONLOAD_ZC_HLRX">onload_zc_hlrx_recv_zc</value>
+            <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_CTL,RECV_IOV,RECV_ADDR,ONLOAD_ZC_HLRX,ONLOAD_ZC_HLRX_COPY">onload_zc_hlrx_recv_copy</value>
+        </enum>
+
+<!--- @subsection arg_types_recv_func_many_msgs recv_func_many_msgs
+Receiving functions allowing to receive multiple messages in one call
+-->
+        <enum name="recv_func_many_msgs">
+            <value reqs="RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,RECVMMSG">recvmmsg</value>
+            <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,ONLOAD_ZC_RECV">onload_zc_recv</value>
+        </enum>
+
+<!--- @subsection arg_types_send_recv_func send_recv_func
+Sending and receiving functions
+-->
+        <enum name="send_recv_func">
+            <value reqs="READ_WRITE">write</value>
+            <value reqs="SEND_IOV,READV_WRITEV">writev</value>
+            <value reqs="SEND_FLAG,SEND_RECV">send</value>
+            <value reqs="SEND_FLAG,SEND_ADDR,SENDTO_RECVFROM">sendto</value>
+            <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMSG_RECVMSG">sendmsg</value>
+            <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMMSG">sendmmsg</value>
+            <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND">onload_zc_send</value>
+            <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND,ONLOAD_ZC_SEND_USER_BUF">onload_zc_send_user_buf</value>
+            <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_IOV,SF_TEMPLATE_SEND,UL_64">template_send</value>
+            <value reqs="ONLOAD_ONLY,SEND_FLAG,SF_ODS,SF_ODS_COMPL">od_send</value>
+            <value reqs="ONLOAD_ONLY,SEND_FLAG,SF_ODS,SF_ODS_RAW">od_send_raw</value>
+            <value reqs="READ_WRITE">read</value>
+            <value reqs="RECV_IOV,READV_WRITEV">readv</value>
+            <value reqs="RECV_FLAG,SEND_RECV">recv</value>
+            <value reqs="RECV_FLAG,RECV_ADDR,SENDTO_RECVFROM">recvfrom</value>
+            <value reqs="RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,SENDMSG_RECVMSG">recvmsg</value>
+            <value reqs="RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,RECVMMSG">recvmmsg</value>
+            <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,ONLOAD_ZC_RECV">onload_zc_recv</value>
+            <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_CTL,RECV_IOV,ONLOAD_ZC_HLRX">onload_zc_hlrx_recv_zc</value>
+            <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_CTL,RECV_IOV,ONLOAD_ZC_HLRX,ONLOAD_ZC_HLRX_COPY">onload_zc_hlrx_recv_copy</value>
+        </enum>
+
+        <enum name="closing_way">
+            <value>close</value>
+            <value>shutdown</value>
+            <value>exit</value>
+            <value>kill</value>
+            <value>dup2</value>
+        </enum>
+
+        <enum name="shutdown_way">
+            <value>shut_rd</value>
+            <value>shut_wr</value>
+            <value>shut_rdwr</value>
+        </enum>
+
+        <enum name="conn_problem">
+            <value>ok</value>
+            <value>refused</value>
+            <value reqs="PROC_SYS_NET">timeout</value>
+            <value>delayed</value>
+        </enum>
+
+        <enum name="socket_function">
+            <value>socket</value>
+            <value reqs="ONLOAD_ONLY,ONLOAD_NONACCEL">onload_socket_unicast_nonaccel</value>
+        </enum>
+
+        <enum name="bind_to">
+            <value>none</value>
+            <value>specific</value>
+            <value>wildcard</value>
+            <value reqs="MULTICAST">multicast</value>
+        </enum>
+
+        <enum name="eth_reset">
+            <!-- RESET_NIC tests are now in separate session in night
+                 testing so we do not care if they crash or break
+                 further testing.-->
+            <value reqs="ETHTOOL_RESET,RESET_NIC">ethtool</value>
+            <value>down_up</value>
+            <value reqs="RESET_NIC">world</value>
+        </enum>
+
+        <enum name="thread_process">
+            <value>none</value>
+            <value>thread</value>
+            <value>process</value>
+        </enum>
+
+        <enum name="created_interface_type">
+            <value reqs="NO_TWO_IF_LEVELS">vlan</value>
+            <value reqs="NO_MACVLAN,MACVLAN,NO_IPVLAN">macvlan</value>
+            <value reqs="NO_MACVLAN,NO_IPVLAN,IPVLAN">ipvlan</value>
+        </enum>
+
+	<enum name="socket_flags">
+            <value reqs="SOCK_CLOEXEC">cloexec</value>
+	    <value reqs="SOCK_NONBLOCK">nonblock</value>
+	    <value>none</value>
+        </enum>
+
+        <!--
+        <exception handdown="descendants">
+            <script name="exception"/>
+        </exception> 
+        -->
+
+        <prologue>
+            <script name="prologue"/>
+            <arg name="env">
+                <!-- In fact, only one option will be used:
+                     - the peer2peer is not used with applied tester-req !ONE-TESTER
+                       from the ts-conf/opts/two_testers;
+                     - the peer2peer_gw is not used with applied tester-req !ENV-GW
+                       from the ts-conf/opts/one_tester. -->
+                <value reqs="ONE-TESTER" ref="env.peer2peer"/>
+                <value ref="env.peer2peer_gw"/>
+            </arg>
+        </prologue>
+
+        <epilogue>
+            <script name="epilogue"/>
+            <arg name="env" ref="env.peer2peer"/>
+        </epilogue>
+
+        <run>
+            <package name="pmtu"/>
+        </run> 
+
+        <run>
+            <package name="arp"/>
+        </run>
+        <run>
+            <package name="route"/>
+        </run>
+        <run>
+            <package name="ifcfg"/>
+        </run>
+
+        <run>
+            <package name="usecases"/>
+        </run>
+        <run>
+            <package name="bnbvalue"/>
+        </run> 
+        <run>
+            <package name="iomux"/>
+        </run> 
+        <run>
+            <package name="basic"/>
+        </run> 
+        <run>
+            <package name="signal"/>
+        </run> 
+        <run>
+            <package name="sendrecv"/>
+        </run>
+        <run>
+            <package name="sendfile"/>
+        </run>
+        <run>
+            <package name="sockopts"/>
+        </run>
+        <run>
+            <package name="ioctls"/>
+        </run>
+        <run>
+            <package name="fcntl"/>
+        </run>
+
+        <run>
+            <package name="udp"/>
+        </run>    
+        <run>
+            <package name="tcp"/>
+        </run>   
+
+        <run>
+            <package name="multicast"/>
+        </run>
+
+        <run>
+            <package name="aio"/>
+        </run>
+
+        <run>
+            <package name="epoll"/>
+        </run>
+
+        <run>
+            <package name="timestamps"/>
+        </run>
+
+        <run>
+            <package name="reuseport"/>
+        </run>
+
+        <run>
+            <package name="bpf"/>
+        </run>
+
+        <run>
+            <package name="performance"/>
+        </run>
+
+        <run>
+            <package name="checksum"/>
+        </run>
+
+        <run>
+            <package name="congestion"/>
+        </run>
+
+        <!-- Following packages may have post-effects.
+             Do not place normal packages below this line. -->
+        <run>
+            <package name="level5"/>
+        </run>
+
+        <!-- Package services is broken: see ON-8461, ST-1834 -->
+        <!-- run>
+            <package name="services"/>
+        </run -->
+
+        <run>
+            <package name="attacks"/>
+        </run>
+
+        <run>
+            <package name="libinit"/>
+        </run>
+    </session>
+
+<!--- @} -->
+
+</package>

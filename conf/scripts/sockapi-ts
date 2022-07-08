@@ -1,0 +1,306 @@
+# SPDX-License-Identifier: Apache-2.0
+# (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved.
+#
+# The file contains sockapi-ts specific environments processing and
+# configuration.
+#
+. ${SF_TS_CONFDIR}/scripts/sfc_onload_gnu
+. ${SF_TS_CONFDIR}/scripts/lib.run
+. ${SF_TS_CONFDIR}/scripts/ipvlan
+. ${SF_TS_CONFDIR}/scripts/sfptpd
+
+guess_libdir="/usr/lib"
+
+case "$IUT_KERNEL_NAME" in
+    Linux )
+        machine="$($SSH $TE_IUT uname -m)"
+        case "$machine" in
+            x86_64 )
+                if [ "$(detect_ul_bitness)" == "64" ] ; then
+                    guess_gnu="${SFC_ONLOAD_GNU_X64}"
+                    if $SSH $TE_IUT test -d /usr/lib64; then
+                        guess_libdir="/usr/lib64"
+                    fi
+                fi
+                ;;
+
+            ppc64 )
+                "${L5_RUN}" && TE_EXTRA_OPTS="${TE_EXTRA_OPTS} --tester-req=!PPC64_SF_DISABLED"
+
+                if [ "$(detect_ul_bitness)" == "64" -a "x$TE_USE_PPC32_TA" == "x" ] ; then
+                    if [ "x$TE_USE_IBM_AT_TA" == "x" ] ; then
+                        guess_gnu="${SFC_ONLOAD_GNU_PPC64}"
+                    else
+                        guess_gnu="${SFC_ONLOAD_GNU_PPC64_AT:-${SFC_ONLOAD_GNU_PPC64}}"
+                    fi
+                else
+                    if [ "x$TE_USE_IBM_AT_TA" == "x" ] ; then
+                        guess_gnu="${SFC_ONLOAD_GNU_PPC32}"
+                    else
+                        guess_gnu="${SFC_ONLOAD_GNU_PPC32_AT:-${SFC_ONLOAD_GNU_PPC32}}"
+                    fi
+                fi
+                ;;
+        esac
+esac
+
+# Export headers versions for agents
+export_headers_num "TE_IUT"
+export_headers_num "TE_TST1"
+export_headers_num "TE_TST2"
+export_headers_num "TE_HYPERVISOR"
+export_headers_num "TE_LOG_LISTENER"
+
+# Linux kernel headers installed on IUT
+TE_EXTRA_OPTS="${TE_EXTRA_OPTS} --trc-tag=linux-headers:${TE_IUT_HEADERS_NUM}"
+
+# Export path to libbpf sources
+if test -z "$TE_LIBBPF_SRC" -a -d "${LIBBPF_SRC}" ; then
+    export TE_LIBBPF_SRC="${LIBBPF_SRC}"
+else
+    echo "TE_LIBBPF_SRC is not exported! BPF support is disabled" >&2
+fi
+
+te_iut_host="$(get_te_iut_host)"
+if test -n "${te_iut_host}" ; then
+    # Dynamic library
+    export_SFC_ONLOAD_GNU "$guess_gnu"
+    ceph_support=false
+
+    if [ -z "$SFC_ONLOAD_GNU" ]; then
+        echo -n "SFC_ONLOAD_GNU is not exported!!!! "
+        echo "This could cause problems with build."
+    else
+        # Find Onload build profile and adjust testing parameters
+        stdump="$SFC_ONLOAD_GNU/tools/ip/onload_stackdump"
+        stdump_ok=""
+        if test "x${SFC_ONLOAD_LOCAL}" == "xyes" ; then
+            ssh -q ${te_iut_host} [[ -x $stdump ]] && stdump_ok="yes"
+        else
+            test -x $tsdump && stdump_ok="yes"
+        fi
+        if [ "${L5_RUN}" = "true" -a "x$stdump_ok"="xyes" ] ; then
+            if test "x${SFC_ONLOAD_LOCAL}" == "xyes" ; then
+                stdump_remote="$stdump"
+            else
+                stdump_remote="/tmp/onload_stackdump"
+
+                scp "${stdump}" "${te_iut_host}:${stdump_remote}" 1>/dev/null
+            fi
+            stdump_cfg=$($SSH $te_iut_host $stdump_remote config | \
+                         grep "CI_CFG_IPV6\|CI_CFG_UL_INTERRUPT_HELPER")
+            if test "x${SFC_ONLOAD_LOCAL}" != "xyes" ; then
+                $SSH ${te_iut_host} "rm -f $stdump_remote"
+            fi
+
+            if test "x${stdump_cfg/CI_CFG_UL_INTERRUPT_HELPER}" == \
+                    "x${stdump_cfg}" ; then
+                ulhelper_build="0"
+            else
+                ulhelper_build=$(echo $stdump_cfg | \
+                    sed "s/.*CI_CFG_UL_INTERRUPT_HELPER *\([0-9]\)/\1/")
+            fi
+            if test "x${stdump_cfg/CI_CFG_IPV6}" == \
+                    "x${stdump_cfg}" ; then
+                ip6_build="0"
+            else
+                ip6_build=$(echo $stdump_cfg | \
+                            sed "s/.*CI_CFG_IPV6 *\([0-9]\).*/\1/")
+            fi
+            if test -z $ip6_build ; then
+                ip6_build="0"
+            fi
+            if [ $ip6_build -eq 0 ] ; then
+                TE_EXTRA_OPTS="${TE_EXTRA_OPTS} --tester-req=!IP6_ONLOAD"
+            elif [ $ip6_build -eq 1 ] ; then
+                TE_EXTRA_OPTS="${TE_EXTRA_OPTS} --script=ool/config/build_cloud"
+            else
+                echo "Incorrect value of CI_CFG_IPV6: $ip6_build" >&2
+            fi
+            if [ $ulhelper_build -eq 1 ] ; then
+                TE_EXTRA_OPTS="${TE_EXTRA_OPTS} --script=ool/config/build_ulhelper"
+            elif [ $ulhelper_build -ne 0 ] ; then
+                echo "Incorrect value of CI_CFG_UL_INTERRUPT_HELPER: " \
+                     "$ulhelper_build" >&2
+            fi
+
+            # Ceph testing may be run only on EF100 SOC with cloud build.
+            if [ "$TE_IUT_EF100_SOC" = "1" -a $ip6_build -eq 1 ]; then
+                ceph_support=true
+            fi
+        fi
+    fi
+
+    if [ -z "$SFC_ONLOAD_LIB" ]; then
+        echo -n "SFC_ONLOAD_LIB is not exported!!!! "
+        echo "This could cause build issues."
+    fi
+
+    if test "x$SFC_ONLOAD_LOCAL" == "xyes" ; then
+        export SFC_SOCKAPI_LIB_IUT="iut:${SFC_ONLOAD_GNU}/lib/transport/unix/libcitransport0.so"
+    else
+        export SFC_SOCKAPI_LIB_IUT="${SFC_ONLOAD_GNU}/lib/transport/unix/libcitransport0.so"
+    fi
+
+    # Directory to put dynamic library
+    host_libdir="$(eval echo '${L5_SOCKAPI_LIBDIR_'$TE_IUT_AUX'}')"
+    if test -n "${host_libdir}" ; then
+        export L5_SOCKAPI_LIBDIR="${host_libdir}"
+    elif test -z "${L5_SOCKAPI_LIBDIR}" -a -n "${guess_libdir}" ; then
+        export L5_SOCKAPI_LIBDIR="${guess_libdir}"
+    fi
+    # v5 epoll implementation
+    if [ -z "$EF_UL_EPOLL" ]; then
+        TE_EXTRA_OPTS="${TE_EXTRA_OPTS} --trc-tag=ool_epoll:1 --tester-req=!NO_EF_UL_EPOLL_ONE"
+    else
+        TE_EXTRA_OPTS="${TE_EXTRA_OPTS} --trc-tag=ool_epoll:$EF_UL_EPOLL"
+    fi
+
+    #
+    # BPF/XDP tests require kernels and installed Linux headers >= 4.18.
+    #
+    if test ${TE_IUT_HEADERS_NUM} -lt 418 -o \
+        ${IUT_KERNEL_VERSION_NUM} -lt 418 -o \
+        -z "${TE_LIBBPF_SRC}"; then
+
+        TE_EXTRA_OPTS="${TE_EXTRA_OPTS} --tester-req=!BPF --tester-req=!TST_BPF"
+        echo "BPF: IUT does not support BPF testing" >&2
+    fi
+
+    if ! $ceph_support; then
+        echo "TCP/Ceph is not supported" >&2
+        TE_EXTRA_OPTS="${TE_EXTRA_OPTS} --tester-req=!CEPH"
+    fi
+fi
+
+if test -n "${SFC_ONLOAD_GNU}" -a -z "${SFC_ONLOAD_HEADERS}" ; then
+    export SFC_ONLOAD_HEADERS="${SFC_ONLOAD_GNU}/../../src/include"
+fi
+
+if test -n "${SFC_ONLOAD_GNU}" -a -z "${SFC_PROFILE_DIR}" ; then
+    if test "x$SFC_ONLOAD_LOCAL" == "xyes" ; then
+        export SFC_PROFILE_DIR="${SOCKAPI_TS_LIBDIR}/talib_sockapi_ts/onload_profiles"
+        scp_dir "$TE_IUT" \
+                "${SFC_ONLOAD_GNU}/../../scripts/onload_profiles" \
+                "$SFC_PROFILE_DIR"
+    else
+        export SFC_PROFILE_DIR=${SFC_ONLOAD_GNU}/../../scripts/onload_profiles
+    fi
+fi
+
+if test -d "${SFC_ONLOAD_HEADERS}" -o "x$SFC_ONLOAD_LOCAL" == "xyes" ; then
+    export SFC_ONLOAD_EXT_HEADERS="${SFC_ONLOAD_HEADERS}/onload"
+else
+    echo "Note! Path to onload headers is not defined. Headers from OL repository " >&2 ;
+    echo "      will be used, they can be deprecated. Set path onload_dev/src/include " >&2 ;
+    echo "      to SFC_ONLOAD_HEADERS variable." >&2 ;
+    export SFC_ONLOAD_EXT_HEADERS="${SOCKAPI_TS_LIBDIR}/talib_sockapi_ts/default_onload_headers/onload"
+fi
+
+if test "x$SFC_ONLOAD_LOCAL" == "xyes" ; then
+    mkdir -p "${SOCKAPI_TS_LIBDIR}/talib_sockapi_ts/copied_headers"
+fi
+for header in extensions.h extensions_zc.h extensions_timestamping.h \
+    test_intf.h ; do
+    dst_name="${SOCKAPI_TS_LIBDIR}/talib_sockapi_ts/${header}"
+    if test "x$SFC_ONLOAD_LOCAL" == "xyes" ; then
+        local_file="${SFC_ONLOAD_EXT_HEADERS}/${header}"
+        target="${SOCKAPI_TS_LIBDIR}/talib_sockapi_ts/copied_headers/${header}"
+        scp_dir "$TE_IUT" "$local_file" "$target"
+    else
+        target="${SFC_ONLOAD_EXT_HEADERS}/${header}"
+    fi
+    if test -f "$target"; then
+        ln_sf_safe "$target" "$dst_name"
+    fi
+done
+
+if test "x$SFC_ONLOAD_LOCAL" == "xyes" ; then
+
+    scp_dir "$TE_IUT" "${SFC_ONLOAD_EXT_HEADERS}" \
+            "${SOCKAPI_TS_LIBDIR}/talib_sockapi_ts/copied_headers/onload"
+
+    scp_dir "$TE_IUT" "${SFC_ONLOAD_EXT_HEADERS}/../etherfabric" \
+            "${SOCKAPI_TS_LIBDIR}/talib_sockapi_ts/copied_headers/etherfabric"
+
+    # Make link to "onload" folder itself, as headers in it may contain
+    # include directives like 'include "onload/extensions_timestamping.h"'
+    ln_sf_safe "${SOCKAPI_TS_LIBDIR}/talib_sockapi_ts/copied_headers/onload" \
+               "${SOCKAPI_TS_LIBDIR}/talib_sockapi_ts/onload" extensions.h
+
+    # extensions_zc.h references etherfabric/ef_vi.h now
+    ln_sf_safe "${SOCKAPI_TS_LIBDIR}/talib_sockapi_ts/copied_headers/etherfabric" \
+               "${SOCKAPI_TS_LIBDIR}/talib_sockapi_ts/etherfabric" ef_vi.h
+else
+    # Make link to "onload" folder itself, as headers in it may contain
+    # include directives like 'include "onload/extensions_timestamping.h"'
+    ln_sf_safe "${SFC_ONLOAD_EXT_HEADERS}" \
+               "${SOCKAPI_TS_LIBDIR}/talib_sockapi_ts/onload" extensions.h
+
+    # extensions_zc.h references etherfabric/ef_vi.h now
+    ln_sf_safe "${SFC_ONLOAD_EXT_HEADERS}/../etherfabric" \
+               "${SOCKAPI_TS_LIBDIR}/talib_sockapi_ts/etherfabric" ef_vi.h
+fi
+
+# Create symlinks needed for ceph application in gpl_tools.
+ln_sf_safe "$SOCKAPI_TS_LIBDIR/talib_sockapi_ts/onload" \
+           "$SOCKAPI_TS_LIBDIR/gpl_tools/ceph/onload"
+ln_sf_safe "$SOCKAPI_TS_LIBDIR/talib_sockapi_ts/etherfabric" \
+           "$SOCKAPI_TS_LIBDIR/gpl_tools/ceph/etherfabric"
+
+if test -n "${TE_TST1}" ; then
+    guess_lib=""
+    UL=$($SSH $TE_TST1 file /bin/bash | sed -e "s/.*ELF //; s/.bit .*//")
+    if [ "$UL" == "64" ] ; then
+        guess_lib="${L5_SOCKAPI_LIB64_TST1}"
+    fi
+    # Dynamic library for Tester1
+# Commented according to OL bug 8135
+#    host_lib="$(eval echo '${L5_SOCKAPI_LIB_'$TE_TST1_AUX'}')"
+    test -n "${guess_lib}" && export L5_SOCKAPI_LIB_TST1="${guess_lib}"
+#    test -n "${host_lib}" && export L5_SOCKAPI_LIB_TST1="${host_lib}"
+    # Directory to put dynamic library for Tester1
+    host_libdir="$(eval echo '${L5_SOCKAPI_LIBDIR_'$TE_TST1_AUX'}')"
+    test -n "${host_libdir}" && export L5_SOCKAPI_LIBDIR_TST1="${host_libdir}"
+fi
+
+if test -n "${TE_TST2}" ; then
+    # Dynamic library for Tester2
+# Commented according to OL bug 8135
+#    host_lib="$(eval echo '${L5_SOCKAPI_LIB_'$TE_TST2_AUX'}')"
+#    test -n "${host_lib}" && export L5_SOCKAPI_LIB_TST2="${host_lib}"
+    # Directory to put dynamic library for Tester2
+    host_libdir="$(eval echo '${L5_SOCKAPI_LIBDIR_'$TE_TST2_AUX'}')"
+    test -n "${host_libdir}" && export L5_SOCKAPI_LIBDIR_TST2="${host_libdir}"
+    # v5 live control plane tool
+fi
+
+# Obtain real path for talib_sockapi-ts directory.
+# The SOCKAPI_TS_LIBDIR variable may contain relative path
+# and TE's rsync_to() will fail with the following error:
+# < found ".." dir in relative path >
+pushd "$SOCKAPI_TS_LIBDIR/talib_sockapi_ts"
+TALIB_REAL_PATH="$(pwd -P)"
+popd
+export TE_RCF_CONSISTENCY_CHECKS_EXT_FILES=$(\
+    find -L "$TALIB_REAL_PATH" \
+        -type f -a \( -name "*.c" -o -name "*.h" \))
+
+if $ZF_SHIM_RUN ; then
+    TE_EXTRA_OPTS="${TE_EXTRA_OPTS} --opts=opts/zf_shim"
+    export SOCKAPI_TS_CFG_L5_UL_INC=true
+elif $L5_RUN ; then
+    TE_EXTRA_OPTS="${TE_EXTRA_OPTS} --opts=opts/onload"
+    export SOCKAPI_TS_CFG_L5_UL_INC=true
+else
+    TE_EXTRA_OPTS="${TE_EXTRA_OPTS} --opts=opts/native"
+fi
+
+# The name of ta_rpcprovider depends from the m32 option
+if test "$TE_OOL_UL" = "m32" ; then
+     export SF_TS_IUT_RPCPROVIDER=ta_rpcs_32
+else
+     export SF_TS_IUT_RPCPROVIDER=ta_rpcs
+fi
+# Use the same ta_rpcprovider for non-IUT hosts
+export SF_TS_TST_RPCPROVIDER=ta_rpcs

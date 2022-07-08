@@ -1,0 +1,53 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup arp ARP table
+@ingroup sockapi
+@{
+
+These tests are aimed to examine ARP resolution process. The main points tested here are:
+    - accelerated socket provokes ARP resolution when it is required;
+    - there is no extra ARP requestes sent in other cases.
+
+Other important points:
+    - ARP timeouts and reinforce using UDP/TCP traffic;
+    - ignoring invalid ARPs;
+    - multiple ARP replies;
+    - using of permanent and dynamic ARP;
+    - using of a few local addresses communicating with a few remoute addresses;
+    - robustness against ARP packets flooding.
+
+@par Maintainers:
+  - Dmitry Izbitsky <Dmitry.Izbitsky@oktetlabs.ru>
+  - Andrey Dmitrov <Andrey.Dmitrov@oktetlabs.ru>
+
+@par Tests:
+
+-# @ref arp-tcp_udp_reinforce
+-# @ref arp-invalid_arp_entry_timeout
+-# @ref arp-invalid_arp_request
+-# @ref arp-incomplete_entry
+-# @ref arp-permanent_entry_untouched_by_reply
+-# @ref arp-permanent_entry_untouched_by_request
+-# @ref arp-arp_table_full
+-# @ref arp-arp_change
+-# @ref arp-gateway_addr
+-# @ref arp-different_subnets
+-# @ref arp-broadcast
+-# @ref arp-common_broadcast
+-# @ref arp-if_ll_addr_1
+-# @ref arp-if_ll_addr_2
+-# @ref arp-no_outgoing_traffic
+-# @ref arp-if_scope_check
+-# @ref arp-many_addresses
+
+@par Possibly outdated tests
+
+These tests may be outdated, their utility is dubious.
+
+-# @ref arp-arp_flooding
+-# @ref arp-arp_packet_pool_empty
+
+@}
+*/

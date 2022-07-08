@@ -1,0 +1,3584 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<test name="signal" type="package">
+  <objective>Signals + Socket API</objective>
+  <notes/>
+  <iter result="PASSED">
+    <notes/>
+    <test name="multithread_signal" type="script">
+      <objective>Check that pthread_kill() delivers signal exactly to a given thread.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="func_sig">sigaction</arg>
+        <arg name="sig_to_send">SIGUSR1</arg>
+        <arg name="thread_to_send">1</arg>
+        <arg name="threads_num">50</arg>
+        <arg name="socket_before_handler"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="func_sig">sigaction</arg>
+        <arg name="sig_to_send">SIGUSR1</arg>
+        <arg name="thread_to_send">23</arg>
+        <arg name="threads_num">50</arg>
+        <arg name="socket_before_handler"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="func_sig">sigaction</arg>
+        <arg name="sig_to_send">SIGUSR1</arg>
+        <arg name="thread_to_send">50</arg>
+        <arg name="threads_num">50</arg>
+        <arg name="socket_before_handler"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="func_sig">bsd_signal_pre_siginterrupt</arg>
+        <arg name="sig_to_send">SIGUSR1</arg>
+        <arg name="thread_to_send">1</arg>
+        <arg name="threads_num">50</arg>
+        <arg name="socket_before_handler"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="func_sig">bsd_signal_pre_siginterrupt</arg>
+        <arg name="sig_to_send">SIGUSR1</arg>
+        <arg name="thread_to_send">23</arg>
+        <arg name="threads_num">50</arg>
+        <arg name="socket_before_handler"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="func_sig">bsd_signal_pre_siginterrupt</arg>
+        <arg name="sig_to_send">SIGUSR1</arg>
+        <arg name="thread_to_send">50</arg>
+        <arg name="threads_num">50</arg>
+        <arg name="socket_before_handler"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="func_sig">bsd_signal_post_siginterrupt</arg>
+        <arg name="sig_to_send">SIGUSR1</arg>
+        <arg name="thread_to_send">1</arg>
+        <arg name="threads_num">50</arg>
+        <arg name="socket_before_handler"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="func_sig">bsd_signal_post_siginterrupt</arg>
+        <arg name="sig_to_send">SIGUSR1</arg>
+        <arg name="thread_to_send">23</arg>
+        <arg name="threads_num">50</arg>
+        <arg name="socket_before_handler"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="func_sig">bsd_signal_post_siginterrupt</arg>
+        <arg name="sig_to_send">SIGUSR1</arg>
+        <arg name="thread_to_send">50</arg>
+        <arg name="threads_num">50</arg>
+        <arg name="socket_before_handler"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="connect_interrupted_signal" type="script">
+      <objective>Check that connect() returns -1, errno EINTR if it is interrupted by signal that is caught, and the next connect() returns success.</objective>
+      <notes>connect() is not interrupted by signal on Linux if SA_RESTART flag is set in signal action.</notes>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env"/>
+        <arg name="func_sig"/>
+        <arg name="restart"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="accept_interrupted_signal" type="script">
+      <objective>Check that accept() returns -1, errno EINTR if it is interrupted by signal that is caught, and the next accept() returns success.</objective>
+      <notes>The test is passed on Level5 since Level5 use select() to implement accept(). select() is not restartable function.</notes>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="func_sig"/>
+        <arg name="env"/>
+        <arg name="restart"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="close_interrupted_signal" type="script">
+      <objective>Check that close() return -1, errno EINTR if it is interrupted by signal that is caught and next close() return success.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="func_sig">sigaction</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="restart">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="func_sig">sigaction</arg>
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="restart">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="func_sig">sigaction</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="restart">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="func_sig">sigaction</arg>
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="restart">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="func_sig">sigaction_siginfo</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="restart">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="func_sig">sigaction_siginfo</arg>
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="restart">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="func_sig">sigaction_siginfo</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="restart">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="func_sig">sigaction_siginfo</arg>
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="restart">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="func_sig">bsd_signal_pre_siginterrupt</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="restart">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="func_sig">bsd_signal_pre_siginterrupt</arg>
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="restart">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="func_sig">bsd_signal_pre_siginterrupt</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="restart">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="func_sig">bsd_signal_pre_siginterrupt</arg>
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="restart">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="func_sig">bsd_signal_post_siginterrupt</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="restart">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="func_sig">bsd_signal_post_siginterrupt</arg>
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="restart">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="func_sig">bsd_signal_post_siginterrupt</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="restart">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="func_sig">bsd_signal_post_siginterrupt</arg>
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="restart">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="func_sig">sigaction</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="restart">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="func_sig">sigaction</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="restart">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="func_sig">sigaction_siginfo</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="restart">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="func_sig">sigaction_siginfo</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="restart">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="func_sig">bsd_signal_pre_siginterrupt</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="restart">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="func_sig">bsd_signal_pre_siginterrupt</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="restart">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="func_sig">bsd_signal_post_siginterrupt</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="restart">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="func_sig">bsd_signal_post_siginterrupt</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="restart">TRUE</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="write_interrupted_signal" type="script">
+      <objective>Check that writing function returns -1, errno EINTR if it is interrupted by signal that is caught, and the next function call returns success.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">template_send</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="v5&amp;!(ool_loop=0)">
+          <result value="FAILED">
+            <verdict>Writing function unexpectedly terminated with errno RPC-EOPNOTSUPP before the signal was sent</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;(ool_loop=0)">
+          <result value="FAILED">
+            <verdict>Writing function unexpectedly terminated with errno RPC-ESOCKTNOSUPPORT before the signal was sent</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">template_send</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>Writing function unexpectedly terminated with errno RPC-ESOCKTNOSUPPORT before the signal was sent</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">template_send</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers">TRUE</arg>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="v5" key="ON-3369">
+          <result value="FAILED">
+            <verdict>Writing function unexpectedly terminated with errno RPC-E2BIG before the signal was sent</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional">-</arg>
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_send_user_buf</arg>
+        <arg name="func_sig">sigaction</arg>
+        <arg name="multithread"/>
+        <arg name="restart">TRUE</arg>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="v5" notes="Socket is not accelerated in this case">
+          <result value="FAILED">
+            <verdict>Writing function unexpectedly terminated with errno RPC-ESOCKTNOSUPPORT (error message 'onload_zc_register_buffers() failed') before the signal was sent</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional">-</arg>
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_send_user_buf</arg>
+        <arg name="func_sig">sigaction_siginfo</arg>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="v5" notes="Socket is not accelerated in this case">
+          <result value="FAILED">
+            <verdict>Writing function unexpectedly terminated with errno RPC-ESOCKTNOSUPPORT (error message 'onload_zc_register_buffers() failed') before the signal was sent</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional">-</arg>
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_send_user_buf</arg>
+        <arg name="func_sig">bsd_signal_pre_siginterrupt</arg>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="v5" notes="Socket is not accelerated in this case">
+          <result value="FAILED">
+            <verdict>Writing function unexpectedly terminated with errno RPC-ESOCKTNOSUPPORT (error message 'onload_zc_register_buffers() failed') before the signal was sent</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional">-</arg>
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_send_user_buf</arg>
+        <arg name="func_sig">bsd_signal_post_siginterrupt</arg>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="v5" notes="Socket is not accelerated in this case">
+          <result value="FAILED">
+            <verdict>Writing function unexpectedly terminated with errno RPC-ESOCKTNOSUPPORT (error message 'onload_zc_register_buffers() failed') before the signal was sent</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional">second_signal</arg>
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_send_user_buf</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="v5" notes="Socket is not accelerated in this case">
+          <result value="FAILED">
+            <verdict>Writing function unexpectedly terminated with errno RPC-ESOCKTNOSUPPORT (error message 'onload_zc_register_buffers() failed') before the signal was sent</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional">timeout</arg>
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_send_user_buf</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="v5" notes="Socket is not accelerated in this case">
+          <result value="FAILED">
+            <verdict>Writing function unexpectedly terminated with errno RPC-ESOCKTNOSUPPORT (error message 'onload_zc_register_buffers() failed') before the signal was sent</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional">second_signal</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_send_user_buf</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart">FALSE</arg>
+        <arg name="small_buffers">TRUE</arg>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional">-</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_send_user_buf</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart">TRUE</arg>
+        <arg name="small_buffers">TRUE</arg>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="v5" key="WONTFIX ON-11631">
+          <result value="FAILED">
+            <verdict>Writing function timed out</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_send_user_buf</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="v5&amp;(ool_loop=0|ool_loop=1&amp;!reuse_stack)">
+          <result value="FAILED">
+            <verdict>Writing function unexpectedly terminated with errno TA_UNIX-ESOCKTNOSUPPORT (error message 'onload_zc_register_buffers() failed') before the signal was sent</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional">-</arg>
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_send_user_buf</arg>
+        <arg name="func_sig">sigaction</arg>
+        <arg name="multithread"/>
+        <arg name="restart">FALSE</arg>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="v5" notes="Socket is not accelerated in this case and onload_zc_register_buffers() fails with this socket">
+          <result value="FAILED">
+            <verdict>Writing function unexpectedly terminated with errno RPC-ESOCKTNOSUPPORT (error message 'onload_zc_register_buffers() failed') before the signal was sent</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_send</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="v5&amp;ool_loop=0">
+          <result value="FAILED">
+            <verdict>Writing function unexpectedly terminated with errno RPC-ESOCKTNOSUPPORT (error message 'onload_zc_alloc_buffers() failed') before the signal was sent</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_send</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="v5" notes="Socket is not accelerated in this case and onload_zc_alloc_buffers() fails with this socket">
+          <result value="FAILED">
+            <verdict>Writing function unexpectedly terminated with errno RPC-ESOCKTNOSUPPORT (error message 'onload_zc_alloc_buffers() failed') before the signal was sent</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">sendmmsg</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="v5&amp;!(ool_loop=0)">
+          <result value="FAILED">
+            <verdict>Writing function unexpectedly terminated with errno RPC-ENOSYS before the signal was sent</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">sendmmsg</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="v5&amp;(libc&lt;=13)">
+          <result value="FAILED">
+            <verdict>Writing function unexpectedly terminated with errno RPC-ENOSYS before the signal was sent</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">sendmmsg</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="v5">
+          <result value="FAILED">
+            <verdict>Writing function unexpectedly terminated with errno RPC-ENOSYS before the signal was sent</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env"/>
+        <arg name="func">sys_write</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env"/>
+        <arg name="func">sys_writev</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional">second_signal</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_send_user_buf</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart">FALSE</arg>
+        <arg name="small_buffers">FALSE</arg>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional">-</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_send_user_buf</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart">TRUE</arg>
+        <arg name="small_buffers">FALSE</arg>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional">-</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_send_user_buf</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart">FALSE</arg>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional">second_signal</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_send_user_buf</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart">TRUE</arg>
+        <arg name="small_buffers">TRUE</arg>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="v5" key="WONTFIX ON-11631">
+          <result value="FAILED">
+            <verdict>Writing function timed out</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional">second_signal</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_send_user_buf</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart">TRUE</arg>
+        <arg name="small_buffers">FALSE</arg>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">template_send</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers">FALSE</arg>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional">-</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">write</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional">-</arg>
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">write</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional">-</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">write</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional">second_signal</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">write</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional">second_signal</arg>
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">write</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional">second_signal</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">write</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional">-</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">writev</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional">-</arg>
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">writev</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional">-</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">writev</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional">second_signal</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">writev</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional">second_signal</arg>
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">writev</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional">second_signal</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">writev</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional">timeout</arg>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_send_user_buf</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_send</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional">timeout</arg>
+        <arg name="env"/>
+        <arg name="func">write</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional">timeout</arg>
+        <arg name="env"/>
+        <arg name="func">writev</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env"/>
+        <arg name="func">send</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env"/>
+        <arg name="func">sendto</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env"/>
+        <arg name="func">sendmsg</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester}}}</arg>
+        <arg name="func"/>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="read_interrupted_signal" type="script">
+      <objective>Check that reading function returns -1, errno EINTR if it is interrupted by signal that is caught, and the next call returns success.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_hlrx_recv_copy</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="v5&amp;!udp_connect_no_handover" notes="onload_zc_hlrx_recv_copy() function is supported only for accelerated sockets">
+          <result value="FAILED">
+            <verdict>Signal was sent when read() was trying to read some data on IUT, it returns -1, but: errno is set to ESOCKTNOSUPPORT instead of EINTR</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;udp_connect_no_handover" key="ST-1670">
+          <result value="PASSED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_hlrx_recv_zc</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="v5&amp;!udp_connect_no_handover" notes="onload_zc_hlrx_recv_zc() function is supported only for accelerated sockets">
+          <result value="FAILED">
+            <verdict>Signal was sent when read() was trying to read some data on IUT, it returns -1, but: errno is set to ESOCKTNOSUPPORT instead of EINTR</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;udp_connect_no_handover" key="ST-1670">
+          <result value="PASSED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="v5&amp;!udp_connect_no_handover" notes="onload_zc_recv() function is supported only for accelerated sockets">
+          <result value="FAILED">
+            <verdict>Signal was sent when read() was trying to read some data on IUT, it returns -1, but: errno is set to ESOCKTNOSUPPORT instead of EINTR</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;udp_connect_no_handover" key="ST-1670">
+          <result value="PASSED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_hlrx_recv_copy</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="v5&amp;ool_loop=0" notes="onload_zc_hlrx_recv_copy() cannot be used on non-accelerated socket">
+          <result value="FAILED">
+            <verdict>Signal was sent when read() was trying to read some data on IUT, it returns -1, but: errno is set to ESOCKTNOSUPPORT instead of EINTR</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_hlrx_recv_zc</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="v5&amp;ool_loop=0" notes="onload_zc_hlrx_recv_zc() cannot be used on non-accelerated socket">
+          <result value="FAILED">
+            <verdict>Signal was sent when read() was trying to read some data on IUT, it returns -1, but: errno is set to ESOCKTNOSUPPORT instead of EINTR</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="v5&amp;ool_loop=0" notes="onload_zc_recv() cannot be used on non-accelerated socket">
+          <result value="FAILED">
+            <verdict>Signal was sent when read() was trying to read some data on IUT, it returns -1, but: errno is set to ESOCKTNOSUPPORT instead of EINTR</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">recvmmsg</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="linux&amp;v5&amp;!(ool_loop=0)" notes="recvmmsg() is not supported for TCP socket on onload">
+          <result value="FAILED">
+            <verdict>Signal was sent when read() was trying to read some data on IUT, it returns -1, but: errno is set to ENOSYS instead of EINTR</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_hlrx_recv_copy</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard">FALSE</arg>
+        <notes/>
+        <results tags="v5&amp;!(udp_connect_no_handover&amp;laddr_all)" notes="onload_zc_hlrx_recv_copy() function is supported only for accelerated sockets">
+          <result value="FAILED">
+            <verdict>Signal was sent when read() was trying to read some data on IUT, it returns -1, but: errno is set to ESOCKTNOSUPPORT instead of EINTR</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_hlrx_recv_zc</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard">FALSE</arg>
+        <notes/>
+        <results tags="v5&amp;!(udp_connect_no_handover&amp;laddr_all)" notes="onload_zc_hlrx_recv_zc() function is supported only for accelerated sockets">
+          <result value="FAILED">
+            <verdict>Signal was sent when read() was trying to read some data on IUT, it returns -1, but: errno is set to ESOCKTNOSUPPORT instead of EINTR</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard">FALSE</arg>
+        <notes/>
+        <results tags="v5&amp;!(udp_connect_no_handover&amp;laddr_all)" notes="onload_zc_recv() function is supported only for accelerated sockets">
+          <result value="FAILED">
+            <verdict>Signal was sent when read() was trying to read some data on IUT, it returns -1, but: errno is set to ESOCKTNOSUPPORT instead of EINTR</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_hlrx_recv_copy</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="v5" notes="onload_zc_hlrx_recv_copy() function is supported only for accelerated sockets">
+          <result value="FAILED">
+            <verdict>Signal was sent when read() was trying to read some data on IUT, it returns -1, but: errno is set to ESOCKTNOSUPPORT instead of EINTR</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_hlrx_recv_zc</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="v5" notes="onload_zc_hlrx_recv_zc() function is supported only for accelerated sockets">
+          <result value="FAILED">
+            <verdict>Signal was sent when read() was trying to read some data on IUT, it returns -1, but: errno is set to ESOCKTNOSUPPORT instead of EINTR</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="v5" notes="onload_zc_recv() function is supported only for accelerated sockets">
+          <result value="FAILED">
+            <verdict>Signal was sent when read() was trying to read some data on IUT, it returns -1, but: errno is set to ESOCKTNOSUPPORT instead of EINTR</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">recvmmsg</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="linux&amp;v5" notes="recvmmsg() is not supported for TCP socket on onload">
+          <result value="FAILED">
+            <verdict>Signal was sent when read() was trying to read some data on IUT, it returns -1, but: errno is set to ENOSYS instead of EINTR</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env"/>
+        <arg name="func">sys_read</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env"/>
+        <arg name="func">sys_readv</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">recvmmsg</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">recvmmsg</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env"/>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env"/>
+        <arg name="func">onload_zc_hlrx_recv_zc</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env"/>
+        <arg name="func">onload_zc_hlrx_recv_copy</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_hlrx_recv_zc</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">onload_zc_hlrx_recv_copy</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func">recvmmsg</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env"/>
+        <arg name="func">read</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env"/>
+        <arg name="func">readv</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env"/>
+        <arg name="func">recv</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env"/>
+        <arg name="func">recvfrom</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env"/>
+        <arg name="func">recvmsg</arg>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env"/>
+        <arg name="func"/>
+        <arg name="func_sig"/>
+        <arg name="multithread"/>
+        <arg name="restart"/>
+        <arg name="signal_before_fd"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="sendfile_interrupted_signal" type="script">
+      <objective>Check that sendfile() function provides the following behaviour if signal has been catched by process: - it is interrupted by signal and returns -1, errno EINTR if SA_RESTART flag is cleared for current signal handler; - it continues processing if SA_RESTART flag is set (default behaviour).</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env"/>
+        <arg name="file_length">512</arg>
+        <arg name="func_sig"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="additional"/>
+        <arg name="env"/>
+        <arg name="file_length">524288</arg>
+        <arg name="func_sig"/>
+        <arg name="restart"/>
+        <arg name="small_buffers"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="iomux_interrupted_signal" type="script">
+      <objective>Check that I/O multiplexers return -1, errno EINTR if it is interrupted by signal that is caught.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="restart"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>Interrupted iomux returned -1, but: errno is set to EINVAL instead of EINTR</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="restart"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>Interrupted iomux returned -1, but: errno is set to EINVAL instead of EINTR</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="restart"/>
+        <arg name="sock_type"/>
+        <arg name="sock_type_add">active</arg>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>Interrupted iomux returned -1, but: errno is set to EINVAL instead of EINTR</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="restart"/>
+        <arg name="sock_type"/>
+        <arg name="sock_type_add">passive</arg>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>Interrupted iomux returned -1, but: errno is set to EINVAL instead of EINTR</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func_sig"/>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="restart"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>Interrupted iomux returned -1, but: errno is set to EINVAL instead of EINTR</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">select</arg>
+        <arg name="restart"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">select</arg>
+        <arg name="restart"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="restart"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="restart"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">poll</arg>
+        <arg name="restart"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">poll</arg>
+        <arg name="restart"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="restart"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="restart"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">epoll</arg>
+        <arg name="restart"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">epoll</arg>
+        <arg name="restart"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="restart"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="restart"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux"/>
+        <arg name="restart"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="restart"/>
+        <arg name="sock_type"/>
+        <arg name="sock_type_add">listen</arg>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">select</arg>
+        <arg name="restart"/>
+        <arg name="sock_type"/>
+        <arg name="sock_type_add"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="restart"/>
+        <arg name="sock_type"/>
+        <arg name="sock_type_add"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">poll</arg>
+        <arg name="restart"/>
+        <arg name="sock_type"/>
+        <arg name="sock_type_add"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="restart"/>
+        <arg name="sock_type"/>
+        <arg name="sock_type_add"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">epoll</arg>
+        <arg name="restart"/>
+        <arg name="sock_type"/>
+        <arg name="sock_type_add"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="restart"/>
+        <arg name="sock_type"/>
+        <arg name="sock_type_add"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux"/>
+        <arg name="restart"/>
+        <arg name="sock_type"/>
+        <arg name="sock_type_add"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux"/>
+        <arg name="restart"/>
+        <arg name="sock_type"/>
+        <arg name="sock_type_add"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func_sig"/>
+        <arg name="iomux">select</arg>
+        <arg name="restart"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func_sig"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="restart"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func_sig"/>
+        <arg name="iomux">poll</arg>
+        <arg name="restart"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func_sig"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="restart"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func_sig"/>
+        <arg name="iomux">epoll</arg>
+        <arg name="restart"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func_sig"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="restart"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="signal_handler_close" type="script">
+      <objective>Check that close() called by signal handler works correctly when signal has been recieved while another function is working on the process.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="close_aux">FALSE</arg>
+        <arg name="close_func">close</arg>
+        <arg name="env"/>
+        <arg name="func">writev</arg>
+        <arg name="restart">TRUE</arg>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="v5" key="ON-743">
+          <result value="FAILED">
+            <verdict>writev() unexpectedly succeeded</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux">FALSE</arg>
+        <arg name="close_func">close</arg>
+        <arg name="env"/>
+        <arg name="func">write</arg>
+        <arg name="restart">TRUE</arg>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="v5" key="ON-743">
+          <result value="FAILED">
+            <verdict>write() unexpectedly succeeded</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux">FALSE</arg>
+        <arg name="close_func">close</arg>
+        <arg name="env"/>
+        <arg name="func">readv</arg>
+        <arg name="restart">TRUE</arg>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="v5" key="ON-743">
+          <result value="FAILED">
+            <verdict>readv() unexpectedly succeeded</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux">FALSE</arg>
+        <arg name="close_func">close</arg>
+        <arg name="env"/>
+        <arg name="func">read</arg>
+        <arg name="restart">TRUE</arg>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="v5" key="ON-743">
+          <result value="FAILED">
+            <verdict>read() unexpectedly succeeded</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux">FALSE</arg>
+        <arg name="close_func">close</arg>
+        <arg name="env"/>
+        <arg name="func">close</arg>
+        <arg name="restart"/>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>Closing function in signal handler failed with errno EBADF</verdict>
+            <verdict>close() unexpectedly succeeded</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux"/>
+        <arg name="close_func">dup2</arg>
+        <arg name="env"/>
+        <arg name="func">onload_zc_send_user_buf</arg>
+        <arg name="restart"/>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="v5" key="ON-1775, ON-4179">
+          <result value="FAILED">
+            <verdict>Test function is hanging</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux"/>
+        <arg name="close_func">dup2</arg>
+        <arg name="env"/>
+        <arg name="func">read</arg>
+        <arg name="restart"/>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="v5" key="ON-1775, ON-4179">
+          <result value="FAILED">
+            <verdict>Test function is hanging</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux"/>
+        <arg name="close_func">dup2</arg>
+        <arg name="env"/>
+        <arg name="func">readv</arg>
+        <arg name="restart"/>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="v5" key="ON-1775, ON-4179">
+          <result value="FAILED">
+            <verdict>Test function is hanging</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux"/>
+        <arg name="close_func">dup2</arg>
+        <arg name="env"/>
+        <arg name="func">write</arg>
+        <arg name="restart"/>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="v5" key="ON-1775, ON-4179">
+          <result value="FAILED">
+            <verdict>Test function is hanging</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux"/>
+        <arg name="close_func">dup2</arg>
+        <arg name="env"/>
+        <arg name="func">writev</arg>
+        <arg name="restart"/>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="v5" key="ON-1775, ON-4179">
+          <result value="FAILED">
+            <verdict>Test function is hanging</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux">FALSE</arg>
+        <arg name="close_func">close</arg>
+        <arg name="env"/>
+        <arg name="func">onload_zc_send_user_buf</arg>
+        <arg name="restart">TRUE</arg>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="v5" notes="Expected behavior, polling closed FD for completion events cannot succeed">
+          <result value="FAILED">
+            <verdict>The following error was reported after calling the test function: TA_UNIX-EINVAL (error message 'poll() returned POLLNVAL event when waiting for completion events')</verdict>
+            <verdict>onload_zc_send_user_buf() failed with wrong errno (Non-RPC TA_UNIX-EINVAL instead EBADF)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux">FALSE</arg>
+        <arg name="close_func">close</arg>
+        <arg name="env"/>
+        <arg name="func">onload_zc_send</arg>
+        <arg name="restart">TRUE</arg>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-743">
+          <result value="FAILED">
+            <verdict>onload_zc_send() unexpectedly succeeded</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux"/>
+        <arg name="close_func">dup2</arg>
+        <arg name="env"/>
+        <arg name="func">accept</arg>
+        <arg name="restart"/>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1775, ON-4179">
+          <result value="FAILED">
+            <verdict>Connection established, though the socket should be closed</verdict>
+            <verdict>Test function is hanging</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux">FALSE</arg>
+        <arg name="close_func">close</arg>
+        <arg name="env"/>
+        <arg name="func">recv</arg>
+        <arg name="restart">TRUE</arg>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-743">
+          <result value="FAILED">
+            <verdict>recv() unexpectedly succeeded</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux"/>
+        <arg name="close_func">dup2</arg>
+        <arg name="env"/>
+        <arg name="func">sendfile</arg>
+        <arg name="restart">TRUE</arg>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="linux-2.6&lt;26&amp;!v5">
+          <result value="FAILED">
+            <verdict>Wrong socket state, got STATE_BOUND; expected STATE_CLEAR</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux"/>
+        <arg name="close_func">dup2</arg>
+        <arg name="env"/>
+        <arg name="func">send</arg>
+        <arg name="restart">TRUE</arg>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1775, ON-4179">
+          <result value="FAILED">
+            <verdict>Test function is hanging</verdict>
+          </result>
+        </results>
+        <results tags="linux-2.6&lt;26&amp;!v5">
+          <result value="FAILED">
+            <verdict>Wrong socket state, got STATE_BOUND; expected STATE_CLEAR</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux"/>
+        <arg name="close_func">dup2</arg>
+        <arg name="env"/>
+        <arg name="func">onload_zc_send</arg>
+        <arg name="restart"/>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1775, ON-4179">
+          <result value="FAILED">
+            <verdict>Test function is hanging</verdict>
+          </result>
+        </results>
+        <results tags="linux-2.6&lt;26&amp;!v5">
+          <result value="FAILED">
+            <verdict>Wrong socket state, got STATE_BOUND; expected STATE_CLEAR</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux">FALSE</arg>
+        <arg name="close_func">close</arg>
+        <arg name="env"/>
+        <arg name="func">send</arg>
+        <arg name="restart">TRUE</arg>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-743">
+          <result value="FAILED">
+            <verdict>send() unexpectedly succeeded</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux"/>
+        <arg name="close_func">shutdown</arg>
+        <arg name="env">{'iut_host'{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,if:'iut_if'},'gw'{{'pco_gw':tester},addr:'gw_iut_addr':inet:unicast}},{'gw'{addr:'gw_tst_addr':inet:unicast,addr:'alien_link_addr':ether:alien},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+        <arg name="func"/>
+        <arg name="restart">TRUE</arg>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="v5" key="ON-1170">
+          <result value="FAILED">
+            <verdict>connect() unexpectedly failed with errno RPC-ECONNRESET</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux"/>
+        <arg name="close_func">dup2</arg>
+        <arg name="env"/>
+        <arg name="func">send</arg>
+        <arg name="restart">FALSE</arg>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1775, ON-4179">
+          <result value="FAILED">
+            <verdict>Test function is hanging</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux"/>
+        <arg name="close_func">dup2</arg>
+        <arg name="env"/>
+        <arg name="func">recv</arg>
+        <arg name="restart"/>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1775, ON-4179">
+          <result value="FAILED">
+            <verdict>Test function is hanging</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux"/>
+        <arg name="close_func">dup2</arg>
+        <arg name="env">{'iut_host'{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,if:'iut_if'},'gw'{{'pco_gw':tester},addr:'gw_iut_addr':inet:unicast}},{'gw'{addr:'gw_tst_addr':inet:unicast,addr:'alien_link_addr':ether:alien},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+        <arg name="func"/>
+        <arg name="restart"/>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1775, ON-4179">
+          <result value="FAILED">
+            <verdict>Test function is hanging</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux">FALSE</arg>
+        <arg name="close_func">close</arg>
+        <arg name="env">{'iut_host'{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,if:'iut_if'},'gw'{{'pco_gw':tester},addr:'gw_iut_addr':inet:unicast}},{'gw'{addr:'gw_tst_addr':inet:unicast,addr:'alien_link_addr':ether:alien},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+        <arg name="func"/>
+        <arg name="restart">TRUE</arg>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-743">
+          <result value="FAILED">
+            <verdict>connect() unexpectedly succeeded</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux">FALSE</arg>
+        <arg name="close_func">close</arg>
+        <arg name="env"/>
+        <arg name="func">send</arg>
+        <arg name="restart">FALSE</arg>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux">FALSE</arg>
+        <arg name="close_func">close</arg>
+        <arg name="env"/>
+        <arg name="func">recv</arg>
+        <arg name="restart">FALSE</arg>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux">FALSE</arg>
+        <arg name="close_func">close</arg>
+        <arg name="env"/>
+        <arg name="func">onload_zc_send</arg>
+        <arg name="restart">FALSE</arg>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux">FALSE</arg>
+        <arg name="close_func">close</arg>
+        <arg name="env"/>
+        <arg name="func">onload_zc_send_user_buf</arg>
+        <arg name="restart">FALSE</arg>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux">FALSE</arg>
+        <arg name="close_func">close</arg>
+        <arg name="env"/>
+        <arg name="func">read</arg>
+        <arg name="restart">FALSE</arg>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux">FALSE</arg>
+        <arg name="close_func">close</arg>
+        <arg name="env"/>
+        <arg name="func">readv</arg>
+        <arg name="restart">FALSE</arg>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux">FALSE</arg>
+        <arg name="close_func">close</arg>
+        <arg name="env"/>
+        <arg name="func">write</arg>
+        <arg name="restart">FALSE</arg>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux">FALSE</arg>
+        <arg name="close_func">close</arg>
+        <arg name="env"/>
+        <arg name="func">writev</arg>
+        <arg name="restart">FALSE</arg>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux">FALSE</arg>
+        <arg name="close_func">close</arg>
+        <arg name="env">{'iut_host'{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,if:'iut_if'},'gw'{{'pco_gw':tester},addr:'gw_iut_addr':inet:unicast}},{'gw'{addr:'gw_tst_addr':inet:unicast,addr:'alien_link_addr':ether:alien},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+        <arg name="func"/>
+        <arg name="restart">FALSE</arg>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux"/>
+        <arg name="close_func">dup2</arg>
+        <arg name="env"/>
+        <arg name="func">sendfile</arg>
+        <arg name="restart">FALSE</arg>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux"/>
+        <arg name="close_func">shutdown</arg>
+        <arg name="env">{'iut_host'{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,if:'iut_if'},'gw'{{'pco_gw':tester},addr:'gw_iut_addr':inet:unicast}},{'gw'{addr:'gw_tst_addr':inet:unicast,addr:'alien_link_addr':ether:alien},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+        <arg name="func"/>
+        <arg name="restart">FALSE</arg>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux">FALSE</arg>
+        <arg name="close_func">close</arg>
+        <arg name="env"/>
+        <arg name="func">sendfile</arg>
+        <arg name="restart"/>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux">FALSE</arg>
+        <arg name="close_func">close</arg>
+        <arg name="env"/>
+        <arg name="func">accept</arg>
+        <arg name="restart"/>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux"/>
+        <arg name="close_func">shutdown</arg>
+        <arg name="env"/>
+        <arg name="func">send</arg>
+        <arg name="restart"/>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux"/>
+        <arg name="close_func">shutdown</arg>
+        <arg name="env"/>
+        <arg name="func">sendfile</arg>
+        <arg name="restart"/>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux"/>
+        <arg name="close_func">shutdown</arg>
+        <arg name="env"/>
+        <arg name="func">recv</arg>
+        <arg name="restart"/>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux"/>
+        <arg name="close_func">shutdown</arg>
+        <arg name="env"/>
+        <arg name="func">accept</arg>
+        <arg name="restart"/>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux"/>
+        <arg name="close_func">shutdown</arg>
+        <arg name="env"/>
+        <arg name="func">onload_zc_send</arg>
+        <arg name="restart"/>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux"/>
+        <arg name="close_func">shutdown</arg>
+        <arg name="env"/>
+        <arg name="func">onload_zc_send_user_buf</arg>
+        <arg name="restart"/>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux"/>
+        <arg name="close_func">dup2</arg>
+        <arg name="env"/>
+        <arg name="func">close</arg>
+        <arg name="restart"/>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux">FALSE</arg>
+        <arg name="close_func"/>
+        <arg name="env"/>
+        <arg name="func">select</arg>
+        <arg name="restart"/>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux">FALSE</arg>
+        <arg name="close_func"/>
+        <arg name="env"/>
+        <arg name="func">pselect</arg>
+        <arg name="restart"/>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux">FALSE</arg>
+        <arg name="close_func"/>
+        <arg name="env"/>
+        <arg name="func">poll</arg>
+        <arg name="restart"/>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux">FALSE</arg>
+        <arg name="close_func"/>
+        <arg name="env"/>
+        <arg name="func">ppoll</arg>
+        <arg name="restart"/>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux">FALSE</arg>
+        <arg name="close_func"/>
+        <arg name="env"/>
+        <arg name="func">epoll</arg>
+        <arg name="restart"/>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux">FALSE</arg>
+        <arg name="close_func"/>
+        <arg name="env"/>
+        <arg name="func">epoll_pwait</arg>
+        <arg name="restart"/>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_aux">TRUE</arg>
+        <arg name="close_func"/>
+        <arg name="env"/>
+        <arg name="func"/>
+        <arg name="restart"/>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="default_signal" type="script">
+      <objective>Check that default signal handler is SIG_DFL.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="sig">SIGUSR1</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="inherited_signal" type="script">
+      <objective>Checks that signal handlers are properly inherited after fork()</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="check_before_socket"/>
+        <arg name="func_sig"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="out_of_packet" type="script">
+      <objective>Check that in case of out of packet condition signals are handled correctly.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="install_sighandler">FALSE</arg>
+        <arg name="restart"/>
+        <notes/>
+        <results tags="v5" notes="'Out of packet' condition is very unstable">
+          <result value="PASSED">
+            <verdict>sendto() have not been unblocked in spite of SO_SNDTIMEO was set</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>Failed to get 'out of packet' condition</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="install_sighandler">TRUE</arg>
+        <arg name="restart">FALSE</arg>
+        <notes/>
+        <results tags="v5" notes="'Out of packet' condition is very unstable">
+          <result value="PASSED">
+            <verdict>sendto() have not been unblocked in spite of SO_SNDTIMEO was set</verdict>
+            <verdict>sendto() with big packet still hanging when SA_RESTART is not set</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>Failed to get 'out of packet' condition</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="install_sighandler"/>
+        <arg name="restart">TRUE</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="iomux_pending_signal" type="script">
+      <objective>Check that pselect(), ppoll() and epoll_pwait() behave correctly when their signal mask unblocks some pending signal and also an event is ready by the time of a call.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux"/>
+        <arg name="sig_to_send"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="timeout">1</arg>
+        <arg name="use_epollet">TRUE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="v5&amp;ool_epoll=1&amp;!ool_spin" key="ON-929">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>The second epoll_pwait() call returned 1 instead of -1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux"/>
+        <arg name="sig_to_send"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="timeout">1</arg>
+        <arg name="use_epollet">TRUE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="libc_close&amp;ool_epoll=3&amp;epoll_mt_safe&amp;v5" key="ON-12255">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>The second epoll_pwait() call returned 1 instead of -1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func_sig"/>
+        <arg name="iomux"/>
+        <arg name="sig_to_send"/>
+        <arg name="sock_type"/>
+        <arg name="timeout">1</arg>
+        <arg name="use_epollet">TRUE</arg>
+        <arg name="use_wildcard">TRUE</arg>
+        <notes/>
+        <results tags="libc_close&amp;ool_epoll=3&amp;epoll_mt_safe&amp;v5" key="ON-12255">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>The second epoll_pwait() call returned 1 instead of -1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux"/>
+        <arg name="sig_to_send"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="timeout">0</arg>
+        <arg name="use_epollet">TRUE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>The second epoll_pwait() call returned 0 instead of -1</verdict>
+            <verdict>Signal unblocked when calling epoll_pwait() was not handled</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=1" key="ON-929">
+          <result value="FAILED">
+            <verdict>The second epoll_pwait() call returned 1 instead of -1</verdict>
+            <verdict>The third epoll_pwait() call returned 0 instead of -1</verdict>
+            <verdict>Signal unblocked when calling epoll_pwait() was not handled</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>The second epoll_pwait() call returned 0 instead of -1</verdict>
+            <verdict>Signal unblocked when calling epoll_pwait() was not handled</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig">sigaction_siginfo</arg>
+        <arg name="iomux"/>
+        <arg name="sig_to_send"/>
+        <arg name="sock_type"/>
+        <arg name="timeout">0</arg>
+        <arg name="use_epollet">TRUE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>The second epoll_pwait() call returned 0 instead of -1</verdict>
+            <verdict>Signal unblocked when calling epoll_pwait() was not handled</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=1" key="ON-929">
+          <result value="FAILED">
+            <verdict>The second epoll_pwait() call returned 1 instead of -1</verdict>
+            <verdict>The third epoll_pwait() call returned 0 instead of -1</verdict>
+            <verdict>Signal unblocked when calling epoll_pwait() was not handled</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>The second epoll_pwait() call returned 0 instead of -1</verdict>
+            <verdict>Signal unblocked when calling epoll_pwait() was not handled</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="sig_to_send"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="timeout">0</arg>
+        <arg name="use_epollet">FALSE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>The second epoll_pwait() call returned 0 instead of -1</verdict>
+            <verdict>Signal unblocked when calling epoll_pwait() was not handled</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig">sigaction_siginfo</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="sig_to_send"/>
+        <arg name="sock_type"/>
+        <arg name="timeout">0</arg>
+        <arg name="use_epollet">FALSE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>The second epoll_pwait() call returned 0 instead of -1</verdict>
+            <verdict>Signal unblocked when calling epoll_pwait() was not handled</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="sig_to_send"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="timeout">0</arg>
+        <arg name="use_epollet"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>The second epoll_pwait() call returned 0 instead of -1</verdict>
+            <verdict>Signal unblocked when calling epoll_pwait() was not handled</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig">sigaction</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="sig_to_send"/>
+        <arg name="sock_type"/>
+        <arg name="timeout">0</arg>
+        <arg name="use_epollet"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>The second epoll_pwait() call returned 0 instead of -1</verdict>
+            <verdict>Signal unblocked when calling epoll_pwait() was not handled</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="sig_to_send"/>
+        <arg name="sock_type"/>
+        <arg name="timeout">0</arg>
+        <arg name="use_epollet"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>The second epoll_pwait() call returned 0 instead of -1</verdict>
+            <verdict>Signal unblocked when calling epoll_pwait() was not handled</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux"/>
+        <arg name="sig_to_send"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="timeout">1</arg>
+        <arg name="use_epollet">TRUE</arg>
+        <arg name="use_wildcard">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux"/>
+        <arg name="sig_to_send"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="timeout">1</arg>
+        <arg name="use_epollet">TRUE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux"/>
+        <arg name="sig_to_send"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="timeout">1</arg>
+        <arg name="use_epollet">TRUE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux"/>
+        <arg name="sig_to_send"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="timeout">1</arg>
+        <arg name="use_epollet">TRUE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func_sig"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="sig_to_send"/>
+        <arg name="sock_type"/>
+        <arg name="timeout">1</arg>
+        <arg name="use_epollet">FALSE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func_sig"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="sig_to_send"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_epollet"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func_sig"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="sig_to_send"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_epollet"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="sa_resethand" type="script">
+      <objective>Check that signal handler installed with SA_RESETHAND flag will be reset to default after receiving a signal</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func_sig">sigaction</arg>
+        <arg name="set_flag">FALSE</arg>
+        <arg name="sig_to_send"/>
+        <arg name="socket_after_sigaction"/>
+        <arg name="drop_stack"/>
+        <notes/>
+        <results tags="ul-64&amp;!ppc64&amp;!aarch64">
+          <result value="PASSED">
+            <verdict>Returned sigaction structure is not the same as specified for previous sigaction() call: flags are SA_RESTORER instead of 0</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func_sig">sigaction</arg>
+        <arg name="set_flag">TRUE</arg>
+        <arg name="sig_to_send"/>
+        <arg name="socket_after_sigaction"/>
+        <arg name="drop_stack"/>
+        <notes/>
+        <results tags="ul-64&amp;!ppc64&amp;!aarch64&amp;!v5">
+          <result value="PASSED">
+            <verdict>Returned sigaction structure is not the same as specified for previous sigaction() call: flags are SA_RESETHAND | SA_RESTORER instead of SA_RESETHAND</verdict>
+            <verdict>After reseting handler to default flags are not 0 but SA_RESETHAND | SA_RESTORER</verdict>
+          </result>
+        </results>
+        <results tags="ul-64&amp;!ppc64&amp;!aarch64&amp;v5" key="ON-9853">
+          <result value="PASSED">
+            <verdict>Returned sigaction structure is not the same as specified for previous sigaction() call: flags are SA_RESETHAND | SA_RESTORER instead of SA_RESETHAND</verdict>
+            <verdict>After reseting handler to default flags are not 0 but SA_RESTORER</verdict>
+          </result>
+        </results>
+        <results tags="(ul-32|ppc64|aarch64)&amp;!v5" key="ON-9853">
+          <result value="PASSED">
+            <verdict>After reseting handler to default flags are not 0 but SA_RESETHAND</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func_sig">sysv_signal</arg>
+        <arg name="set_flag">FALSE</arg>
+        <arg name="sig_to_send"/>
+        <arg name="socket_after_sigaction"/>
+        <arg name="drop_stack"/>
+        <notes/>
+        <results tags="ul-64&amp;!ppc64&amp;!aarch64">
+          <result value="PASSED">
+            <verdict>Returned sigaction structure is not the same as specified for previous sigaction() call: flags are SA_RESETHAND | SA_NODEFER | SA_RESTORER | SA_INTERRUPT instead of SA_RESETHAND | SA_NODEFER</verdict>
+            <verdict>After reseting handler to default flags are not 0 but SA_RESETHAND | SA_NODEFER | SA_RESTORER | SA_INTERRUPT</verdict>
+          </result>
+        </results>
+        <results tags="ul-32|ppc64|aarch64">
+          <result value="PASSED">
+            <verdict>Returned sigaction structure is not the same as specified for previous sigaction() call: flags are SA_RESETHAND | SA_NODEFER | SA_INTERRUPT instead of SA_RESETHAND | SA_NODEFER</verdict>
+            <verdict>After reseting handler to default flags are not 0 but SA_RESETHAND | SA_NODEFER | SA_INTERRUPT</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func_sig">sysv_signal</arg>
+        <arg name="set_flag">TRUE</arg>
+        <arg name="sig_to_send"/>
+        <arg name="socket_after_sigaction"/>
+        <arg name="drop_stack"/>
+        <notes/>
+        <results tags="ul-64&amp;!ppc64&amp;!aarch64&amp;!v5">
+          <result value="PASSED">
+            <verdict>Returned sigaction structure is not the same as specified for previous sigaction() call: flags are SA_RESETHAND | SA_NODEFER | SA_RESTORER | SA_INTERRUPT instead of SA_RESETHAND | SA_NODEFER</verdict>
+            <verdict>After reseting handler to default flags are not 0 but SA_RESETHAND | SA_NODEFER | SA_RESTORER | SA_INTERRUPT</verdict>
+          </result>
+        </results>
+        <results tags="ul-64&amp;!ppc64&amp;!aarch64&amp;v5" key="ON-9853">
+          <result value="PASSED">
+            <verdict>Returned sigaction structure is not the same as specified for previous sigaction() call: flags are SA_RESETHAND | SA_NODEFER | SA_RESTORER | SA_INTERRUPT instead of SA_RESETHAND | SA_NODEFER</verdict>
+            <verdict>After reseting handler to default flags are not 0 but SA_NODEFER | SA_RESTORER | SA_INTERRUPT</verdict>
+          </result>
+        </results>
+        <results tags="(ul-32|ppc64|aarch64)&amp;!v5" key="ON-9853">
+          <result value="PASSED">
+            <verdict>Returned sigaction structure is not the same as specified for previous sigaction() call: flags are SA_RESETHAND | SA_NODEFER | SA_INTERRUPT instead of SA_RESETHAND | SA_NODEFER</verdict>
+            <verdict>After reseting handler to default flags are not 0 but SA_RESETHAND | SA_NODEFER | SA_INTERRUPT</verdict>
+          </result>
+        </results>
+        <results tags="(ul-32|ppc64|aarch64)&amp;v5" key="ON-9853">
+          <result value="PASSED">
+            <verdict>Returned sigaction structure is not the same as specified for previous sigaction() call: flags are SA_RESETHAND | SA_NODEFER | SA_INTERRUPT instead of SA_RESETHAND | SA_NODEFER</verdict>
+            <verdict>After reseting handler to default flags are not 0 but SA_NODEFER | SA_INTERRUPT</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func_sig">bsd_signal</arg>
+        <arg name="set_flag"/>
+        <arg name="sig_to_send"/>
+        <arg name="socket_after_sigaction"/>
+        <arg name="drop_stack"/>
+        <notes/>
+        <results tags="ul-64&amp;!ppc64&amp;!aarch64">
+          <result value="PASSED">
+            <verdict>Returned sigaction structure is not the same as specified for previous sigaction() call: flags are SA_RESTART | SA_RESTORER instead of SA_RESTART</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="sa_onstack" type="script">
+      <objective>Check that signal handler installed with SA_ONSTACK flag is called on an alternate signal stack</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="set_alt_stack"/>
+        <arg name="set_flag">FALSE</arg>
+        <arg name="sig_to_send"/>
+        <arg name="socket_after_sigaction"/>
+        <arg name="drop_stack"/>
+        <notes/>
+        <results tags="ul-64&amp;!ppc64&amp;!aarch64">
+          <result value="PASSED">
+            <verdict>Returned sigaction structure is not the same as specified for previous sigaction() call: flags are SA_RESTORER instead of 0</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="set_alt_stack"/>
+        <arg name="set_flag">TRUE</arg>
+        <arg name="sig_to_send"/>
+        <arg name="socket_after_sigaction"/>
+        <arg name="drop_stack"/>
+        <notes/>
+        <results tags="ul-64&amp;!ppc64&amp;!aarch64">
+          <result value="PASSED">
+            <verdict>Returned sigaction structure is not the same as specified for previous sigaction() call: flags are SA_ONSTACK | SA_RESTORER instead of SA_ONSTACK</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="sa_nodefer" type="script">
+      <objective>Check that signal handler installed with SA_NODEFER flag can be interrupted by the same signal for which it was installed.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="drop_stack"/>
+        <arg name="env"/>
+        <arg name="func_sig">bsd_signal</arg>
+        <arg name="set_flag"/>
+        <arg name="sig_to_send"/>
+        <arg name="socket_after_sigaction"/>
+        <notes/>
+        <results tags="ul-64&amp;!ppc64&amp;!aarch64">
+          <result value="PASSED">
+            <verdict>Returned sigaction structure is not the same as specified for previous sigaction() call: flags are SA_RESTART | SA_RESTORER instead of SA_RESTART</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="drop_stack"/>
+        <arg name="env"/>
+        <arg name="func_sig">sysv_signal</arg>
+        <arg name="set_flag"/>
+        <arg name="sig_to_send"/>
+        <arg name="socket_after_sigaction"/>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>Returned sigaction structure is not the same as specified for previous sigaction() call: flags are SA_RESETHAND | SA_NODEFER | SA_RESTORER | SA_INTERRUPT instead of SA_RESETHAND | SA_NODEFER</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ul-32" key="ON-5350">
+          <result value="PASSED">
+            <verdict>Returned sigaction structure is not the same as specified for previous sigaction() call: flags are SA_RESETHAND | SA_NODEFER | SA_INTERRUPT instead of SA_RESETHAND | SA_NODEFER</verdict>
+          </result>
+        </results>
+        <results tags="aarch64" key="ST-1245">
+          <result value="PASSED">
+            <verdict>Returned sigaction structure is not the same as specified for previous sigaction() call: flags are SA_RESETHAND | SA_NODEFER | SA_INTERRUPT instead of SA_RESETHAND | SA_NODEFER</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="drop_stack"/>
+        <arg name="env"/>
+        <arg name="func_sig">sigaction</arg>
+        <arg name="set_flag">TRUE</arg>
+        <arg name="sig_to_send"/>
+        <arg name="socket_after_sigaction"/>
+        <notes/>
+        <results tags="ul-64&amp;!ppc64&amp;!aarch64">
+          <result value="PASSED">
+            <verdict>Returned sigaction structure is not the same as specified for previous sigaction() call: flags are SA_NODEFER | SA_RESTORER instead of SA_NODEFER</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="drop_stack"/>
+        <arg name="env"/>
+        <arg name="func_sig">sigaction</arg>
+        <arg name="set_flag">FALSE</arg>
+        <arg name="sig_to_send"/>
+        <arg name="socket_after_sigaction"/>
+        <notes/>
+        <results tags="ul-64&amp;!ppc64&amp;!aarch64">
+          <result value="PASSED">
+            <verdict>Returned sigaction structure is not the same as specified for previous sigaction() call: flags are SA_RESTORER instead of 0</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="sa_nocldstop" type="script">
+      <objective>Check that signal handler for SIGCHLD installed with SA_NOCLDSTOP flag will not be invoked when child process is stopped or resumed.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="set_flag">FALSE</arg>
+        <arg name="sig_to_send"/>
+        <arg name="socket_after_sigaction" type="boolean"/>
+        <arg name="drop_stack"/>
+        <notes/>
+        <results tags="ul-64&amp;!ppc64&amp;!aarch64">
+          <result value="PASSED">
+            <verdict>Returned sigaction structure is not the same as specified for previous sigaction() call: flags are SA_SIGINFO | SA_RESTORER instead of SA_SIGINFO</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="set_flag">TRUE</arg>
+        <arg name="sig_to_send"/>
+        <arg name="socket_after_sigaction" type="boolean"/>
+        <arg name="drop_stack"/>
+        <notes/>
+        <results tags="ul-64&amp;!ppc64&amp;!aarch64">
+          <result value="PASSED">
+            <verdict>Returned sigaction structure is not the same as specified for previous sigaction() call: flags are SA_NOCLDSTOP | SA_SIGINFO | SA_RESTORER instead of SA_NOCLDSTOP | SA_SIGINFO</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="sa_nocldwait" type="script">
+      <objective>Check that if signal handler for SIGCHLD is installed with SA_NOCLDWAIT flag, child process will not be turned into zombie after termination.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="set_flag">FALSE</arg>
+        <arg name="sig_to_send"/>
+        <arg name="socket_after_sigaction"/>
+        <arg name="drop_stack"/>
+        <notes/>
+        <results tags="ul-64&amp;!ppc64&amp;!aarch64">
+          <result value="PASSED">
+            <verdict>Returned sigaction structure is not the same as specified for previous sigaction() call: flags are SA_SIGINFO | SA_RESTORER instead of SA_SIGINFO</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="set_flag">TRUE</arg>
+        <arg name="sig_to_send"/>
+        <arg name="socket_after_sigaction"/>
+        <arg name="drop_stack"/>
+        <notes/>
+        <results tags="ul-64&amp;!ppc64&amp;!aarch64">
+          <result value="PASSED">
+            <verdict>Returned sigaction structure is not the same as specified for previous sigaction() call: flags are SA_NOCLDWAIT | SA_SIGINFO | SA_RESTORER instead of SA_NOCLDWAIT | SA_SIGINFO</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="sa_resethand_reinstall" type="script">
+      <objective>Check that signal handler installed with SA_RESETHAND flag can install another signal handler</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sig_to_send"/>
+        <arg name="socket_after_sigaction"/>
+        <arg name="drop_stack"/>
+        <notes/>
+        <results tags="ul-64&amp;!ppc64&amp;!aarch64">
+          <result value="PASSED">
+            <verdict>Returned sigaction structure is not the same as specified for previous sigaction() call: flags are SA_RESETHAND | SA_RESTORER instead of SA_RESETHAND</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="signal_stacks_closed" type="script">
+      <objective>Check that signal handlers when all stacks are closed work properly</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="write_interrupted_signal_udp" type="script">
+      <objective>Interrupt UDP write operation by signal.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="change_route">TRUE</arg>
+        <arg name="env"/>
+        <arg name="func">write</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">1000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="restart">FALSE</arg>
+        <notes/>
+        <results tags="!v5">
+          <result value="PASSED"/>
+          <result value="FAILED" notes="It's ok for linux, i.e. signal does not arrive when socket in in the appropriate state">
+            <verdict>Send operation was not interrupted</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route">TRUE</arg>
+        <arg name="env"/>
+        <arg name="func">writev</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">1000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="restart">FALSE</arg>
+        <notes/>
+        <results tags="!v5">
+          <result value="PASSED"/>
+          <result value="FAILED" notes="It's ok for linux, i.e. signal does not arrive when socket in in the appropriate state">
+            <verdict>Send operation was not interrupted</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route">TRUE</arg>
+        <arg name="env"/>
+        <arg name="func">send</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">1000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="restart">FALSE</arg>
+        <notes/>
+        <results tags="!v5">
+          <result value="PASSED"/>
+          <result value="FAILED" notes="It's ok for linux, i.e. signal does not arrive when socket in in the appropriate state">
+            <verdict>Send operation was not interrupted</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route">TRUE</arg>
+        <arg name="env"/>
+        <arg name="func">sendto</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">1000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="restart">FALSE</arg>
+        <notes/>
+        <results tags="!v5">
+          <result value="PASSED"/>
+          <result value="FAILED" notes="It's ok for linux, i.e. signal does not arrive when socket in in the appropriate state">
+            <verdict>Send operation was not interrupted</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route">TRUE</arg>
+        <arg name="env"/>
+        <arg name="func">sendmsg</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">1000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="restart">FALSE</arg>
+        <notes/>
+        <results tags="!v5">
+          <result value="PASSED"/>
+          <result value="FAILED" notes="It's ok for linux, i.e. signal does not arrive when socket in in the appropriate state">
+            <verdict>Send operation was not interrupted</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">write</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">8900</arg>
+        <arg name="length_min"/>
+        <arg name="mtu">1500</arg>
+        <arg name="restart">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">writev</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">8900</arg>
+        <arg name="length_min"/>
+        <arg name="mtu">1500</arg>
+        <arg name="restart">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">send</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">8900</arg>
+        <arg name="length_min"/>
+        <arg name="mtu">1500</arg>
+        <arg name="restart">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">sendto</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">8900</arg>
+        <arg name="length_min"/>
+        <arg name="mtu">1500</arg>
+        <arg name="restart">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">sendmsg</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">8900</arg>
+        <arg name="length_min"/>
+        <arg name="mtu">1500</arg>
+        <arg name="restart">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">write</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">1000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="restart">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">writev</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">1000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="restart">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">send</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">1000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="restart">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">sendto</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">1000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="restart">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">sendmsg</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">1000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="restart">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">write</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">8900</arg>
+        <arg name="length_min"/>
+        <arg name="mtu">9000</arg>
+        <arg name="restart"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">writev</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">8900</arg>
+        <arg name="length_min"/>
+        <arg name="mtu">9000</arg>
+        <arg name="restart"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">send</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">8900</arg>
+        <arg name="length_min"/>
+        <arg name="mtu">9000</arg>
+        <arg name="restart"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">sendto</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">8900</arg>
+        <arg name="length_min"/>
+        <arg name="mtu">9000</arg>
+        <arg name="restart"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">sendmsg</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">8900</arg>
+        <arg name="length_min"/>
+        <arg name="mtu">9000</arg>
+        <arg name="restart"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route">TRUE</arg>
+        <arg name="env"/>
+        <arg name="func">write</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">8900</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="restart"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route">TRUE</arg>
+        <arg name="env"/>
+        <arg name="func">writev</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">8900</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="restart"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route">TRUE</arg>
+        <arg name="env"/>
+        <arg name="func">send</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">8900</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="restart"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route">TRUE</arg>
+        <arg name="env"/>
+        <arg name="func">sendto</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">8900</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="restart"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route">TRUE</arg>
+        <arg name="env"/>
+        <arg name="func">sendmsg</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">8900</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="restart"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">write</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">40000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="restart"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">writev</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">40000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="restart"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">send</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">40000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="restart"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">sendto</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">40000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="restart"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">sendmsg</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">40000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="restart"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">sys_write</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max"/>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="restart"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">sys_writev</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max"/>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="restart"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">sendmmsg</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max"/>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="restart"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">write</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">1000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu">9000</arg>
+        <arg name="restart">FALSE</arg>
+        <notes/>
+        <results tags="!v5">
+          <result value="PASSED"/>
+          <result value="PASSED" notes="It's ok for linux, i.e. signal does not arrive when socket in in the appropriate state">
+            <verdict>Send operation was not interrupted</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">writev</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">1000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu">9000</arg>
+        <arg name="restart">FALSE</arg>
+        <notes/>
+        <results tags="!v5">
+          <result value="PASSED"/>
+          <result value="PASSED" notes="It's ok for linux, i.e. signal does not arrive when socket in in the appropriate state">
+            <verdict>Send operation was not interrupted</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">send</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">1000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu">9000</arg>
+        <arg name="restart">FALSE</arg>
+        <notes/>
+        <results tags="!v5">
+          <result value="PASSED"/>
+          <result value="PASSED" notes="It's ok for linux, i.e. signal does not arrive when socket in in the appropriate state">
+            <verdict>Send operation was not interrupted</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">sendto</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">1000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu">9000</arg>
+        <arg name="restart">FALSE</arg>
+        <notes/>
+        <results tags="!v5">
+          <result value="PASSED"/>
+          <result value="PASSED" notes="It's ok for linux, i.e. signal does not arrive when socket in in the appropriate state">
+            <verdict>Send operation was not interrupted</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">sendmsg</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max">1000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu">9000</arg>
+        <arg name="restart">FALSE</arg>
+        <notes/>
+        <results tags="!v5">
+          <result value="PASSED"/>
+          <result value="PASSED" notes="It's ok for linux, i.e. signal does not arrive when socket in in the appropriate state">
+            <verdict>Send operation was not interrupted</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">write</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max"/>
+        <arg name="length_min"/>
+        <arg name="mtu">1500</arg>
+        <arg name="restart">FALSE</arg>
+        <notes/>
+        <results tags="!v5">
+          <result value="PASSED"/>
+          <result value="PASSED" notes="It's ok for linux, i.e. signal does not arrive when socket in in the appropriate state">
+            <verdict>Send operation was not interrupted</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">writev</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max"/>
+        <arg name="length_min"/>
+        <arg name="mtu">1500</arg>
+        <arg name="restart">FALSE</arg>
+        <notes/>
+        <results tags="!v5">
+          <result value="PASSED"/>
+          <result value="PASSED" notes="It's ok for linux, i.e. signal does not arrive when socket in in the appropriate state">
+            <verdict>Send operation was not interrupted</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">send</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max"/>
+        <arg name="length_min"/>
+        <arg name="mtu">1500</arg>
+        <arg name="restart">FALSE</arg>
+        <notes/>
+        <results tags="!v5">
+          <result value="PASSED"/>
+          <result value="PASSED" notes="It's ok for linux, i.e. signal does not arrive when socket in in the appropriate state">
+            <verdict>Send operation was not interrupted</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">sendto</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max"/>
+        <arg name="length_min"/>
+        <arg name="mtu">1500</arg>
+        <arg name="restart">FALSE</arg>
+        <notes/>
+        <results tags="!v5">
+          <result value="PASSED"/>
+          <result value="PASSED" notes="It's ok for linux, i.e. signal does not arrive when socket in in the appropriate state">
+            <verdict>Send operation was not interrupted</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="func">sendmsg</arg>
+        <arg name="func_sig"/>
+        <arg name="length_max"/>
+        <arg name="length_min"/>
+        <arg name="mtu">1500</arg>
+        <arg name="restart">FALSE</arg>
+        <notes/>
+        <results tags="!v5">
+          <result value="PASSED"/>
+          <result value="PASSED" notes="It's ok for linux, i.e. signal does not arrive when socket in in the appropriate state">
+            <verdict>Send operation was not interrupted</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+
+    <test name="splice_interrupted_signal" type="script">
+      <objective>Check that @b splice() return @c -1, errno @c EINTR if it is interrupted by signal that is caught</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func_sig"/>
+        <arg name="restart"/>
+        <arg name="set_move"/>
+        <arg name="additional"/>
+        <arg name="to_socket"/>
+        <arg name="block_on_read"/>
+        <notes/>
+      </iter>
+    </test>
+  </iter>
+</test>

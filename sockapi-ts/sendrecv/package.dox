@@ -1,0 +1,95 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup sendrecv Advanced Usage of Send/Receive Functions
+@ingroup sockapi
+@{
+
+The package tests send/receive functions in the following way:
+- advanced features (flags, I/O vectors, etc);
+- multithread usage;
+- signals;
+- loopback and usual sockets under complex/high loads;
+- behaviour and robustness after @b fork().
+
+The following send/receive flags are tested:
+- @c MSG_DONTROUTE;
+- @c MSG_DONTWAIT;
+- @c MSG_NOSIGNAL;
+- @c MSG_MORE;
+- @c MSG_PEEK;
+- @c MSG_WAITALL;
+- @c MSG_OOB;
+- @c MSG_TRUNC;
+- @c MSG_CTRUNC.
+
+@author Andrew Rybchenko <Andrew.Rybchenko@oktetlabs.ru>
+
+
+@par Conformance tests:
+
+-# @ref sendrecv-dgram_iov_send
+-# @ref sendrecv-dgram_iov_recv
+-# @ref sendrecv-stream_iov
+
+-# @ref sendrecv-peer_close
+
+-# @ref sendrecv-send_dontroute
+-# @ref sendrecv-send_dontwait
+-# @ref sendrecv-send_nosignal
+-# @ref sendrecv-send_more_stream
+-# @ref sendrecv-send_more_nodelay_stream
+-# @ref sendrecv-send_more_dgram
+-# @ref sendrecv-send_dgram_ip4_to_ip6_sock
+
+-# @ref sendrecv-recv_dgram_small_buf
+-# @ref sendrecv-recv_peek_block
+-# @ref sendrecv-recv_peek_dgram
+-# @ref sendrecv-recv_peek_stream
+-# @ref sendrecv-recv_peek_stream_flow
+-# @ref sendrecv-recv_peek_many
+-# @ref sendrecv-recv_peek_many_iovec
+-# @ref sendrecv-recv_dontwait
+-# @ref sendrecv-recv_dontwait_peer_close
+-# @ref sendrecv-recv_peek_dontwait
+-# @ref sendrecv-recv_waitall_stream
+-# @ref sendrecv-recv_waitall_dgram
+-# @ref sendrecv-recv_oob_absent
+
+-# @ref sendrecv-many_recv_threads
+-# @ref sendrecv-blk_recv_two_threads
+
+-# @ref sendrecv-recvmsg_bcast
+-# @ref sendrecv-recvmsg_mcast
+-# @ref sendrecv-recvmsg_trunc
+-# @ref sendrecv-recvmsg_peek_trunc
+
+-# @ref sendrecv-send_to_incomplete
+
+-# @ref sendrecv-send_oob_data
+-# @ref sendrecv-oob_span
+-# @ref sendrecv-oob_overwritten
+
+-# @ref sendrecv-recv_data_after_peer_close
+-# @ref sendrecv-recvmmsg
+
+-# @ref sendrecv-largebuff_via_splice
+
+-# @ref sendrecv-sendmsg_pktinfo
+-# @ref sendrecv-sendmsg_pktinfo_src
+
+@par Stress tests:
+
+-# @ref sendrecv-two_thrds_simult on different host and on one host for
+   each combination:
+    - @b iut: IUT, PID1, ...; @b tst: RI, PID2, ...
+    - @b iut: IUT, PID1, ...; @b tst: IUT, PID2, ...
+    - @b iut: IUT, PID1, TID1; @b tst: IUT, PID1, TID2
+    - @b iut: IUT, PID1, TID1; @b tst: IUT, PID1, TID1
+
+-# @ref sendrecv-fill_huge_rcvbuf
+
+@}
+
+*/

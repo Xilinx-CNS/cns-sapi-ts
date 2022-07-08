@@ -1,0 +1,51 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup level5-interop Interoperability of L5 stack with system stack
+@ingroup level5
+@{
+
+Test suite on interoperability of L5 sockets with system "libc"
+resolved functions:
+- @b read();
+- @b readv();
+- @b write();
+- @b writev().
+
+It is checked that for L5 sockets we can call these functions as from
+L5 library and also from libc library simultaneously.
+
+Also usage of system close() call ("trampoling") for Level5 sockets in
+different states is tested here.
+
+@author Oleg Kravtsov <Oleg.Kravtsov@oktetlabs.ru>
+@author Yurij Plotnikov <Yurij.Plotnikov@oktetlabs.ru>
+  
+@par Tests:
+
+-# @ref level5-interop-recv_only
+-# @ref level5-interop-send_only
+
+-# @ref level5-interop-close_create_socket
+-# @ref level5-interop-close_udp_readable_socket
+-# @ref level5-interop-close_listening_socket
+-# @ref level5-interop-close_connected_socket
+-# @ref level5-interop-close_shutdown_socket
+-# @ref level5-interop-close_after_close
+-# @ref level5-interop-close_accept
+-# @ref level5-interop-close_read
+-# @ref level5-interop-close_linger_close
+-# @ref level5-interop-close_iomux
+-# @ref level5-interop-close_fdopen_fclose
+
+-# @ref level5-interop-nonblock
+-# @ref level5-interop-fcntl_nonblock
+
+
+-# @ref level5-interop-pipe_close_pipe
+-# @ref level5-interop-onload_msg_recv_os_inline
+
+@}
+
+*/

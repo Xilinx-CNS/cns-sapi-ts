@@ -1,0 +1,42 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/** @page iomux-flooder Remote traffic flood routine with I/O multiplexing
+ *
+ * @objective Remote routine which receives data from specified set of
+ *            sockets and sends data to specified set of sockets with
+ *            maximum speed using I/O multiplexing.
+ *
+ * @type performance, stress
+ *
+ * @requirement REQ-4, REQ-6
+ *
+ * @param pco       - PCO to be used
+ * @param rcvrs     - set of receiver sockets
+ * @param sndrs     - set of sender sockets
+ * @param bulkszs   - sizes of data bulks to send for each sender (in bytes)
+ * @param time2run  - how long send data (in seconds)
+ * @param iomux     - type of I/O Multiplexing function
+ *                    (@b select(), @b pselect(), @b poll())
+ *
+ * @pre Sockets are connected. I.e. @b send() function may be used
+ *      to send data.
+ *
+ * -# Call @b iomux function to wait for reading and writing on the
+ *    corresponding sockets.
+ * -# If @b iomux function fails, then stop and return results.
+ * -# If @b iomux function times out, then stop sending of data and 
+ *    continue receiving of data with zero timeout in @b iomux function
+ *    call.  When no data are available for reading on all receivers,
+ *    return results to RPC client.
+ * -# If a socket is ready for reading, then read them and calculate
+ *    total number of received bytes.
+ * -# If a socket is ready for writing, then write the next bulk of 
+ *    data and calculate total number of sent bytes.  Size of sent bulk
+ *    is equal to specified in function call for the socket ready for
+ *    writing.
+ * -# Go to the first step.
+ *
+ * @post Sockets are kept opened and connected.
+ * 
+ * @author Andrew Rybchenko <Andrew.Rybchenko@oktetlabs.ru>
+ */

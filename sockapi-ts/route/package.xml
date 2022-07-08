@@ -1,0 +1,1638 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+
+    <description>Route Table</description>
+
+    <author mailto="Oleg.Kravtsov@oktetlabs.ru"/>
+
+    <req id="ROUTE" sticky="true"/>
+
+    <!-- Adding route operation can contain a set of local changes + commit.
+         This cannot be rolled back correctly by configurator using history.
+         See OL bug 9403 for details.
+         All tests should not have any fancy track_conf keywords. -->
+    <session track_conf="nohistory" track_conf_handdown="descendants">
+        <enum name="route_type">
+            <value>direct</value>
+            <value>indirect</value>
+        </enum>
+
+        <enum name="rule_criterion">
+            <value>from</value>
+            <value>to</value>
+            <value>tos</value>
+        </enum>
+
+        <!-- TOS rules do not work for IPv6 Traffic Class well, see
+             bug 86609. -->
+        <enum name="rule_criterion_ipv6">
+            <value reqs="IPV6_RT_RULE_FROM">from</value>
+            <value>to</value>
+        </enum>
+
+        <!--- @subsection arg_types_env_triangle_iut_tst env.triangle_iut_tst
+        IUT is connected to Tester both via gateway and directly. Connection
+        via gateway is over SFC interface.
+        IPv4 addresses are checked.
+        -->
+        <var name="env.triangle_iut_tst" global="true">
+            <value reqs="ENV-TRIANGLE,ENV-GW,ENV-TST-LINK">'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,addr:'iut1_hwaddr':ether:unicast,if:'iut1_if'},'gw_host'{{'pco_gw':tester},addr:'gwa_addr':inet:unicast,addr:'gw_hwaddr':ether:unicast,if:'gwa_if'}},'net2':tester{'iut_host'{addr:'iut2_addr':inet:unicast,addr:'iut2_hwaddr':ether:unicast,if:'iut2_if'},'tst_host'{addr:'tst2_addr':inet:unicast,addr:'tst_hwaddr':ether:unicast,if:'tst2_if'}},'net3'{'gw_host'{addr:'gwb_addr':inet:unicast,if:'gwb_if'},'tst_host'{{'pco_tst':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if',addr:'alien_link_addr':ether:alien}},'tst_remote_addr'='tst1_addr','tst_remote_if'='tst1_if','tst_remote_net'='net3','pco_gwa'='pco_gw','pco_gwb'='pco_gw'</value>
+        </var>
+
+        <!--- @subsection arg_types_env_triangle_tst_iut env.triangle_tst_iut
+        IUT is connected to Tester both via gateway and directly. Direct
+        connection is via SFC interface.
+        IPv4 addresses are checked.
+        -->
+        <var name="env.triangle_tst_iut" global="true">
+            <value reqs="ENV-TRIANGLE,ENV-TST-GW,ENV-TST-LINK">'net1':tester{'iut_host'{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,addr:'iut1_hwaddr':ether:unicast,if:'iut1_if'},'gw_host'{{'pco_gw':tester},addr:'gwa_addr':inet:unicast,addr:'gw_hwaddr':ether:unicast,if:'gwa_if'}},'net2':IUT{'iut_host'{addr:'iut2_addr':inet:unicast,addr:'iut2_hwaddr':ether:unicast,if:'iut2_if'},'tst_host'{addr:'tst2_addr':inet:unicast,addr:'tst_hwaddr':ether:unicast,if:'tst2_if'}},'net3'{'gw_host'{addr:'gwb_addr':inet:unicast,if:'gwb_if'},'tst_host'{{'pco_tst':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if',addr:'alien_link_addr':ether:alien}},'tst_remote_addr'='tst1_addr','tst_remote_if'='tst1_if','tst_remote_net'='net3','pco_gwa'='pco_gw','pco_gwb'='pco_gw'</value>
+        </var>
+
+        <!--- @subsection arg_types_env_triangle_iut_iut env.triangle_iut_iut
+        IUT is connected to Tester via both SFC interfaces directly. However
+        on Tester there is also an interface connected to another host with
+        address assigned from another network. This is done to make possible
+        to use this environment in the same way as
+        @ref arg_types_env_triangle_iut_tst and
+        @ref arg_types_env_triangle_tst_iut, so that we can add routes
+        via gateway over both IUT SFC interfaces leading to an address
+        from different network assigned to the third Tester interface.
+        IPv4 addresses are checked.
+        -->
+        <var name="env.triangle_iut_iut" global="true">
+          <value reqs="ENV-2LINKS-IUT,ENV-GW">'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,addr:'gwb_addr':inet:unicast,if:'iut1_if',addr:'iut1_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst1_addr':inet:unicast,addr:'gwa_addr':inet:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net2':IUT{'iut_host'{addr:'iut2_addr':inet:unicast,if:'iut2_if',addr:'iut2_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}},'net3'{'aux_host'{if:'aux_if'},'tst_host'{addr:'tst3_addr':inet:unicast,if:'tst3_if',addr:'alien_link_addr':ether:alien}},'net4'{'aux_host'{if:'aux_if_iut'},'iut_host'{addr:'iut3_addr':inet:unicast,if:'iut3_if'}},'pco_gw'='pco_tst','pco_gwa'='pco_tst','pco_gwb'='pco_iut','gw_hwaddr'='tst1_hwaddr','tst_hwaddr'='tst2_hwaddr','tst_remote_addr'='tst3_addr','tst_remote_if'='tst3_if','tst_remote_net'='net3','gwa_if'='tst1_if','gwb_if'='iut1_if','iut_remote_addr'='iut3_addr','iut_remote_if'='iut3_if','iut_remote_net'='net4'</value>
+        </var>
+
+        <!--- @subsection arg_types_env_triangle_iut_tst_ipv6 env.triangle_iut_tst_ipv6
+        The same as @ref arg_types_env_triangle_iut_tst, but with IPv6 addresses.
+        -->
+        <var name="env.triangle_iut_tst_ipv6" global="true">
+            <value reqs="ENV-TRIANGLE,ENV-GW,ENV-TST-LINK,IP6,IP6_ONLOAD">'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut1_addr':inet6:unicast,addr:'iut1_hwaddr':ether:unicast,if:'iut1_if'},'gw_host'{{'pco_gw':tester},addr:'gwa_addr':inet6:unicast,addr:'gw_hwaddr':ether:unicast,if:'gwa_if'}},'net2':tester{'iut_host'{addr:'iut2_addr':inet6:unicast,addr:'iut2_hwaddr':ether:unicast,if:'iut2_if'},'tst_host'{addr:'tst2_addr':inet6:unicast,addr:'tst_hwaddr':ether:unicast,if:'tst2_if'}},'net3'{'gw_host'{addr:'gwb_addr':inet6:unicast,if:'gwb_if'},'tst_host'{{'pco_tst':tester},addr:'tst1_addr':inet6:unicast,if:'tst1_if',addr:'alien_link_addr':ether:alien}},'tst_remote_addr'='tst1_addr','tst_remote_if'='tst1_if','tst_remote_net'='net3','pco_gwa'='pco_gw','pco_gwb'='pco_gw'</value>
+        </var>
+
+        <!--- @subsection arg_types_env_triangle_tst_iut_ipv6 env.triangle_tst_iut_ipv6
+        The same as @ref arg_types_env_triangle_tst_iut, but with IPv6 addresses.
+        -->
+        <var name="env.triangle_tst_iut_ipv6" global="true">
+            <value reqs="ENV-TRIANGLE,ENV-TST-GW,ENV-TST-LINK,IP6,IP6_ONLOAD">'net1':tester{'iut_host'{{'pco_iut':IUT},addr:'iut1_addr':inet6:unicast,addr:'iut1_hwaddr':ether:unicast,if:'iut1_if'},'gw_host'{{'pco_gw':tester},addr:'gwa_addr':inet6:unicast,addr:'gw_hwaddr':ether:unicast,if:'gwa_if'}},'net2':IUT{'iut_host'{addr:'iut2_addr':inet6:unicast,addr:'iut2_hwaddr':ether:unicast,if:'iut2_if'},'tst_host'{addr:'tst2_addr':inet6:unicast,addr:'tst_hwaddr':ether:unicast,if:'tst2_if'}},'net3'{'gw_host'{addr:'gwb_addr':inet6:unicast,if:'gwb_if'},'tst_host'{{'pco_tst':tester},addr:'tst1_addr':inet6:unicast,if:'tst1_if',addr:'alien_link_addr':ether:alien}},'tst_remote_addr'='tst1_addr','tst_remote_if'='tst1_if','tst_remote_net'='net3','pco_gwa'='pco_gw','pco_gwb'='pco_gw'</value>
+        </var>
+
+        <!--- @subsection arg_types_env_triangle_iut_iut_ipv6 env.triangle_iut_iut_ipv6
+        The same as @ref arg_types_env_triangle_iut_iut, but with IPv6 addresses.
+        -->
+        <var name="env.triangle_iut_iut_ipv6" global="true">
+          <!-- Note: gwb_addr is on IUT here because on IPv6 Linux does
+               not allow to add a route with gateway set to local address.
+               gwa_addr is on Tester for the same reason. Because of this
+               pco_gwa and pco_gwb are needed instead of pco_gw. -->
+          <value reqs="ENV-2LINKS-IUT,ENV-GW,IP6,IP6_ONLOAD">'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut1_addr':inet6:unicast,addr:'gwb_addr':inet6:unicast,if:'iut1_if',addr:'iut1_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst1_addr':inet6:unicast,addr:'gwa_addr':inet6:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net2':IUT{'iut_host'{addr:'iut2_addr':inet6:unicast,if:'iut2_if',addr:'iut2_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst2_addr':inet6:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}},'net3'{'aux_host'{if:'aux_if'},'tst_host'{addr:'tst3_addr':inet6:unicast,if:'tst3_if',addr:'alien_link_addr':ether:alien}},'net4'{'aux_host'{if:'aux_if_iut'},'iut_host'{addr:'iut3_addr':inet6:unicast,if:'iut3_if'}},'pco_gw'='pco_tst','pco_gwa'='pco_tst','pco_gwb'='pco_iut','gw_hwaddr'='tst1_hwaddr','tst_hwaddr'='tst2_hwaddr','tst_remote_addr'='tst3_addr','tst_remote_if'='tst3_if','tst_remote_net'='net3','gwa_if'='tst1_if','gwb_if'='iut1_if','iut_remote_addr'='iut3_addr','iut_remote_if'='iut3_if','iut_remote_net'='net4'</value>
+        </var>
+
+        <enum name="env.triangle_variants">
+            <value ref="env.triangle_iut_tst"/>
+            <value ref="env.triangle_tst_iut"/>
+            <value ref="env.triangle_iut_iut"/>
+        </enum>
+
+        <enum name="env.triangle_variants_with_ipv6">
+            <value ref="env.triangle_iut_tst"/>
+            <value ref="env.triangle_tst_iut"/>
+            <value ref="env.triangle_iut_iut"/>
+            <value ref="env.triangle_iut_tst_ipv6"/>
+            <value ref="env.triangle_tst_iut_ipv6"/>
+            <value ref="env.triangle_iut_iut_ipv6"/>
+        </enum>
+
+        <var name="env.route_single_if_first_iut" global="true">
+            <value>'net':IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'alien_addr':inet:alien,if:'iut_if',addr:'iut_lladdr':ether:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,addr:'tst_alien_addr':inet:alien,if:'tst_if',addr:'tst_lladdr':ether:unicast}}</value>
+        </var>
+        <var name="env.route_single_if_second_iut" global="true">
+            <value reqs="ENV-2LINKS-IUT">'net_aux':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net':IUT{'iut_host'{addr:'iut_addr':inet:unicast,addr:'alien_addr':inet:alien,if:'iut_if',addr:'iut_if_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,addr:'tst_alien_addr':inet:alien,if:'tst_if',addr:'tst_hwaddr':ether:unicast}}</value>
+        </var>
+        <var name="env.route_single_if_tst" global="true">
+            <value reqs="ENV-TST-LINK">'net':tester{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'alien_addr':inet:alien,if:'iut_if',addr:'iut_lladdr':ether:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,addr:'tst_alien_addr':inet:alien,if:'tst_if',addr:'tst_lladdr':ether:unicast}}</value>
+        </var>
+
+        <var name="env.route_single_if_first_iut_ipv6" global="true">
+            <value reqs="IP6,IP6_ONLOAD">'net':IUT{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast,addr:'alien_addr':inet6:alien,if:'iut_if',addr:'iut_lladdr':ether:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast,addr:'tst_alien_addr':inet6:alien,if:'tst_if',addr:'tst_lladdr':ether:unicast}}</value>
+        </var>
+        <var name="env.route_single_if_second_iut_ipv6" global="true">
+            <value reqs="ENV-2LINKS-IUT,IP6,IP6_ONLOAD">'net_aux':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst1_addr':inet6:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net':IUT{'iut_host'{addr:'iut_addr':inet6:unicast,addr:'alien_addr':inet6:alien,if:'iut_if',addr:'iut_if_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet6:unicast,addr:'tst_alien_addr':inet6:alien,if:'tst_if',addr:'tst_hwaddr':ether:unicast}}</value>
+        </var>
+        <var name="env.route_single_if_tst_ipv6" global="true">
+            <value reqs="ENV-TST-LINK,IP6,IP6_ONLOAD">'net':tester{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast,addr:'alien_addr':inet6:alien,if:'iut_if',addr:'iut_lladdr':ether:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast,addr:'tst_alien_addr':inet6:alien,if:'tst_if',addr:'tst_lladdr':ether:unicast}}</value>
+        </var>
+
+        <enum name="env.single_if_variants">
+            <value ref="env.route_single_if_first_iut"/>
+            <value ref="env.route_single_if_second_iut"/>
+            <value ref="env.route_single_if_tst"/>
+        </enum>
+
+        <enum name="env.single_if_variants_with_ipv6">
+            <value ref="env.route_single_if_first_iut"/>
+            <value ref="env.route_single_if_second_iut"/>
+            <value ref="env.route_single_if_tst"/>
+            <value ref="env.route_single_if_first_iut_ipv6"/>
+            <value ref="env.route_single_if_second_iut_ipv6"/>
+            <value ref="env.route_single_if_tst_ipv6"/>
+        </enum>
+
+        <var name="env.route_two_iut_ifs" global="true">
+            <value reqs="ENV-2LINKS-IUT">'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'alien_addr':inet:alien,addr:'alien_gw':inet:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tst_host'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net1a':IUT{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tst_host'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</value>
+        </var>
+
+        <var name="env.route_two_iut_ifs_ipv6" global="true">
+            <value reqs="ENV-2LINKS-IUT,IP6,IP6_ONLOAD">'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'alien_addr':inet6:alien,addr:'alien_gw':inet6:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tst_host'{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net1a':IUT{'iut_host'{addr:'iut_addr2':inet6:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tst_host'{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</value>
+        </var>
+
+        <enum name="env.two_ifs_variants">
+            <value ref="env.two_nets.iut_first"/>
+            <value ref="env.two_nets.iut_second"/>
+            <!-- Note: EF_SCALABLE_FILTERS=ifname does not accelerate passive
+                 TCP connections which come via second SFC interface. Please
+                 see ON-9740 comment #4 for more info. -->
+            <value ref="env.route_two_iut_ifs"/>
+        </enum>
+
+        <enum name="env.two_ifs_variants_with_ipv6">
+            <value ref="env.two_nets.iut_first"/>
+            <value ref="env.two_nets.iut_second"/>
+            <value ref="env.route_two_iut_ifs"/>
+            <value ref="env.two_nets.iut_first_ipv6"/>
+            <value ref="env.two_nets.iut_second_ipv6"/>
+            <value ref="env.route_two_iut_ifs_ipv6"/>
+        </enum>
+
+        <enum name="route_sock_type">
+            <value reqs="SOCK_STREAM">tcp_active</value>
+            <value reqs="SOCK_STREAM">tcp_passive</value>
+            <value reqs="SOCK_DGRAM">udp</value>
+            <value reqs="SOCK_DGRAM">udp_connect</value>
+        </enum>
+
+        <prologue>
+            <script name="prologue"/>
+            <arg name="env" ref="env.iut_only"/>
+        </prologue>
+
+        <epilogue>
+            <script name="epilogue"/>
+            <arg name="env" ref="env.iut_only"/>
+        </epilogue>
+
+        <run>
+            <script name="rt_if_by_dst_dr">
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants_with_ipv6"/>
+            <arg name="rt_sock_type" type="route_sock_type"/>
+        </run>
+
+        <run>
+            <script name="rt_if_by_dst_gw">
+                <req id="ROUTE_USED_DELETE"/>
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants_with_ipv6"/>
+            <arg name="rt_sock_type" type="route_sock_type"/>
+        </run>
+
+        <run>
+            <session>
+
+                <arg name="env" type="env.single_if_variants"/>
+                <arg name="rt_sock_type" type="route_sock_type"/>
+
+                <run>
+                    <script name="rt_many_subnets_via_gw"/>
+                    <arg name="route_info">
+                        <value>
+                            1.1.1.0/24/11.11.11.11
+                            2.2.0.0/16/22.22.22.22
+                            1.0.0.0/8/33.33.33.33
+                        </value>
+                    </arg>
+                    <arg name="dst_addr_str">
+                        <value>1.1.2.1</value>
+                        <value>1.1.3.1</value>
+                    </arg>
+                    <arg name="exp_gw_addr_str">
+                        <value>33.33.33.33</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="rt_many_subnets_via_gw"/>
+                    <arg name="route_info">
+                        <value>
+                            1.1.1.0/24/11.11.11.11
+                            2.2.0.0/16/22.22.22.22
+                            1.0.0.0/8/33.33.33.33
+                        </value>
+                    </arg>
+                    <arg name="dst_addr_str">
+                        <value>2.2.2.1</value>
+                    </arg>
+                    <arg name="exp_gw_addr_str">
+                        <value>22.22.22.22</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="rt_many_subnets_via_gw"/>
+                    <arg name="route_info">
+                        <value>
+                            1.1.1.0/24/11.11.11.11
+                            2.2.0.0/16/22.22.22.22
+                            1.0.0.0/8/33.33.33.33
+                        </value>
+                        <value>
+                            1.0.0.0/8/33.33.33.33
+                            1.1.1.0/24/11.11.11.11
+                            2.2.0.0/16/22.22.22.22
+                        </value>
+                    </arg>
+                    <arg name="dst_addr_str">
+                        <value>1.1.1.5</value>
+                    </arg>
+                    <arg name="exp_gw_addr_str">
+                        <value>11.11.11.11</value>
+                    </arg>
+                </run>
+
+            </session>
+        </run>
+
+        <run>
+            <session>
+
+                <arg name="env" type="env.single_if_variants_with_ipv6">
+                  <value ref="env.route_single_if_first_iut_ipv6"/>
+                  <value ref="env.route_single_if_second_iut_ipv6"/>
+                  <value ref="env.route_single_if_tst_ipv6"/>
+                </arg>
+                <arg name="rt_sock_type" type="route_sock_type"/>
+
+                <run>
+                    <script name="rt_many_subnets_via_gw"/>
+                    <arg name="route_info">
+                        <value>
+                            fec0:ab0:1:1:1:1:0:0/96/fec5:130::1234
+                            fec1:ab1:1:1:0:0:0:0/64/fec6:132::1235
+                            fec0:ab0:0:0:0:0:0:0/32/fec7:133::1245
+                        </value>
+                    </arg>
+                    <arg name="dst_addr_str">
+                        <value>fec0:ab0:2::33</value>
+                        <value>fec0:ab0:3::33</value>
+                    </arg>
+                    <arg name="exp_gw_addr_str">
+                        <value>fec7:133::1245</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="rt_many_subnets_via_gw"/>
+                    <arg name="route_info">
+                        <value>
+                            fec0:ab0:1:1:1:1:0:0/96/fec5:130::1234
+                            fec1:ab1:1:1:0:0:0:0/64/fec6:132::1235
+                            fec0:ab0:0:0:0:0:0:0/32/fec7:133::1245
+                        </value>
+                    </arg>
+                    <arg name="dst_addr_str">
+                        <value>fec1:ab1:1:1::22</value>
+                    </arg>
+                    <arg name="exp_gw_addr_str">
+                        <value>fec6:132::1235</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="rt_many_subnets_via_gw"/>
+                    <arg name="route_info">
+                        <value>
+                            fec0:ab0:1:1:1:1:0:0/96/fec5:130::1234
+                            fec1:ab1:1:1:0:0:0:0/64/fec6:132::1235
+                            fec0:ab0:0:0:0:0:0:0/32/fec7:133::1245
+                        </value>
+                        <value>
+                            fec0:ab0:0:0:0:0:0:0/32/fec7:133::1245
+                            fec0:ab0:1:1:1:1:0:0/96/fec5:130::1234
+                            fec1:ab1:1:1:0:0:0:0/64/fec6:132::1235
+                        </value>
+                    </arg>
+                    <arg name="dst_addr_str">
+                        <value>fec0:ab0:1:1:1:1::32</value>
+                    </arg>
+                    <arg name="exp_gw_addr_str">
+                        <value>fec5:130::1234</value>
+                    </arg>
+                </run>
+
+            </session>
+        </run>
+
+        <run>
+            <script name="rt_default">
+                <!-- req id="DANGEROUS"/ -->
+                <req id="L5WIN_BLACKLIST"/>
+                <req id="CHANGE_DEFAULT_ROUTE"/>
+                <req id="NETNS_CALICO"/>
+            </script>
+            <arg name="env" type="env.single_if_variants_with_ipv6"/>
+            <arg name="rt_sock_type" type="route_sock_type"/>
+        </run>
+
+        <run>
+            <script name="rt_prefix_len_flexible">
+                <req id="TIME_CONSUMING"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants_with_ipv6"/>
+            <arg name="route_type" type="route_type"/>
+            <arg name="rt_sock_type" type="route_sock_type"/>
+        </run>
+
+        <run>
+            <script name="rt_metric">
+                <req id="ROUTE_METRIC"/>
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants_with_ipv6"/>
+            <arg name="route_type" type="route_type"/>
+            <arg name="rt_sock_type" type="route_sock_type"/>
+        </run>
+
+        <run>
+            <script name="rt_prefix_vs_metric">
+                <req id="ROUTE_METRIC"/>
+                <req id="ENV-2PEERS"/>
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants_with_ipv6"/>
+            <arg name="route_type" type="route_type"/>
+            <arg name="N">
+                <value>4</value>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type"/>
+        </run>
+
+        <run>
+            <script name = "rt_choose_by_tos">
+                <req id="ENV-2PEERS"/>
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants"/>
+            <arg name="rt_sock_type" type="route_sock_type"/>
+        </run>
+
+        <run>
+            <script name="conn_changed_gw">
+              <req id="NETNS_CALICO"/>
+            </script>
+            <arg name="env" type="env.triangle_variants_with_ipv6">
+                <value ref="env.triangle_iut_tst"/>
+                <!-- See ST-2273 -->
+                <value reqs="NO_IPVLAN" ref="env.triangle_tst_iut"/>
+                <value ref="env.triangle_iut_tst_ipv6"/>
+                <!-- See ST-2273 -->
+                <value reqs="NO_IPVLAN" ref="env.triangle_tst_iut_ipv6"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type"/>
+            <arg name="with_arp_entry" type="boolean"/>
+        </run>
+        <run>
+            <script name="conn_changed_gw">
+              <req id="NETNS_CALICO"/>
+            </script>
+            <arg name="env" type="env.triangle_variants_with_ipv6">
+                <value ref="env.triangle_iut_iut"/>
+                <value ref="env.triangle_iut_iut_ipv6"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type">
+                <value>tcp_active</value>
+                <!-- ON-9740 comment 4 -->
+                <value reqs="NO_SCALABLE_IUT">tcp_passive</value>
+                <value>udp</value>
+                <value>udp_connect</value>
+            </arg>
+            <arg name="with_arp_entry" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="rt_src_addr">
+              <req id="ROUTE_SRC_ADDR"/>
+            </script>
+            <arg name="env" type="env.single_if_variants_with_ipv6"/>
+            <arg name="rt_sock_type" type="route_sock_type"/>
+            <arg name="bind_to_device" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="rt_src_based">
+                <req id="ROUTE_POLICY"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants_with_ipv6"/>
+            <arg name="alien_on_iut1" type="boolean"/>
+            <arg name="iut_bind">
+                <value>address</value>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type">
+                <value>udp</value>
+                <value>udp_connect</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="rt_src_based">
+                <req id="ROUTE_POLICY"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants_with_ipv6"/>
+            <arg name="alien_on_iut1" type="boolean"/>
+            <arg name="iut_bind" list="2">
+                <value>address</value>
+                <value>address</value>
+                <value>wildcard</value>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type" list="2">
+                <value>tcp_active</value>
+                <value>tcp_passive</value>
+                <value>tcp_passive</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="rt_src_other_if">
+              <req id="ROUTE_SRC_ADDR"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants_with_ipv6">
+                <value ref="env.two_nets.iut_first"/>
+                <value ref="env.two_nets.iut_second"/>
+                <value ref="env.two_nets.iut_first_ipv6"/>
+                <value ref="env.two_nets.iut_second_ipv6"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type"/>
+            <arg name="bind_to">
+                <value>no</value>
+                <value>wildcard</value>
+                <value>first</value>
+                <value>second</value>
+            </arg>
+        </run>
+        <run>
+            <script name="rt_src_other_if">
+              <req id="ROUTE_SRC_ADDR"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants_with_ipv6">
+                <value ref="env.route_two_iut_ifs"/>
+                <value ref="env.route_two_iut_ifs_ipv6"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type"/>
+            <arg name="bind_to">
+                <value>wildcard</value>
+                <value>second</value>
+            </arg>
+        </run>
+        <run>
+            <script name="rt_src_other_if">
+              <req id="ROUTE_SRC_ADDR"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants_with_ipv6">
+                <value ref="env.route_two_iut_ifs"/>
+                <value ref="env.route_two_iut_ifs_ipv6"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type">
+                <value>tcp_active</value>
+                <!-- ON-9740 comment 4 -->
+                <value reqs="NO_SCALABLE_IUT">tcp_passive</value>
+                <value>udp</value>
+                <value>udp_connect</value>
+            </arg>
+            <arg name="bind_to">
+                <value>first</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="pbr_tos">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants_with_ipv6">
+                <value ref="env.two_nets.iut_first"/>
+                <value ref="env.two_nets.iut_second"/>
+                <value ref="env.route_two_iut_ifs"/>
+                <!-- Currently policy-based routing works in a weird
+                     way for IPv6 if we use TOS property of routing rule
+                     to specify IPv6 Traffic Class. Such a rule affects
+                     only UDP sendto(). See Bug 86609. -->
+                <value ref="env.two_nets.iut_first_ipv6" reqs="BROKEN,IPV6_TCLASS"/>
+                <value ref="env.two_nets.iut_second_ipv6" reqs="BROKEN,IPV6_TCLASS"/>
+                <value ref="env.route_two_iut_ifs_ipv6" reqs="BROKEN,IPV6_TCLASS"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type"/>
+        </run>
+
+        <run>
+            <script name="pbr_tos_two_rules">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants"/>
+            <arg name="rt_sock_type" type="route_sock_type"/>
+            <arg name="first_tos">
+                <value>0x04</value>
+                <value>0x10</value>
+            </arg>
+            <arg name="second_tos">
+                <value>0x1C</value>
+                <value>0x08</value>
+            </arg>
+        </run>
+
+        <!-- Multiple entries are required for some PBR tests because
+             currently there is no way to describe in a concise form
+             that some value of an argument should be excluded
+             (or should have specific requirement) if another argument
+             takes some value. See OL bug 10004. -->
+
+        <run>
+            <script name="pbr_criterion">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants">
+                <value ref="env.two_nets.iut_first"/>
+                <value ref="env.two_nets.iut_second"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type"/>
+            <arg name="criterion" type="rule_criterion"/>
+        </run>
+        <run>
+            <script name="pbr_criterion">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants">
+                <value ref="env.route_two_iut_ifs"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type">
+                <value>tcp_active</value>
+                <!-- ON-9740 comment 4 -->
+                <value reqs="NO_SCALABLE_IUT">tcp_passive</value>
+                <value>udp</value>
+                <value>udp_connect</value>
+            </arg>
+            <arg name="criterion" type="rule_criterion"/>
+        </run>
+
+        <run>
+            <script name="pbr_criterion">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants_with_ipv6">
+                <value ref="env.two_nets.iut_first_ipv6"/>
+                <value ref="env.two_nets.iut_second_ipv6"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type"/>
+            <arg name="criterion" type="rule_criterion_ipv6"/>
+        </run>
+        <run>
+            <script name="pbr_criterion">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants_with_ipv6">
+                <value ref="env.route_two_iut_ifs_ipv6"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type">
+                <value>tcp_active</value>
+                <!-- ON-9740 comment 4 -->
+                <value reqs="NO_SCALABLE_IUT">tcp_passive</value>
+                <value>udp</value>
+                <value>udp_connect</value>
+            </arg>
+            <arg name="criterion" type="rule_criterion_ipv6"/>
+        </run>
+
+        <run>
+            <script name="pbr_metric">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants">
+                <value ref="env.two_nets.iut_first"/>
+                <value ref="env.two_nets.iut_second"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type"/>
+            <arg name="criterion" type="rule_criterion"/>
+        </run>
+        <run>
+            <script name="pbr_metric">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants">
+                <value ref="env.route_two_iut_ifs"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type">
+                <value>tcp_active</value>
+                <!-- ON-9740 comment 4 -->
+                <value reqs="NO_SCALABLE_IUT">tcp_passive</value>
+                <value>udp</value>
+                <value>udp_connect</value>
+            </arg>
+            <arg name="criterion" type="rule_criterion"/>
+        </run>
+
+        <run>
+            <script name="pbr_metric">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants_with_ipv6">
+                <value ref="env.two_nets.iut_first_ipv6"/>
+                <value ref="env.two_nets.iut_second_ipv6"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type"/>
+            <arg name="criterion" type="rule_criterion_ipv6"/>
+        </run>
+        <run>
+            <script name="pbr_metric">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants_with_ipv6">
+                <value ref="env.route_two_iut_ifs_ipv6"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type">
+                <value>tcp_active</value>
+                <!-- ON-9740 comment 4 -->
+                <value reqs="NO_SCALABLE_IUT">tcp_passive</value>
+                <value>udp</value>
+                <value>udp_connect</value>
+            </arg>
+            <arg name="criterion" type="rule_criterion_ipv6"/>
+        </run>
+
+        <run>
+            <script name="pbr_rules_order">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants">
+                <value ref="env.two_nets.iut_first"/>
+                <value ref="env.two_nets.iut_second"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type"/>
+            <arg name="criterion" type="rule_criterion"/>
+            <arg name="set_pref" type="boolean"/>
+        </run>
+        <run>
+            <script name="pbr_rules_order">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants">
+                <value ref="env.route_two_iut_ifs"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type">
+                <value>tcp_active</value>
+                <!-- ON-9740 comment 4 -->
+                <value reqs="NO_SCALABLE_IUT">tcp_passive</value>
+                <value>udp</value>
+                <value>udp_connect</value>
+            </arg>
+            <arg name="criterion" type="rule_criterion"/>
+            <arg name="set_pref" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="pbr_rules_order">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants_with_ipv6">
+                <value ref="env.two_nets.iut_first_ipv6"/>
+                <value ref="env.two_nets.iut_second_ipv6"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type"/>
+            <arg name="criterion" type="rule_criterion_ipv6"/>
+            <arg name="set_pref" type="boolean"/>
+        </run>
+        <run>
+            <script name="pbr_rules_order">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants_with_ipv6">
+                <value ref="env.route_two_iut_ifs_ipv6"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type">
+                <value>tcp_active</value>
+                <!-- ON-9740 comment 4 -->
+                <value reqs="NO_SCALABLE_IUT">tcp_passive</value>
+                <value>udp</value>
+                <value>udp_connect</value>
+            </arg>
+            <arg name="criterion" type="rule_criterion_ipv6"/>
+            <arg name="set_pref" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="pbr_prefix">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants">
+                <value ref="env.two_nets.iut_first"/>
+                <value ref="env.two_nets.iut_second"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type"/>
+            <arg name="criterion" type="rule_criterion"/>
+        </run>
+        <run>
+            <script name="pbr_prefix">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants">
+                <value ref="env.route_two_iut_ifs"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type">
+                <value>tcp_active</value>
+                <!-- ON-9740 comment 4 -->
+                <value reqs="NO_SCALABLE_IUT">tcp_passive</value>
+                <value>udp</value>
+                <value>udp_connect</value>
+            </arg>
+            <arg name="criterion" type="rule_criterion"/>
+        </run>
+
+        <run>
+            <script name="pbr_prefix">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants_with_ipv6">
+                <value ref="env.two_nets.iut_first_ipv6"/>
+                <value ref="env.two_nets.iut_second_ipv6"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type"/>
+            <arg name="criterion" type="rule_criterion_ipv6"/>
+        </run>
+        <run>
+            <script name="pbr_prefix">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants_with_ipv6">
+                <value ref="env.route_two_iut_ifs_ipv6"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type">
+                <value>tcp_active</value>
+                <!-- ON-9740 comment 4 -->
+                <value reqs="NO_SCALABLE_IUT">tcp_passive</value>
+                <value>udp</value>
+                <value>udp_connect</value>
+            </arg>
+            <arg name="criterion" type="rule_criterion_ipv6"/>
+        </run>
+
+        <run>
+            <script name="pbr_rule_from">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants_with_ipv6">
+                <value ref="env.two_nets.iut_first"/>
+                <value ref="env.two_nets.iut_second"/>
+                <value ref="env.two_nets.iut_first_ipv6" reqs="IPV6_RT_RULE_FROM"/>
+                <value ref="env.two_nets.iut_second_ipv6" reqs="IPV6_RT_RULE_FROM"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type">
+                <value>tcp_passive</value>
+            </arg>
+            <arg name="bind_to" type="bind_to">
+                <value>specific</value>
+                <value>wildcard</value>
+            </arg>
+        </run>
+        <run>
+            <script name="pbr_rule_from">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants_with_ipv6">
+                <value ref="env.route_two_iut_ifs"/>
+                <value ref="env.route_two_iut_ifs_ipv6" reqs="IPV6_RT_RULE_FROM"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type">
+                <!-- ON-9740 comment 4 -->
+                <value reqs="NO_SCALABLE_IUT">tcp_passive</value>
+            </arg>
+            <arg name="bind_to" type="bind_to">
+                <value>specific</value>
+                <value>wildcard</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="pbr_rule_from">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants_with_ipv6">
+                <value ref="env.two_nets.iut_first"/>
+                <value ref="env.two_nets.iut_second"/>
+                <value ref="env.route_two_iut_ifs"/>
+                <value ref="env.two_nets.iut_first_ipv6" reqs="IPV6_RT_RULE_FROM"/>
+                <value ref="env.two_nets.iut_second_ipv6" reqs="IPV6_RT_RULE_FROM"/>
+                <value ref="env.route_two_iut_ifs_ipv6" reqs="IPV6_RT_RULE_FROM"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type">
+                <value>tcp_active</value>
+            </arg>
+            <arg name="bind_to" type="bind_to">
+                <value>none</value>
+                <value>specific</value>
+                <value>wildcard</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="pbr_rule_from">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants_with_ipv6">
+                <value ref="env.two_nets.iut_first"/>
+                <value ref="env.two_nets.iut_second"/>
+                <value ref="env.route_two_iut_ifs"/>
+                <value ref="env.two_nets.iut_first_ipv6" reqs="IPV6_RT_RULE_FROM"/>
+                <value ref="env.two_nets.iut_second_ipv6" reqs="IPV6_RT_RULE_FROM"/>
+                <value ref="env.route_two_iut_ifs_ipv6" reqs="IPV6_RT_RULE_FROM"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type">
+                <value>udp</value>
+                <value>udp_connect</value>
+            </arg>
+            <arg name="bind_to" type="bind_to"/>
+        </run>
+
+        <run>
+            <script name="pbr_rule_combined">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants">
+                <value ref="env.two_nets.iut_first"/>
+                <value ref="env.two_nets.iut_second"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type"/>
+            <arg name="cr_first" type="rule_criterion" list="">
+                <value>from</value>
+                <value>from</value>
+                <value>to</value>
+            </arg>
+            <arg name="cr_second" type="rule_criterion" list="">
+                <value>to</value>
+                <value>tos</value>
+                <value>tos</value>
+            </arg>
+            <arg name="match">
+                <value>correct</value>
+                <value>not</value>
+            </arg>
+        </run>
+        <run>
+            <script name="pbr_rule_combined">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants">
+                <value ref="env.route_two_iut_ifs"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type">
+                <value>tcp_active</value>
+                <!-- ON-9740 comment 4 -->
+                <value reqs="NO_SCALABLE_IUT">tcp_passive</value>
+                <value>udp</value>
+                <value>udp_connect</value>
+            </arg>
+            <arg name="cr_first" type="rule_criterion" list="">
+                <value>from</value>
+                <value>from</value>
+                <value>to</value>
+            </arg>
+            <arg name="cr_second" type="rule_criterion" list="">
+                <value>to</value>
+                <value>tos</value>
+                <value>tos</value>
+            </arg>
+            <arg name="match">
+                <value>correct</value>
+                <value>not</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="pbr_rule_combined">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants">
+                <value ref="env.two_nets.iut_first"/>
+                <value ref="env.two_nets.iut_second"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type"/>
+            <arg name="cr_first" type="rule_criterion" list="">
+                <value>from</value>
+                <value>from</value>
+                <value>to</value>
+                <value>to</value>
+                <value>tos</value>
+                <value>tos</value>
+            </arg>
+            <arg name="cr_second" type="rule_criterion" list="">
+                <value>to</value>
+                <value>tos</value>
+                <value>from</value>
+                <value>tos</value>
+                <value>from</value>
+                <value>to</value>
+            </arg>
+            <arg name="match">
+                <value>incorrect</value>
+            </arg>
+        </run>
+        <run>
+            <script name="pbr_rule_combined">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants">
+                <value ref="env.route_two_iut_ifs"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type">
+                <value>tcp_active</value>
+                <!-- ON-9740 comment 4 -->
+                <value reqs="NO_SCALABLE_IUT">tcp_passive</value>
+                <value>udp</value>
+                <value>udp_connect</value>
+            </arg>
+            <arg name="cr_first" type="rule_criterion" list="">
+                <value>from</value>
+                <value>from</value>
+                <value>to</value>
+                <value>to</value>
+                <value>tos</value>
+                <value>tos</value>
+            </arg>
+            <arg name="cr_second" type="rule_criterion" list="">
+                <value>to</value>
+                <value>tos</value>
+                <value>from</value>
+                <value>tos</value>
+                <value>from</value>
+                <value>to</value>
+            </arg>
+            <arg name="match">
+                <value>incorrect</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="pbr_rule_combined">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants_with_ipv6">
+                <value ref="env.two_nets.iut_first_ipv6"/>
+                <value ref="env.two_nets.iut_second_ipv6"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type"/>
+            <arg name="cr_first" type="rule_criterion_ipv6">
+                <value>from</value>
+            </arg>
+            <arg name="cr_second" type="rule_criterion_ipv6">
+                <value>to</value>
+            </arg>
+            <arg name="match">
+                <value>correct</value>
+                <value>not</value>
+            </arg>
+        </run>
+        <run>
+            <script name="pbr_rule_combined">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants_with_ipv6">
+                <value ref="env.route_two_iut_ifs_ipv6"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type">
+                <value>tcp_active</value>
+                <!-- ON-9740 comment 4 -->
+                <value reqs="NO_SCALABLE_IUT">tcp_passive</value>
+                <value>udp</value>
+                <value>udp_connect</value>
+            </arg>
+            <arg name="cr_first" type="rule_criterion_ipv6">
+                <value>from</value>
+            </arg>
+            <arg name="cr_second" type="rule_criterion_ipv6">
+                <value>to</value>
+            </arg>
+            <arg name="match">
+                <value>correct</value>
+                <value>not</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="pbr_rule_combined">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants_with_ipv6">
+                <value ref="env.two_nets.iut_first_ipv6"/>
+                <value ref="env.two_nets.iut_second_ipv6"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type"/>
+            <arg name="cr_first" type="rule_criterion_ipv6" list="">
+                <value>from</value>
+                <value>to</value>
+            </arg>
+            <arg name="cr_second" type="rule_criterion_ipv6" list="">
+                <value>to</value>
+                <value>from</value>
+            </arg>
+            <arg name="match">
+                <value>incorrect</value>
+            </arg>
+        </run>
+        <run>
+            <script name="pbr_rule_combined">
+                <req id="ROUTE_POLICY"/>
+                <req id="NETNS_CALICO"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants_with_ipv6">
+                <value ref="env.route_two_iut_ifs_ipv6"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type">
+                <value>tcp_active</value>
+                <!-- ON-9740 comment 4 -->
+                <value reqs="NO_SCALABLE_IUT">tcp_passive</value>
+                <value>udp</value>
+                <value>udp_connect</value>
+            </arg>
+            <arg name="cr_first" type="rule_criterion_ipv6" list="">
+                <value>from</value>
+                <value>to</value>
+            </arg>
+            <arg name="cr_second" type="rule_criterion_ipv6" list="">
+                <value>to</value>
+                <value>from</value>
+            </arg>
+            <arg name="match">
+                <value>incorrect</value>
+            </arg>
+        </run>
+
+
+        <!--run>
+            <script name="rt_icmp_redirect"/>
+            <arg name="env">
+                <value>'net1'{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'alien_addr':inet:alien,addr:'gw1_addr':inet:alien,addr:'gw2_addr':inet:alien,addr:'alien_mac':ether:alien,if:'iut_if'},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+            </arg>
+        </run-->
+
+        <run>
+            <script name="rt_same_addr_if_down_up">
+                <req id="NEW_CPLANE"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.two_ifs_variants_with_ipv6">
+                <value ref="env.two_nets.iut_first"/>
+                <value ref="env.two_nets.iut_second"/>
+                <value ref="env.route_two_iut_ifs" reqs="TWO_INDEP_IFS"/>
+                <value ref="env.two_nets.iut_first_ipv6" reqs="KEEP_ADDR_ON_DOWN"/>
+                <value ref="env.two_nets.iut_second_ipv6" reqs="KEEP_ADDR_ON_DOWN"/>
+                <value ref="env.route_two_iut_ifs_ipv6" reqs="TWO_INDEP_IFS,KEEP_ADDR_ON_DOWN"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type"/>
+        </run>
+
+        <run>
+            <script name="rt_same_addr_if_down_up_one_sock">
+                <req id="NEW_CPLANE"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" type="env.triangle_variants_with_ipv6">
+                <value ref="env.triangle_iut_tst"/>
+                <value ref="env.triangle_tst_iut"/>
+                <value ref="env.triangle_iut_iut" reqs="TWO_INDEP_IFS"/>
+                <value ref="env.triangle_iut_tst_ipv6" reqs="KEEP_ADDR_ON_DOWN"/>
+                <value ref="env.triangle_tst_iut_ipv6" reqs="KEEP_ADDR_ON_DOWN"/>
+                <value ref="env.triangle_iut_iut_ipv6" reqs="TWO_INDEP_IFS,KEEP_ADDR_ON_DOWN"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type"/>
+        </run>
+
+        <run>
+            <script name="pbr_oif_src">
+                <req id="ROUTE_POLICY"/>
+                <req id="SO_BINDTODEVICE"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type">
+                <value>tcp_active</value>
+                <value>udp</value>
+                <value>udp_connect</value>
+            </arg>
+            <arg name="multicast" type="boolean">
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="pbr_oif_src">
+                <req id="ROUTE_POLICY"/>
+                <req id="SO_BINDTODEVICE"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_mcast"/>
+                <value ref="env.peer2peer_mcast_ipv6"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type">
+                <value>udp</value>
+                <value>udp_connect</value>
+            </arg>
+            <arg name="multicast" type="boolean">
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="pbr_oif_gw">
+                <req id="ROUTE_POLICY"/>
+                <req id="SO_BINDTODEVICE"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type"/>
+        </run>
+
+        <run>
+            <script name="tcp_loopback_alien">
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="bind_to" type="bind_to">
+                <value>specific</value>
+                <value>wildcard</value>
+            </arg>
+            <arg name="iut_if_addr" type="boolean"/>
+        </run>
+
+        <run>
+          <session>
+
+            <arg name="env"/>
+
+            <prologue>
+              <script name="multipath_prologue"/>
+              <arg name="addrs_num">
+                  <value>150</value>
+              </arg>
+            </prologue>
+
+            <epilogue>
+              <script name="../gateways_epilogue"/>
+              <arg name="env">
+                  <value ref="env.peer2peer_gw"/>
+              </arg>
+            </epilogue>
+
+            <run>
+                <script name="multipath_balancing">
+                    <req id="TIME_CONSUMING"/>
+                    <req id="MULTIPATH"/>
+                </script>
+                <arg name="conns_num">
+                    <value>150</value>
+                </arg>
+                <arg name="pkts_per_conn">
+                    <value>5</value>
+                </arg>
+                <arg name="weight1">
+                    <value>1</value>
+                    <value>3</value>
+                </arg>
+                <arg name="weight2">
+                    <value>1</value>
+                    <value>3</value>
+                </arg>
+                <arg name="sock_type" type="socket_udp_tcp"/>
+                <arg name="diff_addrs" type="boolean"/>
+                <arg name="bind_iut" type="boolean">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="iut_other_src" type="boolean">
+                    <value>FALSE</value>
+                    <value reqs="RT_SRC_NONSFC">TRUE</value>
+                </arg>
+            </run>
+            <run>
+                <script name="multipath_balancing">
+                    <req id="TIME_CONSUMING"/>
+                    <req id="MULTIPATH"/>
+                </script>
+                <arg name="conns_num">
+                    <value>150</value>
+                </arg>
+                <arg name="pkts_per_conn">
+                    <value>5</value>
+                </arg>
+                <arg name="weight1">
+                    <value>1</value>
+                    <value>3</value>
+                </arg>
+                <arg name="weight2">
+                    <value>1</value>
+                    <value>3</value>
+                </arg>
+                <arg name="sock_type" type="socket_udp_tcp">
+                    <value>udp_notconn</value>
+                    <value>udp</value>
+                    <value>tcp_active</value>
+                    <!-- ON-9740 comment 4 -->
+                    <value reqs="NO_SCALABLE_IUT">tcp_passive_close</value>
+                </arg>
+                <arg name="diff_addrs" type="boolean"/>
+                <arg name="bind_iut" type="boolean">
+                    <value>TRUE</value>
+                </arg>
+                <arg name="iut_other_src" type="boolean">
+                    <value>FALSE</value>
+                    <value reqs="RT_SRC_NONSFC">TRUE</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="multipath_add_del">
+                    <req id="TIME_CONSUMING"/>
+                    <req id="MULTIPATH"/>
+                </script>
+                <arg name="change">
+                    <value>add</value>
+                    <value>remove</value>
+                </arg>
+                <arg name="first_if" type="boolean"/>
+                <arg name="conns_num">
+                    <value>100</value>
+                </arg>
+                <arg name="pkts_per_conn">
+                    <value>5</value>
+                </arg>
+                <arg name="weight1">
+                    <value>1</value>
+                </arg>
+                <arg name="weight2">
+                    <value>1</value>
+                </arg>
+                <arg name="sock_type" type="socket_udp_tcp"/>
+                <arg name="diff_addrs" type="boolean"/>
+                <arg name="bind_iut" type="boolean">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="iut_other_src" type="boolean">
+                    <value>FALSE</value>
+                </arg>
+            </run>
+            <run>
+                <script name="multipath_add_del">
+                    <req id="TIME_CONSUMING"/>
+                    <req id="MULTIPATH"/>
+                </script>
+                <arg name="change">
+                    <value>add</value>
+                    <value>remove</value>
+                </arg>
+                <arg name="first_if" type="boolean"/>
+                <arg name="conns_num">
+                    <value>100</value>
+                </arg>
+                <arg name="pkts_per_conn">
+                    <value>5</value>
+                </arg>
+                <arg name="weight1">
+                    <value>1</value>
+                </arg>
+                <arg name="weight2">
+                    <value>1</value>
+                </arg>
+                <arg name="sock_type" type="socket_udp_tcp">
+                    <value>udp_notconn</value>
+                    <value>udp</value>
+                    <value>tcp_active</value>
+                    <!-- ON-9740 comment 4 -->
+                    <value reqs="NO_SCALABLE_IUT">tcp_passive_close</value>
+                </arg>
+                <arg name="diff_addrs" type="boolean"/>
+                <arg name="bind_iut" type="boolean">
+                    <value>TRUE</value>
+                </arg>
+                <arg name="iut_other_src" type="boolean">
+                    <value>FALSE</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="multipath_del_add_same_conns">
+                    <req id="TIME_CONSUMING"/>
+                    <req id="MULTIPATH"/>
+                </script>
+                <arg name="first_if" type="boolean"/>
+                <arg name="conns_num">
+                    <value>100</value>
+                </arg>
+                <arg name="pkts_per_conn">
+                    <value>5</value>
+                </arg>
+                <arg name="weight_remain">
+                    <value>3</value>
+                </arg>
+                <arg name="weight_del" list="">
+                    <value>6</value>
+                    <value>1</value>
+                </arg>
+                <arg name="weight_add" list="">
+                    <value>1</value>
+                    <value>6</value>
+                </arg>
+                <arg name="sock_type" type="socket_udp_tcp"/>
+                <arg name="diff_addrs" type="boolean"/>
+                <arg name="bind_iut" type="boolean">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="iut_other_src" type="boolean">
+                    <value>FALSE</value>
+                </arg>
+            </run>
+            <run>
+                <script name="multipath_del_add_same_conns">
+                    <req id="TIME_CONSUMING"/>
+                    <req id="MULTIPATH"/>
+                </script>
+                <arg name="first_if" type="boolean"/>
+                <arg name="conns_num">
+                    <value>100</value>
+                </arg>
+                <arg name="pkts_per_conn">
+                    <value>5</value>
+                </arg>
+                <arg name="weight_remain">
+                    <value>3</value>
+                </arg>
+                <arg name="weight_del" list="">
+                    <value>6</value>
+                    <value>1</value>
+                </arg>
+                <arg name="weight_add" list="">
+                    <value>1</value>
+                    <value>6</value>
+                </arg>
+                <arg name="sock_type" type="socket_udp_tcp">
+                    <value>udp_notconn</value>
+                    <value>udp</value>
+                    <value>tcp_active</value>
+                    <!-- ON-9740 comment 4 -->
+                    <value reqs="NO_SCALABLE_IUT">tcp_passive_close</value>
+                </arg>
+                <arg name="diff_addrs" type="boolean"/>
+                <arg name="bind_iut" type="boolean">
+                    <value>TRUE</value>
+                </arg>
+                <arg name="iut_other_src" type="boolean">
+                    <value>FALSE</value>
+                </arg>
+            </run>
+
+          </session>
+
+          <arg name="env" type="env.triangle_variants_with_ipv6">
+              <value ref="env.triangle_iut_iut"/>
+              <value ref="env.triangle_iut_iut_ipv6" reqs="IP6_MULTIPATH"/>
+          </arg>
+
+        </run>
+
+        <run>
+            <script name="rt_switched_tos">
+                <req id="ROUTE_POLICY"/>
+                <!-- Disabled for night testing: see ON-11117 -->
+                <!-- req id="NETNS_CALICO"/-->
+            </script>
+            <arg name="env">
+                <value ref="env.route_two_iut_ifs"/>
+            </arg>
+            <arg name="sock_type" type="route_sock_type"/>
+            <arg name="use_rules" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="asymmetric">
+                <req id="NETNS_CALICO"/>
+            </script>
+            <arg name="env" type="env.triangle_variants_with_ipv6">
+                <value ref="env.triangle_iut_tst"/>
+                <!-- See ST-2273 -->
+                <value reqs="NO_IPVLAN" ref="env.triangle_tst_iut"/>
+                <value ref="env.triangle_iut_iut"/>
+                <value ref="env.triangle_iut_tst_ipv6"/>
+                <!-- See ST-2273 -->
+                <value reqs="NO_IPVLAN" ref="env.triangle_tst_iut_ipv6"/>
+                <value ref="env.triangle_iut_iut_ipv6"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type">
+                <value>udp</value>
+                <value>udp_connect</value>
+            </arg>
+        </run>
+        <run>
+            <script name="asymmetric">
+                <req id="NETNS_CALICO"/>
+            </script>
+            <arg name="env" type="env.triangle_variants_with_ipv6">
+                <!-- TCP does not work well on Onload when socket
+                     sends via SF interface but receives over
+                     non-SF interface or vice versa -->
+                <value ref="env.triangle_iut_iut"/>
+                <value ref="env.triangle_iut_iut_ipv6"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type">
+                <value>tcp_active</value>
+                <!-- ON-9740 comment 4 -->
+                <value reqs="NO_SCALABLE_IUT">tcp_passive</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="rt_hoplimit">
+                <req id="RT_HOPLIMIT"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer" reqs="IP_TTL"/>
+                <value ref="env.peer2peer_tst" reqs="IP_TTL"/>
+                <value ref="env.peer2peer_ipv6" reqs="IPV6_UNICAST_HOPS"/>
+                <value ref="env.peer2peer_tst_ipv6" reqs="IPV6_UNICAST_HOPS"/>
+            </arg>
+            <arg name="sock_type" type="socket_type_all">
+                <value>tcp_active</value>
+                <value>tcp_passive</value>
+                <value>udp</value>
+                <value>udp_notconn</value>
+            </arg>
+            <arg name="opt_set" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="opt_val" list="">
+                <value>0</value>
+                <value>-1</value>
+                <value>0</value>
+                <value>139</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="retransmit_change_route"/>
+            <arg name="env" type="env.triangle_variants_with_ipv6">
+                <value ref="env.triangle_iut_tst"/>
+                <value ref="env.triangle_iut_tst_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="socket_type_all">
+                <value>tcp_active</value>
+                <value>tcp_passive</value>
+            </arg>
+            <arg name="data_retransmit" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="if_change_netns">
+                <req id="NETNS"/>
+                <!-- It is forbidden to move bond/team devices
+                     between network namespaces, NETIF_F_NETNS_LOCAL
+                     flag is set for them in Linux kernel. -->
+                <req id="NO_BOND"/>
+                <req id="NO_REUSE_STACK"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="rt_sock_type" type="route_sock_type"/>
+        </run>
+
+        <!-- Case of connected UDP socket, with or without
+             specifying destination address in msg_name. -->
+        <run>
+            <script name="conn_changed_tos"/>
+            <arg name="env">
+                <value ref="env.route_two_iut_ifs"/>
+            </arg>
+            <arg name="sock_type" type="socket_type_all">
+              <value>udp</value>
+            </arg>
+            <arg name="with_cmsg" type="boolean"/>
+            <arg name="use_rules" type="boolean"/>
+            <arg name="null_alien_addr" type="boolean"/>
+        </run>
+
+        <!-- Case of not connected UDP socket, with specifying
+             destination address in msg_name. -->
+        <run>
+            <script name="conn_changed_tos"/>
+            <arg name="env">
+                <value ref="env.route_two_iut_ifs"/>
+            </arg>
+            <arg name="sock_type" type="socket_type_all">
+              <value>udp_notconn</value>
+            </arg>
+            <arg name="with_cmsg" type="boolean"/>
+            <arg name="use_rules" type="boolean"/>
+            <arg name="null_alien_addr" type="boolean">
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <!-- Case of TCP connection, with or without
+             specifying destination address in msg_name. -->
+        <run>
+            <script name="conn_changed_tos"/>
+            <arg name="env">
+                <value ref="env.route_two_iut_ifs"/>
+            </arg>
+            <arg name="sock_type" type="socket_type_all">
+              <value>tcp_active</value>
+              <value reqs="IP_TOS_TCP_PASSIVE">tcp_passive</value>
+              <value reqs="IP_TOS_TCP_PASSIVE">tcp_passive_close</value>
+            </arg>
+            <arg name="with_cmsg" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="use_rules" type="boolean"/>
+            <arg name="null_alien_addr" type="boolean"/>
+        </run>
+
+    </session>
+</package>

@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: Apache-2.0
+# (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved.
+TE_SHELL([TE64=`gcc -dumpmachine | grep 64`])
+TE_SHELL([if test "$TE64" ; then \
+              MY_HOST=x86_64-pc-linux ; \
+              OTHER_HOST=i386-pc-linux ; \
+              OTHER_CFLAGS="-m32 -DTE_AGT_PLATFORM_OTHER "; \
+              LINUX32_PLATFORM=linux_other ; \
+              LINUX64_PLATFORM= ; \
+          else \
+              MY_HOST=i386-pc-linux ; \
+              OTHER_HOST=x86_64-pc-linux ; \
+              OTHER_CFLAGS="-m64 -DTE_AGT_PLATFORM_OTHER "; \
+              LINUX32_PLATFORM= ; \
+              LINUX64_PLATFORM=linux_other ; \
+          fi])

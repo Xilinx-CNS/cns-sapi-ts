@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<trc_db version="$Id$" last_match="true">
+  <test name="sockapi-ts" type="package">
+    <objective>Socket API Test Suite</objective>
+    <xi:include href="trc-sockapi-ts-globals.xml" parse="xml"
+                xmlns:xi="http://www.w3.org/2003/XInclude"/>
+    <iter result="PASSED">
+      <notes/>
+      <test name="prologue" type="script" auxiliary="true">
+        <objective>Up all used network interfaces. Assign IPv4 addresses for all used networks. Add static ARP entries, if required. Copy libraries to be tested on test hosts.</objective>
+        <iter result="PASSED">
+          <arg name="env"/>
+          <notes/>
+        </iter>
+      </test>
+      <test name="epilogue" type="script" auxiliary="true">
+        <objective/>
+        <notes/>
+        <iter result="PASSED">
+          <arg name="env">VAR.env.peer2peer</arg>
+          <notes/>
+        </iter>
+      </test>
+
+      <xi:include href="trc-sockapi-ts-usecases.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+      <xi:include href="trc-sockapi-ts-bnbvalue.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+      <xi:include href="trc-sockapi-ts-basic.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+      <xi:include href="trc-sockapi-ts-signal.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+      <xi:include href="trc-sockapi-ts-iomux.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+      <xi:include href="trc-sockapi-ts-sendrecv.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+      <xi:include href="trc-sockapi-ts-sendfile.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+      <xi:include href="trc-sockapi-ts-sockopts.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+      <xi:include href="trc-sockapi-ts-ioctls.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+      <xi:include href="trc-sockapi-ts-fcntl.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+      <xi:include href="trc-sockapi-ts-udp.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+      <xi:include href="trc-sockapi-ts-tcp.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+      <xi:include href="trc-sockapi-ts-multicast.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+      <xi:include href="trc-sockapi-ts-aio.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+      <xi:include href="trc-sockapi-ts-arp.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+      <xi:include href="trc-sockapi-ts-route.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+      <xi:include href="trc-sockapi-ts-ifcfg.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+      <!--xi:include href="trc-sockapi-ts-services.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/-->
+
+      <xi:include href="trc-sockapi-ts-attacks.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+      <xi:include href="trc-sockapi-ts-level5.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+      <xi:include href="trc-sockapi-ts-pmtu.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+      <xi:include href="trc-sockapi-ts-epoll.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+      <xi:include href="trc-sockapi-ts-libinit.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+      <xi:include href="trc-sockapi-ts-timestamps.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+      <xi:include href="trc-sockapi-ts-reuseport.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+      <xi:include href="trc-sockapi-ts-bpf.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+      <xi:include href="trc-sockapi-ts-performance.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+      <xi:include href="trc-sockapi-ts-congestion.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+      <xi:include href="trc-sockapi-ts-checksum.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+    </iter>
+  </test>
+</trc_db>

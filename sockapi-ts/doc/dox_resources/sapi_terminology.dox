@@ -1,0 +1,38 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup sapi_term_abrev Terminology and Abbreviations
+@ingroup sapi
+
+@section sapi_terminology Terminology
+
+@tdt_start
+
+@tdt_term reference implementation
+@tdt_def  Implementation considered as standard and used for comparison
+          with IUT. IUT must behave as Reference Implementation.
+
+@tdt_term Implementation Under Test
+@tdt_def  Implentation bening tested at the moment. Can be Onload or native
+          OS implementation.          
+
+@tdt_end
+
+@section sapi_abbreviations Abbreviations
+
+@tdt_start
+
+@tdt_term IUT
+@tdt_def  Implementation Under Test
+
+@tdt_term PCO
+@tdt_def  Point of Control and Observation
+
+@tdt_term RI
+@tdt_def  Reference Implementation
+
+@tdt_end
+
+@}
+*/

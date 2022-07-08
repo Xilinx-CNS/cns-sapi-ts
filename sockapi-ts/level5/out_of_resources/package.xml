@@ -1,0 +1,202 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+    
+    <description>L5 stack/system stack run out of hardware resources test</description>
+    
+    <author mailto="Alexander.Kukuta@oktetlabs.ru"/>
+
+    <req id="OUT_OF_RESOURCES" sticky="true"/>
+    <req id="NO_REUSE_STACK" sticky="true"/>
+    <req id="ONLOAD_ONLY" sticky="true"/>
+
+    <session track_conf="nohistory">
+        <enum name="env.peer2peer_aux">
+            <value>'net':IUT{'iut_host'{{'pco_aux':IUT},{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'alien_addr':inet:alien,addr:'alien_gw':inet:alien,if:'iut_if',addr:'iut_if_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if',addr:'tst_hwaddr':ether:unicast}}</value>
+        </enum>
+
+        <run name="sync_testing">
+            <session>
+                <arg name="env">
+                    <value reqs="ENV-2LINKS-IUT">'net':IUT{'iut_host'{{'pco_aux':IUT},{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'alien_addr':inet:alien,addr:'alien_gw':inet:alien,if:'iut_if',addr:'iut_if_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if',addr:'tst_hwaddr':ether:unicast}},'net1a':IUT{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</value>
+                </arg>
+                <arg name="ef_no_fail"/>
+
+                <prologue>
+                    <script name="prologue"/>
+                    <arg name="env" ref="env.peer2peer"/>
+                </prologue>
+                <epilogue>
+                    <script name="epilogue"/>
+                    <arg name="env" ref="env.peer2peer"/>
+                </epilogue>
+
+                <run>
+                    <script name="out_of_hw_filters_udp_bind_connect" track_conf="silent">
+                        <req id="SOCK_DGRAM"/>
+                        <req id="ONLOAD_UDP_OUT_OF_RESOURCES"/>
+                    </script>
+                    <arg name="bind" type="boolean" list="">
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="bind_only" type="boolean" list="">
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="wild" type="boolean" list="">
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="out_of_hw_filters_tcp" track_conf="silent">
+                        <req id="SOCK_STREAM"/>
+                        <!-- See Bug 81789 comment #5 -->
+                        <req id="CPLANE_NON_ZERO_GRACE_TIMEOUT"/>
+                    </script>
+                    <arg name="env" type="env.peer2peer_aux"/>
+                    <arg name="bind" type="boolean"/>
+                </run>
+
+                <run>
+                    <script name="out_of_hw_filters_tcp_listen" track_conf="silent">
+                        <req id="SOCK_STREAM"/> 
+                    </script>
+                    <arg name="iut_if_addr_count">
+                        <value>16</value>
+                    </arg>
+                    <arg name="wild" type="boolean"/>
+                </run>
+
+                <run>
+                    <script name="out_of_hw_filters_udp_recvfrom" track_conf="silent">
+                        <req id="SOCK_DGRAM"/>
+                        <req id="ONLOAD_UDP_OUT_OF_RESOURCES"/>
+                    </script>
+                    <arg name="iut_if_addr_count">
+                        <value>16</value>
+                    </arg>
+                    <arg name="wild" type="boolean"/>
+                </run>
+
+                <run>
+                    <script name="out_of_netifs" track_conf="silent">
+                        <req id="KERNEL_64"/>
+                    </script>
+                    <arg name="env" type="env.peer2peer_aux"/>
+                    <arg name="netifs_max">
+                        <value>270</value>
+                    </arg>
+                    <arg name="sock_type" type="sock_stream_dgram">
+                        <value>SOCK_STREAM</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="out_of_multicast_filters" track_conf="silent">
+                    <!-- It is possible to meet rtnl deadlock by joining to a lot of multicast
+                         address. The joining use to work well, but RCU stale happens when
+                         system tries to remove all the multicast addresses from all interfaces
+                         in the team or bond.
+                         The test behaves unpredictably with bonding and teaming in
+                         dependence on linux kernel version.
+                         See bugs 69022, 50900 and 58633 for details. -->
+                        <req id="NO_BOND"/>
+                        <req id="MCAST_HAS_LONG_DROP"/>
+                        <req id="SO_REUSEADDR"/>
+                        <req id="PROC_SYS_NET"/>
+                    </script>
+                    <arg name="env" type="env.peer2peer_aux"/>
+                    <arg name="sock_func" type="socket_function"/>
+                    <arg name="bind_before" type="boolean"/>
+                    <arg name="overfill" type="boolean"/>
+                </run>
+
+                <run>
+                    <script name="oof_multicast_gradual" track_conf="silent">
+                    <!-- It is possible to meet rtnl deadlock by joining to a lot of multicast
+                         address. The joining use to work well, but RCU stale happens when
+                         system tries to remove all the multicast addresses from all interfaces
+                         in the team or bond.
+                         The test may cause the crash with modern kernels (4.9) with teaming or
+                         bonding.
+                         See bugs 69022, 50900 and 58633 for details. -->
+                        <req id="NO_BOND"/>
+                        <req id="MCAST_HAS_LONG_DROP"/>
+                        <req id="SO_REUSEADDR"/>
+                        <req id="PROC_SYS_NET"/>
+                    </script>
+                    <arg name="env" type="env.peer2peer_aux"/>
+                    <arg name="sock_func" type="socket_function"/>
+                    <arg name="bind_before" type="boolean"/>
+                    <arg name="portion">
+                        <value>100</value>
+                    </arg>
+                    <arg name="success">
+                        <value>10</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="out_of_stacks" track_conf="silent">
+                        <req id="SOCK_STREAM"/>
+                        <req id="FORK"/>
+                        <req id="NO_REUSE_STACK"/>
+                        <req id="KERNEL_64"/>
+                        <req id="SO_RCVBUF"/>
+                        <req id="SO_SNDBUF"/>
+                    </script>
+                    <arg name="env" ref="env.peer2peer"/>
+                </run>
+
+            </session>
+            <arg name="ef_no_fail" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="out_of_packets" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+                <req id="NO_REUSE_STACK"/>
+                <req id="SO_RCVBUF"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="create_process" type="boolean">
+                <value reqs="FORK">TRUE</value>
+                <value reqs="THREADS">FALSE</value>
+            </arg>
+            <arg name="udp_send" type="boolean">
+                <value>FALSE</value>
+                <value reqs="SOCK_DGRAM">TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="data_flows_few_pkts" track_conf="nohistory">
+                <req id="SOCK_STREAM"/>
+                <req id="NO_REUSE_STACK"/>
+                <req id="RPC_RESTART"/>
+                <req id="TIME_CONSUMING"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+        </run>
+
+    </session>
+</package>

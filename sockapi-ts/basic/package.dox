@@ -1,0 +1,160 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup basic Basic Socket API
+@ingroup sockapi
+@{
+
+The test package contains complex tests on Basic Socket API. Tests in
+the package cover the following system calls: @b socket(), @b close(), 
+@b shutdown(), @b bind(), @b connect(), @b listen(), @b accept(), 
+@b getsockname(), @b getpeername() and others.
+
+Semantic of these functions is checked, influence of previous system
+calls and their parameters to the results of certain system call is
+tested.
+
+Robustness under inappropriate sequences of system calls, signals,
+multithread, multi-instances (using @b dup()), shared sockets functionality
+including unblocking of many users simulteneously and unblocking of one user
+because of action of another, @b dup(), @b fork(), @b execve().
+
+Local-side IP address should be iterated at least in the following set of
+values: correct host global IP address, loopback address, bad IP address.
+
+@author Konstantin Abramenko <Konstantin.Abramenko@oktetlabs.ru>
+
+@par Tests:
+
+-# @ref basic-chroot_socket
+-# @ref basic-get_sock_peer_name_str
+-# @ref basic-get_sock_peer_name_dgm
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref basic-state_trans_client
+-# @ref basic-state_trans_server
+-# @ref basic-state_trans_udp
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref basic-threads_client
+-# @ref basic-threads_server
+-# @ref basic-threads_dgm
+-# @ref basic-threads_shutdown_unblock
+-# @ref basic-threads_shutdown_diff_sock
+-# @ref basic-threads_shutdown_listening
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref basic-close_created
+-# @ref basic-close_bound
+-# @ref basic-close_listening
+-# @ref basic-connect_failed_func
+-# @ref basic-listen_backlog_values
+-# @ref basic-listen_shutdown_connect
+-# @ref basic-listen_shutdown_wr
+-# @ref basic-listen_accept_close
+-# @ref basic-close_listen_pending
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref basic-shutdown_write_read
+-# @ref basic-shutdown_stream_read_write
+-# @ref basic-shutdown_dgm_rd
+-# @ref basic-shutdown_dgm_wr
+-# @ref basic-shutdown_dgm_all
+-# @ref basic-shutdown_peer
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref basic-bind_sockaddr_send
+-# @ref basic-bind_sockaddr_recv
+-# @ref basic-bind_reuse
+-# @ref basic-udp_connect
+-# @ref basic-default_bind_connect
+-# @ref basic-default_bind_listen
+-# @ref basic-default_bind_sendto
+-# @ref basic-listen_shutdown_pending
+-# @ref basic-listen_shutdown_listen
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref basic-connect_interrupted
+-# @ref basic-connect_after_fault
+-# @ref basic-connect_influence_sendto
+-# @ref basic-dgram_bind_connect_addr
+-# @ref basic-dgram_crd_unbound
+-# @ref basic-dgram_crd_bound_lb
+-# @ref basic-dgram_crd_bound_wc
+-# @ref basic-dgram_bind_connect_names
+-# @ref basic-data_before_accept
+-# @ref basic-rst_before_accept
+-# @ref basic-two_accept_blocked
+-# @ref basic-accept_order
+-# @ref basic-connections_on_aliases
+-# @ref basic-wildcard_server_passive_opening
+-# @ref basic-socket_peer_rst
+-# @ref basic-tcp_server_reboot
+-# @ref basic-tcp_server_crashes_timeout
+-# @ref basic-ipv6_recv_ip
+-# @ref basic-ipv6_send_ip
+-# @ref basic-ipv6_ipv4_reuse
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref basic-fork_created
+-# @ref basic-fork_bound
+-# @ref basic-fork_conn_dgm
+-# @ref basic-fork_conn_str
+-# @ref basic-fork_listening
+-# @ref basic-fork_kill
+-# @ref basic-fork_share_sock
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref basic-exec_created
+-# @ref basic-exec_bound
+-# @ref basic-exec_conn
+-# @ref basic-exec_listening
+-# @ref basic-exec_fork_multiple
+-# @ref basic-exec_fork_multithread
+-# @ref basic-exec_fork_traffic
+-# @ref basic-exec_dup
+-# @ref basic-close_on_exec
+-# @ref basic-derived_bind
+-# @ref basic-derived_connect
+-# @ref basic-derived_bindtodevice
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref basic-fork_nb_receive
+-# @ref basic-bind_two_nets
+-# @ref basic-pipe_write_and_close
+-# @ref basic-pipe_close_on_exec
+-# @ref basic-pipe_read_nonblock
+-# @ref basic-pipe_write_nonblock
+-# @ref basic-pipe_write_block
+-# @ref basic-many_pipes
+-# @ref basic-pipe_merge_buf
+-# @ref basic-pipe_close_write
+-# @ref basic-pipe_close_read
+-# @ref basic-pipe_socket_interact
+-# @ref basic-pipe_become_writable
+-# @ref basic-pipe_big_buffer_read
+-# @ref basic-pipe_big_buffer_write
+-# @ref basic-pipe_writev_readv
+-# @ref basic-stat_mode
+-# @ref basic-tcp_udp_two_threads
+-# @ref basic-pipe_rw_rnd_len
+-# @ref basic-close_sock_oth_thread
+-# @ref basic-many_listen_connect_lo
+-# @ref basic-terminate_waitpid
+-# @ref basic-sock_exec_many
+-# @ref basic-mtu_usage
+   \n @htmlonly &nbsp; @endhtmlonly
+-# @ref basic-vfork_open_close_exec
+-# @ref basic-vfork_sig_exec
+-# @ref basic-vfork_check_hang
+-# @ref basic-vfork_func_exec
+-# @ref basic-popen_multithread_flood
+-# @ref basic-accept_multiple
+-# @ref basic-many_sockets
+-# @ref basic-splice_nonblock
+-# @ref basic-threaded_busy_socket
+-# @ref basic-threaded_nblock_conn
+-# @ref basic-threaded_listen
+-# @ref basic-threaded_udp
+-# @ref basic-kill_lock_stack
+-# @ref basic-reuseport_bind_zero_port
+-# @ref basic-threads_system
+-# @ref basic-socket_via_af_unix_read
+-# @ref basic-pipe_via_af_unix
+-# @ref basic-listen_via_af_unix
+-# @ref basic-pthread_cancellation_point
+@}
+
+*/

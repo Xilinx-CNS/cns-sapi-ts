@@ -1,0 +1,1641 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<test name="timestamps" type="package">
+  <objective>Timestamps testing</objective>
+  <notes/>
+  <iter result="PASSED">
+    <notes/>
+
+    <test name="prologue" type="script" auxiliary="true">
+      <objective/>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="epilogue" type="script" auxiliary="true">
+      <objective/>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="sync_testing_prologue" type="script" auxiliary="true">
+      <objective/>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+
+    <test name="ts_read" type="script">
+      <objective>Check TX and RX timestamps values which are retrieved in blocking or non-blocking modes.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="blocking"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="length">1000</arg>
+        <arg name="num">3</arg>
+        <arg name="onload_ext">FALSE</arg>
+        <arg name="select_err_queue"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="tx">TRUE</arg>
+        <arg name="opt_before_bind"/>
+        <notes/>
+        <results tags="v5" key="ON-4169">
+          <result value="FAILED">
+            <verdict>Receive function failed with unexpected error RPC-EINVAL instead of RPC_EAGAIN before events were generated</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="blocking"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="iomux">select</arg>
+        <arg name="length">1000</arg>
+        <arg name="num">3</arg>
+        <arg name="onload_ext">FALSE</arg>
+        <arg name="select_err_queue"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="tx">TRUE</arg>
+        <arg name="opt_before_bind"/>
+        <notes/>
+        <results tags="v5" key="ON-4169">
+          <result value="FAILED">
+            <verdict>Receive function failed with unexpected error RPC-EINVAL instead of RPC_EAGAIN before events were generated</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="blocking"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="length">1000</arg>
+        <arg name="num">3</arg>
+        <arg name="onload_ext">FALSE</arg>
+        <arg name="select_err_queue"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="tx">TRUE</arg>
+        <arg name="opt_before_bind"/>
+        <notes/>
+        <results tags="v5" key="ON-4169">
+          <result value="FAILED">
+            <verdict>Receive function failed with unexpected error RPC-EINVAL instead of RPC_EAGAIN before events were generated</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="blocking"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="length">1000</arg>
+        <arg name="num">3</arg>
+        <arg name="onload_ext">FALSE</arg>
+        <arg name="select_err_queue"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="tx">TRUE</arg>
+        <arg name="opt_before_bind"/>
+        <notes/>
+        <results tags="v5" key="ON-4169">
+          <result value="FAILED">
+            <verdict>Receive function failed with unexpected error RPC-EINVAL instead of RPC_EAGAIN before events were generated</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="blocking"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="iomux">epoll</arg>
+        <arg name="length">1000</arg>
+        <arg name="num">3</arg>
+        <arg name="onload_ext">FALSE</arg>
+        <arg name="select_err_queue"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="tx">TRUE</arg>
+        <arg name="opt_before_bind"/>
+        <notes/>
+        <results tags="v5" key="ON-4169">
+          <result value="FAILED">
+            <verdict>Receive function failed with unexpected error RPC-EINVAL instead of RPC_EAGAIN before events were generated</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="blocking"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="length">1000</arg>
+        <arg name="num">3</arg>
+        <arg name="onload_ext">FALSE</arg>
+        <arg name="select_err_queue"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="tx">TRUE</arg>
+        <arg name="opt_before_bind"/>
+        <notes/>
+        <results tags="v5" key="ON-4169">
+          <result value="FAILED">
+            <verdict>Receive function failed with unexpected error RPC-EINVAL instead of RPC_EAGAIN before events were generated</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="blocking"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="length">1000</arg>
+        <arg name="num">3</arg>
+        <arg name="onload_ext">FALSE</arg>
+        <arg name="select_err_queue"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="tx">TRUE</arg>
+        <arg name="opt_before_bind"/>
+        <notes/>
+        <results tags="v5" key="ON-4169">
+          <result value="FAILED">
+            <verdict>Receive function failed with unexpected error RPC-EINVAL instead of RPC_EAGAIN before events were generated</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="blocking"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="length">1000</arg>
+        <arg name="num">3</arg>
+        <arg name="onload_ext">FALSE</arg>
+        <arg name="select_err_queue"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="tx">FALSE</arg>
+        <arg name="opt_before_bind"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="blocking"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="iomux">select</arg>
+        <arg name="length">1000</arg>
+        <arg name="num">3</arg>
+        <arg name="onload_ext">FALSE</arg>
+        <arg name="select_err_queue"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="tx">FALSE</arg>
+        <arg name="opt_before_bind"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="blocking"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="iomux">pselect</arg>
+        <arg name="length">1000</arg>
+        <arg name="num">3</arg>
+        <arg name="onload_ext">FALSE</arg>
+        <arg name="select_err_queue"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="tx">FALSE</arg>
+        <arg name="opt_before_bind"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="blocking"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="iomux">ppoll</arg>
+        <arg name="length">1000</arg>
+        <arg name="num">3</arg>
+        <arg name="onload_ext">FALSE</arg>
+        <arg name="select_err_queue"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="tx">FALSE</arg>
+        <arg name="opt_before_bind"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="blocking"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="iomux">epoll</arg>
+        <arg name="length">1000</arg>
+        <arg name="num">3</arg>
+        <arg name="onload_ext">FALSE</arg>
+        <arg name="select_err_queue"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="tx">FALSE</arg>
+        <arg name="opt_before_bind"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="blocking"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="length">1000</arg>
+        <arg name="num">3</arg>
+        <arg name="onload_ext">FALSE</arg>
+        <arg name="select_err_queue"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="tx">FALSE</arg>
+        <arg name="opt_before_bind"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="blocking"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="length">1000</arg>
+        <arg name="num">3</arg>
+        <arg name="onload_ext">FALSE</arg>
+        <arg name="select_err_queue"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="tx">FALSE</arg>
+        <arg name="opt_before_bind"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="blocking"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="iomux">poll</arg>
+        <arg name="length">1000</arg>
+        <arg name="num">1</arg>
+        <arg name="onload_ext"/>
+        <arg name="select_err_queue">FALSE</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="tx"/>
+        <arg name="opt_before_bind"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="blocking"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="func">recvmmsg</arg>
+        <arg name="iomux"/>
+        <arg name="length">1000</arg>
+        <arg name="num"/>
+        <arg name="onload_ext"/>
+        <arg name="select_err_queue"/>
+        <arg name="sock_type"/>
+        <arg name="tx"/>
+        <arg name="opt_before_bind"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="blocking"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="func">recvmsg</arg>
+        <arg name="iomux"/>
+        <arg name="length">1000</arg>
+        <arg name="num">3</arg>
+        <arg name="onload_ext"/>
+        <arg name="select_err_queue"/>
+        <arg name="sock_type"/>
+        <arg name="tx"/>
+        <arg name="opt_before_bind"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="blocking"/>
+        <arg name="env"/>
+        <arg name="func">onload_zc_hlrx_recv_copy</arg>
+        <arg name="iomux"/>
+        <arg name="length"/>
+        <arg name="num"/>
+        <arg name="onload_ext"/>
+        <arg name="select_err_queue"/>
+        <arg name="sock_type"/>
+        <arg name="tx"/>
+        <arg name="opt_before_bind"/>
+        <notes/>
+      </iter>
+    </test>
+
+    <test name="ts_env" type="script">
+      <objective>Check env EF_TIMESTAMPING_REPORTING, EF_TX_TIMESTAMPING, EF_RX_TIMESTAMPING influence to timestamps retrieving.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="ef_rx_timestamping"/>
+        <arg name="ef_timestamping_reporting"/>
+        <arg name="ef_tx_timestamping"/>
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <arg name="tx"/>
+        <arg name="sync"/>
+        <arg name="length"/>
+        <arg name="num"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ts_tcp_re" type="script">
+      <objective>Check retransmissions influence on TX TCP timestamps retrieving.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="use_tx_ack"/>
+        <arg name="onload_ext"/>
+        <arg name="select_err_queue"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ts_queued_packets" type="script">
+      <objective>Read queued packets after timestamps disabling check timestamps extracting.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="length"/>
+        <arg name="onload_ext">FALSE</arg>
+        <arg name="select_err_queue"/>
+        <arg name="send_after_disabling"/>
+        <arg name="send_num"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="tx">TRUE</arg>
+        <notes/>
+        <results tags="v5" key="ON-5411">
+          <result value="FAILED">
+            <verdict>Ancillary message IP_RECVERR was not retrieved</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="length"/>
+        <arg name="onload_ext"/>
+        <arg name="select_err_queue"/>
+        <arg name="send_after_disabling"/>
+        <arg name="send_num"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="length"/>
+        <arg name="onload_ext"/>
+        <arg name="select_err_queue"/>
+        <arg name="send_after_disabling"/>
+        <arg name="send_num"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="tx"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="length"/>
+        <arg name="onload_ext">TRUE</arg>
+        <arg name="select_err_queue"/>
+        <arg name="send_after_disabling"/>
+        <arg name="send_num"/>
+        <arg name="sock_type"/>
+        <arg name="tx"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ts_fin" type="script">
+      <objective>Try to get timestamps for the FIN packet with or without data.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="data"/>
+        <arg name="env"/>
+        <arg name="tx"/>
+        <arg name="iomux"/>
+        <arg name="onload_ext"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="siocshwtstamp" type="script">
+      <objective>Check that SIOCSHWTSTAMP request and SO_TIMESTAMPING socket option return a scm_timestamping structure containing the time at which the packet was received.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="call_ioctl"/>
+        <arg name="env"/>
+        <arg name="none_ioctl"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="use_raw_hw_ts">FALSE</arg>
+        <arg name="use_sw_ts">FALSE</arg>
+        <arg name="use_sys_hw_ts">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_ioctl"/>
+        <arg name="env"/>
+        <arg name="none_ioctl"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="use_raw_hw_ts">FALSE</arg>
+        <arg name="use_sw_ts">FALSE</arg>
+        <arg name="use_sys_hw_ts">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_ioctl"/>
+        <arg name="env"/>
+        <arg name="none_ioctl"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="use_raw_hw_ts">FALSE</arg>
+        <arg name="use_sw_ts">TRUE</arg>
+        <arg name="use_sys_hw_ts"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_ioctl">FALSE</arg>
+        <arg name="env"/>
+        <arg name="none_ioctl"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="use_raw_hw_ts">TRUE</arg>
+        <arg name="use_sw_ts"/>
+        <arg name="use_sys_hw_ts"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_ioctl">FALSE</arg>
+        <arg name="env"/>
+        <arg name="none_ioctl"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="use_raw_hw_ts"/>
+        <arg name="use_sw_ts"/>
+        <arg name="use_sys_hw_ts"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_ioctl">TRUE</arg>
+        <arg name="env"/>
+        <arg name="none_ioctl"/>
+        <arg name="sock_type"/>
+        <arg name="use_raw_hw_ts"/>
+        <arg name="use_sw_ts"/>
+        <arg name="use_sys_hw_ts"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="siocshwtstamp_tx" type="script">
+      <objective>Check that SIOCSHWTSTAMP request and SO_TIMESTAMPING socket option return a scm_timestamping structure containing the time at which the packet was sent.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="ioctl_tx"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="use_hw_tx">TRUE</arg>
+        <arg name="use_onload_stream"/>
+        <arg name="use_raw_hw_ts">FALSE</arg>
+        <arg name="use_sw_ts"/>
+        <arg name="use_sys_hw_ts">FALSE</arg>
+        <arg name="use_tx_sched">TRUE</arg>
+        <notes/>
+        <results tags="v5&amp;linux-3&gt;=19" key="ON-4131, ON-5410">
+          <result value="FAILED">
+            <verdict>Timestamp was unexpectedly retrieved</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="ioctl_tx"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="use_hw_tx">TRUE</arg>
+        <arg name="use_onload_stream"/>
+        <arg name="use_raw_hw_ts">FALSE</arg>
+        <arg name="use_sw_ts"/>
+        <arg name="use_sys_hw_ts">FALSE</arg>
+        <arg name="use_tx_sched">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-4131">
+          <result value="FAILED">
+            <verdict>Timestamp was unexpectedly retrieved</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="ioctl_tx"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="use_hw_tx">TRUE</arg>
+        <arg name="use_onload_stream"/>
+        <arg name="use_raw_hw_ts">FALSE</arg>
+        <arg name="use_sw_ts"/>
+        <arg name="use_sys_hw_ts">TRUE</arg>
+        <arg name="use_tx_sched"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="ioctl_tx"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="use_hw_tx">TRUE</arg>
+        <arg name="use_onload_stream"/>
+        <arg name="use_raw_hw_ts">TRUE</arg>
+        <arg name="use_sw_ts"/>
+        <arg name="use_sys_hw_ts"/>
+        <arg name="use_tx_sched"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="ioctl_tx">HWTSTAMP_TX_NONE</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="use_hw_tx">TRUE</arg>
+        <arg name="use_onload_stream"/>
+        <arg name="use_raw_hw_ts"/>
+        <arg name="use_sw_ts"/>
+        <arg name="use_sys_hw_ts"/>
+        <arg name="use_tx_sched"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="ioctl_tx"/>
+        <arg name="sock_type"/>
+        <arg name="use_hw_tx">FALSE</arg>
+        <arg name="use_onload_stream"/>
+        <arg name="use_raw_hw_ts"/>
+        <arg name="use_sw_ts"/>
+        <arg name="use_sys_hw_ts"/>
+        <arg name="use_tx_sched"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="ioctl_tx">HWTSTAMP_TX_OFF</arg>
+        <arg name="sock_type"/>
+        <arg name="use_hw_tx"/>
+        <arg name="use_onload_stream"/>
+        <arg name="use_raw_hw_ts"/>
+        <arg name="use_sw_ts"/>
+        <arg name="use_sys_hw_ts"/>
+        <arg name="use_tx_sched"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="ioctl_tx">HWTSTAMP_TX_ONESTEP_SYNC</arg>
+        <arg name="sock_type"/>
+        <arg name="use_hw_tx"/>
+        <arg name="use_onload_stream"/>
+        <arg name="use_raw_hw_ts"/>
+        <arg name="use_sw_ts"/>
+        <arg name="use_sys_hw_ts"/>
+        <arg name="use_tx_sched"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="ioctl_tx">HWTSTAMP_TX_ON</arg>
+        <arg name="sock_type"/>
+        <arg name="use_hw_tx"/>
+        <arg name="use_onload_stream"/>
+        <arg name="use_raw_hw_ts"/>
+        <arg name="use_sw_ts"/>
+        <arg name="use_sys_hw_ts"/>
+        <arg name="use_tx_sched"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ts_states" type="script">
+      <objective>Check that HW timestamps can be enabled in any different states.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="onload_ext"/>
+        <arg name="sendto"/>
+        <arg name="sock_type"/>
+        <arg name="state"/>
+        <arg name="tx"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ts_select_err_queue" type="script">
+      <objective>Check flag SO_SELECT_ERR_QUEUE sanity</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type"/>
+        <arg name="tx"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ts_opt_tsonly" type="script">
+      <objective>Check if flag SOF_TIMESTAMPING_OPT_CMSG is used packet payload is not returned with timestamps.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ts_tx_opt_id" type="script">
+      <objective>Check if flag SOF_TIMESTAMPING_OPT_ID is set a uniqe packet identifier is generated.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="length_max"/>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="packets_num"/>
+        <arg name="sock_type"/>
+        <arg name="onload_ext"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ts_tx_ack" type="script">
+      <objective>Check if flag SOF_TIMESTAMPING_TX_ACK is used new transmit timestamp event is generated when ACK is received.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="opt_cmsg"/>
+        <arg name="sock_type"/>
+        <arg name="tx_ack"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ts_tx_shut_rd" type="script">
+      <objective>Check that TX timestamps can be retrieved after calling shutdown() on IUT.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type"/>
+        <arg name="iomux"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ts_tx_shut_wr" type="script">
+      <objective>Check that queued TX timestamps can be retrieved after calling shutdown(WR) on IUT.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="onload_ext"/>
+        <arg name="shutdown_how"/>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ts_flow" type="script">
+      <objective>Transmit data flow with different parameters, check that timestastamps are monotonic.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="length_max">9000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="total"/>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ipvlan" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>msg_controllen is zero, but tstamps are enabled</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="length_max">40000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="total"/>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ipvlan" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>msg_controllen is zero, but tstamps are enabled</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux">select</arg>
+        <arg name="length_max">9000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="total"/>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ipvlan" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>msg_controllen is zero, but tstamps are enabled</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="length_max">9000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="total"/>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ipvlan" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>msg_controllen is zero, but tstamps are enabled</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux">poll</arg>
+        <arg name="length_max">9000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="total"/>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ipvlan" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>msg_controllen is zero, but tstamps are enabled</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="length_max">9000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="total"/>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ipvlan" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>msg_controllen is zero, but tstamps are enabled</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux">epoll</arg>
+        <arg name="length_max">9000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="total"/>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ipvlan" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>msg_controllen is zero, but tstamps are enabled</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="length_max">9000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="total"/>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ipvlan" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>msg_controllen is zero, but tstamps are enabled</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux">select</arg>
+        <arg name="length_max">40000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="total"/>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ipvlan" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>msg_controllen is zero, but tstamps are enabled</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux">pselect</arg>
+        <arg name="length_max">40000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="total"/>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ipvlan" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>msg_controllen is zero, but tstamps are enabled</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux">poll</arg>
+        <arg name="length_max">40000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="total"/>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ipvlan" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>msg_controllen is zero, but tstamps are enabled</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux">ppoll</arg>
+        <arg name="length_max">40000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="total"/>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ipvlan" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>msg_controllen is zero, but tstamps are enabled</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux">epoll</arg>
+        <arg name="length_max">40000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="total"/>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ipvlan" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>msg_controllen is zero, but tstamps are enabled</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="length_max">40000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="total"/>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ipvlan" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>msg_controllen is zero, but tstamps are enabled</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="length_max">9000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="total"/>
+        <arg name="tx">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="length_max">40000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="total"/>
+        <arg name="tx">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="length_max">9000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext">FALSE</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="total"/>
+        <arg name="tx"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="length_max">40000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext">FALSE</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="total"/>
+        <arg name="tx"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="length_max">9000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext">TRUE</arg>
+        <arg name="sock_type"/>
+        <arg name="total"/>
+        <arg name="tx"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="length_max">40000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext">TRUE</arg>
+        <arg name="sock_type"/>
+        <arg name="total"/>
+        <arg name="tx"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="length_max">1000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type"/>
+        <arg name="total"/>
+        <arg name="tx"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="length_max">8800</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type"/>
+        <arg name="total"/>
+        <arg name="tx"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="length_max">2000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type"/>
+        <arg name="total"/>
+        <arg name="tx"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ts_recvmsg_trunc" type="script">
+      <objective>Check that MSG_TRUNC flag is returned if received data does not fit into space in msg_iov buffers while timestamps are also reported in control data. Also check that setting MSG_TRUNC before recvmsg() is called has no effect. Check the same for MSG_CTRUNC flag and truncated control data.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="control_len">zero</arg>
+        <arg name="control_null"/>
+        <arg name="env"/>
+        <arg name="msg_ctrunc"/>
+        <arg name="msg_data">ok</arg>
+        <arg name="msg_trunc"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type"/>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="control_len">small</arg>
+        <arg name="control_null">TRUE</arg>
+        <arg name="env"/>
+        <arg name="msg_ctrunc"/>
+        <arg name="msg_data">small_space</arg>
+        <arg name="msg_trunc"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+        <results tags="linux-4&gt;=15&amp;!v5" notes="Linux does not report TCP RX timestamp when there is not enough space for normal data">
+          <result value="FAILED">
+            <verdict>recvmsg() reported flags 0 instead of MSG_CTRUNC</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="control_len">ok</arg>
+        <arg name="control_null">TRUE</arg>
+        <arg name="env"/>
+        <arg name="msg_ctrunc"/>
+        <arg name="msg_data">small_space</arg>
+        <arg name="msg_trunc"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+        <results tags="linux-4&gt;=15&amp;!v5" notes="Linux does not report TCP RX timestamp when there is not enough space for normal data">
+          <result value="FAILED">
+            <verdict>recvmsg() reported flags 0 instead of MSG_CTRUNC</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="control_len">ok</arg>
+        <arg name="control_null">FALSE</arg>
+        <arg name="env"/>
+        <arg name="msg_ctrunc"/>
+        <arg name="msg_data">small_space</arg>
+        <arg name="msg_trunc"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+        <results tags="linux-4&gt;=15&amp;!v5" notes="Linux does not report TCP RX timestamp when there is not enough space for normal data">
+          <result value="FAILED">
+            <verdict>Failed to retrieve timestamps, controllen is zero</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="control_len">small</arg>
+        <arg name="control_null">FALSE</arg>
+        <arg name="env"/>
+        <arg name="msg_ctrunc"/>
+        <arg name="msg_data">small_space</arg>
+        <arg name="msg_trunc"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+        <results tags="linux-4&gt;=15&amp;!v5" notes="Linux does not report TCP RX timestamp when there is not enough space for normal data">
+          <result value="FAILED">
+            <verdict>recvmsg() reported flags 0 instead of MSG_CTRUNC</verdict>
+            <verdict>Truncated control message was not found</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="control_len">small</arg>
+        <arg name="control_null">TRUE</arg>
+        <arg name="env"/>
+        <arg name="msg_ctrunc"/>
+        <arg name="msg_data"/>
+        <arg name="msg_trunc"/>
+        <arg name="onload_ext">FALSE</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="tx">TRUE</arg>
+        <notes/>
+        <results tags="linux&lt;4&amp;!v5">
+          <result value="FAILED">
+            <verdict>recvmsg() failed with unexpected errno RCF_PCH-ERPCDEAD</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="control_len">ok</arg>
+        <arg name="control_null">TRUE</arg>
+        <arg name="env"/>
+        <arg name="msg_ctrunc"/>
+        <arg name="msg_data"/>
+        <arg name="msg_trunc"/>
+        <arg name="onload_ext">FALSE</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="tx">TRUE</arg>
+        <notes/>
+        <results tags="linux&lt;4&amp;!v5">
+          <result value="FAILED">
+            <verdict>recvmsg() failed with unexpected errno RCF_PCH-ERPCDEAD</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="control_len">ok</arg>
+        <arg name="control_null">FALSE</arg>
+        <arg name="env"/>
+        <arg name="msg_ctrunc"/>
+        <arg name="msg_data">zero_iovs</arg>
+        <arg name="msg_trunc"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+        <results tags="linux-4&gt;=15&amp;!v5" notes="Linux does not report TCP RX timestamp when there is not enough space for normal data">
+          <result value="FAILED">
+            <verdict>Failed to retrieve timestamps, controllen is zero</verdict>
+          </result>
+        </results>
+        <results tags="v5" key="ON-9641">
+          <result value="FAILED">
+            <verdict>Failed to retrieve timestamps, controllen is zero</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="control_len">small</arg>
+        <arg name="control_null">FALSE</arg>
+        <arg name="env"/>
+        <arg name="msg_ctrunc"/>
+        <arg name="msg_data">zero_iovs</arg>
+        <arg name="msg_trunc"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+        <results tags="linux-4&gt;=15&amp;!v5" notes="Linux does not report TCP RX timestamp when there is not enough space for normal data">
+          <result value="FAILED">
+            <verdict>recvmsg() reported flags 0 instead of MSG_CTRUNC</verdict>
+            <verdict>Truncated control message was not found</verdict>
+          </result>
+        </results>
+        <results tags="v5" key="ON-9641">
+          <result value="FAILED">
+            <verdict>recvmsg() reported flags 0 instead of MSG_CTRUNC</verdict>
+            <verdict>Truncated control message was not found</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="control_len">small</arg>
+        <arg name="control_null">FALSE</arg>
+        <arg name="env"/>
+        <arg name="msg_ctrunc"/>
+        <arg name="msg_data">ok</arg>
+        <arg name="msg_trunc"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="control_len">small</arg>
+        <arg name="control_null">FALSE</arg>
+        <arg name="env"/>
+        <arg name="msg_ctrunc"/>
+        <arg name="msg_data"/>
+        <arg name="msg_trunc"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="tx"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="control_len">small</arg>
+        <arg name="control_null">FALSE</arg>
+        <arg name="env"/>
+        <arg name="msg_ctrunc"/>
+        <arg name="msg_data"/>
+        <arg name="msg_trunc"/>
+        <arg name="onload_ext">TRUE</arg>
+        <arg name="sock_type"/>
+        <arg name="tx"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="control_len">small</arg>
+        <arg name="control_null">TRUE</arg>
+        <arg name="env"/>
+        <arg name="msg_ctrunc"/>
+        <arg name="msg_data">zero_iovs</arg>
+        <arg name="msg_trunc"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+        <results tags="linux-4&gt;=15&amp;!v5" notes="Linux does not report TCP RX timestamp when there is not enough space for normal data">
+          <result value="FAILED">
+            <verdict>recvmsg() reported flags 0 instead of MSG_CTRUNC</verdict>
+          </result>
+        </results>
+        <results tags="v5" key="ON-9641">
+          <result value="FAILED">
+            <verdict>recvmsg() reported flags 0 instead of MSG_CTRUNC</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="control_len">ok</arg>
+        <arg name="control_null">TRUE</arg>
+        <arg name="env"/>
+        <arg name="msg_ctrunc"/>
+        <arg name="msg_data">zero_iovs</arg>
+        <arg name="msg_trunc"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+        <results tags="linux-4&gt;=15&amp;!v5" notes="Linux does not report TCP RX timestamp when there is not enough space for normal data">
+          <result value="FAILED">
+            <verdict>recvmsg() reported flags 0 instead of MSG_CTRUNC</verdict>
+          </result>
+        </results>
+        <results tags="v5" key="ON-9641">
+          <result value="FAILED">
+            <verdict>recvmsg() reported flags 0 instead of MSG_CTRUNC</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="control_len">zero</arg>
+        <arg name="control_null"/>
+        <arg name="env"/>
+        <arg name="msg_ctrunc"/>
+        <arg name="msg_data">zero_iovs</arg>
+        <arg name="msg_trunc"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+        <results tags="linux-4&gt;=15&amp;!v5" notes="Linux does not report TCP RX timestamp when there is not enough space for normal data">
+          <result value="FAILED">
+            <verdict>recvmsg() reported flags 0 instead of MSG_CTRUNC</verdict>
+          </result>
+        </results>
+        <results tags="v5" key="ON-9641">
+          <result value="FAILED">
+            <verdict>recvmsg() reported flags 0 instead of MSG_CTRUNC</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="control_len">zero</arg>
+        <arg name="control_null"/>
+        <arg name="env"/>
+        <arg name="msg_ctrunc"/>
+        <arg name="msg_data">small_space</arg>
+        <arg name="msg_trunc"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+        <results tags="linux-4&gt;=15&amp;!v5" notes="Linux does not report TCP RX timestamp when there is not enough space for normal data">
+          <result value="FAILED">
+            <verdict>recvmsg() reported flags 0 instead of MSG_CTRUNC</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="control_len">small</arg>
+        <arg name="control_null">FALSE</arg>
+        <arg name="env"/>
+        <arg name="msg_ctrunc"/>
+        <arg name="msg_data"/>
+        <arg name="msg_trunc"/>
+        <arg name="onload_ext">FALSE</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="tx">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="control_len">ok</arg>
+        <arg name="control_null">FALSE</arg>
+        <arg name="env"/>
+        <arg name="msg_ctrunc"/>
+        <arg name="msg_data"/>
+        <arg name="msg_trunc"/>
+        <arg name="onload_ext">FALSE</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="tx">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="control_len">small</arg>
+        <arg name="control_null">TRUE</arg>
+        <arg name="env"/>
+        <arg name="msg_ctrunc"/>
+        <arg name="msg_data">ok</arg>
+        <arg name="msg_trunc"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="control_len">ok</arg>
+        <arg name="control_null"/>
+        <arg name="env"/>
+        <arg name="msg_ctrunc"/>
+        <arg name="msg_data">ok</arg>
+        <arg name="msg_trunc"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="control_len">zero</arg>
+        <arg name="control_null"/>
+        <arg name="env"/>
+        <arg name="msg_ctrunc"/>
+        <arg name="msg_data"/>
+        <arg name="msg_trunc"/>
+        <arg name="onload_ext">FALSE</arg>
+        <arg name="sock_type"/>
+        <arg name="tx">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="control_len">small</arg>
+        <arg name="control_null">TRUE</arg>
+        <arg name="env"/>
+        <arg name="msg_ctrunc"/>
+        <arg name="msg_data"/>
+        <arg name="msg_trunc"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="tx"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="control_len">small</arg>
+        <arg name="control_null">TRUE</arg>
+        <arg name="env"/>
+        <arg name="msg_ctrunc"/>
+        <arg name="msg_data"/>
+        <arg name="msg_trunc"/>
+        <arg name="onload_ext">TRUE</arg>
+        <arg name="sock_type"/>
+        <arg name="tx"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="control_len">ok</arg>
+        <arg name="control_null"/>
+        <arg name="env"/>
+        <arg name="msg_ctrunc"/>
+        <arg name="msg_data"/>
+        <arg name="msg_trunc"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="tx"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="control_len">zero</arg>
+        <arg name="control_null"/>
+        <arg name="env"/>
+        <arg name="msg_ctrunc"/>
+        <arg name="msg_data"/>
+        <arg name="msg_trunc"/>
+        <arg name="onload_ext">TRUE</arg>
+        <arg name="sock_type"/>
+        <arg name="tx"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="control_len">ok</arg>
+        <arg name="control_null"/>
+        <arg name="env"/>
+        <arg name="msg_ctrunc"/>
+        <arg name="msg_data"/>
+        <arg name="msg_trunc"/>
+        <arg name="onload_ext">TRUE</arg>
+        <arg name="sock_type"/>
+        <arg name="tx"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="control_len">zero</arg>
+        <arg name="control_null"/>
+        <arg name="env"/>
+        <arg name="msg_ctrunc"/>
+        <arg name="msg_data">zero_iovs</arg>
+        <arg name="msg_trunc"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="control_len">zero</arg>
+        <arg name="control_null"/>
+        <arg name="env"/>
+        <arg name="msg_ctrunc"/>
+        <arg name="msg_data">small_space</arg>
+        <arg name="msg_trunc"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+      </iter>
+    </test>
+
+    <test name="ts_msg_onepkt" type="script">
+      <objective>Check that with ONLOAD_MSG_ONEPKT flag recvmsg() retrieves TCP packets as they were received and with matching timestamps.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+
+  </iter>
+</test>

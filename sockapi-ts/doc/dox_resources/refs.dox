@@ -1,0 +1,63 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+@defgroup sapi_refs_details References List
+
+@{
+
+List of references across the tests specification.
+
+@todo This one is incomplete.
+
+@refs_start
+
+@ref_ref        WBS-PD WBS-PD
+@ref_title      Level 5 Networks Socket API Testing Project Definition
+@ref_identifier OKTL-WBS-0000041
+
+@ref_ref        XNS5 XNS5
+@ref_title      Technical Standard. Networking Services (XNS) Issue 5
+@ref_identifier -
+
+@ref_ref        STEVENS STEVENS
+@ref_title      W. Richard Stevens UNIX Network Programming: Networking
+                APIs: Sockets and XTI, Volume 1, Second edition,
+                Prentice Hall PTR, Upper Saddle River, NJ 07458
+@ref_identifier -
+
+@ref_ref        COMER COMER
+@ref_title      Douglas E. Comer, Internetworking with TCP/IP,
+                Volume 1: Principles, Protocols, and Architecture.
+                Third edition, Prentice Hall international, Inc,
+                ASBN 0-13-227836-7
+@ref_identifier -
+
+
+@ref_ref        TCP-IP-ILLUSTRATED TCP-IP-ILLUSTRATED
+@ref_title      W. Richard Stevens TCP/IP Illustrated, Volume 1:
+                The protocols,
+                Addison-Wesley Publishing Company, Inc.
+                ISBN 0-201-63346-9
+@ref_identifier -
+
+@ref_ref        RFC2553 RFC 2553
+@ref_title      Basic Socket Interface Extensions for IPv6
+@ref_identifier http://www.ietf.org/rfc/rfc2553.txt
+
+@ref_ref        RFC5961 RFC 5961
+@ref_title      Improving TCP's Robustness to Blind In-Window Attacks
+@ref_identifier https://tools.ietf.org/html/rfc5961
+
+@ref_ref        MSDN MSDN
+@ref_title      MSDN library
+@ref_identifier http://msdn.microsoft.com/library
+
+@ref_ref        BLIND-FIN-ATTACK-PAPER BLIND-FIN-ATTACK-PAPER
+@ref_title      Resilience of Deployed TCP to Blind FIN Attacks
+@ref_identifier https://www.caida.org/publications/papers/2017/resilience_deployed_tcp_blind/resilience_deployed_tcp_blind.pdf
+
+@refs_end
+
+@}                              <!--refs -->
+
+*/

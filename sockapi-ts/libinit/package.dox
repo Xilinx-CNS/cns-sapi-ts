@@ -1,0 +1,28 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+@defgroup libinit Library _init() function tests
+@ingroup sockapi
+@{
+
+This package contains tests that use libinit_test.so library to
+conform the behavior of several functions when called
+from _init() library function.
+
+libinit_test.so has 2 functions: _init(), called automatically at
+start time, and lt_do(), called by test.
+
+@ref libinit-sequences_and_iterations
+
+@author Nikita Rastegaev <Nikita.Rastegaev@oktetlabs.ru>
+
+@par Tests:
+
+-# List of tests:
+    -# @ref libinit-non_socket_tests
+    -# @ref libinit-socket_send_tests
+    -# @ref libinit-socket_recv_tests
+
+@}
+
+*/

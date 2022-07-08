@@ -1,0 +1,3431 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+    
+    <description>Bad and boundary values</description>
+    
+    <author mailto="Oleg.Kravtsov@oktetlabs.ru"/>
+
+    <req id="BNBVALUE" sticky="true"/>
+
+    <session>
+
+        <run>
+            <script name="descr_nonexist">
+                <req id="TEST_HARNESS_SANITY"/>
+            </script>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="func">
+                <value>accept</value>
+                <value>bind</value>
+                <value>close</value>
+                <value>connect</value>
+                <value>getpeername</value>
+                <value>getsockname</value>
+                <value reqs="SO_BROADCAST">getsockopt</value>
+                <value>ioctl</value>
+                <value>listen</value>
+                <value reqs="SELECT,PSELECT">pselect</value>
+                <value reqs="READ_WRITE">read</value>
+                <value reqs="READ_WRITE,SPLICE">read_via_splice</value>
+                <value reqs="READV_WRITEV">readv</value>
+                <value>recv</value>
+                <value>recvfrom</value> 
+                <value reqs="SENDMSG_RECVMSG">recvmsg</value>
+                <value reqs="ONLOAD_ZC_SEND">simple_zc_send_sock</value>
+                <value reqs="ONLOAD_ZC_SEND,ONLOAD_ZC_SEND_USER_BUF">simple_zc_send_sock_user_buf</value>
+                <value reqs="ONLOAD_ZC_RECV">simple_zc_recv</value>
+                <value reqs="ONLOAD_ONLY,ONLOAD_ZC_HLRX,BROKEN">simple_hlrx_recv_zc</value>
+                <value reqs="ONLOAD_ONLY,ONLOAD_ZC_HLRX,ONLOAD_ZC_HLRX_COPY,BROKEN">simple_hlrx_recv_copy</value>
+                <value reqs="RECVMMSG">recvmmsg_alt</value>
+                <value reqs="SELECT">select</value>
+                <value>send</value>
+                <value reqs="SENDMSG_RECVMSG">sendmsg</value>
+                <value reqs="SENDMMSG">sendmmsg_alt</value>
+                <value>sendto</value>
+                <value reqs="SO_BROADCAST">setsockopt</value>
+                <value>shutdown</value>
+                <value reqs="READ_WRITE">write</value>
+                <value reqs="READ_WRITE,SPLICE">write_via_splice</value>
+                <value reqs="READV_WRITEV">writev</value>
+                <value reqs="ONLOAD_ONLY,SEND_FLAG,SF_ODS,SF_ODS_COMPL">od_send</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="descr_inapprop"/>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="func">
+                <value>accept</value>
+                <value>bind</value>
+                <value>connect</value>
+                <value>getpeername</value>
+                <value>getsockname</value>
+                <value reqs="SO_BROADCAST">getsockopt</value>
+                <value>ioctl</value>
+                <value>listen</value>
+                <value>recv</value>
+                <value>recvfrom</value>
+                <value reqs="SENDMSG_RECVMSG">recvmsg</value>
+                <value reqs="ONLOAD_ONLY,ONLOAD_ZC_RECV">simple_zc_recv</value>
+                <value reqs="ONLOAD_ONLY,ONLOAD_ZC_HLRX,BROKEN">simple_hlrx_recv_zc</value>
+                <value reqs="ONLOAD_ONLY,ONLOAD_ZC_HLRX,ONLOAD_ZC_HLRX_COPY,BROKEN">simple_hlrx_recv_copy</value>
+                <value reqs="RECVMMSG">recvmmsg_alt</value>
+                <value reqs="ONLOAD_ONLY,ONLOAD_ZC_SEND">simple_zc_send_sock</value>
+                <value reqs="ONLOAD_ONLY,ONLOAD_ZC_SEND,ONLOAD_ZC_SEND_USER_BUF">simple_zc_send_sock_user_buf</value>
+                <value>send</value>
+                <value reqs="SENDMSG_RECVMSG">sendmsg</value>
+                <value reqs="SENDMMSG">sendmmsg_alt</value>
+                <value>sendto</value>
+                <value reqs="SO_BROADCAST">setsockopt</value>
+                <value>shutdown</value>
+                <value reqs="ONLOAD_ONLY,SF_TEMPLATE_SEND">onload_msg_template_alloc</value>
+               <value reqs="ONLOAD_ONLY,SEND_FLAG,SF_ODS,SF_ODS_COMPL">od_send</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="func_socket">
+                <req ref="sock_type"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="sock_type" list="">
+                <value>SOCK_STREAM</value>
+                <value>SOCK_RAW</value>
+                <value>SOCK_UNKNOWN</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_RAW</value>
+                <value>SOCK_UNKNOWN</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+            </arg>
+            <!-- PROTO_UNKNOWN iterations are disabled. See ST-2100. -->
+            <arg name="proto" list="">
+                <value>PROTO_DEF</value>
+                <value>PROTO_DEF</value>
+                <value>PROTO_DEF</value>
+                <value reqs="BROKEN">PROTO_UNKNOWN</value>
+                <value reqs="BROKEN">PROTO_UNKNOWN</value>
+                <value>IPPROTO_TCP</value>
+                <value>IPPROTO_UDP</value>
+                <value>PROTO_DEF</value>
+                <value>PROTO_DEF</value>
+                <value reqs="BROKEN">PROTO_UNKNOWN</value>
+                <value reqs="BROKEN">PROTO_UNKNOWN</value>
+                <value>IPPROTO_TCP</value>
+                <value>IPPROTO_UDP</value>
+            </arg>
+            <arg name="domain" list="">
+                <value>PF_UNKNOWN</value>
+                <value>PF_INET</value>
+                <value>PF_INET</value>
+                <value>PF_INET</value>
+                <value>PF_INET</value>
+                <value>PF_INET</value>
+                <value>PF_INET</value>
+                <value reqs="IP6">PF_INET6</value>
+                <value reqs="IP6">PF_INET6</value>
+                <value reqs="IP6">PF_INET6</value>
+                <value reqs="IP6">PF_INET6</value>
+                <value reqs="IP6">PF_INET6</value>
+                <value reqs="IP6">PF_INET6</value>
+            </arg>
+            <arg name="exp_errno" list="">
+                <value>EAFNOSUPPORT</value>
+                <value>EPROTOTYPE</value>
+                <value>EPROTOTYPE</value>
+                <value>EINVAL</value>
+                <value>EINVAL</value>
+                <value>EPROTONOSUPPORT</value>
+                <value>EPROTONOSUPPORT</value>
+                <value>EPROTOTYPE</value>
+                <value>EPROTOTYPE</value>
+                <value>EINVAL</value>
+                <value>EINVAL</value>
+                <value>EPROTONOSUPPORT</value>
+                <value>EPROTONOSUPPORT</value>
+            </arg>
+        </run>
+
+        <run>
+            <session>
+                <!-- func_socket_pipe_too_many test -->
+                <arg name="ef_no_fail">
+                    <value>1</value>
+                    <value>0</value>
+                </arg>
+                <!-- Two first entries test what happens when
+                     RLIMIT_NOFILE is greater than EF_MAX_ENDPOINTS,
+                     here EF_MAX_ENDPOINTS set to its default Onload value.
+                     Other entries test what happens when EF_MAX_ENDPOINTS set
+                     to the maximum value and RLIM_NOFILE reached first.
+                     Retry parameter stands for action that
+                     should be taken when limit was reached. -->
+                <arg name="ef_max_end" list="limit">
+                    <value reqs="NO_REUSE_STACK">2048</value>
+                    <value reqs="NO_REUSE_STACK">2048</value>
+                    <value>65536</value>
+                    <value>65536</value>
+                    <value>65536</value>
+                    <value>65536</value>
+                    <value>65536</value>
+                    <value>65536</value>
+                </arg>
+                <arg name="rlim_nofiles" list="limit">
+                    <value reqs="NO_DEFAULT_SELECT">3072</value>
+                    <value reqs="NO_DEFAULT_SELECT">3072</value>
+                    <value reqs="NO_DEFAULT_SELECT">2048</value>
+                    <value reqs="NO_DEFAULT_SELECT">2048</value>
+                    <value reqs="NO_DEFAULT_SELECT">2048</value>
+                    <value>1024</value>
+                    <value>1024</value>
+                    <value>1024</value>
+                </arg>
+                <arg name="retry" list="limit">
+                    <value>-</value>
+                    <value>close</value>
+                    <value>-</value>
+                    <value reqs="BUG_45334">rlim</value>
+                    <value reqs="BUG_45334">close</value>
+                    <value>-</value>
+                    <value reqs="BUG_45334">rlim</value>
+                    <value reqs="BUG_45334">close</value>
+                </arg>
+
+                <run>
+                    <script name="func_socket_pipe_too_many">
+                        <req id="MANY_SOCKETS"/>
+                        <req id="TIME_CONSUMING_ON_SOLARIS"/>
+                        <req id="SMALL_RLIMIT_NOFILE"/>
+                    </script>
+                    <arg name="domain">
+                        <value>PF_INET</value>
+                    </arg>
+                    <arg name="env" ref="env.iut_only"/>
+                    <arg name="sock_type">
+                        <value>-</value>
+                    </arg>
+                    <arg name="sleep_before_retry">
+                      <value>0</value>
+                    </arg>
+                    <arg name="use_pipe">
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="use_accept">
+                        <value>FALSE</value>
+                    </arg>
+                </run>
+                <run>
+                    <script name="func_socket_pipe_too_many">
+                        <req id="MANY_SOCKETS"/>
+                        <req id="TIME_CONSUMING_ON_SOLARIS"/>
+                        <req id="SMALL_RLIMIT_NOFILE"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="env" ref="env.iut_only"/>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="sleep_before_retry">
+                      <value>0</value>
+                    </arg>
+                    <arg name="use_pipe">
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="use_accept">
+                        <value>FALSE</value>
+                    </arg>
+                </run>
+                <run>
+                    <script name="func_socket_pipe_too_many">
+                        <req id="MANY_SOCKETS"/>
+                        <req id="TIME_CONSUMING_ON_SOLARIS"/>
+                        <req id="SMALL_RLIMIT_NOFILE"/>
+                    </script>
+                    <arg name="domain" type="socket_domain" list="ip_ver">
+                        <value>PF_INET</value>
+                        <value reqs="IP6,IP6_ONLOAD">PF_INET6</value>
+                    </arg>
+                    <arg name="env" list="ip_ver">
+                        <value ref="env.peer2peer"/>
+                        <value ref="env.peer2peer_ipv6"/>
+                    </arg>
+                    <arg name="sock_type">
+                        <value>SOCK_STREAM</value>
+                    </arg>
+                    <arg name="sleep_before_retry">
+                      <value>0</value>
+                      <value>90</value>
+                    </arg>
+                    <arg name="use_pipe">
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="use_accept">
+                        <value>TRUE</value>
+                    </arg>
+                </run>
+            </session>
+        </run>
+
+        <run>
+            <script name="many_sock_on_server">
+                <req id="SOCK_STREAM"/>
+                <req id="MANY_SOCKETS"/>
+                <req id="TIME_CONSUMING_ON_SOLARIS"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="close_one" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="addr_len_inapprop_bind"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="len_val">
+                <value>small</value>
+                <value>big</value>
+                <value>large</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="addr_len_inapprop_connect"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+                <value ref="env.p2p_ip6ip4mapped"/>
+            </arg>
+            <arg name="len_val">
+                <value>small</value>
+                <value>big</value>
+                <value>large</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="addr_len_inapprop_sendto"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="connect">
+                <value>TRUE</value>
+            </arg>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+                <value ref="env.p2p_ip6ip4mapped"/>
+            </arg>
+            <arg name="len_val">
+                <value>small</value>
+                <value>big</value>
+                <value>large</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="addr_len_inapprop_sendto">
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="connect">
+                <value>FALSE</value>
+            </arg>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+                <value ref="env.p2p_ip6ip4mapped"/>
+            </arg>
+            <arg name="len_val">
+                <value>small</value>
+                <value>big</value>
+                <value>large</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="addr_len_inapprop_sendmsg"/>
+            <arg name="sock_type" type="sock_stream_dgram" list="">
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="conn_func" list="">
+                <value>notconn</value>
+                <value>connect</value>
+                <value>connect</value>
+            </arg>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+                <value ref="env.p2p_ip6ip4mapped"/>
+            </arg>
+            <arg name="len_val">
+                <value>small</value>
+                <value>big</value>
+                <value>large</value>
+            </arg>
+            <arg name="func">
+                <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMSG_RECVMSG">sendmsg</value>
+                <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMMSG">sendmmsg</value>
+            </arg>
+        </run>
+        <run>
+            <script name="addr_len_inapprop_sendmsg"/>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="conn_func">
+                <value>connect</value>
+            </arg>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_lo"/>
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_lo_ipv6"/>
+                <value ref="env.p2p_ip6ip4mapped"/>
+            </arg>
+            <arg name="len_val">
+                <value>small</value>
+                <value>big</value>
+                <value>large</value>
+            </arg>
+            <arg name="func">
+                <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND">onload_zc_send</value>
+                <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND,ONLOAD_ZC_SEND_USER_BUF">onload_zc_send_user_buf</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="addr_len_accept">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="addr_buf_size">
+                <value>0</value>
+                <value>exact</value>
+                <value>long</value>
+                <value>short</value>
+            </arg>
+            <arg name="func">
+                <value>accept</value>
+	    </arg>
+            <arg name="func_flag" type="socket_flags">
+	        <value>none</value>
+	    </arg>
+        </run>
+
+        <run>
+            <script name="addr_len_accept">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="addr_buf_size">
+                <value>0</value>
+                <value>exact</value>
+                <value>long</value>
+                <value>short</value>
+            </arg>
+            <arg name="func">
+	        <value reqs="ACCEPT4">accept4</value>
+	    </arg>
+	    <arg name="func_flag" type="socket_flags">
+		<value>none</value>
+		<value>nonblock</value>
+		<value>cloexec</value>
+	    </arg>
+        </run>
+
+	<run>
+            <script name="addr_len_getname"/>
+            <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+            <arg name="func">
+                <value>getsockname</value>
+                <value>getpeername</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="addr_buf_size">
+                <value>long</value>
+                <value>short</value>
+                <value>0</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="addr_len_inapprop_recv_short">
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+            <arg name="func" type="recv_func_with_addr"/>
+            <arg name="zero" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="null_buf" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+        </run>
+        <run>
+            <script name="addr_len_inapprop_recvfrom_long"/>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="len_val">
+                <value>big</value>
+                <value>large</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="addr_len_inapprop_recvmsg_long">
+                <req id="SENDMSG_RECVMSG"/>
+            </script>
+            <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="len_val">
+                <value>big</value>
+                <value>large</value>
+            </arg>
+            <arg name="func" type="recv_func_with_msg"/>
+        </run>
+
+        <run>
+            <script name="msg_controllen_inapprop"/>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_tst"/>
+                <!-- UDP is not accelerated on loopback -->
+            </arg>
+            <arg name="func" type="recv_func_with_ctl"/>
+            <arg name="zero_len" type="boolean"/>
+            <arg name="null_buf" type="boolean"/>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="opt_name">
+                <value>IP_PKTINFO</value>
+                <value>SO_TIMESTAMP</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="msg_controllen_inapprop"/>
+            <arg name="env">
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+                <!-- UDP is not accelerated on loopback -->
+            </arg>
+            <arg name="func" type="recv_func_with_ctl"/>
+            <arg name="zero_len" type="boolean"/>
+            <arg name="null_buf" type="boolean"/>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="opt_name">
+                <value>IPV6_RECVPKTINFO</value>
+                <value>SO_TIMESTAMP</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="msg_controllen_inapprop"/>
+            <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+            <arg name="func" type="recv_func_with_ctl">
+                <value>recvmsg</value>
+                <value>onload_zc_recv</value>
+                <!-- recvmmsg() is not supported for TCP on Onload -->
+            </arg>
+            <arg name="zero_len" type="boolean"/>
+            <arg name="null_buf" type="boolean"/>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="opt_name">
+                <value>SO_TIMESTAMP</value>
+            </arg>
+        </run>
+
+
+        <run>
+            <script name="func_accept_addr_null">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="use_wildcard" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="func_send_addr_null_stream_not_conn">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="domain">
+                <value>PF_INET</value>
+                <value reqs="PF_INET6,IP6">PF_INET6</value>
+            </arg>
+            <arg name="addrlen" type="boolean"/>
+            <arg name="func" type="send_func_with_addr"/>
+        </run>
+        <run>
+            <script name="func_send_addr_null_stream_conn">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="addrlen" type="boolean"/>
+            <arg name="func" type="send_func_with_addr"/>
+        </run>
+        <run>
+            <script name="func_sendto_addr_null_dgram">
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+        </run>
+        <run>
+            <script name="func_sendmsg_addr_null_dgram">
+                <req id="SOCK_DGRAM"/>
+                <req id="SENDMSG_RECVMSG"/>
+            </script>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="func">
+                <value reqs="SENDMSG_RECVMSG">sendmsg</value>
+                <value reqs="SENDMMSG">sendmmsg</value>
+            </arg>
+        </run>
+        <run>
+            <script name="func_bind_addr_null"/>
+            <arg name="domain" type="socket_domain"/>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+        <run>
+            <script name="func_connect_addr_null"/>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+
+        <run>
+            <script name="func_getname_addr_null_stream">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+        </run>
+        <run>
+            <script name="func_getname_addr_null_dgram">
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+        </run>
+        <run>
+            <script name="func_recvfrom_addr_null_stream">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+        </run>
+        <run>
+            <script name="func_recvfrom_addr_null_dgram">
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+        </run>
+        <run>
+            <script name="incorrect_family">
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+             <arg name="net_addr">
+                <value>v4</value>
+                <value>v6</value>
+            </arg>
+            <arg name="func" type="send_func_with_addr"/>
+        </run>
+
+        <run>
+            <script name="func_connect_inapprop_addr">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="addr_wildcard" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="port_wildcard" list="">
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="addr_family_inapprop_bind"/>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="domain" >
+                <value>PF_INET</value>
+                <value reqs="PF_INET6,IP6">PF_INET6</value>
+            </arg>
+            <arg name="family_unknown" >
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="addr_family_inapprop_connect"/>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+
+        <run>
+            <script name="func_bind_twice"/>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},addr:'bind1_addr':inet:unicast}},'bind2_addr'='bind1_addr'</value>
+                <value>{{{'pco_iut':IUT},addr:'bind1_addr':inet:wildcard,addr:'bind2_addr':inet:unicast}}</value>
+                <value>{{{'pco_iut':IUT},addr:'bind1_addr':inet:unicast,addr:'bind2_addr':inet:wildcard}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'bind1_addr':inet6:unicast}},'bind2_addr'='bind1_addr'</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'bind1_addr':inet6:wildcard,addr:'bind2_addr':inet6:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'bind1_addr':inet6:unicast,addr:'bind2_addr':inet6:wildcard}}</value>
+            </arg>
+            <arg name="port1">
+                <value>unspecified</value>
+                <value>specified</value>
+            </arg>
+            <arg name="port2">
+                <value>unspecified</value>
+                <value>same</value>
+                <value>other</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+        <run>
+            <script name="func_bind_after_listen">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+        </run>
+        <run>
+            <script name="func_bind_after_accept">
+                <req id="SOCK_STREAM"/>
+                <req id="LISTEN_WITHOUT_BIND"/>
+            </script>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+        </run>
+        <run>
+            <script name="func_bind_after_connect">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+        </run>
+        <run>
+            <script name="func_bind_notassigned_addr"/>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+        <run>
+            <script name="func_bind_after_implicit_bind_udp">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="func">
+                <value>connect</value>
+                <value>sendto</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="func_listen_dgram">
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+        </run>
+        <run>
+            <script name="func_listen_after_connect">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+        </run>
+        <run>
+            <script name="func_listen_twice">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+        </run>
+
+        <run>
+            <script name="func_accept_dgram">
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="func">
+                <value>accept</value>
+	    </arg>
+	    <arg name="func_flag" type="socket_flags">
+	        <value>none</value>
+	    </arg>
+        </run>
+
+        <run>
+            <script name="func_accept_dgram">
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="func">
+                <value reqs="ACCEPT4">accept4</value>
+	    </arg>
+            <arg name="func_flag" type="socket_flags">
+		<value>none</value>
+		<value>nonblock</value>
+		<value>cloexec</value>
+	   </arg>
+        </run>
+
+        <run>
+            <script name="func_accept_stream_client">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="func">
+                <value>accept</value>
+	    </arg>
+            <arg name="func_flag" type="socket_flags">
+		<value>none</value>
+	    </arg>
+        </run>
+        <run>
+            <script name="func_accept_stream_client">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="func">
+                <value reqs="ACCEPT4">accept4</value>
+	    </arg>
+            <arg name="func_flag" type="socket_flags">
+		<value>none</value>
+		<value>nonblock</value>
+		<value>cloexec</value>
+	    </arg>
+        </run>
+
+        <run>
+            <script name="func_connect_twice">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+        </run>
+        <run>
+            <script name="func_connect_after_listen">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="with_bind" type="boolean">
+                <value>TRUE</value>
+                <value reqs="LISTEN_WITHOUT_BIND">FALSE</value>
+            </arg>
+        </run>
+        <run>
+            <script name="func_connect_str_unspec_af">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="with_bind" type="boolean">
+                <value>TRUE</value>
+                <value reqs="LISTEN_WITHOUT_BIND">FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="func_getname"/>
+            <arg name="domain" type="socket_domain"/>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+
+        <run>
+            <script name="func_sockopt_level_name">
+                <req id="BNB_PARAM_CHECK"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="domain">
+                <value>PF_INET</value>
+                <value reqs="PF_INET6,IP6">PF_INET6</value>
+            </arg>
+            <arg name="type" type="sock_stream_dgram"/>
+            <arg name="func">
+                <value>getsockopt</value>
+                <value>setsockopt</value>
+            </arg>
+            <arg name="level"     value="SOL_UNKNOWN"/>
+            <arg name="opt_name"  value="SO_TYPE"/>
+            <arg name="exp_errno" value="EINVAL"/>
+        </run>
+        <run>
+            <script name="func_sockopt_level_name">
+                <req id="BNB_PARAM_CHECK"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="domain">
+                <value>PF_INET</value>
+                <value reqs="PF_INET6,IP6">PF_INET6</value>
+            </arg>
+            <arg name="type" type="sock_stream_dgram"/>
+            <arg name="func">
+                <value>getsockopt</value>
+                <value>setsockopt</value>
+            </arg>
+            <arg name="level">
+                <value>SOL_SOCKET</value>
+                <value>SOL_IP</value>
+                <value reqs="IP6,IP6_ONLOAD">SOL_IPV6</value>
+                <value>SOL_TCP</value>
+                <value>SOL_UDP</value>
+            </arg>
+            <arg name="opt_name"  value="SOCKOPT_UNKNOWN"/>
+            <arg name="exp_errno" value="ENOPROTOOPT"/>
+        </run>
+
+        <run>
+            <script name="func_setsockopt">
+                <req ref="opt_name"/>
+                <req id="BNB_PARAM_CHECK"/>
+            </script>
+            <arg name="domain" type="socket_domain"/>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="opt_name">
+                <value>SO_REUSEADDR</value>
+                <value>SO_REUSEPORT</value>
+                <value>IP_TOS</value>
+            </arg>
+            <arg name="opt_buffer" type="boolean" list="" preferred="false">
+                <value>TRUE</value>
+                <value name="false">FALSE</value>
+            </arg>
+            <arg name="opt_len" list="">
+                <value>0</value>
+                <value>5</value>
+                <value>34</value>
+                <value>0</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="func_setsockopt">
+                <req ref="opt_name"/>
+                <!-- Bad-and-boundary-values checking for
+                     IPv6 options is provided only in the
+                     case of IPv6 Onload build. -->
+                <req id="BNB_PARAM_CHECK"/>
+                <req id="IP6_ONLOAD"/>
+            </script>
+            <arg name="domain" type="socket_domain"/>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="opt_name">
+                <value reqs="LINUX_SPECIFIC">IPV6_ROUTER_ALERT</value>
+                <value reqs="SOLARIS_SPECIFIC">IPV6_NEXTHOP</value>
+            </arg>
+            <arg name="opt_buffer" type="boolean" list="" preferred="false">
+                <value>TRUE</value>
+                <value name="false">FALSE</value>
+            </arg>
+            <arg name="opt_len" list="">
+                <value>0</value>
+                <value>5</value>
+                <value>34</value>
+                <value>0</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="func_setsockopt">
+                <req ref="opt_name"/>
+                <req id="BNB_PARAM_CHECK"/>
+            </script>
+            <arg name="domain" type="socket_domain"/>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="opt_name">
+                <value>TCP_CORK</value>
+            </arg>
+            <arg name="opt_buffer" type="boolean" list="">
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="opt_len" list="">
+                <value>0</value>
+                <value>5</value>
+                <value>34</value>
+                <value>0</value>
+            </arg>
+        </run>
+
+        <run>
+            <!-- Short optlen, SOL_SOCKET -->
+            <script name="func_setsockopt">
+                <req ref="opt_name"/>
+                <req id="BNB_PARAM_CHECK"/>
+            </script>
+            <arg name="domain" type="socket_domain"/>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="opt_name">
+                <value>SO_ACCEPTCONN</value>
+                <value>SO_CONDITIONAL_ACCEPT</value>
+                <value>SO_BINDTODEVICE</value>
+                <value>SO_BROADCAST</value>
+                <value>SO_DEBUG</value>
+                <value>SO_DONTROUTE</value>
+                <value>SO_ERROR</value>
+                <value>SO_KEEPALIVE</value>
+                <value>SO_LINGER</value>
+                <value>SO_DONTLINGER</value>
+                <value>SO_OOBINLINE</value>
+                <value>SO_PRIORITY</value>
+                <value>SO_RCVBUF</value>
+                <value>SO_RCVBUFFORCE</value>
+                <value>SO_RCVLOWAT</value>
+                <value>SO_RCVTIMEO</value>
+                <value>SO_REUSEADDR</value>
+                <value>SO_REUSEPORT</value>
+                <value>SO_EXCLUSIVEADDRUSE</value>
+                <value>SO_SNDBUF</value>
+                <value>SO_SNDBUFFORCE</value>
+                <value>SO_SNDLOWAT</value>
+                <value>SO_SNDTIMEO</value>
+                <value>SO_TYPE</value>
+                <value>SO_USELOOPBACK</value>
+                <value reqs="SO_TIMESTAMP">SO_TIMESTAMP</value>
+                <value reqs="SO_TIMESTAMPNS">SO_TIMESTAMPNS</value>
+                <value reqs="SO_TIMESTAMPING,HW_PTP_RX_TIMESTAMP">SO_TIMESTAMPING</value>
+            </arg>
+            <arg name="opt_buffer" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="opt_len">
+                <value>1</value>
+            </arg>
+        </run>
+
+        <run>
+            <!-- Short optlen, SOL_IP -->
+            <script name="func_setsockopt">
+                <req ref="opt_name"/>
+                <req id="BNB_PARAM_CHECK"/>
+            </script>
+            <arg name="domain" type="socket_domain"/>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="opt_name">
+                <value>IP_ADD_MEMBERSHIP</value>
+                <value>IP_DROP_MEMBERSHIP</value>
+                <value>IP_MULTICAST_IF</value>
+                <value>IP_MULTICAST_LOOP</value>
+                <value>IP_MULTICAST_TTL</value>
+                <value>IP_OPTIONS</value>
+                <value>IP_PKTINFO</value>
+                <value>IP_RECVERR</value>
+                <value>IP_RECVOPTS</value>
+                <value>IP_RECVTOS</value>
+                <value>IP_RECVTTL</value>
+                <value>IP_RETOPTS</value>
+                <value>IP_ROUTER_ALERT</value>
+                <value>IP_DONTFRAGMENT</value>
+                <value>IP_TOS</value>
+                <value>IP_TTL</value>
+                <value>IP_MTU_DISCOVER</value>
+            </arg>
+            <arg name="opt_buffer" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="opt_len">
+                <value>1</value>
+            </arg>
+        </run>
+
+        <run>
+            <!-- Short optlen, SOL_IPV6 -->
+            <script name="func_setsockopt">
+                <req ref="opt_name"/>
+                <!-- Bad-and-boundary-values checking for
+                     IPv6 options is provided only in the
+                     case of IPv6 Onload build. -->
+                <req id="BNB_PARAM_CHECK"/>
+                <req id="IP6_ONLOAD"/>
+            </script>
+            <arg name="domain" type="socket_domain"/>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="opt_name">
+                <value>IPV6_DSTOPTS</value>
+                <value>IPV6_RECVHOPLIMIT</value>
+                <value>IPV6_HOPOPTS</value>
+                <value>IPV6_NEXTHOP</value>
+                <value>IPV6_ROUTER_ALERT</value>
+                <value>IPV6_V6ONLY</value>
+                <value>IPV6_ADDRFORM</value>
+                <value>IPV6_AUTHHDR</value>
+                <value>IPV6_CHECKSUM</value>
+                <value>IPV6_MULTICAST_HOPS</value>
+                <value>IPV6_MULTICAST_LOOP</value>
+                <value>IPV6_RECVPKTINFO</value>
+                <value>IPV6_UNICAST_HOPS</value>
+            </arg>
+            <arg name="opt_buffer" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="opt_len">
+                <value>1</value>
+            </arg>
+        </run>
+
+        <run>
+            <!-- Short optlen, SOL_TCP -->
+            <script name="func_setsockopt">
+                <req id="BNB_PARAM_CHECK"/>
+                <req ref="opt_name"/>
+            </script>
+            <arg name="domain" type="socket_domain"/>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="opt_name">
+                <value>TCP_NODELAY</value>
+                <value>TCP_CORK</value>
+                <value>TCP_MAXSEG</value>
+                <value>TCP_KEEPIDLE</value>
+                <value>TCP_KEEPINTVL</value>
+                <value>TCP_KEEPCNT</value>
+                <value>TCP_DEFER_ACCEPT</value>
+                <value>TCP_QUICKACK</value>
+                <value>TCP_USER_TIMEOUT</value>
+            </arg>
+            <arg name="opt_buffer" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="opt_len">
+                <value>1</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="func_getsockopt">
+                <req ref="opt_name"/>
+            </script>
+            <arg name="domain" type="socket_domain"/>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="opt_name">
+                <value>SO_TYPE</value>
+                <value>IP_TOS</value>
+                <value>IP_TTL</value>
+            </arg>
+            <arg name="opt_buffer" type="boolean" list="">
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="len_buffer" type="boolean" list="">
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="opt_len_val" list="">
+                <value>0</value>
+                <value>(unused)</value>
+                <value>0</value>
+                <value>10</value>
+                <value>(unused)</value>
+            </arg>
+            <arg name="buf_rlen" list="">
+                <value>0</value>
+                <value>(unused)</value>
+                <value>0</value>
+                <value>10</value>
+                <value>(unused)</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="func_getsockopt">
+                <req ref="opt_name"/>
+            </script>
+            <arg name="domain" type="socket_domain"/>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="opt_name">
+                <value>IPV6_RECVPKTINFO</value>
+            </arg>
+            <arg name="opt_buffer" type="boolean" list="">
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="len_buffer" type="boolean" list="">
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="opt_len_val" list="">
+                <value>0</value>
+                <value>(unused)</value>
+                <value>0</value>
+                <value>10</value>
+                <value>(unused)</value>
+            </arg>
+            <arg name="buf_rlen" list="">
+                <value>0</value>
+                <value>(unused)</value>
+                <value>0</value>
+                <value>10</value>
+                <value>(unused)</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="func_getsockopt">
+                <req ref="opt_name"/>
+            </script>
+            <arg name="domain" type="socket_domain"/>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="opt_name">
+                <value>TCP_CORK</value>
+            </arg>
+            <arg name="opt_buffer" type="boolean" list="">
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="len_buffer" type="boolean" list="">
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="opt_len_val" list="">
+                <value>0</value>
+                <value>(unused)</value>
+                <value>0</value>
+                <value>10</value>
+                <value>(unused)</value>
+            </arg>
+            <arg name="buf_rlen" list="">
+                <value>0</value>
+                <value>(unused)</value>
+                <value>0</value>
+                <value>10</value>
+                <value>(unused)</value>
+            </arg>
+        </run>
+
+        <run>
+            <!-- Short optlen, SOL_SOCKET -->
+            <script name="func_getsockopt">
+                <req ref="opt_name"/>
+            </script>
+            <arg name="domain" type="socket_domain"/>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="opt_name">
+                <value>SO_ACCEPTCONN</value>
+                <value>SO_CONDITIONAL_ACCEPT</value>
+                <value>SO_BINDTODEVICE</value>
+                <value>SO_BROADCAST</value>
+                <value>SO_DEBUG</value>
+                <value>SO_DONTROUTE</value>
+                <value>SO_ERROR</value>
+                <value>SO_KEEPALIVE</value>
+                <value>SO_LINGER</value>
+                <value>SO_DONTLINGER</value>
+                <value>SO_OOBINLINE</value>
+                <value>SO_PRIORITY</value>
+                <value>SO_RCVBUF</value>
+                <value>SO_RCVLOWAT</value>
+                <value>SO_RCVTIMEO</value>
+                <value>SO_REUSEADDR</value>
+                <value>SO_REUSEPORT</value>
+                <value>SO_EXCLUSIVEADDRUSE</value>
+                <value>SO_SNDBUF</value>
+                <value>SO_SNDLOWAT</value>
+                <value>SO_SNDTIMEO</value>
+                <value>SO_TYPE</value>
+                <value>SO_USELOOPBACK</value>
+                <value reqs="SO_TIMESTAMP">SO_TIMESTAMP</value>
+                <value reqs="SO_TIMESTAMPNS">SO_TIMESTAMPNS</value>
+                <value reqs="SO_TIMESTAMPING,HW_PTP_RX_TIMESTAMP">SO_TIMESTAMPING</value>
+            </arg>
+            <arg name="opt_buffer" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="len_buffer" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="opt_len_val" list="">
+                <value>1</value>
+                <value>200</value>
+            </arg>
+            <arg name="buf_rlen" list="">
+                <value>1</value>
+                <value>10</value>
+            </arg>
+        </run>
+
+        <run>
+            <!-- Short optlen, SOL_IP -->
+            <script name="func_getsockopt">
+                <req ref="opt_name"/>
+            </script>
+            <arg name="domain" type="socket_domain"/>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="opt_name">
+                <value>IP_ADD_MEMBERSHIP</value>
+                <value>IP_DROP_MEMBERSHIP</value>
+                <value>IP_MULTICAST_IF</value>
+                <value>IP_MULTICAST_LOOP</value>
+                <value>IP_MULTICAST_TTL</value>
+                <value>IP_OPTIONS</value>
+                <value>IP_PKTINFO</value>
+                <value>IP_RECVERR</value>
+                <value>IP_RECVOPTS</value>
+                <value>IP_RECVTOS</value>
+                <value>IP_RECVTTL</value>
+                <value>IP_RETOPTS</value>
+                <value>IP_ROUTER_ALERT</value>
+                <value>IP_DONTFRAGMENT</value>
+                <value>IP_TOS</value>
+                <value>IP_TTL</value>
+                <value>IP_MTU_DISCOVER</value>
+            </arg>
+            <arg name="opt_buffer" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="len_buffer" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="opt_len_val" list="">
+                <value>1</value>
+                <value>200</value>
+            </arg>
+            <arg name="buf_rlen" list="">
+                <value>1</value>
+                <value>10</value>
+            </arg>
+        </run>
+
+        <run>
+            <!-- Short optlen, SOL_IPV6 -->
+            <script name="func_getsockopt">
+                <req ref="opt_name"/>
+            </script>
+            <arg name="domain" type="socket_domain"/>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="opt_name">
+                <value>IPV6_DSTOPTS</value>
+                <value>IPV6_RECVHOPLIMIT</value>
+                <value>IPV6_HOPOPTS</value>
+                <value>IPV6_NEXTHOP</value>
+                <value>IPV6_ROUTER_ALERT</value>
+                <value>IPV6_V6ONLY</value>
+                <value>IPV6_ADDRFORM</value>
+                <value>IPV6_AUTHHDR</value>
+                <value>IPV6_CHECKSUM</value>
+                <value>IPV6_MULTICAST_HOPS</value>
+                <value>IPV6_MULTICAST_LOOP</value>
+                <value>IPV6_RECVPKTINFO</value>
+                <value>IPV6_UNICAST_HOPS</value>
+            </arg>
+            <arg name="opt_buffer" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="len_buffer" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="opt_len_val" list="">
+                <value>1</value>
+                <value>200</value>
+            </arg>
+            <arg name="buf_rlen" list="">
+                <value>1</value>
+                <value>10</value>
+            </arg>
+        </run>
+
+        <run>
+            <!-- Short optlen, SOL_TCP -->
+            <script name="func_getsockopt">
+                <req ref="opt_name"/>
+            </script>
+            <arg name="domain" type="socket_domain"/>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="opt_name">
+                <value>TCP_NODELAY</value>
+                <value>TCP_CORK</value>
+                <value>TCP_MAXSEG</value>
+                <value>TCP_KEEPIDLE</value>
+                <value>TCP_KEEPINTVL</value>
+                <value>TCP_KEEPCNT</value>
+                <value>TCP_DEFER_ACCEPT</value>
+                <value>TCP_QUICKACK</value>
+                <value>TCP_USER_TIMEOUT</value>
+            </arg>
+            <arg name="opt_buffer" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="len_buffer" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="opt_len_val" list="">
+                <value>1</value>
+                <value>200</value>
+            </arg>
+            <arg name="buf_rlen" list="">
+                <value>1</value>
+                <value>10</value>
+            </arg>
+        </run>
+
+        <run>
+            <session>
+                <arg name="env" ref="env.iut_only"/>
+                <arg name="opt_len">
+                    <value>4</value>
+                    <value>5</value>
+                    <value>8</value>
+                    <value>9</value>
+                </arg>
+                <arg name="exp_errno">
+                    <value>0</value>
+                </arg>
+                
+                <run>
+                    <script name="func_sockopt_boolean">
+                        <req ref="opt_name"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="opt_name">
+                        <value>SO_BROADCAST</value>
+                        <value>SO_DEBUG</value>
+                        <value>SO_DONTROUTE</value>
+                        <value>SO_REUSEADDR</value>
+                        <value>SO_REUSEPORT</value>
+                    </arg>
+                </run>
+                <run>
+                    <script name="func_sockopt_boolean">
+                        <req ref="opt_name"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="opt_name">
+                        <value reqs="MULTICAST">IP_MULTICAST_LOOP</value>
+                    </arg>
+                </run>
+                <run>
+                    <script name="func_sockopt_boolean">
+                        <req ref="opt_name"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="opt_name">
+                        <value reqs="MULTICAST">IPV6_MULTICAST_LOOP</value>
+                    </arg>
+                </run>
+                <run>
+                    <script name="func_sockopt_boolean">
+                        <req ref="opt_name"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram">
+                        <value>SOCK_STREAM</value>
+                    </arg>
+                    <arg name="opt_name">
+                        <value>SO_KEEPALIVE</value>
+                        <value>SO_OOBINLINE</value>
+                        <value reqs="SO_TIMESTAMP">SO_TIMESTAMP</value>
+                        <value reqs="SO_TIMESTAMPNS">SO_TIMESTAMPNS</value>
+                    </arg>
+                </run>
+            </session>
+        </run>
+
+        <run>
+            <session>
+                <arg name="env" ref="env.iut_only"/>
+                <arg name="opt_len">
+                    <value>1</value>
+                    <value>3</value>
+                    <value>4</value>
+                    <value>5</value>
+                </arg>
+                
+                <run>
+                    <script name="func_sockopt_get_integer">
+                        <req ref="opt_name"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="opt_name">
+                        <value>SO_PRIORITY</value>
+                        <value>SO_RCVBUF</value>
+                        <value>SO_RCVLOWAT</value>
+                        <value>SO_SNDBUF</value>
+                        <value>SO_TYPE</value>
+                        <value reqs="SO_TIMESTAMPING,HW_PTP_RX_TIMESTAMP">SO_TIMESTAMPING</value>
+
+                        <value>IP_MULTICAST_TTL</value>
+                        <value>IP_TOS</value>
+                        <value>IP_TTL</value>
+                        <value>IP_MTU_DISCOVER</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_get_integer">
+                        <req ref="opt_name"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="opt_name">
+                        <value>IPV6_ROUTER_ALERT</value>
+                        <value>IPV6_MULTICAST_HOPS</value>
+                        <value>IPV6_UNICAST_HOPS</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_get_integer">
+                        <req ref="opt_name"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram">
+                        <value>SOCK_STREAM</value>
+                    </arg>
+                    <arg name="opt_name">
+                        <value>TCP_MAXSEG</value>
+                        <value>TCP_KEEPIDLE</value>
+                        <value>TCP_KEEPINTVL</value>
+                        <value>TCP_KEEPCNT</value>
+                        <value>TCP_DEFER_ACCEPT</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_set_integer">
+                        <req ref="opt_name"/>
+                        <req id="BNB_PARAM_CHECK"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="opt_name">
+                        <value>SO_PRIORITY</value>
+                    </arg>
+                    <arg name="opt_val">
+                        <value>-1</value>
+                        <value>0</value>
+                        <value>5</value>
+                        <value>64</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_set_integer">
+                        <req ref="opt_name"/>
+                        <req id="BNB_PARAM_CHECK"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="opt_name">
+                        <value>SO_RCVBUF</value>
+                        <value>SO_RCVBUFFORCE</value>
+                    </arg>
+                    <arg name="opt_val">
+                        <value>-1</value>
+                        <value>100</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_set_integer">
+                        <req ref="opt_name"/>
+                        <req id="BNB_PARAM_CHECK"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="opt_name">
+                        <value reqs="SO_TIMESTAMPING,HW_PTP_RX_TIMESTAMP">SO_TIMESTAMPING</value>
+                    </arg>
+                    <arg name="opt_val" list="">
+                        <value>-1</value>
+                        <value>-1</value>
+                        <value>-1</value>
+                        <value>79</value>
+                        <value>-1</value>
+                        <value>79</value>
+                    </arg>
+                    <arg name="opt_len" list="">
+                        <value>1</value>
+                        <value>3</value>
+                        <value>4</value>
+                        <value>4</value>
+                        <value>5</value>
+                        <value>5</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_set_integer">
+                        <req ref="opt_name"/>
+                        <req id="BNB_PARAM_CHECK"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="opt_name">
+                        <value>SO_RCVBUF</value>
+                        <value>SO_RCVBUFFORCE</value>
+                    </arg>
+                    <arg name="opt_val">
+                        <value>65536</value>
+                    </arg>
+                    <arg name="opt_len">
+                        <value>4</value>
+                        <value>5</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_set_integer">
+                        <req ref="opt_name"/>
+                        <req id="BNB_PARAM_CHECK"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="opt_name">
+                        <value>SO_RCVLOWAT</value>
+                    </arg>
+                    <arg name="opt_val">
+                        <value>-1</value>
+                        <value>100</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_set_integer">
+                        <req ref="opt_name"/>
+                        <req id="BNB_PARAM_CHECK"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="opt_name">
+                        <value>SO_RCVLOWAT</value>
+                    </arg>
+                    <arg name="opt_val">
+                        <value>65536</value>
+                    </arg>
+                    <arg name="opt_len">
+                        <value>4</value>
+                        <value>5</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_set_integer">
+                        <req ref="opt_name"/>
+                        <req id="BNB_PARAM_CHECK"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="opt_name">
+                        <value>SO_SNDBUF</value>
+                        <value>SO_SNDBUFFORCE</value>
+                    </arg>
+                    <arg name="opt_val">
+                        <value>-1</value>
+                        <value>100</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_set_integer">
+                        <req ref="opt_name"/>
+                        <req id="BNB_PARAM_CHECK"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="opt_name">
+                        <value>SO_SNDBUF</value>
+                        <value>SO_SNDBUFFORCE</value>
+                    </arg>
+                    <arg name="opt_val">
+                        <value>65536</value>
+                    </arg>
+                    <arg name="opt_len">
+                        <value>4</value>
+                        <value>5</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_set_integer">
+                        <req ref="opt_name"/>
+                        <req id="BNB_PARAM_CHECK"/>
+                    </script>
+                    <arg name="domain"  type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="opt_name">
+                        <value>IP_MULTICAST_TTL</value>
+                    </arg>
+                    <arg name="opt_val">
+                        <value>-1</value>
+                        <value>1</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_set_integer">
+                        <req ref="opt_name"/>
+                        <req id="BNB_PARAM_CHECK"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="opt_name">
+                        <value>IP_MULTICAST_TTL</value>
+                    </arg>
+                    <arg name="opt_val">
+                        <value>255</value>
+                        <value>65536</value>
+                    </arg>
+                    <arg name="opt_len">
+                        <value>4</value>
+                        <value>5</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_set_integer">
+                        <req ref="opt_name"/>
+                        <req id="BNB_PARAM_CHECK"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="opt_name">
+                        <value>IP_TOS</value>
+                    </arg>
+                    <arg name="opt_val">
+                        <value>-1</value>
+                        <value>0</value>
+                        <value>5</value>
+                        <value>64</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_set_integer">
+                        <req ref="opt_name"/>
+                        <req id="BNB_PARAM_CHECK"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="opt_name">
+                        <value>IP_TTL</value>
+                    </arg>
+                    <arg name="opt_val">
+                        <value>-1</value>
+                        <value>1</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_set_integer">
+                        <req ref="opt_name"/>
+                        <req id="BNB_PARAM_CHECK"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="opt_name">
+                        <value>IP_TTL</value>
+                    </arg>
+                    <arg name="opt_val">
+                        <value>255</value>
+                        <value>65536</value>
+                    </arg>
+                    <arg name="opt_len">
+                        <value>4</value>
+                        <value>5</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_set_integer">
+                        <req ref="opt_name"/>
+                        <req id="BNB_PARAM_CHECK"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="opt_name">
+                        <value>IP_MTU_DISCOVER</value>
+                    </arg>
+                    <arg name="opt_val">
+                        <value>-1</value>
+                        <value>0</value>
+                        <value>1</value>
+                        <value>10</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_set_integer">
+                        <req ref="opt_name"/>
+                        <!-- Bad-and-boundary-values checking for
+                             IPv6 options is provided only in the
+                             case of IPv6 Onload build. -->
+                        <req id="BNB_PARAM_CHECK"/>
+                        <req id="IP6_ONLOAD"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="opt_name">
+                        <value>IPV6_ROUTER_ALERT</value>
+                    </arg>
+                    <arg name="opt_val">
+                        <value>-1</value>
+                        <value>0</value>
+                        <value>1</value>
+                        <value>10</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_set_integer">
+                        <req ref="opt_name"/>
+                        <!-- Bad-and-boundary-values checking for
+                             IPv6 options is provided only in the
+                             case of IPv6 Onload build. -->
+                        <req id="BNB_PARAM_CHECK"/>
+                        <req id="IP6_ONLOAD"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="opt_name">
+                        <value>IPV6_MULTICAST_HOPS</value>
+                    </arg>
+                    <arg name="opt_val">
+                        <value>-1</value>
+                        <value>0</value>
+                        <value>10</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_set_integer">
+                        <req ref="opt_name"/>
+                        <!-- Bad-and-boundary-values checking for
+                             IPv6 options is provided only in the
+                             case of IPv6 Onload build. -->
+                        <req id="BNB_PARAM_CHECK"/>
+                        <req id="IP6_ONLOAD"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="opt_name">
+                        <value>IPV6_MULTICAST_HOPS</value>
+                    </arg>
+                    <arg name="opt_val">
+                        <value>1000</value>
+                    </arg>
+                    <arg name="opt_len">
+                        <value>4</value>
+                        <value>5</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_set_integer">
+                        <req ref="opt_name"/>
+                        <!-- Bad-and-boundary-values checking for
+                             IPv6 options is provided only in the
+                             case of IPv6 Onload build. -->
+                        <req id="BNB_PARAM_CHECK"/>
+                        <req id="IP6_ONLOAD"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="opt_name">
+                        <value>IPV6_UNICAST_HOPS</value>
+                    </arg>
+                    <arg name="opt_val">
+                        <value>-1</value>
+                        <value>0</value>
+                        <value>10</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_set_integer">
+                        <req ref="opt_name"/>
+                        <!-- Bad-and-boundary-values checking for
+                             IPv6 options is provided only in the
+                             case of IPv6 Onload build. -->
+                        <req id="BNB_PARAM_CHECK"/>
+                        <req id="IP6_ONLOAD"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="opt_name">
+                        <value>IPV6_UNICAST_HOPS</value>
+                    </arg>
+                    <arg name="opt_val">
+                        <value>1000</value>
+                    </arg>
+                    <arg name="opt_len">
+                        <value>4</value>
+                        <value>5</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_set_integer">
+                        <req ref="opt_name"/>
+                        <req id="BNB_PARAM_CHECK"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram">
+                        <value>SOCK_STREAM</value>
+                    </arg>
+                    <arg name="opt_name">
+                        <value>TCP_MAXSEG</value>
+                    </arg>
+                    <arg name="opt_val">
+                        <value>-1</value>
+                        <value>64</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_set_integer">
+                        <req ref="opt_name"/>
+                        <req id="BNB_PARAM_CHECK"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram">
+                        <value>SOCK_STREAM</value>
+                    </arg>
+                    <arg name="opt_name">
+                        <value>TCP_MAXSEG</value>
+                    </arg>
+                    <arg name="opt_val">
+                        <value>256</value>
+                        <value>1048576</value>
+                    </arg>
+                    <arg name="opt_len">
+                        <value>4</value>
+                        <value>5</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_set_integer">
+                        <req ref="opt_name"/>
+                        <req id="BNB_PARAM_CHECK"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram">
+                        <value>SOCK_STREAM</value>
+                    </arg>
+                    <arg name="opt_name">
+                        <value>TCP_KEEPIDLE</value>
+                    </arg>
+                    <arg name="opt_val">
+                        <value>-1</value>
+                        <value>0</value>
+                        <value>1</value>
+                        <value>60</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_set_integer">
+                        <req ref="opt_name"/>
+                        <req id="BNB_PARAM_CHECK"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram">
+                        <value>SOCK_STREAM</value>
+                    </arg>
+                    <arg name="opt_name">
+                        <value>TCP_KEEPIDLE</value>
+                    </arg>
+                    <arg name="opt_val">
+                        <value>60000</value>
+                    </arg>
+                    <arg name="opt_len">
+                        <value>4</value>
+                        <value>5</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_set_integer">
+                        <req ref="opt_name"/>
+                        <req id="BNB_PARAM_CHECK"/>
+                    </script>
+                    <arg name="domain">
+                        <value>PF_INET</value>
+                    </arg>
+                    <arg name="sock_type" type="sock_stream_dgram">
+                        <value>SOCK_STREAM</value>
+                    </arg>
+                    <arg name="opt_name">
+                        <value>TCP_KEEPINTVL</value>
+                    </arg>
+                    <arg name="opt_val">
+                        <value>-1</value>
+                        <value>0</value>
+                        <value>1</value>
+                        <value>60</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_set_integer">
+                        <req ref="opt_name"/>
+                        <req id="BNB_PARAM_CHECK"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram">
+                        <value>SOCK_STREAM</value>
+                    </arg>
+                    <arg name="opt_name">
+                        <value>TCP_KEEPINTVL</value>
+                    </arg>
+                    <arg name="opt_val">
+                        <value>60000</value>
+                    </arg>
+                    <arg name="opt_len">
+                        <value>4</value>
+                        <value>5</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_set_integer">
+                        <req ref="opt_name"/>
+                        <req id="BNB_PARAM_CHECK"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram">
+                        <value>SOCK_STREAM</value>
+                    </arg>
+                    <arg name="opt_name">
+                        <value>TCP_KEEPCNT</value>
+                    </arg>
+                    <arg name="opt_val">
+                        <value>-1</value>
+                        <value>1</value>
+                        <value>127</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_set_integer">
+                        <req ref="opt_name"/>
+                        <req id="BNB_PARAM_CHECK"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram">
+                        <value>SOCK_STREAM</value>
+                    </arg>
+                    <arg name="opt_name">
+                        <value>TCP_KEEPCNT</value>
+                    </arg>
+                    <arg name="opt_val">
+                        <value>65535</value>
+                    </arg>
+                    <arg name="opt_len">
+                        <value>4</value>
+                        <value>5</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_set_integer">
+                        <req ref="opt_name"/>
+                        <req id="BNB_PARAM_CHECK"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram">
+                        <value>SOCK_STREAM</value>
+                    </arg>
+                    <arg name="opt_name">
+                        <value>TCP_DEFER_ACCEPT</value>
+                    </arg>
+                    <arg name="opt_val">
+                        <value>-1</value>
+                        <value>1</value>
+                        <value>60</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="func_sockopt_set_integer">
+                        <req ref="opt_name"/>
+                        <req id="BNB_PARAM_CHECK"/>
+                    </script>
+                    <arg name="domain" type="socket_domain"/>
+                    <arg name="sock_type" type="sock_stream_dgram">
+                        <value>SOCK_STREAM</value>
+                    </arg>
+                    <arg name="opt_name">
+                        <value>TCP_DEFER_ACCEPT</value>
+                    </arg>
+                    <arg name="opt_val">
+                        <value>60000</value>
+                    </arg>
+                    <arg name="opt_len">
+                        <value>4</value>
+                        <value>5</value>
+                    </arg>
+                </run>
+            </session>
+        </run>
+
+        <run>
+            <script name="func_select_negative_timeout"/>
+            <arg name="env" ref="env.iut_only"/>
+        </run>
+        <run>
+            <script name="func_select_pselect_neg_fdnum"/>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="func">
+                <value reqs="SELECT">select</value>
+                <value reqs="SELECT,PSELECT">pselect</value>
+            </arg>
+        </run>
+        <run>
+            <script name="func_select_all_zeros">
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+        </run>
+        <run>
+            <script name="func_select_inapprop_maxfd"/>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+        <run>
+            <script name="func_select_many_descrs">
+                <req id="SOCK_STREAM"/>
+                <req id="MANY_SOCKETS"/>
+                <!-- ST-2448 -->
+                <req id="EF100_BROKEN"/>
+            </script>
+            <arg name="connect_sockets" type="boolean" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="env" list="">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_lo"/>
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="ef_select_fast" list="ef_par_list">
+                <value>0</value>
+                <value>1</value>
+            </arg>
+            <arg name="ef_no_fail" list="ef_par_list">
+                <value>1</value>
+                <value>0</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="func_shutdown_incorrect_how"/>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+        <run>
+            <script name="func_shutdown_before_connect"/>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="bind_to">
+                <value>none</value>
+                <value>wild</value>
+                <value>lo</value>
+                <value>iut</value>
+            </arg>
+            <arg name="shut_how">
+                <value>SHUT_RD</value>
+                <value>SHUT_WR</value>
+                <value>SHUT_RDWR</value>
+                <value>SHUT_NONE</value>
+                <value>SHUT_UNKNOWN</value>
+            </arg>
+        </run>
+        <run>
+            <script name="func_poll_nval">
+                <req id="POLL"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="evt" list="">
+                <value>POLLIN</value>
+                <value>POLLIN</value>
+                <value>POLLIN</value>
+                <value>POLLPRI</value>
+                <value>POLLOUT</value>
+                <value>POLLERR</value>
+                <value>POLLHUP</value>
+                <value>POLLNVAL</value>
+            </arg>
+            <arg name="timeout" list="">
+                <value>-1</value>
+                <value>0</value>
+                <value>1</value>
+                <value>-1</value>
+                <value>0</value>
+                <value>0</value>
+                <value>1</value>
+                <value>-1</value>
+            </arg>
+            <arg name="nfds" list="">
+                <value>3</value>
+                <value>2</value>
+                <value>1</value>
+                <value>3</value>
+                <value>2</value>
+                <value>2</value>
+                <value>1</value>
+                <value>3</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="func_poll_fd_negative">
+                <req id="POLL"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="nfds">
+                <value>3</value>
+            </arg>
+            <arg name="evt">
+                <value>POLLIN</value>
+                <value>POLLOUT</value>
+            </arg>
+        </run>
+        <run>
+            <script name="func_poll_zero_evt">
+                <req id="POLL"/>
+            </script>
+            <arg name="domain" type="socket_domain"/>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+        <run>
+            <script name="func_poll_nentries">
+                <req id="POLL"/>
+            </script>
+            <arg name="domain" type="socket_domain"/>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="nfds">
+                <value>3</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="func_pselect_ppoll_negative_timeout">
+                <req id="PSELECT"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="iomux">
+                <value reqs="SELECT,PSELECT">pselect</value>
+                <value reqs="POLL,PPOLL">ppoll</value>
+            </arg>
+        </run>
+        <run>
+            <script name="iomux_notmasked_signals"/>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="iomux">
+                <value reqs="SELECT,PSELECT">pselect</value>
+                <value reqs="POLL,PPOLL">ppoll</value>
+                <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="func_recvmsg_ctrunc">
+                <req id="SOCK_DGRAM"/>
+                <req id="MSG_CTRUNC"/>
+                <req id="SENDMSG_RECVMSG"/>
+                <req id="MSG_CONTROL"/>
+                <req id="IP_RECVTTL"/>
+            </script>
+            <arg name="recv_f" type="recv_func_with_ctl"/>
+            <arg name="env" type="env.peer2peer_all_ipv4"/>
+        </run>
+
+        <run>
+            <script name="func_recvmsg_ctrunc">
+                <req id="SOCK_DGRAM"/>
+                <req id="MSG_CTRUNC"/>
+                <req id="SENDMSG_RECVMSG"/>
+                <req id="MSG_CONTROL"/>
+                <req id="IPV6_RECVHOPLIMIT"/>
+            </script>
+            <arg name="recv_f" type="recv_func_with_ctl"/>
+            <arg name="env" type="env.peer2peer_all_ipv6"/>
+        </run>
+
+        <run>
+            <session>
+                <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+                <arg name="sock_type" type="sock_stream_dgram"/>
+                <arg name="func" type="send_func">
+                    <value reqs="READ_WRITE">write</value>
+                    <value reqs="SEND_IOV,READV_WRITEV">writev</value>
+                    <value reqs="SEND_FLAG,SEND_RECV">send</value>
+                    <value reqs="SEND_FLAG,SEND_ADDR,SENDTO_RECVFROM">sendto</value>
+                    <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMSG_RECVMSG">sendmsg</value>
+                    <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMMSG">sendmmsg</value>
+                </arg>
+                <arg name="buffer" type="boolean" list="">
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                    <value>FALSE</value>
+                </arg>
+                <arg name="buflen" list="">
+                    <value>0</value>
+                    <value>0</value>
+                    <value>1</value>
+                </arg>
+
+                <run>
+                    <script name="tx_buf_len_not_connected"/>
+                </run>
+                <run>
+                    <script name="tx_buf_len_connected"/>
+                </run> 
+            </session>
+        </run>
+        <run>
+            <session>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                  <value ref="env.peer2peer_ipv6"/>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram"/>
+                <arg name="func" type="send_func">
+                  <value>template_send</value>
+                </arg>
+                <arg name="buffer" type="boolean" list="">
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                    <value>FALSE</value>
+                </arg>
+                <arg name="buflen" list="">
+                    <value>0</value>
+                    <value>0</value>
+                    <!-- Exclude iteration since segfault WONTFIX SF 40616 -->
+                    <value reqs="SF_BLACKLIST">1</value>
+                </arg>
+
+                <run>
+                    <script name="tx_buf_len_not_connected"/>
+                </run>
+                <run>
+                    <script name="tx_buf_len_connected"/>
+                </run> 
+            </session>
+        </run>
+        <run>
+            <script name="rx_buf_len_zero_connected"/>
+            <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="buffer" type="boolean"/>
+            <arg name="func" type="recv_func"/>
+        </run>
+        <run>
+            <script name="rx_buf_len_zero_connected"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="buffer" type="boolean"/>
+            <arg name="func">
+                <value reqs="AIO">aio_read</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="func_io_after_listen">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="func">
+                <value>recv</value>
+                <value>recvfrom</value> 
+                <value reqs="SENDMSG_RECVMSG">recvmsg</value>
+                <!-- The test is incompatible with zero-copy receive API,
+                     see ON-11450. -->
+                <!-- <value reqs="ONLOAD_ONLY,ONLOAD_ZC_RECV">onload_zc_recv</value> -->
+                <value reqs="RECVMMSG">recvmmsg</value>
+                <value reqs="READ_WRITE">read</value>
+                <value reqs="READV_WRITEV">readv</value>
+                <value reqs="AIO">aio_read_poll</value>
+                <value reqs="AIO">aio_read_suspend</value>
+                <value reqs="AIO">aio_read_signal</value>
+                <value reqs="AIO">aio_read_callback</value>
+                <value reqs="AIO">aio_read</value>
+                <value>send</value>
+                <value>sendto</value>
+                <value reqs="SENDMSG_RECVMSG">sendmsg</value>
+                <value reqs="SENDMMSG">sendmmsg</value>
+                <!-- Commented due to WONTFIX bug 31160 -->
+                <!--value reqs="ONLOAD_ZC_SEND">onload_zc_send</value-->
+                <value reqs="READ_WRITE">write</value>
+                <value reqs="READV_WRITEV">writev</value>
+                <value reqs="AIO">aio_write_poll</value>
+                <value reqs="AIO">aio_write_suspend</value>
+                <value reqs="AIO">aio_write_signal</value>
+                <value reqs="AIO">aio_write_callback</value>
+                <value reqs="AIO">aio_write</value>
+               <value reqs="ONLOAD_ONLY,SEND_FLAG,SF_ODS,SF_ODS_COMPL">od_send</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="incorrect_iovec_pointer"/>
+            <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="vector" type="boolean"/>
+            <arg name="veclen" type="boolean"/>
+            <arg name="func" type="recv_func_with_iov">
+                <value>readv</value>
+                <value>recvmsg</value>
+                <value>recvmmsg</value>
+                <!-- Onload ZC functions do not fully check validity
+                     of arguments -->
+            </arg>
+        </run>
+        <run>
+            <script name="incorrect_iovec_pointer"/>
+            <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="vector" type="boolean"/>
+            <arg name="veclen" type="boolean"/>
+            <arg name="func" type="send_func_with_iov">
+              <value reqs="SEND_IOV,READV_WRITEV,ONLOAD_ONLY,OOL_INTEROP">writev</value>
+              <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMSG_RECVMSG">sendmsg</value>
+              <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMMSG">sendmmsg</value>
+              <!-- onload_zc_send() is not checked since it "makes only
+                   limited checks for validity on the arguments"; see ON-1477 -->
+            </arg>
+        </run>
+        <run>
+            <script name="incorrect_iovec_pointer"/>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+              <value reqs="SOCK_DGRAM">SOCK_DGRAM</value>
+            </arg>
+            <arg name="vector" type="boolean"/>
+            <arg name="veclen" type="boolean"/>
+            <arg name="func" type="send_func_with_iov">
+              <value reqs="ONLOAD_ONLY,SEND_IOV,SF_TEMPLATE_SEND">template_send</value>
+            </arg>
+        </run>
+        <run>
+            <script name="incorrect_iovec_pointer"/>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+              <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+            </arg>
+            <arg name="vector" type="boolean" list="">
+              <value>TRUE</value>
+              <!-- SF bug 40617 -->
+              <value reqs="SF_BLACKLIST">TRUE</value>
+              <value reqs="SF_BLACKLIST">FALSE</value>
+              <value reqs="SF_BLACKLIST">FALSE</value>
+            </arg>
+            <arg name="veclen" type="boolean" list="">
+              <value>TRUE</value>
+              <value>FALSE</value>
+              <value>TRUE</value>
+              <value>FALSE</value>
+            </arg>
+            <arg name="func" type="send_func_with_iov">
+              <value reqs="ONLOAD_ONLY,SEND_IOV,SF_TEMPLATE_SEND">template_send</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="incorrect_address_length">
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="func" type="send_func_with_addr"/>
+            <arg name="corrupt">
+                <value>4</value>
+                <value>5</value>
+                <value>1-4</value>
+                <value>5-?</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="send_oob_dgram">
+                <req id="SOCK_DGRAM"/>
+                <req id="OOB"/>
+            </script>
+            <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+            <arg name="func_tested" type="send_func_with_flags">
+                <value>send</value>
+                <value>sendto</value>
+                <value>sendmsg</value>
+                <value>sendmmsg</value>
+                <value>onload_zc_send</value>
+                <value>onload_zc_send_user_buf</value>
+            </arg>
+        </run>
+ 
+        <run>
+            <script name="recv_oob_dgram">
+                <req id="SOCK_DGRAM"/>
+                <req id="OOB"/>
+            </script>
+            <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+            <arg name="func_tested" type="recv_func_with_flags">
+                <value>recv</value>
+                <value>recvfrom</value>
+                <value>recvmsg</value>
+                <value>recvmmsg</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="func_send_too_long_dgram">
+                <req id="SO_SNDBUF"/>
+            </script>
+            <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+            <arg name="dgram_size">
+                <value reqs="L2_TS">65507</value>
+                <value>65508</value>
+                <value>65527</value>
+                <value>65528</value>
+            </arg>
+            <arg name="func">
+                <value>send</value> 
+                <value reqs="AIO">aio_write</value>
+            </arg>
+        </run>
+        <run>
+            <script name="func_ioctl_null">
+                <req ref="req"/>
+                <req id="BNB_PARAM_CHECK"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="rcvd_data" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="sock_type" list="">
+              <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+              <value reqs="SOCK_DGRAM">SOCK_DGRAM</value>
+              <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+              <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+              <value reqs="SOCK_DGRAM">SOCK_DGRAM</value>
+            </arg>
+            <arg name="passive" list="">
+              <value>FALSE</value>
+              <value>FALSE</value>
+              <value>FALSE</value>
+              <value reqs="BNB_PARAM_CHECK_ACCEPT">TRUE</value>
+              <value>FALSE</value>
+            </arg>
+            <arg name="req">
+                <value>SIOCGPGRP</value>
+                <value reqs="BUG_33338">SIOCSPGRP</value>
+                <value>SIOCATMARK</value>
+                <value reqs="SIOCGSTAMP">SIOCGSTAMP</value>
+                <value reqs="SIOCGSTAMPNS">SIOCGSTAMPNS</value>
+                <value reqs="SIOCSHWTSTAMP,HW_PTP_RX_TIMESTAMP">SIOCSHWTSTAMP</value>
+                <value>FIOASYNC</value>
+                <value>FIONBIO</value>
+                <value>FIONREAD</value>
+                <value>SIOCINQ</value>
+                <value>SIOCGIFCONF</value>
+                <value>SIOCGIFFLAGS</value>
+                <value>SIOCSIFFLAGS</value>
+                <value>SIOCGIFADDR</value>
+                <value>SIOCSIFADDR</value>
+                <value>SIOCGIFNETMASK</value>
+                <value>SIOCSIFNETMASK</value>
+                <value>SIOCGIFBRDADDR</value>
+                <value>SIOCSIFBRDADDR</value>
+                <value>SIOCGIFDSTADDR</value>
+                <value>SIOCSIFDSTADDR</value>
+                <value>SIOCGIFHWADDR</value>
+                <value>SIOCGIFMTU</value>
+                <value>SIOCSIFMTU</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="func_ioctl_unknown">
+            </script>
+            <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+            <arg name="sock_type" type="sock_stream_dgram" list="">
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="how" list="">
+                <value>created</value>
+                <value>created</value>
+                <value>bound</value>
+                <value>bound</value>
+                <value>listening</value>
+                <value>connected</value>
+                <value>client</value>
+                <value>accepted</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="dgram_empty">
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="sender" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="func_epoll_create">
+                <req id="EPOLL"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+        </run>
+
+        <run>
+            <script name="func_epoll_ctl_add">
+                <req id="EPOLL"/>
+            </script>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+
+        <run>
+            <script name="func_epoll_wait_bad_maxevents">
+                <req id="EPOLL"/>
+            </script>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="iomux">
+                <value reqs="EPOLL">epoll</value>
+                <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="events">
+                <value>invalid</value>
+                <value>valid</value>
+            </arg>
+            <arg name="maxevents">
+                <value>0</value>
+                <value>-1</value>
+            </arg>
+            <arg name="timeout">
+                <value>2000</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="func_epoll_ctl_bad_epfd">
+                <req ref="sock_type"/>
+                <req id="EPOLL"/>
+            </script>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="sock_type" list="">
+                <value>SOCK_UNSPEC</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="epfd" list="">
+                <value>invalid</value>
+                <value>socket</value>
+                <value>socket</value>
+                <value>invalid</value>
+                <value>invalid</value>
+                <value>socket</value>
+                <value>socket</value>
+            </arg>
+            <arg name="fd" list="">
+                <value>invalid</value>
+                <value>invalid</value>
+                <value>invalid</value>
+                <value>valid</value>
+                <value>valid</value>
+                <value>valid</value>
+                <value>valid</value>
+            </arg>
+            <arg name="create" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="func_epoll_ctl_bad_fd">
+                <req id="EPOLL"/>
+            </script>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+
+        <run>
+            <script name="func_epoll_ctl_bad_fd_type">
+                <req id="EPOLL"/>
+            </script>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+        </run>
+
+        <run>
+            <script name="func_epoll_ctl_null_events">
+                <req id="EPOLL"/>
+            </script>
+            <arg name="env">
+                <value>IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast}}</value>
+                <value reqs="ENV-TST-LINK">tester{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">IUT{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast}}</value>
+                <value reqs="ENV-TST-LINK,IP6,IP6_ONLOAD">tester{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast}}</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="wait_between" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="func_epoll_ctl_bad_op">
+                <req id="EPOLL"/>
+            </script>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+
+        <run>
+            <script name="func_epoll_wait_bad_epfd">
+                <req ref="sock_type"/>
+                <req id="EPOLL"/>
+            </script>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="iomux">
+                <value reqs="EPOLL">epoll</value>
+                <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+            </arg>
+            <arg name="sock_type" list="">
+                <value>SOCK_UNSPEC</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="epfd" list="">
+                <value>invalid</value>
+                <value>socket</value>
+                <value>socket</value>
+                <value>invalid</value>
+                <value>invalid</value>
+                <value>socket</value>
+                <value>socket</value>
+            </arg>
+            <arg name="create" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="timeout">
+                <value>2000</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="func_epoll_ctl_mod_del">
+                <req id="EPOLL"/>
+            </script>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="oper">
+                <value>mod</value>
+                <value>del</value>
+            </arg>
+            <arg name="descr_type" list="">
+                <value>socket</value>
+                <value>file</value>
+                <value>epoll_fd</value>
+            </arg>
+            <arg name="error" list="">
+                <value>ENOENT</value>
+                <value>EPERM</value>
+                <value>EINVAL</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="unbound">
+                <req id="SO_RCVTIMEO"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="domain" type="socket_domain"/>
+            <arg name="is_iomux" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="func" type="send_func_with_sys">
+                <value>write</value>
+                <value>sys_write</value>
+                <value>writev</value>
+                <value>sys_writev</value>
+                <value>send</value>
+                <value>sendto</value>
+                <value>sendmsg</value>
+                <value>sendmmsg</value>
+                <value>onload_zc_send</value>
+                <value>onload_zc_send_user_buf</value>
+                <value>template_send</value>
+                <value>od_send</value>
+            </arg>
+            <arg name="sys_call">
+              <value>-</value>
+            </arg>
+        </run>
+        <run>
+            <script name="unbound">
+                <req id="SO_RCVTIMEO"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="domain" type="socket_domain"/>
+            <arg name="is_iomux" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="func" type="recv_func_with_sys"/>
+            <arg name="sys_call">
+              <value>-</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="unbound">
+                <req id="SO_RCVTIMEO"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="domain" type="socket_domain"/>
+            <arg name="is_iomux" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="iomux" type="iomux_with_oo_epoll"/>
+            <arg name="sys_call" type="syscall_bool">
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="unbound">
+                <req id="SO_RCVTIMEO"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="domain" type="socket_domain"/>
+            <arg name="is_iomux" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="iomux" type="iomux"/>
+            <arg name="sys_call" type="syscall_bool">
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="func_recvmmsg_negative_timeout">
+                <req id="RECVMMSG"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="domain" type="socket_domain"/>
+        </run>
+        <run>
+            <script name="func_recvmmsg_all_zeros">
+                <req id="RECVMMSG"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="domain" type="socket_domain"/>
+        </run>
+        <!-- Commented out due to bug 31226 -->
+        <!--run>
+            <script name="func_zc_recv_all_zeros">
+                <req id="ONLOAD_ZC_RECV"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+        </run-->
+
+        <run>
+            <script name="read_zero_bytes"/>
+            <arg name="is_pipe">
+                <value>TRUE</value>
+            </arg>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="data_ready" type="boolean"/>
+            <arg name="func">
+                <value reqs="READ_WRITE">read</value>
+                <value reqs="RECV_IOV,READV_WRITEV">readv</value>
+            </arg>
+        </run>
+        <run>
+            <script name="read_zero_bytes"/>
+            <arg name="is_pipe">
+                <value>FALSE</value>
+            </arg>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="data_ready" type="boolean"/>
+            <arg name="func" type="recv_func"/>
+        </run>
+
+        <run>
+            <script name="sig_err_handler"/>
+            <arg name="env">
+                <value>IUT{{{'pco_iut':IUT},{'pco_killer':tester}}}</value>
+            </arg>
+            <arg name="sig">
+                <value>SIGUSR1</value>
+            </arg>
+            <arg name="func_sig">
+                <value>sigaction</value>
+                <value>signal</value>
+                <value reqs="BSD_SIGNAL">bsd_signal</value>
+                <value reqs="SYSV_SIGNAL">sysv_signal</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="func_pipe">
+                <req id="PIPE"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="use_pipe2">
+                <value>FALSE</value>
+            </arg>
+            <arg name="bad_flags">
+                <value>none</value>
+            </arg>
+            <arg name="bad_pipefds">
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="func_pipe">
+                <req id="PIPE"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="use_pipe2">
+                <value reqs="PIPE2">TRUE</value>
+            </arg>
+            <arg name="bad_flags" list="">
+                <value>none</value>
+                <value>unexpected</value>
+                <value>unexpected</value>
+                <value>incorrect</value>
+                <value>incorrect</value>
+            </arg>
+            <arg name="bad_pipefds" list="">
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="func_pipe_wrong_fd">
+                <req id="PIPE"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="use_pipe2">
+                <value>FALSE</value>
+                <value reqs="PIPE2">TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="pipe_sock_send">
+                <req id="PIPE"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="func">
+                <value reqs="SEND_FLAG,SEND_RECV">send</value>
+                <value reqs="SEND_FLAG,SEND_ADDR,SENDTO_RECVFROM">sendto</value>
+                <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMSG_RECVMSG">sendmsg</value>
+                <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMMSG">sendmmsg</value>
+                <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND">onload_zc_send</value>
+                <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND,ONLOAD_ZC_SEND_USER_BUF">onload_zc_send_user_buf</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="pipe_sock_recv">
+                <req id="PIPE"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="func">
+                <value reqs="RECV_FLAG,SEND_RECV">recv</value>
+                <value reqs="RECV_FLAG,RECV_ADDR,SENDTO_RECVFROM">recvfrom</value>
+                <value reqs="RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,SENDMSG_RECVMSG">recvmsg</value>
+                <value reqs="RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,RECVMMSG">recvmmsg</value>
+                <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,ONLOAD_ZC_RECV">onload_zc_recv</value>
+                <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_CTL,RECV_IOV,ONLOAD_ZC_HLRX">onload_zc_hlrx_recv_zc</value>
+                <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_CTL,RECV_IOV,ONLOAD_ZC_HLRX,ONLOAD_ZC_HLRX_COPY">onload_zc_hlrx_recv_copy</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="pipe_sock_func">
+                <req id="PIPE"/>
+            </script>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="write_end" type="boolean"/>
+            <arg name="func">
+                <value>bind</value>
+                <value>connect</value>
+                <value>listen</value>
+                <value>accept</value>
+                <value>getsockname</value>
+                <value>getpeername</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="pipe_sock_func">
+                <req id="PIPE"/>
+            </script>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="write_end" type="boolean"/>
+            <arg name="func">
+                <value>shutdown</value>
+            </arg>
+            <arg name="shutdown_how">
+                <value>SHUT_RD</value>
+                <value>SHUT_WR</value>
+                <value>SHUT_RDWR</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="func_execve_null"/>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="params">
+                <value>null</value>
+                <value>null_arr</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="bond_bind_remove" track_conf="nohistory">
+                <!-- See bugs 70403, 70337 and 70761 -->
+                <req id="OOL1606"/>
+                <!-- See bug 70337 -->
+                <req id="NO_BOND"/>
+                <req id="CREATE_NET_IF"/>
+                <!-- The test kills ta and breaks further testing.
+                     See ST-1850 -->
+                <req id="BROKEN"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env">
+                <value reqs="ENV-2LINKS-IUT">'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,if:'iut_if1'}},'net1a':IUT{'iut_host'{if:'iut_if2'}}</value>
+            </arg>
+            <arg name="mode">
+                <value reqs="BOND">bond1</value>
+                <value reqs="BOND">bond4</value>
+                <value reqs="TEAM">team1</value>
+                <value reqs="TEAM">team4</value>
+            </arg>
+            <arg name="restart_close_sock">
+                <value>none</value>
+                <value>restart</value>
+                <value>close</value>
+            </arg>
+            <arg name="remove_slave" type="boolean"/>
+            <arg name="remove_bond" type="boolean"/>
+            <arg name="max_tries">
+                <value>10</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="extra_large_packet">
+                <!-- See ON-9505 -->
+                <req id="OOL1811"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="conn_type" type="socket_type_all">
+                <value>udp</value>
+                <value>udp_notconn</value>
+                <value>tcp_active</value>
+                <value>tcp_passive</value>
+            </arg>
+            <arg name="direction" list="">
+                <value>to</value>
+                <value>from</value>
+                <value>from</value>
+            </arg>
+            <arg name="len">
+                <!-- ST-1343, ST-2449 -->
+                <value reqs="UL_64">0xAFFFFF00</value>
+                <value>0x7FFFFF00</value>
+            </arg>
+            <arg name="tst_send" type="boolean" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="ipv4_mapped_in_ipv6" track_conf="silent"/>
+            <arg name="env">
+                <value ref="env.p2p_ip4_ip6"/>
+            </arg>
+            <arg name="ipv4_src" type="boolean"/>
+            <arg name="ipv4_dst" type="boolean"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+
+        <run>
+            <script name="ipv4_mapped_connect_ipv6" track_conf="silent"/>
+            <arg name="env">
+                <value ref="env.p2p_ip4_ip6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="ipv4_iut" type="boolean" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="v6only" type="boolean" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="v6only_after" type="boolean" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="send_connect_zero_addr"/>
+            <arg name="sock_type" list="">
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+            <arg name="use_connect" list="">
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+        </run>
+        <run>
+            <script name="protected_signal"/>
+            <arg name="env">
+                <value ref="env.iut_only"/>
+            </arg>
+            <arg name="func_sig">
+                <value>sigaction</value>
+                <value reqs="BSD_SIGNAL">bsd_signal</value>
+                <value reqs="SYSV_SIGNAL">sysv_signal</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="file_max_overflow" track_conf="nohistory"/>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="fd_type">
+                <value reqs="SOCK_STREAM">tcp</value>
+                <value reqs="SOCK_STREAM">tcp_passive</value>
+                <value reqs="SOCK_DGRAM">udp</value>
+            </arg>
+            <arg name="other_user" type="boolean">
+                <value>FALSE</value>
+                <value reqs="RPC_RESTART,SETUID">TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="file_max_overflow" track_conf="nohistory"/>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+            </arg>
+            <arg name="fd_type">
+                <value reqs="PIPE">pipe</value>
+                <!-- Restart needed due to ON-13243 -->
+                <value reqs="EPOLL,NO_REUSE_PCO">epoll</value>
+            </arg>
+            <arg name="other_user" type="boolean">
+                <value>FALSE</value>
+                <value reqs="RPC_RESTART,SETUID">TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="chk_too_big_len">
+                <req id="CHK_FUNC"/>
+                <req id="FORK"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="func" type="recv_func">
+                <value>read</value>
+                <value>recv</value>
+                <value>recvfrom</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="chk_too_big_len">
+                <req id="CHK_FUNC"/>
+                <req id="FORK"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="func" type="iomux">
+                <value>poll</value>
+                <value>ppoll</value>
+            </arg>
+        </run>
+
+    </session>
+</package>

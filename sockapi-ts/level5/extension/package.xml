@@ -1,0 +1,1296 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+
+    <description>Onload extensions</description>
+
+    <author mailto="Konstantin.Ushakov@oktetlabs.ru"/>
+
+    <session>
+      <run>
+        <script name="dont_accelerate" track_conf="silent">
+            <req id="ONLOAD_ONLY"/>
+            <req id="ONLOAD_FD_STAT"/>
+        </script>
+        <arg name="env" ref="env.iut_only"/>
+        <arg name="object" type="objtype"/>
+      </run>
+      <run>
+        <script name="is_present" track_conf="silent">
+            <req id="ONLOAD_ONLY"/>
+            <req id="ONLOAD_IS_PRESENT"/>
+        </script>
+        <arg name="env" ref="env.iut_only"/>
+      </run>
+
+      <run>
+        <script name="udp_rx_filter_simple">
+            <req id="ONLOAD_ONLY"/>
+            <req id="ONLOAD_SET_RECV_FILTER"/>
+        </script>
+        <arg name="env">
+           <value ref="env.peer2peer"/>
+           <value ref="env.peer2peer_lo" reqs="NO_LOOP_LINUX"/>
+        </arg>
+        <arg name="pkt_num">
+            <value>10</value>
+        </arg>
+        <arg name="recv_f" type="recv_func">
+            <value>read</value>
+            <value>readv</value>
+            <value>recv</value>
+            <value>recvfrom</value>
+            <value>recvmsg</value>
+            <value>recvmmsg</value>
+        </arg>
+      </run>
+
+<!-- See L5 bug 52236
+      <run>
+        <script name="udp_rx_filter" track_conf="silent"/>
+        <arg name="env" ref="env.peer2peer"/>
+        <arg name="pattern_len">
+            <value>5</value>
+            <value>10240</value>
+        </arg>
+        <arg name="use_iomux" type="boolean">
+          <value>FALSE</value>
+        </arg>
+        <arg name="recv_f" type="recv_func">
+          <value reqs="READ_WRITE">read</value>
+          <value reqs="RECV_IOV,READV_WRITEV">readv</value>
+          <value reqs="RECV_FLAG,SEND_RECV">recv</value>
+          <value reqs="RECV_FLAG,RECV_ADDR,SENDTO_RECVFROM">recvfrom</value>
+          <value reqs="RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,SENDMSG_RECVMSG">recvmsg</value>
+          <value reqs="RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,RECVMMSG">recvmmsg</value>
+        </arg>
+        <arg name="block_call" type="boolean"/>
+        <arg name="tx_msg">
+            <value>match</value>
+            <value>nonmatch</value>
+            <value>short</value>
+            <value>zero</value>
+        </arg>
+      </run>
+      <run>
+        <script name="udp_rx_filter" track_conf="silent"/>
+        <arg name="env" ref="env.peer2peer"/>
+        <arg name="pattern_len">
+            <value>5</value>
+            <value>10240</value>
+        </arg>
+        <arg name="use_iomux" type="boolean">
+          <value>TRUE</value>
+        </arg>
+        <arg name="iomux_f" type="iomux_with_oo_epoll"/>
+        <arg name="block_call" type="boolean"/>
+        <arg name="tx_msg">
+            <value>match</value>
+            <value>nonmatch</value>
+            <value>short</value>
+            <value>zero</value>
+        </arg>
+      </run>
+-->
+
+        <run>
+            <script name="onload_zc_send">
+                <req id="SOCK_STREAM"/>
+                <req id="ONLOAD_ZC_SEND"/>
+                <req id="ONLOAD_ONLY"/>
+            </script>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},addr:'tst_addr1':inet:unicast}},'iut_addr2'='iut_addr1','tst_addr2'='tst_addr1'</value>
+                <!-- Both connections over the second port -->
+                <value reqs="ENV-2LINKS-IUT">'net1':IUT{'iut_host'{{'pco_iut':IUT}}},'net2':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},addr:'tst_addr1':inet:unicast}},'iut_addr2'='iut_addr1','tst_addr2'='tst_addr1'</value>
+                <!-- One connection over the first port, another connection over the second port -->
+                <value reqs="ENV-2LINKS-IUT">'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast},'tst_host'{{'pco_tst1':tester},addr:'tst_addr1':inet:unicast}},'net2':IUT{'iut_host'{addr:'iut_addr2':inet:unicast},'tst_host'{{'pco_tst2':tester},addr:'tst_addr2':inet:unicast}}</value>
+            </arg>
+            <arg name="first_active" type="boolean"/>
+            <arg name="second_active" type="boolean"/>
+            <arg name="alloc_another_sock" list="">
+              <value>FALSE</value>
+              <value>TRUE</value>
+              <value>FALSE</value>
+              <!-- These iterations cause assert. See FIXED bug 30208
+                   comment 11 -->
+              <!-- <value reqs="BROKEN">TRUE</value> -->
+            </arg>
+            <arg name="use_exec" list="">
+              <value>FALSE</value>
+              <value>FALSE</value>
+              <value reqs="EXEC">TRUE</value>
+              <!-- <value reqs="EXEC">TRUE</value> -->
+            </arg>
+            <arg name="diff_stacks">
+              <value>FALSE</value>
+            </arg>
+            <arg name="user_buf" type="boolean">
+                <value>FALSE</value>
+                <value reqs="ONLOAD_ZC_SEND_USER_BUF">TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="onload_zc_send">
+                <req id="SOCK_STREAM"/>
+                <req id="ONLOAD_ZC_SEND"/>
+                <req id="ONLOAD_ONLY"/>
+                <req id="FEW_ACCEL_PROCESSES"/>
+            </script>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},{'pco_tst1':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast},{{'pco_tst2':tester},addr:'tst_addr2':inet:unicast}},'tst_addr1'='iut_addr1'</value>
+                <value>{{{'pco_iut':IUT},{'pco_tst1':IUT},{'pco_tst2':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast}},'tst_addr1'='iut_addr1','tst_addr2'='iut_addr2'</value>
+            </arg>
+            <arg name="first_active" type="boolean"/>
+            <arg name="second_active" type="boolean"/>
+            <arg name="alloc_another_sock">
+              <!-- These iterations cause assert. See FIXED bug 30208
+                   comment 11 -->
+              <!--<value reqs="BROKEN">TRUE</value>-->
+              <value>FALSE</value>
+            </arg>
+            <arg name="use_exec">
+              <value>FALSE</value>
+              <value reqs="EXEC">TRUE</value>
+            </arg>
+            <arg name="diff_stacks">
+              <value>FALSE</value>
+            </arg>
+            <arg name="user_buf" type="boolean">
+                <!-- Sending user buffer is not supported for loopback sockets,
+                     see ON-11571 -->
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="onload_zc_send">
+                <req id="SOCK_STREAM"/>
+                <req id="ONLOAD_ZC_SEND"/>
+                <req id="ONLOAD_ONLY"/>
+            </script>
+            <arg name="env" list="">
+                <value>{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},addr:'tst_addr1':inet:unicast}},'iut_addr2'='iut_addr1','tst_addr2'='tst_addr1'</value>
+                <value>{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},addr:'tst_addr1':inet:unicast}},'iut_addr2'='iut_addr1','tst_addr2'='tst_addr1'</value>
+                <value>{{{'pco_iut':IUT},{'pco_tst1':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast},{{'pco_tst2':tester},addr:'tst_addr2':inet:unicast}},'tst_addr1'='iut_addr1'</value>
+                <value>{{{'pco_iut':IUT},{'pco_tst1':IUT},{'pco_tst2':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast}},'tst_addr1'='iut_addr1','tst_addr2'='iut_addr2'</value>
+            </arg>
+            <arg name="user_buf" type="boolean" list="">
+                <value>FALSE</value>
+                <value reqs="ONLOAD_ZC_SEND_USER_BUF">TRUE</value>
+                <!-- Sending user buffer is not supported for loopback sockets,
+                     see ON-11571 -->
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="first_active" type="boolean"/>
+            <arg name="second_active" type="boolean"/>
+            <arg name="alloc_another_sock">
+              <!-- These iterations cause assert. See FIXED bug 30208
+                   comment 11 -->
+              <!-- <value reqs="BROKEN">TRUE</value> -->
+              <value>FALSE</value>
+            </arg>
+            <arg name="use_exec">
+                <value>FALSE</value>
+                <value reqs="EXEC">TRUE</value>
+            </arg>
+            <arg name="diff_stacks">
+              <value reqs="FORK">TRUE</value>
+            </arg>
+        </run>
+
+      <run>
+        <script name="onload_zc_recv_large" track_conf="silent">
+          <req id="SOCK_DGRAM"/>
+          <req id="ONLOAD_ZC_RECV"/>
+          <req id="RECV_IP_FRAG"/>
+          <req id="ONLOAD_ONLY"/>
+        </script>
+        <arg name="env" ref="env.peer2peer"/>
+        <arg name="length">
+            <value>5000</value>
+        </arg>
+        <arg name="packet_num">
+            <value>5</value>
+        </arg>
+      </run>
+
+      <run>
+        <script name="onload_zc_recv_keep">
+          <req id="ONLOAD_ZC_RECV"/>
+          <req id="ONLOAD_ONLY"/>
+          <req id="IF_DOWN_UP"/>
+        </script>
+        <arg name="env">
+            <value ref="env.peer2peer"/>
+            <value ref="env.peer2peer_ipv6"/>
+        </arg>
+        <arg name="sock_type" type="sock_stream_dgram" list="pkt_size">
+            <value>SOCK_DGRAM</value>
+            <value>SOCK_DGRAM</value>
+            <value>SOCK_STREAM</value>
+        </arg>
+        <arg name="big_pkt" type="boolean" list="pkt_size">
+            <value>FALSE</value>
+            <value reqs="JUMBO_FRAME">TRUE</value>
+            <value>FALSE</value>
+        </arg>
+        <arg name="pkts_num">
+            <value>1</value>
+            <value>5</value>
+        </arg>
+        <arg name="keep">
+            <value>none</value>
+        </arg>
+        <arg name="action">
+            <value>none</value>
+        </arg>
+      </run>
+      <run>
+        <script name="onload_zc_recv_keep">
+          <req id="ONLOAD_ZC_RECV"/>
+          <req id="ONLOAD_ONLY"/>
+          <req id="IF_DOWN_UP"/>
+        </script>
+        <arg name="env">
+            <value ref="env.peer2peer"/>
+            <value ref="env.peer2peer_ipv6"/>
+        </arg>
+        <arg name="sock_type" type="sock_stream_dgram" list="pkt_size">
+            <value>SOCK_DGRAM</value>
+            <value>SOCK_DGRAM</value>
+            <value>SOCK_STREAM</value>
+        </arg>
+        <arg name="big_pkt" type="boolean" list="pkt_size">
+            <value>FALSE</value>
+            <value reqs="JUMBO_FRAME">TRUE</value>
+            <value>FALSE</value>
+        </arg>
+        <arg name="pkts_num" list="keep_list">
+            <value>1</value>
+            <value>5</value>
+            <value>5</value>
+        </arg>
+        <arg name="keep" list="keep_list">
+            <value>all</value>
+            <value>all</value>
+            <value>some</value>
+        </arg>
+        <arg name="action">
+            <value>release</value>
+            <!-- See ON-11918 -->
+            <value reqs="BROKEN,ONLOAD_ZC_SEND">reuse</value>
+        </arg>
+      </run>
+
+      <run>
+        <script name="zc_send_big_buf_complete">
+          <req id="SOCK_STREAM"/>
+          <req id="ONLOAD_ZC_SEND"/>
+          <req id="ONLOAD_ZC_SEND_USER_BUF"/>
+          <req id="ONLOAD_ONLY"/>
+        </script>
+        <arg name="env">
+           <value ref="env.peer2peer"/>
+           <value ref="env.peer2peer_ipv6"/>
+        </arg>
+        <arg name="sock_type" type="socket_tcp"/>
+        <arg name="buf_size">
+            <value>5000</value>
+            <value>15000</value>
+        </arg>
+      </run>
+
+      <run>
+        <script name="oo_epoll">
+            <req id="HW_PTP_RX_TIMESTAMP"/>
+            <req id="SF_WODA"/>
+            <req id="NO_EF_UL_EPOLL_ZERO"/>
+            <req id="NO_EF_UL_EPOLL_TWO"/>
+            <req id="ONLOAD_ONLY"/>
+            <req id="OO_EPOLL_CHECK_ORDER"/>
+        </script>
+        <arg name="env" ref="env.peer2peer"/>
+        <arg name="sock_type">
+            <value>tcp</value>
+        </arg>
+        <arg name="streams_num">
+            <value>10</value>
+        </arg>
+        <arg name="stream_packets_num" list="">
+            <value>1000</value>
+            <value>100</value>
+        </arg>
+        <arg name="buf_size_min" list="">
+            <value>1</value>
+            <value>5000</value>
+        </arg>
+        <arg name="buf_size_max" list="">
+            <value>300</value>
+            <value>10000</value>
+        </arg>
+      </run>
+
+      <run>
+        <script name="oo_epoll">
+            <req id="HW_PTP_RX_TIMESTAMP"/>
+            <req id="SF_WODA"/>
+            <req id="NO_EF_UL_EPOLL_ZERO"/>
+            <req id="NO_EF_UL_EPOLL_TWO"/>
+            <req id="ONLOAD_ONLY"/>
+            <req id="OO_EPOLL_CHECK_ORDER"/>
+        </script>
+        <arg name="env" ref="env.peer2peer"/>
+        <arg name="sock_type">
+            <value>udp</value>
+            <value>both</value>
+        </arg>
+        <arg name="streams_num">
+            <value>10</value>
+        </arg>
+        <arg name="stream_packets_num" list="">
+            <value>1000</value>
+            <value>100</value>
+        </arg>
+        <arg name="buf_size_min" list="">
+            <value>1</value>
+            <value reqs="RECV_IP_FRAG">5000</value>
+        </arg>
+        <arg name="buf_size_max" list="">
+            <value>300</value>
+            <value>10000</value>
+        </arg>
+      </run>
+
+      <run>
+        <script name="oo_epoll_dont_read">
+            <req id="HW_PTP_RX_TIMESTAMP"/>
+            <req id="SF_WODA"/>
+            <req id="NO_EF_UL_EPOLL_ZERO"/>
+            <req id="NO_EF_UL_EPOLL_TWO"/>
+            <req id="ONLOAD_ONLY"/>
+            <req id="OO_EPOLL_CHECK_ORDER"/>
+        </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram" list="">
+                <value>SOCK_STREAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="test_case">
+                <!-- Sequence: A1 E1 A2 E2 -->
+                <value>1</value>
+                <!-- Sequence: A1 B1 E1 A2 E2 -->
+                <value>2</value>
+                <!-- Sequence: A1 B1 E1 B2 E2 -->
+                <value>3</value>
+            </arg>
+            <arg name="buf_size_min" list="">
+                <value>1</value>
+                <value>5000</value>
+                <value>1</value>
+                <value reqs="RECV_IP_FRAG">5000</value>
+            </arg>
+            <arg name="buf_size_max" list="">
+                <value>1400</value>
+                <value>10000</value>
+                <value>1400</value>
+                <value>10000</value>
+            </arg>
+      </run>
+
+      <run>
+        <script name="oo_epoll_read">
+            <req id="HW_PTP_RX_TIMESTAMP"/>
+            <req id="SF_WODA"/>
+            <req id="NO_EF_UL_EPOLL_ZERO"/>
+            <req id="NO_EF_UL_EPOLL_TWO"/>
+            <req id="ONLOAD_ONLY"/>
+            <req id="OO_EPOLL_CHECK_ORDER"/>
+        </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram" list="">
+                <value>SOCK_STREAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="test_case">
+                <value>less</value>
+                <value>equal</value>
+                <value>more</value>
+            </arg>
+            <arg name="buf_size_min" list="">
+                <value>1</value>
+                <value>5000</value>
+                <value>1</value>
+                <value reqs="RECV_IP_FRAG">5000</value>
+            </arg>
+            <arg name="buf_size_max" list="">
+                <value>1400</value>
+                <value>20000</value>
+                <value>1400</value>
+                <value>20000</value>
+            </arg>
+      </run>
+
+<!--
+      The following test iteration to check error when ool_epoll!=1
+-->
+      <run>
+        <script name="oo_epoll_read">
+            <req id="HW_PTP_RX_TIMESTAMP"/>
+            <req id="SF_WODA"/>
+            <req id="NO_EF_UL_EPOLL_ONE"/>
+            <req id="ONLOAD_ONLY"/>
+            <req id="OO_EPOLL_CHECK_ORDER"/>
+        </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="test_case">
+                <value>equal</value>
+            </arg>
+            <arg name="buf_size_min">
+                <value>1</value>
+            </arg>
+            <arg name="buf_size_max">
+                <value>1400</value>
+            </arg>
+      </run>
+
+      <run>
+        <script name="oo_epoll_seg_reordering" track_conf="silent">
+            <req id="HW_PTP_RX_TIMESTAMP"/>
+            <req id="SF_WODA"/>
+            <req id="NO_EF_UL_EPOLL_ZERO"/>
+            <req id="NO_EF_UL_EPOLL_TWO"/>
+            <req id="ONLOAD_ONLY"/>
+            <req id="OO_EPOLL_CHECK_ORDER"/>
+        </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="test_case">
+                <!-- Segments sequence: A1 A3 B1 B2 A2 B3 -->
+                <value>lost_retransmit_one</value>
+                <!-- Segments sequence: A1 A3 B2 B3 A2 B1 -->
+                <value>lost_retransmit_two</value>
+                <!-- Segments sequence: A2 A3 B1 B2 A1 B3 -->
+                <value>lost_retransmit_three</value>
+                <!-- Segments sequence: A2 A3 B2 A1 B1 B3 -->
+                <value>empty_event</value>
+                <!-- Segments sequence: A1 A3 B1 B2 A2 B3 A2 -->
+                <value>duplicate</value>
+                <!-- Segments sequence: A1 B1 B2 B3 A3 <no A2> -->
+                <value>lost</value>
+            </arg>
+      </run>
+
+      <run>
+        <script name="template_update">
+          <req id="SF_TEMPLATE_SEND"/>
+          <req id="UL_64"/>
+          <req id="ONLOAD_ONLY"/>
+        </script>
+          <arg name="env" ref="env.peer2peer"/>
+          <arg name="iovcnt" list="">
+            <value>5</value>
+            <value>10</value>
+          </arg>
+          <arg name="total" list="">
+            <value>10</value>
+            <value>1448</value>
+          </arg>
+          <arg name="updates_num" list="">
+            <value>15</value>
+            <value>10</value>
+          </arg>
+          <arg name="mode">
+            <value>single</value>
+            <value>few</value>
+            <value>single_send</value>
+          </arg>
+      </run>
+
+      <run>
+        <script name="template_update">
+          <req id="SF_TEMPLATE_SEND"/>
+          <req id="UL_64"/>
+          <req id="ONLOAD_ONLY"/>
+        </script>
+          <arg name="env" ref="env.peer2peer"/>
+          <arg name="iovcnt">
+            <value>5</value>
+          </arg>
+          <arg name="total">
+            <value>2000</value>
+            <value>1600</value>
+          </arg>
+          <arg name="updates_num">
+            <value>10</value>
+          </arg>
+          <arg name="mode">
+            <value>single</value>
+          </arg>
+      </run>
+
+      <run>
+        <script name="template_send">
+          <req id="SF_TEMPLATE_SEND"/>
+          <req id="UL_64"/>
+          <req id="ONLOAD_ONLY"/>
+        </script>
+          <arg name="env" ref="env.peer2peer"/>
+          <arg name="total">
+            <value>1024</value>
+            <value>3000</value>
+          </arg>
+          <arg name="iovcnt">
+            <value>5</value>
+          </arg>
+          <arg name="data_amount">
+            <value>10000</value>
+          </arg>
+      </run>
+
+      <run>
+        <script name="template_hide_ack" track_conf="silent">
+          <req id="SF_TEMPLATE_SEND"/>
+          <req id="UL_64"/>
+          <req id="ONLOAD_ONLY"/>
+        </script>
+          <arg name="env">
+            <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if',addr:'alien_link_addr':ether:alien}}</value>
+            </arg>
+          <arg name="total">
+            <value>1024</value>
+          </arg>
+          <arg name="iovcnt">
+            <value>5</value>
+          </arg>
+      </run>
+
+      <run>
+        <script name="template_overfill">
+          <req id="SF_TEMPLATE_SEND"/>
+          <req id="UL_64"/>
+          <req id="ONLOAD_ONLY"/>
+        </script>
+          <arg name="env" ref="env.peer2peer"/>
+          <arg name="total" list="">
+            <value>1024</value>
+          </arg>
+          <arg name="iovcnt">
+            <value>5</value>
+          </arg>
+      </run>
+
+      <run>
+        <script name="template_abort">
+          <req id="SF_TEMPLATE_SEND"/>
+          <req id="UL_64"/>
+          <req id="ONLOAD_ONLY"/>
+<!--
+          Leads to segfault, bug 45701
+-->
+          <req id="SF_BLACKLIST"/>
+        </script>
+          <arg name="env" ref="env.peer2peer"/>
+          <arg name="total" list="">
+            <value>1024</value>
+          </arg>
+          <arg name="iovcnt">
+            <value>5</value>
+          </arg>
+      </run>
+
+      <run>
+        <script name="template_close" track_conf="silent">
+          <req id="SF_TEMPLATE_SEND"/>
+          <req id="UL_64"/>
+          <req id="NO_REUSE_STACK"/>
+          <req id="ONLOAD_ONLY"/>
+          <req id="NO_BOND4"/> <!-- See ST-2318 -->
+          <req id="NO_TEAM4"/> <!-- See ST-2318 -->
+        </script>
+          <arg name="env" ref="env.peer2peer"/>
+          <arg name="total" list="">
+            <value>1024</value>
+            <value>16</value>
+          </arg>
+          <arg name="iovcnt" list="">
+            <value>5</value>
+            <value>2</value>
+          </arg>
+          <arg name="way" type="closing_way"/>
+      </run>
+
+      <run>
+        <script name="template_signal">
+          <req id="SF_TEMPLATE_SEND"/>
+          <req id="UL_64"/>
+          <req id="ONLOAD_ONLY"/>
+        </script>
+          <arg name="env">
+              <value>{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+          </arg>
+          <arg name="total" list="">
+            <value>1024</value>
+          </arg>
+          <arg name="iovcnt">
+            <value>5</value>
+          </arg>
+      </run>
+
+      <run>
+        <script name="template_alloc_bnb">
+          <req id="SF_TEMPLATE_SEND"/>
+          <req id="UL_64"/>
+          <req id="ONLOAD_ONLY"/>
+        </script>
+          <arg name="env" ref="env.peer2peer"/>
+          <arg name="total" list="">
+            <value>1024</value>
+          </arg>
+          <arg name="iovcnt">
+            <value>5</value>
+          </arg>
+          <arg name="testcase">
+            <value>non_accelerated_socket</value>
+            <value>non_socket</value>
+<!--
+            The following iterations lead to segfault, bug 40617.
+            <value>null_handle</value>
+            <value>flags</value>
+-->
+          </arg>
+      </run>
+
+      <run>
+        <script name="template_update_bnb">
+          <req id="SF_TEMPLATE_SEND"/>
+          <req id="UL_64"/>
+          <req id="ONLOAD_ONLY"/>
+        </script>
+          <arg name="env" ref="env.peer2peer"/>
+          <arg name="total" list="">
+            <value>1024</value>
+          </arg>
+          <arg name="iovcnt">
+            <value>5</value>
+          </arg>
+          <arg name="second_update" type="boolean">
+            <value>FALSE</value>
+          </arg>
+          <arg name="testcase">
+            <value>ulen_zero</value>
+            <value>big_otmu_offset</value>
+            <value>otmu_len_zero</value>
+            <value>otmu_flags</value>
+            <!-- bug 63476 value>otmu_base_null</value-->
+            <value>bad_socket</value>
+<!--
+            The following iterations lead to segfault, bug 40617.
+            <value>flags</value>
+            <value>null_handle</value>
+            <value>null_updates</value>
+-->
+          </arg>
+      </run>
+
+      <run>
+        <script name="template_update_bnb">
+          <req id="SF_TEMPLATE_SEND"/>
+          <req id="UL_64"/>
+          <req id="ONLOAD_ONLY"/>
+        </script>
+          <arg name="env" ref="env.peer2peer"/>
+          <arg name="total" list="">
+            <value>1024</value>
+          </arg>
+          <arg name="iovcnt">
+            <value>5</value>
+          </arg>
+          <arg name="second_update" type="boolean">
+            <value>TRUE</value>
+          </arg>
+          <arg name="testcase">
+            <value>big_otmu_offset</value>
+            <value>otmu_len_zero</value>
+            <value>otmu_flags</value>
+            <!-- bug 63476 value>otmu_base_null</value-->
+          </arg>
+      </run>
+
+      <run>
+        <script name="template_abort_bnb">
+          <req id="SF_TEMPLATE_SEND"/>
+          <req id="UL_64"/>
+          <req id="ONLOAD_ONLY"/>
+        </script>
+          <arg name="env" ref="env.peer2peer"/>
+          <arg name="total" list="">
+            <value>1024</value>
+          </arg>
+          <arg name="iovcnt">
+            <value>5</value>
+          </arg>
+          <arg name="testcase">
+            <value>bad_socket</value>
+<!--
+            The following iterations lead to segfault, bug 40617.
+            <value>null_handle</value>
+            <value>twice</value>
+            <value>after_sending</value>
+-->
+          </arg>
+      </run>
+
+<!--
+      This test consumes a lot of PIO buffers, and may cause
+      other template tests to fail.
+      Let's keep it the end of the session.
+ -->
+      <run>
+        <script name="template_mult">
+          <req id="SF_TEMPLATE_SEND"/>
+          <req id="UL_64"/>
+          <req id="ONLOAD_ONLY"/>
+        </script>
+          <arg name="env" ref="env.peer2peer"/>
+          <arg name="total">
+            <value>64</value>
+          </arg>
+          <arg name="iovcnt">
+            <value>5</value>
+          </arg>
+          <arg name="sockets_num">
+            <value>5</value>
+          </arg>
+          <arg name="updates_num">
+            <value>5</value>
+          </arg>
+          <arg name="templates_num">
+            <value>8</value>
+          </arg>
+          <arg name="send_num">
+            <value>8</value>
+          </arg>
+          <arg name="order" type="boolean"/>
+          <arg name="thread_process">
+              <value>none</value>
+              <value>thread</value>
+              <value reqs="NO_REUSE_STACK">process</value>
+          </arg>
+          <arg name="flags_pio_retry" type="boolean">
+              <value>FALSE</value>
+          </arg>
+      </run>
+
+      <run>
+        <script name="template_mult">
+          <req id="SF_TEMPLATE_SEND"/>
+          <req id="UL_64"/>
+          <req id="ONLOAD_ONLY"/>
+        </script>
+          <arg name="env" ref="env.peer2peer"/>
+          <arg name="total">
+            <value>512</value>
+          </arg>
+          <arg name="iovcnt">
+            <value>5</value>
+          </arg>
+          <arg name="sockets_num">
+            <value>7</value>
+          </arg>
+          <arg name="updates_num">
+            <value>5</value>
+          </arg>
+          <arg name="templates_num">
+            <value>7</value>
+          </arg>
+          <arg name="send_num">
+            <value>7</value>
+          </arg>
+          <arg name="order" type="boolean">
+            <value>TRUE</value>
+          </arg>
+          <arg name="thread_process">
+              <value>none</value>
+              <value reqs="NO_REUSE_STACK">process</value>
+          </arg>
+          <arg name="flags_pio_retry" type="boolean"/>
+      </run>
+
+      <run>
+          <script name="delegated_api">
+              <req id="SF_ODS"/>
+          </script>
+          <arg name="env" ref="env.peer2peer"/>
+          <arg name="length">
+              <value>5000</value>
+          </arg>
+          <arg name="use_iov" type="boolean" list="">
+              <value>FALSE</value>
+              <value>FALSE</value>
+              <value>TRUE</value>
+          </arg>
+          <arg name="single_rpc" type="boolean" list="">
+              <value>FALSE</value>
+              <value>TRUE</value>
+              <value>TRUE</value>
+          </arg>
+          <arg name="raw_send" type="boolean"/>
+      </run>
+
+      <run>
+          <script name="od_overfill_sndbuf">
+              <req id="SF_ODS"/>
+          </script>
+          <arg name="env" ref="env.peer2peer"/>
+          <arg name="raw_send" type="boolean"/>
+          <arg name="small_portion" type="boolean"/>
+      </run>
+
+      <run>
+          <script name="od_no_ack" track_conf="silent">
+              <req id="SF_ODS"/>
+          </script>
+          <arg name="env" ref="env.peer2peer"/>
+          <arg name="nonblock" type="boolean"/>
+          <arg name="raw_send" type="boolean"/>
+          <arg name="small_portion" type="boolean"/>
+      </run>
+
+      <run>
+          <script name="msg_warm">
+              <req id="ONLOAD_ONLY"/>
+              <req id="MSG_WARM"/>
+          </script>
+          <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_lo" reqs="NO_LOOP_LINUX"/>
+          </arg>
+          <arg name="sock_type" type="socket_tcp_active_passive"/>
+          <arg name="func" type="send_func">
+              <value>send</value>
+              <value>sendto</value>
+              <value>sendmsg</value>
+              <value>onload_zc_send</value>
+          </arg>
+          <arg name="buf_len">
+              <!-- See bug 54307#c24 -->
+              <value reqs="OOL1509">0</value>
+              <value>1</value>
+              <value>1000</value>
+              <!-- <value>4000</value> See SF Bug 58822 -->
+          </arg>
+          <arg name="flags">
+              <value>none</value>
+              <value>MSG_DONTWAIT</value>
+              <value>MSG_MORE</value>
+              <value>MSG_NOSIGNAL</value>
+          </arg>
+          <arg name="send_data_before" type="boolean"/>
+      </run>
+
+      <run>
+          <script name="msg_warm_send_flow">
+              <req id="ONLOAD_ONLY"/>
+              <req id="MSG_WARM"/>
+          </script>
+          <arg name="env" ref="env.peer2peer"/>
+          <arg name="sock_type" type="socket_tcp_active_passive"/>
+          <arg name="func" type="send_func">
+              <value>send</value>
+              <value>sendto</value>
+              <value>sendmsg</value>
+              <!-- See bug 67185 -->
+              <value reqs="NO_REUSE_STACK">onload_zc_send</value>
+          </arg>
+      </run>
+
+      <run>
+          <script name="msg_warm_fill_send_buf">
+              <req id="ONLOAD_ONLY"/>
+              <req id="MSG_WARM"/>
+          </script>
+          <arg name="env" ref="env.peer2peer"/>
+          <arg name="sock_type" type="socket_tcp_active_passive"/>
+          <arg name="func" type="send_func">
+              <value>send</value>
+              <value>sendto</value>
+              <value>sendmsg</value>
+              <value>onload_zc_send</value>
+          </arg>
+          <arg name="full" type="boolean"/>
+      </run>
+
+      <run>
+          <script name="msg_warm_conn_problem" track_conf="silent">
+              <req id="ONLOAD_ONLY"/>
+              <req id="MSG_WARM"/>
+          </script>
+          <arg name="env" ref="env.peer2peer_gw"/>
+          <arg name="sock_type" type="socket_tcp_active_passive"/>
+          <arg name="func" type="send_func">
+              <value>send</value>
+              <value>sendto</value>
+              <value>sendmsg</value>
+              <value>onload_zc_send</value>
+          </arg>
+          <arg name="status" type="conn_problem">
+              <value>refused</value>
+              <value reqs="NO_REUSE_STACK">timeout</value>
+              <value>delayed</value>
+          </arg>
+      </run>
+
+      <run>
+          <script name="msg_warm_large_buf" track_conf="silent">
+              <req id="ONLOAD_ONLY"/>
+              <req id="MSG_WARM"/>
+          </script>
+          <arg name="env" ref="env.peer2peer"/>
+          <arg name="sock_type" type="socket_tcp_active_passive"/>
+          <arg name="func" type="send_func">
+              <value>send</value>
+              <value>sendto</value>
+              <value>sendmsg</value>
+          </arg>
+      </run>
+
+      <run>
+          <script name="msg_warm_zc_send">
+              <req id="SOCK_STREAM"/>
+              <req id="ONLOAD_ZC_SEND"/>
+              <req id="ONLOAD_ONLY"/>
+              <req id="MSG_WARM"/>
+          </script>
+          <arg name="env" ref="env.peer2peer"/>
+          <arg name="sock_type" type="socket_tcp_active_passive"/>
+          <arg name="big_packet" type="boolean" list="">
+              <value>FALSE</value>
+              <value>FALSE</value>
+              <value>TRUE</value>
+          </arg>
+          <arg name="single_iov" type="boolean" list="">
+              <value>TRUE</value>
+              <value>FALSE</value>
+              <value>FALSE</value>
+          </arg>
+      </run>
+
+      <run>
+          <script name="msg_warm_concurrent">
+              <req id="ONLOAD_ONLY"/>
+              <req id="MSG_WARM"/>
+          </script>
+          <arg name="env" ref="env.peer2peer"/>
+          <arg name="sock_type" type="socket_tcp_active_passive"/>
+          <arg name="func" type="send_func">
+              <value>send</value>
+              <value>sendto</value>
+              <value>sendmsg</value>
+              <value>onload_zc_send</value>
+          </arg>
+          <arg name="nonblock" type="boolean"/>
+      </run>
+
+      <run>
+          <script name="simple_ds">
+              <req id="SF_ODS"/>
+          </script>
+          <arg name="env" ref="env.peer2peer"/>
+          <arg name="length">
+              <value>2048</value>
+          </arg>
+          <arg name="raw_send" type="boolean"/>
+      </run>
+
+      <run>
+          <script name="od_send_peer_close">
+              <req id="SF_ODS"/>
+              <req id="SOCK_STREAM"/>
+              <req id="TCP_ACTIVE"/>
+          </script>
+          <arg name="env">
+              <value ref="env.peer2peer"/>
+          </arg>
+          <arg name="first_call">
+              <value>od_send</value>
+              <value reqs="SF_ODS_RAW">od_send_raw</value>
+          </arg>
+          <arg name="second_call">
+              <value>od_send</value>
+              <value reqs="SF_ODS_RAW">od_send_raw</value>
+          </arg>
+          <arg name="overfill" type="boolean">
+              <value>FALSE</value>
+              <value reqs="TIME_CONSUMING">TRUE</value>
+          </arg>
+          <arg name="get_err_first" type="boolean"/>
+          <arg name="aux_func">
+              <value>none</value>
+          </arg>
+      </run>
+      <run>
+          <script name="od_send_peer_close">
+              <req id="SF_ODS"/>
+              <req id="SOCK_STREAM"/>
+              <req id="TCP_ACTIVE"/>
+          </script>
+          <arg name="env">
+              <value ref="env.peer2peer"/>
+          </arg>
+          <arg name="first_call" list="">
+              <value>no_ods</value>
+              <value>no_ods</value>
+              <value>od_send</value>
+              <value reqs="SF_ODS_RAW">od_send_raw</value>
+          </arg>
+          <arg name="second_call" list="">
+              <value>od_send</value>
+              <value reqs="SF_ODS_RAW">od_send_raw</value>
+              <value>no_ods</value>
+              <value>no_ods</value>
+          </arg>
+          <arg name="overfill" type="boolean">
+              <value>FALSE</value>
+              <value reqs="TIME_CONSUMING">TRUE</value>
+          </arg>
+          <arg name="get_err_first" type="boolean"/>
+          <arg name="aux_func" type="send_recv_func">
+              <value>write</value>
+              <value>writev</value>
+              <value>send</value>
+              <value>sendto</value>
+              <value>sendmsg</value>
+              <value>read</value>
+              <value>readv</value>
+              <value>recv</value>
+              <value>recvfrom</value>
+              <value>recvmsg</value>
+          </arg>
+      </run>
+
+      <run>
+        <script name="zc_send_ack_complete" track_conf="silent">
+          <req id="SOCK_STREAM"/>
+          <req id="ONLOAD_ZC_SEND"/>
+          <req id="ONLOAD_ZC_SEND_USER_BUF"/>
+          <req id="ONLOAD_ONLY"/>
+        </script>
+        <arg name="env">
+           <value ref="env.peer2peer_gw"/>
+           <value ref="env.peer2peer_gw_ipv6"/>
+        </arg>
+        <arg name="sock_type" type="socket_tcp"/>
+      </run>
+
+      <run>
+          <script name="zc_register_bufs">
+              <req id="ONLOAD_ZC_SEND_USER_BUF"/>
+              <req id="ONLOAD_ONLY"/>
+              <!-- The test may fail with reuse_pco due to memory management
+                   issues not related to Onload. See ST-1998. -->
+              <req id="NO_REUSE_PCO"/>
+          </script>
+          <arg name="env">
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+          </arg>
+          <arg name="sock_type" type="sock_stream_dgram"/>
+          <arg name="buf_len" list="">
+              <value>1</value>
+              <value>1000</value>
+              <value>2.5</value>
+              <value>1</value>
+              <value>1</value>
+          </arg>
+          <arg name="huge_pages" list="">
+              <value>no</value>
+              <value>no</value>
+              <value>no</value>
+              <value reqs="HUGE_PAGES">explicit</value>
+              <value reqs="HUGE_PAGES,TRANSPARENT_HUGE_PAGES">transparent</value>
+          </arg>
+          <arg name="buf_aligned" type="boolean"/>
+      </run>
+
+      <run>
+          <script name="zc_hlrx_pkts">
+              <req id="ONLOAD_ONLY"/>
+              <req id="ONLOAD_ZC_HLRX"/>
+              <req id="SOCK_STREAM"/>
+          </script>
+          <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_ipv6"/>
+          </arg>
+          <arg name="pkt_len">
+              <value>1024</value>
+          </arg>
+          <arg name="pkts_num">
+              <value>5</value>
+          </arg>
+          <arg name="read_len">
+              <value>1500</value>
+              <value>700</value>
+              <value>100</value>
+          </arg>
+          <arg name="func">
+              <value>zc</value>
+              <value reqs="ONLOAD_ZC_HLRX_COPY">copy</value>
+              <value reqs="ONLOAD_ZC_HLRX_COPY">alternate</value>
+          </arg>
+      </run>
+      <run>
+          <script name="zc_hlrx_pkts">
+              <req id="ONLOAD_ONLY"/>
+              <req id="ONLOAD_ZC_HLRX"/>
+              <req id="SOCK_STREAM"/>
+          </script>
+          <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_ipv6"/>
+          </arg>
+          <arg name="pkt_len">
+              <!-- Choose randomly -->
+              <value>-1</value>
+          </arg>
+          <arg name="pkts_num">
+              <!-- Choose randomly -->
+              <value>-1</value>
+          </arg>
+          <arg name="read_len">
+              <!-- Choose randomly -->
+              <value>-1</value>
+          </arg>
+          <arg name="func">
+              <value reqs="ONLOAD_ZC_HLRX_COPY">random</value>
+          </arg>
+      </run>
+
+      <run>
+          <script name="zc_send_mixed_bufs">
+              <req id="ONLOAD_ONLY"/>
+              <req id="ONLOAD_ZC_SEND_USER_BUF"/>
+              <req id="SOCK_STREAM"/>
+          </script>
+          <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_ipv6"/>
+          </arg>
+          <arg name="sock_type" type="socket_tcp"/>
+          <arg name="allocation">
+              <value>two_groups_first_alloc</value>
+              <value>two_groups_first_reg</value>
+              <value>random</value>
+          </arg>
+      </run>
+
+      <run>
+          <script name="zc_recv_oob">
+              <req id="ONLOAD_ONLY"/>
+              <req id="SOCK_STREAM"/>
+              <req id="ONLOAD_ZC_RECV"/>
+          </script>
+          <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+          </arg>
+          <arg name="oob_inline">
+              <value reqs="OOB">FALSE</value>
+              <value>TRUE</value>
+          </arg>
+          <arg name="os_inline" type="boolean"/>
+          <arg name="unblock_zc" type="boolean"/>
+      </run>
+
+      <run>
+          <script name="zc_send_msg_more" track_conf="nohistory">
+              <req id="ONLOAD_ONLY"/>
+              <req id="SOCK_STREAM"/>
+              <req id="MSG_MORE"/>
+              <req id="ONLOAD_ZC_SEND"/>
+              <req id="ONLOAD_ZC_SEND_USER_BUF"/>
+              <req id="IF_DOWN_UP"/>
+          </script>
+          <arg name="env">
+              <value ref="env.peer2peer_gw"/>
+              <value ref="env.peer2peer_gw_ipv6"/>
+          </arg>
+          <arg name="split_pos">
+              <value>first</value>
+              <value>between</value>
+              <value>second</value>
+          </arg>
+          <arg name="first_zc" list="">
+              <value>FALSE</value>
+              <value>TRUE</value>
+              <value>TRUE</value>
+          </arg>
+          <arg name="second_zc" list="">
+              <value>TRUE</value>
+              <value>FALSE</value>
+              <value>TRUE</value>
+          </arg>
+      </run>
+
+      <run>
+          <script name="zc_send_user_buf_overfill">
+              <req id="ONLOAD_ONLY"/>
+              <req id="SOCK_STREAM"/>
+              <req id="ONLOAD_ZC_SEND"/>
+              <req id="ONLOAD_ZC_SEND_USER_BUF"/>
+          </script>
+          <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_ipv6"/>
+          </arg>
+          <arg name="sock_type" type="socket_tcp"/>
+          <arg name="msg_dontwait" type="boolean">
+              <value>FALSE</value>
+              <value reqs="MSG_DONTWAIT">TRUE</value>
+          </arg>
+      </run>
+
+      <run>
+          <script name="msg_onepkt">
+              <req id="ONLOAD_ONLY"/>
+              <req id="MSG_ONEPKT"/>
+          </script>
+          <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_lo" reqs="NO_LOOP_LINUX"/>
+              <value ref="env.peer2peer_lo_ipv6" reqs="NO_LOOP_LINUX"/>
+          </arg>
+          <arg name="sock_type" type="socket_tcp_active_passive"/>
+          <arg name="pkts_num">
+              <value>100</value>
+          </arg>
+          <arg name="recv_f" type="recv_func">
+              <value>recv</value>
+              <value>recvfrom</value>
+              <value>recvmsg</value>
+          </arg>
+          <arg name="random_recv_size" type="boolean" list="">
+              <value>FALSE</value>
+              <value>TRUE</value>
+              <value>TRUE</value>
+          </arg>
+          <arg name="random_recv_flag" type="boolean" list="">
+              <value>FALSE</value>
+              <value>FALSE</value>
+              <value>TRUE</value>
+          </arg>
+      </run>
+
+    </session>
+</package>

@@ -1,0 +1,42 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup reuseport SO_REUSEPORT socket option tests
+@ingroup sockapi
+@{
+
+@author Andrey Dmitrov <Andrey.Dmitrov@oktetlabs.ru>
+
+@par Tests:
+-# @ref reuseport-reuseport_del_addr_connect
+-# @ref reuseport-reuseport_after_bind
+-# @ref reuseport-reuseport_two_interfaces
+-# @ref reuseport-reuseport_tcp_time_wait
+-# @ref reuseport-reuseport_connect
+-# @ref reuseport-reuseport_reset_if
+-# @ref reuseport-reuseport_vs_reuseaddr
+-# @ref reuseport-reuseport_load_tcp
+-# @ref reuseport-reuseport_load_udp
+-# @ref reuseport-reuseport_uids
+-# @ref reuseport-reuseport_iomux
+-# @ref reuseport-reuseport_threaded_iomux
+-# @ref reuseport-reuseport_rcvtimeo
+-# @ref reuseport-reuseport_udp_wild
+-# @ref reuseport-reuseport_udp_dst
+-# @ref reuseport-mcast_reuseport
+-# @ref reuseport-move_fd_reuseport
+-# @ref reuseport-socket_closing
+-# @ref reuseport-reuseport_del_addr
+-# @ref reuseport-reuseport_tcp_wild
+-# @ref reuseport-reuseport_lacp_slave_up
+-# @ref reuseport-cluster_restart_all_orphaned
+-# @ref reuseport-cluster_restart_one_killed
+-# @ref reuseport-cluster_restart_one_closed
+-# @ref reuseport-tcp_close_listener
+-# @ref reuseport-several_clusters
+
+@}
+*/
+
+

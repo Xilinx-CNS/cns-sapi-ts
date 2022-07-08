@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<test name="congestion" type="package">
+  <objective>Testing of congestion algorithms</objective>
+  <notes/>
+  <iter result="PASSED">
+    <notes/>
+    <test name="prologue" type="script">
+      <objective/>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="epilogue" type="script">
+      <objective/>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="app_rtt" type="script">
+      <objective>Check behavior of congestion algorithm in a managed network that has bottleneck with limited throughput.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="chunk_size"/>
+        <arg name="delay"/>
+        <arg name="env"/>
+        <arg name="limit"/>
+        <arg name="set_dsack"/>
+        <arg name="set_sack"/>
+        <arg name="set_ts"/>
+        <arg name="stimulus"/>
+        <arg name="stimulus_param"/>
+        <arg name="rate"/>
+        <notes/>
+      </iter>
+    </test>
+    </iter>
+</test>

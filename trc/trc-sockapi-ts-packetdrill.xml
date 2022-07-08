@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 AMD, Inc. All rights reserved. -->
+<test name="packetdrill" type="package">
+  <objective>Packetdrill tests</objective>
+  <notes/>
+  <iter result="PASSED">
+    <notes/>
+    <test name="prologue" type="script">
+      <objective/>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="epilogue" type="script">
+      <objective/>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="base" type="script">
+      <objective>Run packetdrill tests</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">initial_window/iw10-short-response.pkt</arg>
+        <notes/>
+        <results tags="v5&amp;!scooby" key="ON-12415" notes="Congestion algorithm difference">
+          <result value="FAILED">
+            <verdict>15: error handling packet: live packet field tcp_seq: expected: 4381 (0x111d) vs actual: 1 (0x1)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">icmp/icmp-all-types.pkt</arg>
+        <notes/>
+        <results tags="v5&amp;!build_ulhelper&amp;!(scalable_passive&amp;!rss_scalable_active_passive)" key="ON-12414" notes="Will not be fixed in Onload">
+          <result value="FAILED">
+            <verdict>69: error handling packet: live packet payload: expected 0 bytes vs actual 1194 bytes</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>69: error handling packet: live packet payload: expected 0 bytes vs actual 1460 bytes</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">mss/mss-setsockopt-tcp_maxseg-server.pkt</arg>
+        <notes/>
+        <results tags="v5" key="ON-12415" notes="Congestion algorithm difference">
+          <result value="FAILED">
+            <verdict>27: error handling packet: live packet field tcp_seq: expected: 2201 (0x899) vs actual: 1 (0x1)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">mss/mss-getsockopt-tcp_maxseg-server-ts.pkt</arg>
+        <notes/>
+        <results tags="v5" key="ON-12410" notes="Will not be fixed in Onload">
+          <result value="FAILED">
+            <verdict>20: runtime error in getsockopt call: Bad getsockopt optval: expected: 1088 actual: 536</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">mss/mss-getsockopt-tcp_maxseg-client-ts.pkt</arg>
+        <notes/>
+        <results tags="v5" key="ON-12410" notes="Will not be fixed in Onload">
+          <result value="FAILED">
+            <verdict>17: runtime error in getsockopt call: Bad getsockopt optval: expected: 1088 actual: 536</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">mss/mss-setsockopt-tcp_maxseg-client.pkt</arg>
+        <notes/>
+        <results tags="v5" key="ON-12415" notes="Congestion algorithm difference">
+          <result value="FAILED">
+            <verdict>24: error handling packet: live packet field tcp_seq: expected: 2201 (0x899) vs actual: 1 (0x1)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">mss/mss-getsockopt-tcp_maxseg-client.pkt</arg>
+        <notes/>
+        <results tags="v5" key="ON-12410" notes="Will not be fixed in Onload">
+          <result value="FAILED">
+            <verdict>14: runtime error in getsockopt call: Bad getsockopt optval: expected: 1100 actual: 536</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">mss/mss-getsockopt-tcp_maxseg-server.pkt</arg>
+        <notes/>
+        <results tags="v5" key="ON-12410" notes="Will not be fixed in Onload">
+          <result value="FAILED">
+            <verdict>17: runtime error in getsockopt call: Bad getsockopt optval: expected: 1100 actual: 536</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">early_retransmit/er-delayed-get-ack-3pkt-sack.pkt</arg>
+        <notes/>
+        <results tags="v5&amp;!scooby&amp;!reuse_stack&amp;!((scalable_active|scalable_passive)&amp;!rss_scalable_active_passive)" key="ON-12415" notes="Congestion algorithm difference">
+          <result value="FAILED">
+            <verdict>17: error handling packet: live packet field tcp_seq: expected: 2921 (0xb69) vs actual: 1 (0x1)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">early_retransmit/er-delayed-filled-3pkt-sack.pkt</arg>
+        <notes/>
+        <results tags="v5" key="ON-12415" notes="Congestion algorithm difference">
+          <result value="FAILED">
+            <verdict>17: error handling packet: live packet field tcp_seq: expected: 2921 (0xb69) vs actual: 1 (0x1)</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;(reuse_stack|scooby|scalable_active|scalable_passive)&amp;!rss_scalable_active_passive" key="ON-12415" notes="Congestion algorithm difference">
+          <result value="FAILED">
+            <verdict>24: error handling packet: live packet payload: expected 0 bytes vs actual 1460 bytes</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">early_retransmit/er-delayed-3pkt-sack.pkt</arg>
+        <notes/>
+        <results tags="v5&amp;!scooby&amp;!reuse_stack&amp;!((scalable_active|scalable_passive)&amp;!rss_scalable_active_passive)" key="ON-12415" notes="Congestion algorithm difference">
+          <result value="FAILED">
+            <verdict>14: error handling packet: live packet field tcp_seq: expected: 2921 (0xb69) vs actual: 1 (0x1)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">early_retransmit/er-quick-3pkt-sack.pkt</arg>
+        <notes/>
+        <results tags="v5&amp;!scooby&amp;!reuse_stack&amp;!((scalable_active|scalable_passive)&amp;!rss_scalable_active_passive)" key="ON-12415" notes="Congestion algorithm difference">
+          <result value="FAILED">
+            <verdict>14: error handling packet: live packet field tcp_seq: expected: 2921 (0xb69) vs actual: 1 (0x1)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">early_retransmit/er-delayed-2pkt-sack.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">early_retransmit/er-quick-2pkt-sack.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">receiver_rtt/rcv-rtt-with-timestamps-new.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">receiver_rtt/rcv-rtt-without-timestamps-new.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">mss/mss-getsockopt-tcp_maxseg-server-advmss-ipv4.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">mss/mss-getsockopt-tcp_maxseg-server-advmss-ts-ipv4.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">fast_retransmit/fr-4pkt-sack-linux.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">initial_window/iw10-base-case.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">close/close-so-linger-onoff-1-linger-0-rst.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">close/close-unread-data-rst.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">close/close-read-data-fin.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">init_rto/init_rto_passive_open.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">connect/http-get-nonblocking-ts.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">shutdown/shutdown-rd-close.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">shutdown/shutdown-rdwr-close.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">shutdown/shutdown-rd-wr-close.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">shutdown/shutdown-wr-close.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">undo/undo-fr-acks-dropped-then-dsack.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">undo/undo-fr-ack-then-dsack-on-ack-below-snd_una.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">ioctl/ioctl-siocinq-fin.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">fast_recovery/prr-ss-ack-below-snd_una-reno.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">sack/sack-shift-sacked-1-2:6-fack.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">sack/sack-shift-sacked-1-2-3-fack.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">blocking/blocking-accept.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">blocking/blocking-read.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">inet_diag/inet-diag-ipv4.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">inet_diag/inet-diag-ipv4-mapped-ipv6.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">inet_diag/inet-diag-ipv6.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">listen/listen-incoming-syn-ack.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">listen/listen-incoming-ack.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">listen/listen-incoming-syn-rst.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">listen/listen-incoming-rst.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">listen/listen-incoming-no-tcp-flags.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">pmtu_discovery/pmtud-10pkt-1460-to-1160.pkt</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_name">pmtu_discovery/pmtud-1pkt-1460-to-1160.pkt</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="tcp_early_retrans_prologue" type="script">
+      <objective/>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="optval"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="tcp_rmem_prologue" type="script">
+      <objective/>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+  </iter>
+</test>

@@ -1,0 +1,139 @@
+# SPDX-License-Identifier: Apache-2.0
+# (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved.
+params:
+  medford_host: [elrond, hurin, bifur, olorin, loni, balin, farin, nali, frar, fili,
+    fror, fundin, mim, nar, oin, gloin]
+  ef100_host: [xce-fpgahost18, xce-fpgahost18-soc]
+  x3_host: [cmod-x3sim-ub1804, dellr220ae]
+  no_ipvlan: [floi, frar]
+  no_m32: [xce-fpgahost18-soc]
+  no_netns: []
+  no_syscall: [xce-fpgahost18-soc]
+  # ST-1523: Do not test vlan+macvlan on linux < 3.16
+  no_vlan_macvlan: [floi, frar]
+  # AF_XDP requires linux >= 5.4 or RHEL8 and x86_64
+  no_af_xdp: [floi, frar,
+              fror, fundin, xce-fpgahost18-soc, loni, telchar]
+# Before adding new parameter add realisation to delete it
+bad_ool_host:
+  # X3-975: No tiny_spin allowed for dellr220ae
+  # X3-906: No ip_options allowed for dellr220ae
+  dellr220ae: ["no_ip_options", "no_tiny_spin"]
+parts:
+- [ip4_testing1]
+- [ip4_testing2]
+- [ip4_testing3]
+- [ip4_testing4]
+- [ip6_testing1]
+- [ip4_testing5]
+- [ip4_testing6]
+- [ip4_testing7]
+- [ip4_testing8]
+- [ip6_testing2]
+- [ip4_testing9]
+- [ip4_testing10]
+- [ip4_testing11]
+- [transparent, cache_testing, cache_testing_ip6]
+- [ip6_testing3]
+- [ip6_testing4]
+- [ip6_testing5]
+- [ip6_testing6]
+- [bpf_testing, cong_testing]
+slices:
+  bpf_testing:
+    ools: [build_cloud, cplane_track_xdp]
+    packages: [bpf, level5/bpf]
+    reqs: [BPF]
+  cache_testing:
+    ools: [socket_cache]
+    packages: [tcp, level5/fd_caching]
+    reqs: [FD_CACHING, '!IP6_ONLOAD']
+  cache_testing_ip6:
+    ools: [socket_cache, build_cloud]
+    packages: [tcp, level5/fd_caching]
+    reqs: [FD_CACHING, 'IP6_ONLOAD']
+  cong_testing:
+    ools: []
+    packages: [congestion]
+    reqs: []
+  ip4_testing1:
+    ools: []
+    packages: [arp, route, ifcfg, reuseport]
+    reqs: ['!IP6_ONLOAD', '!RESET_NIC']
+  ip4_testing10:
+    ex_packages: [bpf, arp, route, ifcfg, reuseport, signal, basic, tcp,
+      epoll, iomux, pmtu, sockopts, checksum, fcntl, multicast, usecases, bnbvalue, sendrecv,
+      sendfile, performance, congestion, level5/fd_caching]
+    ools: []
+    reqs: ['!IP6_ONLOAD', '!BPF', '!RESET_NIC']
+  # NIC reset testing is removed from night testing for now. We wait for
+  # any reason to switch it on.
+  nic_reset_testing:
+    ools: []
+    packages: [ioctls, reuseport]
+    reqs: ['RESET_NIC']
+  ip4_testing2:
+    ools: []
+    packages: [signal]
+    reqs: ['!IP6_ONLOAD']
+  ip4_testing3:
+    ools: []
+    packages: [basic]
+    reqs: ['!IP6_ONLOAD']
+  ip4_testing4:
+    ools: []
+    packages: [tcp]
+    reqs: ['!IP6_ONLOAD', '!TCP_SUBPART']
+  ip4_testing11:
+    ools: []
+    packages: [tcp]
+    reqs: ['!IP6_ONLOAD', TCP_SUBPART]
+  ip4_testing5:
+    ools: []
+    packages: [epoll]
+    reqs: ['!IP6_ONLOAD']
+  ip4_testing6:
+    ools: []
+    packages: [iomux]
+    reqs: ['!IP6_ONLOAD']
+  ip4_testing7:
+    ools: []
+    packages: [pmtu, sockopts, checksum]
+    reqs: ['!IP6_ONLOAD']
+  ip4_testing8:
+    ools: []
+    packages: [fcntl, multicast]
+    reqs: ['!IP6_ONLOAD']
+  ip4_testing9:
+    ools: []
+    packages: [usecases, bnbvalue, sendrecv, sendfile]
+    reqs: ['!IP6_ONLOAD']
+  ip6_testing1:
+    ools: [build_cloud]
+    packages: [route, usecases, bnbvalue, udp]
+    reqs: [IP6, IP6_ONLOAD]
+  ip6_testing2:
+    ools: [build_cloud]
+    packages: [tcp]
+    reqs: [IP6, IP6_ONLOAD, '!TCP_SUBPART']
+  ip6_testing6:
+    ools: [build_cloud]
+    packages: [tcp]
+    reqs: [IP6, IP6_ONLOAD, TCP_SUBPART]
+  ip6_testing3:
+    ools: [build_cloud]
+    packages: [iomux, sendfile, ioctls]
+    reqs: [IP6, IP6_ONLOAD, '!RESET_NIC']
+  ip6_testing4:
+    ools: [build_cloud]
+    packages: [basic, sockopts]
+    reqs: [IP6, IP6_ONLOAD]
+  ip6_testing5:
+    ex_packages: [route, usecases, bnbvalue, udp, tcp, iomux, sendfile, ioctls, basic,
+      sockopts, performance, congestion, level5/fd_caching]
+    ools: [build_cloud]
+    reqs: [IP6, IP6_ONLOAD, '!BPF']
+  transparent:
+    ools: [scalable]
+    packages: []
+    reqs: [IP_TRANSPARENT, '!IP6_ONLOAD']

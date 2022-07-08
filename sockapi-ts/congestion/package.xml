@@ -1,0 +1,213 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+
+    <description>Testing of congestion algorithms</description>
+
+    <author mailto="Roman.Zhukov@oktetlabs.ru"/>
+
+    <req id="CONGESTION" sticky="true"/>
+    <req id="SOCK_STREAM" sticky="true"/>
+
+    <session track_conf="nohistory">
+
+        <prologue>
+            <script name="prologue"/>
+            <arg name="env" ref="env.peer2peer"/>
+        </prologue>
+
+        <epilogue>
+            <script name="epilogue"/>
+            <arg name="env" ref="env.peer2peer"/>
+        </epilogue>
+
+        <run>
+            <session track_conf="nohistory">
+                <arg name="env">
+                    <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="limit">
+                    <value>50000</value>
+                    <value>100000</value>
+                </arg>
+                <arg name="delay">
+                    <value>0</value>
+                    <value>50</value>
+                </arg>
+                <arg name="rate">
+                    <value>10</value>
+                </arg>
+
+                <!-- Iterations with different combinations of TCP options and
+                     without stimuli.. -->
+                <run>
+                    <script name="app_rtt"/>
+                    <arg name="set_ts">
+                        <value reqs="TCP_TS_DISABLED,RPC_RESTART">FALSE</value>
+                        <value reqs="TCP_TS_ENABLED">TRUE</value>
+                    </arg>
+                    <arg name="set_sack" type="boolean" list="">
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                        <value reqs="RPC_RESTART">FALSE</value>
+                    </arg>
+                    <arg name="set_dsack" type="boolean" list="">
+                        <value>TRUE</value>
+                        <value reqs="RPC_RESTART">FALSE</value>
+                        <value reqs="RPC_RESTART">FALSE</value>
+                    </arg>
+                    <arg name="stimulus">
+                        <value>none</value>
+                        <value>slow_start</value>
+                    </arg>
+                    <arg name="stimulus_param">
+                        <value>0</value>
+                    </arg>
+                    <arg name="chunk_size">
+                        <value>150000</value>
+                    </arg>
+                </run>
+
+                <!-- Iterations with stimuli and with default TCP options. -->
+                <run>
+                    <script name="app_rtt"/>
+                    <arg name="set_ts">
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="set_sack">
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="set_dsack">
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="stimulus">
+                        <value>drop</value>
+                        <value>duplicate</value>
+                        <!-- tc_delay program uses map element values as helpers
+                             arguments, which is prohibited in older versions
+                             of verifier: "R3 type=map_value expected=fp".
+                             See Linux commit where it was fixed: 5722569bb9c3.
+                             It is not possible to run delay stimulus on kernels
+                             prior to 4.18. So let's keep the requirement for
+                             this iteration.
+                        -->
+                        <value reqs="TST_BPF">delay</value>
+                    </arg>
+                    <arg name="stimulus_param" list="">
+                        <value>1</value>
+                        <value>10</value>
+                        <value>20</value>
+                    </arg>
+                    <arg name="chunk_size" list="">
+                        <value>150000</value>
+                        <value>150000</value>
+                        <value>7000</value>
+                    </arg>
+                </run>
+
+            </session>
+        </run>
+
+        <!-- Iterations with default (enabled) TCP options and without stimuli,
+             but with specific values for 'limit' and 'delay' parameters -->
+        <run>
+            <session track_conf="nohistory">
+                <arg name="env">
+                    <value ref="env.peer2peer"/>
+                </arg>
+                <arg name="chunk_size">
+                    <value>150000</value>
+                </arg>
+                <arg name="set_ts">
+                    <value>TRUE</value>
+                </arg>
+                <arg name="set_sack">
+                    <value>TRUE</value>
+                </arg>
+                <arg name="set_dsack">
+                    <value>TRUE</value>
+                </arg>
+                <arg name="stimulus">
+                    <value>none</value>
+                </arg>
+                <arg name="stimulus_param">
+                    <value>0</value>
+                </arg>
+                <arg name="rate">
+                    <value>10</value>
+                </arg>
+
+                <run>
+                    <script name="app_rtt"/>
+                    <arg name="limit">
+                        <value>15000</value>
+                        <value>50000</value>
+                        <value>100000</value>
+                        <value>150000</value>
+                    </arg>
+                    <arg name="delay">
+                        <value>5</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="app_rtt"/>
+                    <arg name="limit">
+                        <value>15000</value>
+                        <value>150000</value>
+                    </arg>
+                    <arg name="delay">
+                        <value>0</value>
+                        <value>50</value>
+                    </arg>
+                </run>
+
+            </session>
+        </run>
+
+        <run>
+            <session track_conf="nohistory">
+
+                <!-- Iterations with 40 Mb/s bottleneck bandwidth. -->
+                <run>
+                    <script name="app_rtt"/>
+                    <arg name="env">
+                        <value ref="env.peer2peer"/>
+                    </arg>
+                    <arg name="limit">
+                        <value>100000</value>
+                        <value>150000</value>
+                    </arg>
+                    <arg name="delay">
+                        <value>0</value>
+                        <value>50</value>
+                    </arg>
+                    <arg name="chunk_size">
+                        <value>150000</value>
+                    </arg>
+                    <arg name="set_ts">
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="set_sack">
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="set_dsack">
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="stimulus">
+                        <value>none</value>
+                    </arg>
+                    <arg name="stimulus_param">
+                        <value>0</value>
+                    </arg>
+                    <arg name="rate">
+                        <value>40</value>
+                    </arg>
+                </run>
+
+            </session>
+        </run>
+
+    </session>
+</package>

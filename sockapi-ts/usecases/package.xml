@@ -1,0 +1,874 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+    
+    <description>Main use cases of Socket API</description>
+    
+    <author mailto="Igor.Vasiliev@oktetlabs.ru"/>
+
+    <session>
+<!---
+@addtogroup arg_types
+@{
+@subsection arg_types_env_server2clients env.server2clients
+Set of environments dedicated to TCP server test.
+@}
+-->
+        <enum name="env.server2clients">
+            <value>'net':IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet:unicast}},'pco_tst1'='pco_tst'</value>
+            <value reqs="ENV-TST-LINK">'net':tester{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet:unicast}},'pco_tst1'='pco_tst'</value>
+            <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'host2_addr':inet:unicast}},'pco_tst2'='pco_tst'</value>
+            <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'host2_addr':inet:unicast}},'pco_tst2'='pco_tst'</value>
+            <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet:unicast}},'pco_tst2'='pco_tst'</value>
+            <value reqs="IP6,IP6_IP4MAPPED">{{{'pco_iut':IUT},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst1'='pco_tst'</value>
+            <value reqs="IP6,IP6_IP4MAPPED">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</value>
+            <value reqs="IP6,IP6_IP4MAPPED">{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</value>
+            <value reqs="IP6,IP6_IP4MAPPED">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</value>
+            <value reqs="IP6,IP6_ONLOAD,IP6_LINKLOCAL">{{{'pco_iut':IUT},addr:'iut_addr':inet6:linklocal},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet6:linklocal}},'pco_tst1'='pco_tst'</value>
+            <value reqs="IP6,IP6_ONLOAD,IP6_LINKLOCAL">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet6:linklocal},{{'pco_tst':tester},addr:'host2_addr':inet6:linklocal}},'pco_tst2'='pco_tst'</value>
+            <value reqs="IP6,IP6_ONLOAD,IP6_LINKLOCAL">{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iut_addr':inet6:linklocal},{{'pco_tst':tester},addr:'host2_addr':inet6:linklocal}},'pco_tst2'='pco_tst'</value>
+            <value reqs="IP6,IP6_ONLOAD,IP6_LINKLOCAL">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:linklocal}},'pco_tst2'='pco_tst','host2_addr'='iut_addr'</value>
+            <value reqs="IP6,IP6_ONLOAD">'net':IUT{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet6:unicast}},'pco_tst1'='pco_tst'</value>
+            <value reqs="ENV-TST-LINK,IP6,IP6_ONLOAD">'net':tester{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet6:unicast}},'pco_tst1'='pco_tst'</value>
+            <value reqs="ENV-TST-LINK,IP6,IP6_ONLOAD,IP6_LINKLOCAL">'net':tester{{{'pco_iut':IUT},addr:'iut_addr':inet6:linklocal},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet6:linklocal}},'pco_tst1'='pco_tst'</value>
+            <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},addr:'host2_addr':inet6:unicast}},'pco_tst2'='pco_tst'</value>
+            <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},addr:'host2_addr':inet6:unicast}},'pco_tst2'='pco_tst'</value>
+            <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:unicast}},'pco_tst2'='pco_tst'</value>
+        </enum>
+
+        <run>
+            <script name="socket_close">
+                <req id="TEST_HARNESS_SANITY"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="domain">
+                <value>PF_INET</value>
+                <value reqs="IP6">PF_INET6</value>
+            </arg>
+            <arg name="type" type="sock_stream_dgram" list="">
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="proto" list="">
+                <value>IPPROTO_TCP</value>
+                <value>IPPROTO_UDP</value>
+                <value>PROTO_DEF</value>
+                <value>PROTO_DEF</value>
+            </arg>
+        </run> 
+       
+        <run>
+            <script name="read_write">
+                <req id="SOCK_STREAM"/>
+                <req id="READ_WRITE"/>
+                <req id="TEST_HARNESS_SANITY"/>
+                <req id="L2_TS"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.p2p_ip6ip4mapped"/>
+              <value ref="env.p2p_ip6"/>
+              <value ref="env.p2p_ip6linklocal"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.p2p_tst_ip6linklocal"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+        </run>
+        <run>
+            <script name="readv_writev">
+                <req id="SOCK_STREAM"/>
+                <req id="READV_WRITEV"/>
+                <req id="TEST_HARNESS_SANITY"/>
+                <req id="L2_TS"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.p2p_ip6ip4mapped"/>
+              <value ref="env.p2p_ip6"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+        </run>
+       <run>
+            <script name="shutdown_rd">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.p2p_ip6ip4mapped"/>
+              <value ref="env.p2p_ip6"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_fake"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+        </run>
+        <run>
+            <script name="shutdown_wr">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.p2p_ip6ip4mapped"/>
+              <value ref="env.p2p_ip6"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_fake"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+        </run>
+        <run>
+            <script name="shutdown_rdwr">
+                <req id="V5_SANITY"/>
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.p2p_ip6ip4mapped"/>
+              <value ref="env.p2p_ip6"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_fake"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+        </run> 
+        <run>
+            <script name="shutdown">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.p2p_ip6ip4mapped"/>
+              <value ref="env.p2p_ip6"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_fake"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+        </run>
+        <run>
+            <script name="send_recv">
+                <req id="V5_SANITY"/>
+                <req id="L2_TS"/>
+            </script>
+            <arg name="sock_type" type="socket_type">
+                <value>udp</value>
+                <value>tcp_active</value>
+                <value>tcp_passive_close</value>
+            </arg>
+            <arg name="sock_func" type="socket_function"/>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.p2p_ip6ip4mapped"/>
+              <value ref="env.p2p_ip6"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+        </run> 
+        <run>
+            <script name="sendto_recvfrom">
+                <req id="SOCK_DGRAM"/>
+                <req id="V5_SANITY"/>
+                <req id="L2_TS"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.p2p_ip6ip4mapped"/>
+              <value ref="env.p2p_ip6"/>
+              <value ref="env.p2p_ip6linklocal"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.p2p_tst_ip6linklocal"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+        </run>
+        <run>
+            <script name="sendmsg_recvmsg">
+                <req id="SOCK_DGRAM"/>
+                <req id="SENDMSG_RECVMSG"/>
+                <req id="TEST_HARNESS_SANITY"/>
+                <req id="V5_SANITY"/>
+                <req id="L2_TS"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.p2p_ip6ip4mapped"/>
+              <value ref="env.p2p_ip6"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+        </run>
+        <run>
+            <script name="server">
+                <req id="SOCK_STREAM"/>
+                <req id="TEST_HARNESS_SANITY"/>
+                <req id="V5_SANITY"/>
+                <req id="L2_TS"/>
+            </script>
+            <arg name="env" type="env.server2clients"/>
+        </run>
+        <run>
+            <script name="getsockname_getpeername">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.p2p_ip6ip4mapped"/>
+              <value ref="env.p2p_ip6"/>
+              <value ref="env.p2p_ip6linklocal"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.p2p_tst_ip6linklocal"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+        <run>
+            <script name="ioctl">
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.p2p_ip6ip4mapped"/>
+              <value ref="env.p2p_ip6"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+        </run>
+        <run>
+            <script name="get_setsockopt">
+                <req id="SOCK_STREAM"/>
+                <req id="OOB"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.p2p_ip6ip4mapped"/>
+              <value ref="env.p2p_ip6"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_fake"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+        </run>
+
+        <run>
+            <script name="if_nameindex">
+                <req id="IF_NAMEINDEX"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+        </run>
+
+        <run>
+            <script name="multi_clients_handler">
+                <req id="SOCK_STREAM"/>
+                <req id="FORK"/>
+                <req id="FORK_ACCEPT"/>
+            </script>
+            <arg name="env">
+                <!-- IPv4 env -->
+                <value reqs="V5_SANITY">'net1':IUT{{{'pco_iut':IUT},addr:'iutaddr':inet:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},{'pco_tst3':tester}}}</value>
+                <value reqs="ENV-TST-LINK">'net':tester{{{'pco_iut':IUT},addr:'iutaddr':inet:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},{'pco_tst3':tester}}}</value>
+                <value>{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iutaddr':inet:unicast},{{'pco_tst2':tester},{'pco_tst3':tester}}}</value>
+                <value>{{{'pco_iut':IUT},{'pco_tst2':tester},addr:'iutaddr':inet:unicast},{{'pco_tst1':tester},{'pco_tst3':tester}}}</value>
+                <value>{{{'pco_iut':IUT},{'pco_tst3':tester},addr:'iutaddr':inet:unicast},{{'pco_tst1':tester},{'pco_tst2':tester}}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iutaddr':inet:unicast},{{'pco_tst2':tester},{'pco_tst3':tester}}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst2':IUT},addr:'iutaddr':inet:unicast},{{'pco_tst3':tester},{'pco_tst1':tester}}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst3':IUT},addr:'iutaddr':inet:unicast},{{'pco_tst1':tester},{'pco_tst2':tester}}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst2':tester},addr:'iutaddr':inet:unicast},{{'pco_tst3':tester}}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst2':IUT},{'pco_tst3':tester},addr:'iutaddr':inet:unicast},{{'pco_tst1':tester}}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst3':IUT},{'pco_tst1':tester},addr:'iutaddr':inet:unicast},{{'pco_tst2':tester}}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst2':IUT},addr:'iutaddr':inet:unicast},{{'pco_tst3':tester}}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst2':IUT},{'pco_tst3':IUT},addr:'iutaddr':inet:unicast},{{'pco_tst1':tester}}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst3':IUT},{'pco_tst1':IUT},addr:'iutaddr':inet:unicast},{{'pco_tst2':tester}}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst2':tester},{'pco_tst3':tester},addr:'iutaddr':inet:unicast}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst2':IUT},{'pco_tst3':tester},{'pco_tst1':tester},addr:'iutaddr':inet:unicast}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst3':IUT},{'pco_tst1':tester},{'pco_tst2':tester},addr:'iutaddr':inet:unicast}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst2':IUT},{'pco_tst3':tester},addr:'iutaddr':inet:unicast}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst2':IUT},{'pco_tst3':IUT},{'pco_tst1':tester},addr:'iutaddr':inet:unicast}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst3':IUT},{'pco_tst1':IUT},{'pco_tst2':tester},addr:'iutaddr':inet:unicast}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst2':IUT},{'pco_tst3':IUT},addr:'iutaddr':inet:unicast}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst2':IUT},{'pco_tst3':IUT},{'pco_tst1':IUT},addr:'iutaddr':inet:unicast}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst3':IUT},{'pco_tst1':IUT},{'pco_tst2':IUT},addr:'iutaddr':inet:unicast}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst2':IUT,'pco_tst3':IUT},addr:'iutaddr':inet:unicast}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst2':IUT},{'pco_tst1':IUT,'pco_tst3':IUT},addr:'iutaddr':inet:unicast}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst3':IUT},{'pco_tst1':IUT,'pco_tst2':IUT},addr:'iutaddr':inet:unicast}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst1':IUT,'pco_tst2':IUT},{'pco_tst3':tester},addr:'iutaddr':inet:unicast}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst2':IUT,'pco_tst3':IUT},{'pco_tst1':tester},addr:'iutaddr':inet:unicast}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst3':IUT,'pco_tst1':IUT},{'pco_tst2':tester},addr:'iutaddr':inet:unicast}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst1':IUT,'pco_tst2':IUT},{'pco_tst3':IUT},addr:'iutaddr':inet:unicast}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst2':IUT,'pco_tst3':IUT},{'pco_tst1':IUT},addr:'iutaddr':inet:unicast}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst3':IUT,'pco_tst1':IUT},{'pco_tst2':IUT},addr:'iutaddr':inet:unicast}}</value>
+                <value>{{{'pco_iut':IUT,'pco_tst1':IUT,'pco_tst2':IUT,'pco_tst3':IUT},addr:'iutaddr':inet:unicast}}</value>
+                <!-- IPv6 env -->
+                <value reqs="V5_SANITY,IP6,IP6_ONLOAD">'net1':IUT{{{'pco_iut':IUT},addr:'iutaddr':inet6:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},{'pco_tst3':tester}}}</value>
+                <value reqs="ENV-TST-LINK,IP6,IP6_ONLOAD">'net':tester{{{'pco_iut':IUT},addr:'iutaddr':inet6:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},{'pco_tst3':tester}}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iutaddr':inet6:unicast},{{'pco_tst2':tester},{'pco_tst3':tester}}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst2':tester},addr:'iutaddr':inet6:unicast},{{'pco_tst1':tester},{'pco_tst3':tester}}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst3':tester},addr:'iutaddr':inet6:unicast},{{'pco_tst1':tester},{'pco_tst2':tester}}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iutaddr':inet6:unicast},{{'pco_tst2':tester},{'pco_tst3':tester}}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst2':IUT},addr:'iutaddr':inet6:unicast},{{'pco_tst3':tester},{'pco_tst1':tester}}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst3':IUT},addr:'iutaddr':inet6:unicast},{{'pco_tst1':tester},{'pco_tst2':tester}}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst2':tester},addr:'iutaddr':inet6:unicast},{{'pco_tst3':tester}}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst2':IUT},{'pco_tst3':tester},addr:'iutaddr':inet6:unicast},{{'pco_tst1':tester}}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst3':IUT},{'pco_tst1':tester},addr:'iutaddr':inet6:unicast},{{'pco_tst2':tester}}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst2':IUT},addr:'iutaddr':inet6:unicast},{{'pco_tst3':tester}}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst2':IUT},{'pco_tst3':IUT},addr:'iutaddr':inet6:unicast},{{'pco_tst1':tester}}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst3':IUT},{'pco_tst1':IUT},addr:'iutaddr':inet6:unicast},{{'pco_tst2':tester}}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst2':tester},{'pco_tst3':tester},addr:'iutaddr':inet6:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst2':IUT},{'pco_tst3':tester},{'pco_tst1':tester},addr:'iutaddr':inet6:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst3':IUT},{'pco_tst1':tester},{'pco_tst2':tester},addr:'iutaddr':inet6:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst2':IUT},{'pco_tst3':tester},addr:'iutaddr':inet6:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst2':IUT},{'pco_tst3':IUT},{'pco_tst1':tester},addr:'iutaddr':inet6:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst3':IUT},{'pco_tst1':IUT},{'pco_tst2':tester},addr:'iutaddr':inet6:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst2':IUT},{'pco_tst3':IUT},addr:'iutaddr':inet6:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst2':IUT},{'pco_tst3':IUT},{'pco_tst1':IUT},addr:'iutaddr':inet6:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst3':IUT},{'pco_tst1':IUT},{'pco_tst2':IUT},addr:'iutaddr':inet6:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst2':IUT,'pco_tst3':IUT},addr:'iutaddr':inet6:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst2':IUT},{'pco_tst1':IUT,'pco_tst3':IUT},addr:'iutaddr':inet6:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst3':IUT},{'pco_tst1':IUT,'pco_tst2':IUT},addr:'iutaddr':inet6:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst1':IUT,'pco_tst2':IUT},{'pco_tst3':tester},addr:'iutaddr':inet6:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst2':IUT,'pco_tst3':IUT},{'pco_tst1':tester},addr:'iutaddr':inet6:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst3':IUT,'pco_tst1':IUT},{'pco_tst2':tester},addr:'iutaddr':inet6:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst1':IUT,'pco_tst2':IUT},{'pco_tst3':IUT},addr:'iutaddr':inet6:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst2':IUT,'pco_tst3':IUT},{'pco_tst1':IUT},addr:'iutaddr':inet6:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst3':IUT,'pco_tst1':IUT},{'pco_tst2':IUT},addr:'iutaddr':inet6:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_tst1':IUT,'pco_tst2':IUT,'pco_tst3':IUT},addr:'iutaddr':inet6:unicast}}</value>
+            </arg>
+            <arg name="method">
+                <value>forkandexec</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="pipe">
+                <req id="PIPE"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="data_size">
+                <value>*16</value>
+                <value>*17</value>
+                <value>*25</value>
+                <value>*64</value>
+            </arg>
+            <arg name="writer_child">
+                <value>FALSE</value>
+            </arg>
+            <arg name="reader_child"><value>TRUE</value></arg>
+            <arg name="block_read" type="boolean"/>
+            <arg name="write_before_fork">
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="pipe">
+                <req id="PIPE"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="data_size">
+                <value>1</value>
+                <!-- PAGE_SIZE + 1 -->
+                <value>+1</value>
+                <!-- 4 * PAGE_SIZE -->
+                <!-- On Onload this size is too big on PPC64, see SF 34303 -->
+                <value reqs="PPC64_SF_DISABLED">*4</value>
+            </arg>
+            <arg name="writer_child">
+                <value>FALSE</value>
+            </arg>
+            <arg name="reader_child" type="boolean"/>
+            <arg name="block_read" type="boolean"/>
+            <arg name="write_before_fork">
+                <value>FALSE</value>
+            </arg>
+        </run>
+        <run>
+            <script name="pipe">
+                <req id="PIPE"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="data_size">
+                <value>1</value>
+                <!-- PAGE_SIZE + 1 -->
+                <value>+1</value>
+                <!-- 4 * PAGE_SIZE -->
+                <!-- On Onload this size is too big on PPC64, see SF 34303 -->
+                <value reqs="PPC64_SF_DISABLED">*4</value>
+            </arg>
+            <arg name="writer_child">
+                <value>FALSE</value>
+            </arg>
+            <arg name="reader_child">
+                <value>TRUE</value>
+            </arg>
+            <arg name="block_read">
+                <value>FALSE</value>
+            </arg>
+            <arg name="write_before_fork" list="">
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+        <!-- Separated from 'pipe' test because of limitations-->
+        <!-- in tester reqs management -->
+        <run>
+            <script name="pipe">
+                <req id="PIPE"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="data_size">
+                <!-- PAGE size -->
+                <value>*1</value>
+            </arg>
+            <arg name="writer_child">
+                <value>TRUE</value>
+            </arg>
+            <arg name="reader_child">
+                <value reqs="V5_SANITY">FALSE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="block_read" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="sendmmsg">
+                <req id="SENDMMSG"/>
+            </script>
+            <arg name="env">
+              <value ref="env.two_nets.iut_first"/>
+              <value ref="env.two_nets.iut_second"/>
+              <value ref="env.two_nets.iut_first_ipv6"/>
+              <value ref="env.two_nets.iut_second_ipv6"/>
+              <value>{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},addr:'tst1_addr':inet:unicast}},'iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</value>
+              <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT},{'pco_tst1':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast},{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}},'tst1_addr'='iut_addr1'</value>
+              <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT},{'pco_tst1':IUT},{'pco_tst2':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast}},'tst1_addr'='iut_addr1','tst2_addr'='iut_addr2'</value>
+              <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},addr:'tst1_addr':inet6:unicast}},'iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</value>
+              <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst1':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast},{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast}},'tst1_addr'='iut_addr1'</value>
+              <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst1':IUT},{'pco_tst2':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast}},'tst1_addr'='iut_addr1','tst2_addr'='iut_addr2'</value>
+            </arg>
+            <arg name="sock_type">
+                <value reqs="SOCK_DGRAM">SOCK_DGRAM</value>
+            </arg>
+            <arg name="active">
+                <value>FALSE</value>
+            </arg>
+        </run>
+        <run>
+            <script name="sendmmsg">
+                <req id="SENDMMSG"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.p2p_ip6ip4mapped"/>
+              <value ref="env.p2p_ip6"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="sock_type">
+                <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+            </arg>
+            <arg name="active" type="boolean"/>
+        </run>
+        <run>
+            <script name="multiple_listen">
+                <req id="SOCK_STREAM"/>
+                <req id="LISTEN_BACKLOG"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.p2p_ip6ip4mapped"/>
+              <value ref="env.p2p_ip6"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="first_backlog" list="">
+                <value>10</value>
+                <value>20</value>
+            </arg>
+            <arg name="second_backlog" list="">
+                <value>20</value>
+                <value>10</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="splice">
+                <req id="SOCK_STREAM"/>
+                <req id="SPLICE"/>
+            </script>
+            <arg name="env">
+              <value>{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast}},'pco_tst2'='pco_tst1','iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</value>
+              <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast}},'pco_tst2'='pco_tst1','iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</value>
+            </arg>
+            <arg name="splice_before_data" type="boolean"/>
+            <arg name="set_move" type="boolean"/>
+            <arg name="set_nonblock" type="boolean"/>
+            <arg name="extra_pipes">
+                <value>0</value>
+            </arg>
+            <arg name="check_after_splice" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="overfill_pipe" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="acc_pipe" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="diff_stacks" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="pipe_size" list="">
+                <value reqs="V5_SANITY">unchanged</value>
+                <value reqs="F_SETPIPE_SZ">reduce</value>
+                <value reqs="F_SETPIPE_SZ">increase</value>
+                <value reqs="F_SETPIPE_SZ">large</value>
+                <!-- PAGE -->
+                <value reqs="F_SETPIPE_SZ">4096</value>
+                <!-- 2 * PAGE -->
+                <value reqs="F_SETPIPE_SZ">8192</value>
+                <!-- 1024 * 1024 -->
+                <value reqs="F_SETPIPE_SZ">1048576</value>
+            </arg>
+            <arg name="use_fcntl" list="">
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value reqs="ONLOAD_ONLY">FALSE</value>
+                <value reqs="ONLOAD_ONLY">FALSE</value>
+                <value reqs="ONLOAD_ONLY">FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="splice">
+                <req id="SOCK_STREAM"/>
+                <req id="SPLICE"/>
+            </script>
+            <arg name="env">
+              <value>{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast}},'pco_tst2'='pco_tst1','iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</value>
+              <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast}},'pco_tst2'='pco_tst1','iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</value>
+            </arg>
+            <arg name="splice_before_data" type="boolean"/>
+            <arg name="set_move" type="boolean"/>
+            <arg name="set_nonblock" type="boolean"/>
+            <arg name="extra_pipes">
+                <value>0</value>
+                <value>5</value>
+            </arg>
+            <arg name="check_after_splice" type="boolean"/>
+            <arg name="overfill_pipe" type="boolean"/>
+            <arg name="acc_pipe" type="boolean"/>
+            <arg name="diff_stacks" type="boolean">
+                <value reqs="ONLOAD_ONLY,NO_REUSE_STACK">TRUE</value>
+            </arg>
+            <arg name="pipe_size" list="">
+                <value>unchanged</value>
+                <value reqs="F_SETPIPE_SZ">reduce</value>
+                <value reqs="F_SETPIPE_SZ">increase</value>
+                <value reqs="F_SETPIPE_SZ">large</value>
+                <!-- PAGE -->
+                <value reqs="F_SETPIPE_SZ">4096</value>
+                <!-- 2 * PAGE -->
+                <value reqs="F_SETPIPE_SZ">8192</value>
+                <!-- 1024 * 1024 -->
+                <value reqs="F_SETPIPE_SZ">1048576</value>
+            </arg>
+            <arg name="use_fcntl" list="">
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value reqs="ONLOAD_ONLY">FALSE</value>
+                <value reqs="ONLOAD_ONLY">FALSE</value>
+                <value reqs="ONLOAD_ONLY">FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="splice">
+                <req id="SOCK_STREAM"/>
+                <req id="SPLICE"/>
+            </script>
+            <arg name="env">
+              <value>{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast}},'pco_tst2'='pco_tst1','iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</value>
+              <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast}},'pco_tst2'='pco_tst1','iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</value>
+            </arg>
+            <arg name="splice_before_data" type="boolean"/>
+            <arg name="set_move" type="boolean"/>
+            <arg name="set_nonblock" type="boolean"/>
+            <arg name="extra_pipes">
+                <value>0</value>
+                <value>5</value>
+            </arg>
+            <arg name="check_after_splice" type="boolean"/>
+            <arg name="overfill_pipe" type="boolean"/>
+            <arg name="acc_pipe" type="boolean">
+                <value reqs="ONLOAD_ONLY">FALSE</value>
+            </arg>
+            <arg name="diff_stacks" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="pipe_size" list="">
+                <value>unchanged</value>
+                <value reqs="F_SETPIPE_SZ">reduce</value>
+                <value reqs="F_SETPIPE_SZ">increase</value>
+                <value reqs="F_SETPIPE_SZ">large</value>
+                <!-- PAGE -->
+                <value reqs="F_SETPIPE_SZ">4096</value>
+                <!-- 2 * PAGE -->
+                <value reqs="F_SETPIPE_SZ">8192</value>
+                <!-- 1024 * 1024 -->
+                <value reqs="F_SETPIPE_SZ">1048576</value>
+            </arg>
+            <arg name="use_fcntl" list="">
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value reqs="ONLOAD_ONLY">FALSE</value>
+                <value reqs="ONLOAD_ONLY">FALSE</value>
+                <value reqs="ONLOAD_ONLY">FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="splice">
+                <req id="SOCK_STREAM"/>
+                <req id="SPLICE"/>
+            </script>
+            <arg name="env">
+              <value>{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast}},'pco_tst2'='pco_tst1','iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</value>
+              <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast}},'pco_tst2'='pco_tst1','iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</value>
+            </arg>
+            <arg name="splice_before_data" type="boolean"/>
+            <arg name="set_move" type="boolean"/>
+            <arg name="set_nonblock" type="boolean"/>
+            <arg name="extra_pipes">
+                <value>0</value>
+                <value>5</value>
+            </arg>
+            <arg name="check_after_splice" type="boolean"/>
+            <arg name="overfill_pipe" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="acc_pipe" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="diff_stacks" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="pipe_size" list="">
+                <value>unchanged</value>
+                <value reqs="F_SETPIPE_SZ">reduce</value>
+                <value reqs="F_SETPIPE_SZ">increase</value>
+                <value reqs="F_SETPIPE_SZ">large</value>
+                <!-- PAGE -->
+                <value reqs="F_SETPIPE_SZ">4096</value>
+                <!-- 2 * PAGE -->
+                <value reqs="F_SETPIPE_SZ">8192</value>
+                <!-- 1024 * 1024 -->
+                <value reqs="F_SETPIPE_SZ">1048576</value>
+            </arg>
+            <arg name="use_fcntl" list="">
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value reqs="ONLOAD_ONLY">FALSE</value>
+                <value reqs="ONLOAD_ONLY">FALSE</value>
+                <value reqs="ONLOAD_ONLY">FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="splice">
+                <req id="SOCK_STREAM"/>
+                <req id="SPLICE"/>
+            </script>
+            <arg name="env">
+              <value>{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast}},'pco_tst2'='pco_tst1','iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</value>
+              <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast}},'pco_tst2'='pco_tst1','iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</value>
+            </arg>
+            <arg name="splice_before_data" type="boolean"/>
+            <arg name="set_move" type="boolean"/>
+            <arg name="set_nonblock" type="boolean"/>
+            <arg name="extra_pipes">
+                <value>0</value>
+                <value>5</value>
+            </arg>
+            <arg name="check_after_splice" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="overfill_pipe" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="acc_pipe" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="diff_stacks" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="pipe_size" list="">
+                <value>unchanged</value>
+                <value reqs="F_SETPIPE_SZ">reduce</value>
+                <value reqs="F_SETPIPE_SZ">increase</value>
+                <value reqs="F_SETPIPE_SZ">large</value>
+                <!-- PAGE -->
+                <value reqs="F_SETPIPE_SZ">4096</value>
+                <!-- 2 * PAGE -->
+                <value reqs="F_SETPIPE_SZ">8192</value>
+                <!-- 1024 * 1024 -->
+                <value reqs="F_SETPIPE_SZ">1048576</value>
+            </arg>
+            <arg name="use_fcntl" list="">
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value reqs="ONLOAD_ONLY">FALSE</value>
+                <value reqs="ONLOAD_ONLY">FALSE</value>
+                <value reqs="ONLOAD_ONLY">FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="splice">
+                <req id="SOCK_STREAM"/>
+                <req id="SPLICE"/>
+            </script>
+            <arg name="env">
+              <value>{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast}},'pco_tst2'='pco_tst1','iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</value>
+              <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast}},'pco_tst2'='pco_tst1','iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</value>
+            </arg>
+            <arg name="splice_before_data" type="boolean"/>
+            <arg name="set_move" type="boolean"/>
+            <arg name="set_nonblock" type="boolean"/>
+            <arg name="extra_pipes">
+                <value>5</value>
+            </arg>
+            <arg name="check_after_splice" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="overfill_pipe" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="acc_pipe" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="diff_stacks" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="pipe_size" list="">
+                <value>unchanged</value>
+                <value reqs="F_SETPIPE_SZ">reduce</value>
+                <value reqs="F_SETPIPE_SZ">increase</value>
+                <value reqs="F_SETPIPE_SZ">large</value>
+                <!-- PAGE -->
+                <value reqs="F_SETPIPE_SZ">4096</value>
+                <!-- 2 * PAGE -->
+                <value reqs="F_SETPIPE_SZ">8192</value>
+                <!-- 1024 * 1024 -->
+                <value reqs="F_SETPIPE_SZ">1048576</value>
+            </arg>
+            <arg name="use_fcntl" list="">
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value reqs="ONLOAD_ONLY">FALSE</value>
+                <value reqs="ONLOAD_ONLY">FALSE</value>
+                <value reqs="ONLOAD_ONLY">FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="splice">
+                <req id="SOCK_STREAM"/>
+                <req id="SPLICE"/>
+            </script>
+            <arg name="env">
+              <!-- IPv4 env -->
+              <value reqs="ENV-TST-LINK">tester{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast}},'pco_tst2'='pco_tst1','iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</value>
+              <value>{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr1':inet:unicast}},'pco_tst2'='pco_tst1','iut_addr2'='iut_addr1','tst1_addr'='iut_addr1','tst2_addr'='iut_addr1'</value>
+              <value reqs="ENV-2PEERS">IUT{'host1'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast}},tester{'host1'{addr:'iut_addr2':inet:unicast},{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</value>
+              <value reqs="ENV-2PEERS">tester{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast}},IUT{{addr:'iut_addr2':inet:unicast},{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</value>
+              <value>{{{'pco_iut':IUT},{'pco_tst2':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast}},'iut_addr2'='iut_addr1','tst2_addr'='iut_addr1'</value>
+              <value>{{{'pco_iut':IUT},{'pco_tst1':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}},'iut_addr2'='iut_addr1','tst1_addr'='iut_addr1'</value>
+              <value reqs="ENV-TST-LINK">tester{{{'pco_iut':IUT},{'pco_tst2':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast}},'iut_addr2'='iut_addr1','tst2_addr'='iut_addr1'</value>
+              <value reqs="ENV-TST-LINK">tester{{{'pco_iut':IUT},{'pco_tst1':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}},'iut_addr2'='iut_addr1','tst1_addr'='iut_addr1'</value>
+              <!-- IPv6 env -->
+              <value reqs="ENV-TST-LINK,IP6,IP6_ONLOAD">tester{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast}},'pco_tst2'='pco_tst1','iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</value>
+              <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr1':inet6:unicast}},'pco_tst2'='pco_tst1','iut_addr2'='iut_addr1','tst1_addr'='iut_addr1','tst2_addr'='iut_addr1'</value>
+              <value reqs="ENV-2PEERS,IP6,IP6_ONLOAD">IUT{'host1'{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast}},tester{'host1'{addr:'iut_addr2':inet6:unicast},{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast}}</value>
+              <value reqs="ENV-2PEERS,IP6,IP6_ONLOAD">tester{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast}},IUT{{addr:'iut_addr2':inet6:unicast},{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast}}</value>
+              <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst2':IUT},addr:'iut_addr1':inet6:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast}},'iut_addr2'='iut_addr1','tst2_addr'='iut_addr1'</value>
+              <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst1':IUT},addr:'iut_addr1':inet6:unicast},{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast}},'iut_addr2'='iut_addr1','tst1_addr'='iut_addr1'</value>
+              <value reqs="ENV-TST-LINK,IP6,IP6_ONLOAD">tester{{{'pco_iut':IUT},{'pco_tst2':IUT},addr:'iut_addr1':inet6:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast}},'iut_addr2'='iut_addr1','tst2_addr'='iut_addr1'</value>
+              <value reqs="ENV-TST-LINK,IP6,IP6_ONLOAD">tester{{{'pco_iut':IUT},{'pco_tst1':IUT},addr:'iut_addr1':inet6:unicast},{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast}},'iut_addr2'='iut_addr1','tst1_addr'='iut_addr1'</value>
+            </arg>
+            <arg name="extra_pipes">
+                <value>0</value>
+                <value>5</value>
+            </arg>
+            <arg name="check_after_splice" type="boolean"/>
+            <arg name="splice_before_data" type="boolean"/>
+            <arg name="overfill_pipe" type="boolean"/>
+            <arg name="set_move" type="boolean"/>
+            <arg name="set_nonblock" type="boolean"/>
+            <arg name="acc_pipe" type="boolean">
+                <value>TRUE</value>
+                <value reqs="ONLOAD_ONLY">FALSE</value>
+            </arg>
+            <arg name="diff_stacks" type="boolean">
+                <value reqs="ONLOAD_ONLY,NO_REUSE_STACK">TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="pipe_size">
+                <value>unchanged</value>
+            </arg>
+            <arg name="use_fcntl">
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="ipv6_del_ll_addrs_transmit" track_conf="nohistory">
+                <req id="REMOVE_IP6_LL_ADDR"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+                <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="socket_udp_tcp"/>
+        </run>
+
+    </session>
+</package>

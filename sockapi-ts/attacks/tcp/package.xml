@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+    
+    <description>TCP-based attacks</description>
+    
+    <author mailto="Elena.Vengerova@oktetlabs.ru"/>
+
+    <req id="L2_TS" sticky="true"/>
+
+    <session>
+        <run>
+            <script name="land" track_conf="silent">
+                <req id="NO_OOL1509_NDEBUG"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+        </run>
+
+        <run>
+            <script name="syn_flood" track_conf="silent"/>
+            <arg name="env" ref="env.peer2peer"/>
+        </run>
+
+        <run>
+            <script name="flood"/>
+            <arg name="env" ref="env.peer2peer"/>
+        </run>
+
+        <run>
+             <script name="syn_spoof"/>
+             <arg name="env" type="env.two_nets"/>
+        </run>
+
+        <run>
+            <script name="syn_cookies" track_conf="silent">
+              <req id="SYN_COOKIES"/>
+              <req id="NO_REUSE_STACK"/>
+              <req id="PROC_SYS_NET"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="disable_tst_timestamps" type="boolean"/>
+            <arg name="pending_accept" type="boolean"/>
+            <arg name="use_syn_cookies" list="">
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="syn_backlog" list="">
+                <value>256</value>
+                <value>131072</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="reorder" track_conf="silent"/>
+            <arg name="env">
+                <value ref="env.peer2peer_gw"/>
+            </arg>
+        </run>
+
+        <run>
+            <script name="overlapped" track_conf="silent"/>
+            <arg name="env">
+                <value ref="env.peer2peer_gw"/>
+            </arg>
+        </run>
+    </session>
+</package>

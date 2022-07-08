@@ -1,0 +1,181 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+    
+    <description>Testing of internal send buffers reorganization after path MTU changes.</description>
+    
+    <author mailto="Alexandra.Kossovsky@oktetlabs.ru"/>
+
+    <req id="PMTU" sticky="true"/>
+    <req id="SOCK_STREAM" sticky="true"/>
+
+    <session track_conf="silent" track_conf_handdown="children">
+
+        <!-- IPv4 session -->
+        <run>
+            <session track_conf="nohistory">
+
+                <arg name="env">
+                    <value ref="env.peer2peer_gw"/>
+                </arg>
+
+                <prologue>
+                    <script name="prologue"/>
+                    <arg name="mtu">
+                        <value>1500</value>
+                    </arg>
+                </prologue>
+
+                <epilogue>
+                    <script name="epilogue"/>
+                </epilogue>
+
+                <run>
+                    <script name="steps">
+                         <req id="SO_SNDBUF"/>
+                         <req id="SO_RCVBUF"/>
+                         <req id="IF_DOWN_UP"/>
+                    </script>
+
+                    <arg name="mtu_seq">
+                        <value>1500,576</value>
+                        <value>1500,1280</value>
+                        <value reqs="TIME_CONSUMING">1280</value>
+                        <value>576</value>
+                    </arg>
+                    <arg name="retr_queue" type="boolean"/>
+                    <arg name="before_start" value="200"/>
+                    <arg name="time_limit" value="30"/>
+                    <arg name="send_buf_size">
+                        <value>65536</value>
+                    </arg>
+                    <arg name="recv_buf_size">
+                        <value>65536</value>
+                    </arg>
+                    <arg name="send_params">
+                        <!-- Simple functions. Useless in the night tests, as all
+                        such failures will be caught in the next iterations -->
+                        <value>send</value>
+                        <!--
+                        <value reqs="SENDFILE">sendfile</value>
+                        <value reqs="OOL_INTEROP,SENDFILE">sys_sendfile</value>
+                        <value>write</value>
+                        <value reqs="OOL_INTEROP">sys_write</value>
+                        <value>writev</value>
+                        <value reqs="OOL_INTEROP">sys_writev</value>
+                        -->
+
+                        <!-- Pairs of functions. It is very time-consuming to run
+                        them all -->
+                        <!--
+                        <value reqs="TIME_CONSUMING,SENDFILE">sendfile,sendfile</value>
+                        <value reqs="TIME_CONSUMING,OOL_INTEROP,SENDFILE">sendfile,sys_sendfile</value>
+                        <value reqs="TIME_CONSUMING,SENDFILE">sendfile,writev</value>
+                        <value reqs="TIME_CONSUMING,OOL_INTEROP,SENDFILE">sendfile,sys_writev</value>
+
+                        <value reqs="TIME_CONSUMING,OOL_INTEROP,SENDFILE">sys_sendfile,sys_sendfile</value>
+                        <value reqs="TIME_CONSUMING,OOL_INTEROP,SENDFILE">sys_sendfile,writev</value>
+                        <value reqs="TIME_CONSUMING,OOL_INTEROP,SENDFILE">sys_sendfile,sys_writev</value>
+                        <value reqs="TIME_CONSUMING">writev,writev</value>
+                        <value reqs="TIME_CONSUMING,OOL_INTEROP">writev,sys_writev</value>
+                        <value reqs="TIME_CONSUMING,OOL_INTEROP">sys_writev,sys_writev</value>
+                        -->
+
+                        <!-- Real configurations to test -->
+                        <value reqs="OOL_INTEROP,NO_SPIN">write,sys_write,writev,sys_writev</value>
+                        <value>write,write,writev,writev</value>
+                        <value reqs="SENDFILE,OOL_INTEROP">sendfile,sys_sendfile</value>
+                        <value reqs="OOL_INTEROP,SENDFILE,L2_TS,NO_SPIN">sendfile,sys_sendfile,writev,sys_writev</value>
+                    </arg>
+                    <arg name="passive" type="socket_tcp_boolean"/>
+                </run>
+
+            </session>
+        </run> <!-- end of IPv4 session -->
+
+        <!-- IPv6 session -->
+        <run>
+            <session track_conf="nohistory">
+
+                <arg name="env">
+                    <value ref="env.peer2peer_gw_ipv6"/>
+                </arg>
+
+                <prologue>
+                    <script name="prologue"/>
+                    <arg name="mtu">
+                        <value>1500</value>
+                    </arg>
+                </prologue>
+
+                <epilogue>
+                    <script name="epilogue"/>
+                </epilogue>
+
+                <run>
+                    <script name="steps">
+                         <req id="SO_SNDBUF"/>
+                         <req id="SO_RCVBUF"/>
+                         <!-- See ON-11990, path MTU discovery does
+                              not work properly on IPv6 in the branch -->
+                         <req id="ONLOAD7.1"/>
+                         <req id="IF_DOWN_UP"/>
+                    </script>
+
+                    <arg name="mtu_seq">
+                        <value>1500,1280</value>
+                        <value reqs="TIME_CONSUMING">1280</value>
+                    </arg>
+                    <arg name="retr_queue" type="boolean"/>
+                    <arg name="before_start" value="200"/>
+                    <arg name="time_limit" value="30"/>
+                    <arg name="send_buf_size">
+                        <value>65536</value>
+                    </arg>
+                    <arg name="recv_buf_size">
+                        <value>65536</value>
+                    </arg>
+                    <arg name="send_params">
+                        <!-- Simple functions. Useless in the night tests, as all
+                        such failures will be caught in the next iterations -->
+                        <value>send</value>
+                        <!--
+                        <value reqs="SENDFILE">sendfile</value>
+                        <value reqs="OOL_INTEROP,SENDFILE">sys_sendfile</value>
+                        <value>write</value>
+                        <value reqs="OOL_INTEROP">sys_write</value>
+                        <value>writev</value>
+                        <value reqs="OOL_INTEROP">sys_writev</value>
+                        -->
+
+                        <!-- Pairs of functions. It is very time-consuming to run
+                        them all -->
+                        <!--
+                        <value reqs="TIME_CONSUMING,SENDFILE">sendfile,sendfile</value>
+                        <value reqs="TIME_CONSUMING,OOL_INTEROP,SENDFILE">sendfile,sys_sendfile</value>
+                        <value reqs="TIME_CONSUMING,SENDFILE">sendfile,writev</value>
+                        <value reqs="TIME_CONSUMING,OOL_INTEROP,SENDFILE">sendfile,sys_writev</value>
+
+                        <value reqs="TIME_CONSUMING,OOL_INTEROP,SENDFILE">sys_sendfile,sys_sendfile</value>
+                        <value reqs="TIME_CONSUMING,OOL_INTEROP,SENDFILE">sys_sendfile,writev</value>
+                        <value reqs="TIME_CONSUMING,OOL_INTEROP,SENDFILE">sys_sendfile,sys_writev</value>
+                        <value reqs="TIME_CONSUMING">writev,writev</value>
+                        <value reqs="TIME_CONSUMING,OOL_INTEROP">writev,sys_writev</value>
+                        <value reqs="TIME_CONSUMING,OOL_INTEROP">sys_writev,sys_writev</value>
+                        -->
+
+                        <!-- Real configurations to test -->
+                        <value reqs="OOL_INTEROP,NO_SPIN">write,sys_write,writev,sys_writev</value>
+                        <value>write,write,writev,writev</value>
+                        <value reqs="SENDFILE,OOL_INTEROP">sendfile,sys_sendfile</value>
+                        <value reqs="OOL_INTEROP,SENDFILE,L2_TS,NO_SPIN">sendfile,sys_sendfile,writev,sys_writev</value>
+                    </arg>
+                    <arg name="passive" type="socket_tcp_boolean"/>
+                </run>
+
+            </session>
+        </run> <!-- end of IPv6 session -->
+
+    </session>
+</package>

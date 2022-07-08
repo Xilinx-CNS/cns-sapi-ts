@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<test name="services" type="package">
+  <objective>Common services</objective>
+  <notes/>
+  <iter result="PASSED">
+    <notes/>
+    <test name="prologue" type="script" auxiliary="true">
+      <objective/>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="slapd_ldapsearch" type="script">
+      <objective>Check that slapd and ldapsearch work together correctly.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="server">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="server">FALSE</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="dhcp_srv_bootp" type="script">
+      <objective>Check that DHCP server may process BOOTP client requests.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">'net1':IUT{'host_iut'{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,if:'if_iut1'},'host_tst1'{if:'if_tst1',addr:'tst1_la':ether:unicast}},'net2':tester{'host_iut'{addr:'iut2_addr':inet:unicast,if:'if_iut2'},'host_tst2'{if:'if_tst2',addr:'tst2_la':ether:unicast}}</arg>
+        <arg name="bind_if1">FALSE</arg>
+        <arg name="bind_if2">FALSE</arg>
+        <notes>dhcpd acceleration is disabled in L5</notes>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">'net1':IUT{'host_iut'{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,if:'if_iut1'},'host_tst1'{if:'if_tst1',addr:'tst1_la':ether:unicast}},'net2':tester{'host_iut'{addr:'iut2_addr':inet:unicast,if:'if_iut2'},'host_tst2'{if:'if_tst2',addr:'tst2_la':ether:unicast}}</arg>
+        <arg name="bind_if1">FALSE</arg>
+        <arg name="bind_if2">TRUE</arg>
+        <notes>This iteration is passed on Level5, since DHCP server works on non-Level5 interface.</notes>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">'net1':IUT{'host_iut'{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,if:'if_iut1'},'host_tst1'{if:'if_tst1',addr:'tst1_la':ether:unicast}},'net2':tester{'host_iut'{addr:'iut2_addr':inet:unicast,if:'if_iut2'},'host_tst2'{if:'if_tst2',addr:'tst2_la':ether:unicast}}</arg>
+        <arg name="bind_if1">TRUE</arg>
+        <arg name="bind_if2">FALSE</arg>
+        <notes>dhcpd acceleration is disabled in L5</notes>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">'net1':IUT{'host_iut'{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,if:'if_iut1'},'host_tst1'{if:'if_tst1',addr:'tst1_la':ether:unicast}},'net2':tester{'host_iut'{addr:'iut2_addr':inet:unicast,if:'if_iut2'},'host_tst2'{if:'if_tst2',addr:'tst2_la':ether:unicast}}</arg>
+        <arg name="bind_if1">TRUE</arg>
+        <arg name="bind_if2">TRUE</arg>
+        <notes>dhcpd acceleration is disabled in L5</notes>
+      </iter>
+    </test>
+    <test name="dhcp_srv" type="script">
+      <objective>Check that DHCP server may process DHCP client requests</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">'net1':IUT{'host_iut'{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,if:'if_iut1'},'host_tst1'{if:'if_tst1',addr:'tst1_la':ether:unicast}},'net2':tester{'host_iut'{addr:'iut2_addr':inet:unicast,if:'if_iut2'},'host_tst2'{if:'if_tst2',addr:'tst2_la':ether:unicast}}</arg>
+        <notes>dhcpd acceleration is disabled in L5</notes>
+      </iter>
+    </test>
+    <test name="dns_server" type="script">
+      <objective>Check that DNS server may process DNS client requests and interact with other DNS servers during processing.</objective>
+      <notes>The test may fail because of running DNS server on Tester1</notes>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="name">oktetlabs.ru</arg>
+        <arg name="use_tcp">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="name">oktetlabs.ru</arg>
+        <arg name="use_tcp">TRUE</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="rsh_client" type="script">
+      <objective>Check that RSH client can connect to the RSH servers and execute the command.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="rsh_server" type="script">
+      <objective>Check that RSH server may accept connections from the clients and execute the commands.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="telnet_client" type="script">
+      <objective>Check that TELNET client can connect to the TELNET server, login and execute the command.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="telnet_server" type="script">
+      <objective>Check that TELNET server may accept connections from clients.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ssh_server" type="script">
+      <objective>Check that SSH server may accept connections from clients and execute a command.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <notes/>
+        <results tags="v5" key="ON-823">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="ssh_client" type="script">
+      <objective>Check that SSH client can connect to the SSH server, login and execute a command.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ssh_port_fwd_srv" type="script">
+      <objective>Check that SSH server performs TCP forwarding properly.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <notes/>
+        <results tags="v5" key="ON-823">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="ssh_port_fwd_clnt" type="script">
+      <objective>Check that SSH server performs TCP forwarding properly.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ssh_complex" type="script">
+      <objective>Check that SSH may perform X forwarding, TCP forwarding and login/command execution simultaneously.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="server">TRUE</arg>
+        <notes/>
+        <results tags="v5" key="ON-823">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="server">FALSE</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ssh_x_fwd_srv" type="script">
+      <objective>Check that SSH performs X forwarding properly on the server side.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <notes/>
+        <results tags="v5" key="ON-823">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="ssh_x_fwd_clnt" type="script">
+      <objective>Check that SSH performs X forwarding properly on the client side.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="x_server" type="script">
+      <objective>Check that X client can interact with the X server.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="x_client" type="script">
+      <objective>Check that X client can interact with the X server.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="vnc_server" type="script">
+      <objective>Check that VNC server may act as X server and may accept connections from VNC client.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="vnc_client" type="script">
+      <objective>Check that VNC client is able to connect to VNC server.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ftp_client" type="script">
+      <objective>Check that FTP client are able to connect to FTP server for files downloading/uploading.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="ftp_client">ftp</arg>
+        <arg name="passive">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="ftp_client">ftp</arg>
+        <arg name="passive">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="ftp_client">lftp</arg>
+        <arg name="passive">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="ftp_client">lftp</arg>
+        <arg name="passive">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="ftp_client">ncftp</arg>
+        <arg name="passive">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="ftp_client">ncftp</arg>
+        <arg name="passive">FALSE</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ftp_put_get" type="script">
+      <objective>Check that FTP server properly receives/sends data via secondary connection in active and passive modes.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="passive">TRUE</arg>
+        <arg name="get">TRUE</arg>
+        <arg name="server">vsftpd</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="passive">TRUE</arg>
+        <arg name="get">TRUE</arg>
+        <arg name="server">xinetd_vsftpd</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="passive">TRUE</arg>
+        <arg name="get">FALSE</arg>
+        <arg name="server">vsftpd</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="passive">TRUE</arg>
+        <arg name="get">FALSE</arg>
+        <arg name="server">xinetd_vsftpd</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="passive">FALSE</arg>
+        <arg name="get">TRUE</arg>
+        <arg name="server">vsftpd</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="passive">FALSE</arg>
+        <arg name="get">TRUE</arg>
+        <arg name="server">xinetd_vsftpd</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="passive">FALSE</arg>
+        <arg name="get">FALSE</arg>
+        <arg name="server">vsftpd</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="passive">FALSE</arg>
+        <arg name="get">FALSE</arg>
+        <arg name="server">xinetd_vsftpd</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="passive">TRUE</arg>
+        <arg name="get">TRUE</arg>
+        <arg name="server">wuftpd</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="passive">TRUE</arg>
+        <arg name="get">TRUE</arg>
+        <arg name="server">proftpd</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="passive">TRUE</arg>
+        <arg name="get">TRUE</arg>
+        <arg name="server">xinetd_proftpd</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="passive">TRUE</arg>
+        <arg name="get">FALSE</arg>
+        <arg name="server">wuftpd</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="passive">TRUE</arg>
+        <arg name="get">FALSE</arg>
+        <arg name="server">proftpd</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="passive">TRUE</arg>
+        <arg name="get">FALSE</arg>
+        <arg name="server">xinetd_proftpd</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="passive">FALSE</arg>
+        <arg name="get">TRUE</arg>
+        <arg name="server">wuftpd</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="passive">FALSE</arg>
+        <arg name="get">TRUE</arg>
+        <arg name="server">proftpd</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="passive">FALSE</arg>
+        <arg name="get">TRUE</arg>
+        <arg name="server">xinetd_proftpd</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="passive">FALSE</arg>
+        <arg name="get">FALSE</arg>
+        <arg name="server">wuftpd</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="passive">FALSE</arg>
+        <arg name="get">FALSE</arg>
+        <arg name="server">proftpd</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="passive">FALSE</arg>
+        <arg name="get">FALSE</arg>
+        <arg name="server">xinetd_proftpd</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ftp_file" type="script">
+      <objective>Check that FTP server allows downloading of the one file by several clients from different offsets.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="server">vsftpd</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="server">xinetd_vsftpd</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="server">wuftpd</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="server">proftpd</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="server">xinetd_proftpd</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ftp_many" type="script">
+      <objective>Check that FTP server properly satisfies PUT and GET requested simultaneously via one control connection.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="passive">TRUE</arg>
+        <arg name="server">vsftpd</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="passive">TRUE</arg>
+        <arg name="server">xinetd_vsftpd</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="passive">FALSE</arg>
+        <arg name="server">vsftpd</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="passive">FALSE</arg>
+        <arg name="server">xinetd_vsftpd</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ifconfig_get" type="script">
+      <objective>Check that "ifconfig", "ifconfig -a" and "ifconfig" for particular device return the same and correct parameters.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ifconfig_a" type="script">
+      <objective>Check that "-a" option has effect for "ifconfig".</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ifconfig_stat" type="script">
+      <objective>Check that "ifconfig", "ifconfig -a" and "ifconfig" for particular device return the same and correct statistics.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <notes>The test is Linux-specific. Solaris and FreeBSD do not provide statistics in 'ifconfig' output.</notes>
+        <results tags="v5&amp;vlan" key="ON-1074">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="ifconfig_set" type="script">
+      <objective>Check that interface parameters may be changed using "ifconfig".</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="smtp_srv_clnt" type="script">
+      <objective>Check that SMTP server may receive and relay E-mail.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="server">sendmail</arg>
+        <notes>See OL 864 for some history.</notes>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="server">postfix</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="server">exim</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="server">qmail</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="netstat" type="script">
+      <objective>Check that "netstat" utility provides the information about TCP and UDP servers and TCP connections.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <notes/>
+        <results tags="v5" key="ON-778">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="epilogue" type="script" auxiliary="true">
+      <objective/>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</arg>
+        <notes/>
+      </iter>
+    </test>
+  </iter>
+</test>

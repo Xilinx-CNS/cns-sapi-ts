@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<test name="bpf" type="package">
+  <objective>Onload specific BPF/XDP tests</objective>
+  <notes/>
+  <iter result="PASSED">
+    <notes/>
+    <test name="../../bpf/prologue" type="script">
+      <objective/>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="xdp_attach_to_stack" type="script">
+      <objective>Check that XDP program correctly works on a specific Onload stack and does not affect other stacks</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="link_before"/>
+        <arg name="wild_if"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="xdp_one_stack_two_ifs" type="script">
+      <objective>Check XDP program attachment to different interfaces and one stack</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <arg name="xdp_link_if"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="xdp_two_stacks" type="script">
+      <objective>Check that multiple XDP programs can be attached to multiple stacks</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="wild_if"/>
+        <arg name="wild_stack"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="xdp_same_stack" type="script">
+      <objective>Check that multiple XDP programs cannot be attached to a single stack/interface pair.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="link_before"/>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+    </test>
+  </iter>
+</test>

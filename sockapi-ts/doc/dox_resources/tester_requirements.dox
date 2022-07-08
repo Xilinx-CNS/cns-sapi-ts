@@ -1,0 +1,512 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+@defgroup tester_requirements Tester requirements list
+@{
+@table_2c_head1{Requirement name}
+@table_2c_head2{Description}
+
+@table_2c_section Requirements to control tests execuition flow:
+@table_2c_first BROKEN
+@table_2c_second                Tests which are currenty broken and should
+                            not be run in nigth testing (in comments
+                            Bug ID registered for the problem
+                            should be mentioned)
+@table_2c_first EF100_BROKEN
+@table_2c_second            Tests which are currenty broken on EF100 NICs and
+                            should not be run in night testing (in comments
+                            Bug ID registered for the problem
+                            should be mentioned)
+@table_2c_first X3_BROKEN
+@table_2c_second            Tests which are currenty broken on X3 NICs and
+                            should not be run in night testing (in comments
+                            Bug ID registered for the problem
+                            should be mentioned)
+@table_2c_first TIME_CONSUMING
+@table_2c_second        Time consuming tests, useful for manual runs
+@table_2c_first TEST_HARNESS_SANITY
+@table_2c_second   Tests to be run to check TE sanity
+@table_2c_first V5_SANITY
+@table_2c_second             Tests to be run to check V5 sanity
+@table_2c_first SF_BLACKLIST
+@table_2c_second          There is a bug with Onload, test won't be
+                            launched in the night testing
+@table_2c_first TCP_SUBPART
+@table_2c_second          This test req marks some part of tests in tcp
+                          package to split this package in night testing
+
+@table_2c_section Network interfaces configuration requirements:
+@table_2c_first NO_VLAN
+@table_2c_second               Tests which should not be run over VLAN
+                            interface (for example, tests parsing/sending
+                            raw ethernet packets or creating VLANs)
+@table_2c_first TEAM,BOND
+@table_2c_second The test creates teaming or bonding interface
+@table_2c_first MACVLAN
+@table_2c_second The test creates MAC VLAN interface on IUT
+@table_2c_first IPVLAN
+@table_2c_second The test creates IP VLAN interface on IUT
+@table_2c_first CREATE_NET_IF
+@table_2c_second The test creates any net interface: VLAN, MAC VLAN
+                            or bond/team
+@table_2c_first NETNS
+@table_2c_second The test creates network namespaces on IUT
+@table_2c_first NO_MACVLAN
+@table_2c_second The test should not be run on MAC VLAN interface
+@table_2c_first NO_IPVLAN
+@table_2c_second The test should not be run on IP VLAN interface
+@table_2c_first NO_TWO_IF_LEVELS
+@table_2c_second The test should not be run on more than one level of VLAN / MAC VLAN.
+@table_2c_first NO_TEAM4
+@table_2c_second The test should not be run with teaming 4
+@table_2c_first IF_DOWN_UP
+@table_2c_second The test switches the network interfaces down/up
+@table_2c_first MTU_500_OR_LESS
+@table_2c_second The test sets the MTU value equal to or less than 500
+
+@table_2c_section Architecture-specific requirements (really used for x86 only; ppc case
+should be fixed):
+@table_2c_first KERNEL_32
+@table_2c_second Run only if IUT system has 32-bit kernel
+@table_2c_first KERNEL_64
+@table_2c_second Run only if IUT system has 64-bit kernel
+@table_2c_first UL_32
+@table_2c_second Run only if IUT system has 32-bit userland
+@table_2c_first UL_64
+@table_2c_second Run only if IUT system has 64-bit userland
+
+@table_2c_section A sort of per-branch SF_BLACKLIST:
+@table_2c_first OOL1502
+@table_2c_second Do not run for releases older than ool1502 onload_dev branch
+@table_2c_first OOL1509
+@table_2c_second Do not run for ool1509 or older branches
+@table_2c_first OOL1606
+@table_2c_second Do not run for ool1606 or older branches
+@table_2c_first NO_OOL1509_NDEBUG
+@table_2c_second Do not run for ool1509 with debug build
+@table_2c_first OOL1710
+@table_2c_second Do not run for ool1710 or older branches
+@table_2c_first OOL1805
+@table_2c_second Do not run for ool1805 or older branches
+@table_2c_first NEW_CPLANE
+@table_2c_second Do not run for branches with old cplane
+@table_2c_first OOL1811
+@table_2c_second Do not run for ool1811 or older branches
+
+@table_2c_section Socket API and other functions specific features:
+@table_2c_first SOCK_DGRAM
+@table_2c_second            Tests which use SOCK_DGRAM sockets
+@table_2c_first SOCK_STREAM
+@table_2c_second           Tests which use SOCK_STREAM sockets
+@table_2c_first TCP_ACTIVE
+@table_2c_second           Tests which use active open TCP sockets
+@table_2c_first SOCK_NONBLOCK
+@table_2c_second Tests which set SOCK_NONBLOCK flag for IUT socket
+@table_2c_first SOCK_CLOEXEC
+@table_2c_second Tests which set SOCK_CLOEXEC flag for IUT socket
+
+@table_2c_first SIMULTANEOUS_OPEN
+@table_2c_second     Tests which call connect() simultaneously on
+                            both sides to create TCP connection
+
+@table_2c_first FORK
+@table_2c_second                Tests which use FORK
+@table_2c_first THREADS
+@table_2c_second             Tests which use threads
+@table_2c_first EXEC
+@table_2c_second                Tests which use EXEC
+@table_2c_first DUP
+@table_2c_second                 Tests using dup(), dup2(), fcntl(F_DUPFD) and similar
+
+@table_2c_first SIGNALS
+@table_2c_second             Tests which use signals
+@table_2c_first SIGNAL
+@table_2c_second             Tests which use signal() (assuming it works like
+                             bsd_signal())
+@table_2c_first BSD_SIGNAL
+@table_2c_second             Tests which use bsd_signal()
+@table_2c_first SYSV_SIGNAL
+@table_2c_second             Tests which use sysv_signal()
+@table_2c_first __SYSV_SIGNAL
+@table_2c_second             Tests which use __sysv_signal()
+@table_2c_first CALL_DURATION
+@table_2c_second       Tests which check call duration to be correct
+@table_2c_first ROUTE_POLICY
+@table_2c_second        Tests which require support of policy based routing
+@table_2c_first IPV6_RT_RULE_FROM
+@table_2c_second        Tests which use IPv6 source policy routing rule
+@table_2c_first MULTIPATH
+@table_2c_second        Tests which require ECMP (Multipath) support
+@table_2c_first MCAST_LOCAL_ADDR
+@table_2c_second        Tests which assign a multicast address as a local
+
+@table_2c_first OOB
+@table_2c_second                 Tests on TCP urgent (out-of-band) data
+@table_2c_first AIO
+@table_2c_second                 Tests on asynchronous input/output
+@table_2c_first FCNTL
+@table_2c_second               Tests on fcntl()
+@table_2c_first SENDFILE
+@table_2c_second            Tests on sendfile()
+@table_2c_first RECVMMSG
+@table_2c_second            Tests on recvmmsg() syscall
+@table_2c_first MSG_CONTROL
+@table_2c_second         Tests on msg_control field in struct msghdr
+@table_2c_first MSG_WAITALL
+@table_2c_second         Tests on MSG_WAITALL flag in recvmsg flags
+@table_2c_first MSG_MORE
+@table_2c_second            Tests on MSG_MORE flag in sendmsg flags
+@table_2c_first MSG_TRUNC
+@table_2c_second           Tests on MSG_TRUNC flag in recvmsg flags
+@table_2c_first MSG_CTRUNC
+@table_2c_second          Tests on MSG_CTRUNC flag in recvmsg flags
+@table_2c_first MSG_MCAST
+@table_2c_second           Tests on MSG_MCAST flag in recvmsg flags
+@table_2c_first MSG_BCAST
+@table_2c_second           Tests on MSG_BCAST flag in recvmsg flags
+@table_2c_first MSG_DONTWAIT
+@table_2c_second        Tests on MSG_DONTWAIT flag in recvmsg flags
+@table_2c_first MSG_DONTROUTE
+@table_2c_second       Tests on MSG_DONTROUTE flag in recvmsg flags
+@table_2c_first MSG_NOSIGNAL
+@table_2c_second        Tests on MSG_NOSIGNAL flag in recvmsg flags
+@table_2c_first MSG_PEEK
+@table_2c_second            Tests on MSG_PEEK flag in recvmsg flags
+@table_2c_first LISTEN_BACKLOG
+@table_2c_second      Tests the backlog value in listen() call
+@table_2c_first FSTAT
+@table_2c_second               Tests on fstat()
+
+@table_2c_section Input/output multiplexing functions requirements:
+@table_2c_first POLL
+@table_2c_second                poll()
+@table_2c_first PPOLL
+@table_2c_second               ppoll()
+@table_2c_first SELECT
+@table_2c_second              select()
+@table_2c_first PSELECT
+@table_2c_second             pselect()
+@table_2c_first EPOLL
+@table_2c_second               Tests on epoll functions
+@table_2c_first EPOLL_PWAIT
+@table_2c_second         epoll_pwait(); EPOLL req is mandatory
+@table_2c_first EPOLL_CREATE1
+@table_2c_second       epoll_create1()
+@table_2c_first EPOLL_MULTI_LEVEL
+@table_2c_second   Tests for epoll fd in poll/select/epoll
+@table_2c_first EPOLL_CTL_EARLY
+@table_2c_second     Tests with epoll_ctl() being called just after socket
+                          is created (i.e. before connect(), listen(), bind())
+
+@table_2c_section Onload specific API:
+@table_2c_first ONLOAD_ONLY
+@table_2c_second         Tests which are REALLY USELESS without Onload
+@table_2c_first SF_WODA
+@table_2c_second             Wire order delivery via epoll
+@table_2c_first ONLOAD_ZC_SEND
+@table_2c_second      Send operation with Zero-copy API
+@table_2c_first ONLOAD_ZC_SEND_USER_BUF
+@table_2c_second      onload_zc_send() with onload_zc_register_buffers()
+@table_2c_first ONLOAD_ZC_HLRX
+@table_2c_second      Onload high-level receive API
+@table_2c_first ONLOAD_ZC_HLRX_COPY
+@table_2c_second      Onload high-level receive API, onload_zc_hlrx_recv_copy()
+@table_2c_first ONLOAD_ZC_RECV
+@table_2c_second      Receive operation with Zero-copy API
+@table_2c_first ONLOAD_FD_STAT
+@table_2c_second      Function which returns internal details of file descriptor
+@table_2c_first ONLOAD_IS_PRESENT
+@table_2c_second      Function which checks present of onload
+@table_2c_first ONLOAD_SET_RECV_FILTER
+@table_2c_second      Function which installs a callback that can intercept data
+                        obtained be receive functions
+@table_2c_first MSG_WARM
+@table_2c_second      Flag for send functions to keep the send path warm
+@table_2c_first MSG_ONEPKT
+@table_2c_second      Flag for receive functions to receive datat only up to
+                        next packet boundary
+@table_2c_first SF_ODS
+@table_2c_second              Send operation with Onload delegated API
+@table_2c_first SF_ODS_COMPL
+@table_2c_second        Use ODS API, send data when _complete() is called
+@table_2c_first SF_ODS_RAW
+@table_2c_second          Use ODS API, send data with oo_raw_send()
+@table_2c_first OOL_INTEROP
+@table_2c_second         Interoperability of OOL calls with system ones
+@table_2c_first NO_PHYS_MODE
+@table_2c_second Tests and iterations which should not be run with ool=phys_mode
+@table_2c_first FD_CACHING
+@table_2c_second Tests and iterations in which the fd caching mode should be enabled.
+@table_2c_first FD_CACHE_INCOMPATIBLE
+@table_2c_second Tests and iterations which are incompatible with the fd caching mode.
+@table_2c_first OO_EPOLL_CHECK_ORDER
+@table_2c_second Tests which check data order with onload_ordered_epoll_wait().
+@table_2c_first FEW_ACCEL_PROCESSES
+@table_2c_second Tests which use more than one accelerated processes
+@table_2c_first NO_SCALABLE_IUT
+@table_2c_second Tests which not compatible with one scalable IUT interface
+@table_2c_first NO_SCALABLE
+@table_2c_second Tests which not compatible with all scalable IUT interfaces
+@table_2c_first NO_SCALABLE_ACTIVE_PASSIVE
+@table_2c_second Tests which not compatible with scalable active passive testing
+@table_2c_first SCALABLE
+@table_2c_second Tests which require some scalable filters being enabled
+@table_2c_first RSS_SCALABLE
+@table_2c_second Tests which require some RSS scalable filters being enabled
+@table_2c_first SCALABLE_FILTERS_ENABLE_WORKER
+@table_2c_second Tests which require some RSS scalable filters being enabled
+                 with a special SCALABLE_FILTERS_ENABLE_WORKE mode
+@table_2c_first ONLOAD_ZC_RELEASE_OS_INLINE
+@table_2c_second Tests checking explicit release of Onload ZC buffer with kernel data
+@table_2c_first ONLOAD_UDP_OUT_OF_RESOURCES
+@table_2c_second Tests which use UDP sockets to check out of hardware resources
+@table_2c_first SECOND_IF_ACCELERATED
+@table_2c_second Tests which require accelerated connection via second interface on IUT
+@table_2c_first VFORK_MODE_2
+@table_2c_second Tests which enable @c EF_VFORK_MODE=2 mode
+@table_2c_first NO_AF_XDP
+@table_2c_second Tests and iterations which are incompatible with AF_XDP.
+
+@table_2c_section Network configuration requirements:
+@table_2c_first ENV-2LINKS-IUT
+@table_2c_second      Two IUT ethernet links between a signle pair of peers
+@table_2c_first ENV-2PEERS
+@table_2c_second          Two tester peers with single link to each peer, from IUT and TST interfaces
+@table_2c_first ENV-2PEERS-IUT
+@table_2c_second      Two tester peers with single link from IUT interfaces to each peer
+@table_2c_first ENV-GW
+@table_2c_second              Gateway behind IUT interface
+@table_2c_first ENV-IUT-FAKE-ADDR
+@table_2c_second   One peer with single link from IUT interface and fake
+                          address on TST interface (used mostly for
+                          IP_TRANSPARENT testing)
+@table_2c_first ENV-LOOPBACK
+@table_2c_second        Loopback
+@table_2c_first ENV-TRIANGLE
+@table_2c_second        Ethernet link between each of three peers
+@table_2c_first ENV-TST-GW
+@table_2c_second          Gateway behind TST interface
+@table_2c_first ENV-TST-LINK
+@table_2c_second        One peer with single link from TST interface
+@table_2c_first ONE-TESTER
+@table_2c_second        Configuration with one tester: only IUT + TST1 are used
+
+@table_2c_section IP6 addressing:
+@table_2c_first IP6
+@table_2c_second                 Support IPv6
+@table_2c_first IP6_FULL
+@table_2c_second            Full IPv6 addresses are used
+@table_2c_first IP6_IP4MAPPED
+@table_2c_second       IPv4 mapped to IPv6 addresses
+@table_2c_first IP6_MULTIPATH
+@table_2c_second       IPv6 addresses in multipath routes
+@table_2c_first KEEP_ADDR_ON_DOWN
+@table_2c_second       Tests setting keep_addr_on_down option
+
+@table_2c_section Socket option requirements:
+@table_2c_first SO_BINDTODEVICE
+@table_2c_second
+@table_2c_first SO_REUSEADDR
+@table_2c_second
+@table_2c_first TCP_CORK
+@table_2c_second
+@table_2c_first SO_RCVTIMEO
+@table_2c_second
+@table_2c_first SO_SNDTIMEO
+@table_2c_second
+@table_2c_first SO_LINGER
+@table_2c_second
+@table_2c_first SO_TIMESTAMP
+@table_2c_second
+@table_2c_first SO_TIMESTAMPNS
+@table_2c_second
+@table_2c_first SO_SNDBUFFORCE
+@table_2c_second
+@table_2c_first SO_RCVBUFFORCE
+@table_2c_second
+@table_2c_first IP_RECVERR, IPV6_RECVERR
+@table_2c_second
+@table_2c_first IP_MTU, IPV6_MTU, IP_MTU_DISCOVER, IPV6_MTU_DISCOVER
+@table_2c_second
+@table_2c_first IPV6_TCLASS
+@table_2c_second
+@table_2c_first IPV6_RECVTCLASS
+@table_2c_second
+@table_2c_first IP_TOS
+@table_2c_second
+@table_2c_first IP_RECVTOS
+@table_2c_second
+@table_2c_first IP_TTL
+@table_2c_second
+@table_2c_first IP_RECVTTL
+@table_2c_second
+@table_2c_first IPV6_UNICAST_HOPS
+@table_2c_second
+@table_2c_first IPV6_RECVHOPLIMIT
+@table_2c_second
+@table_2c_first IP_PKTINFO
+@table_2c_second    This is set both for tests checking IP_PKTINFO and for tests checking IPV6_RECVPKTINFO
+@table_2c_first IPV6_PKTINFO
+@table_2c_second
+@table_2c_first IPV6_RECVPKTINFO
+@table_2c_second
+@table_2c_first IPV6_AUTOFLOWLABEL
+@table_2c_second
+
+@table_2c_section Fcntl flags requirements:
+@table_2c_first F_GETOWN
+@table_2c_second
+@table_2c_first F_SETOWN
+@table_2c_second
+@table_2c_first F_GETFL
+@table_2c_second
+@table_2c_first F_SETFL
+@table_2c_second
+@table_2c_first O_ASYNC
+@table_2c_second
+@table_2c_first O_NONBLOCK
+@table_2c_second
+@table_2c_first O_CLOEXEC
+@table_2c_second
+@table_2c_first F_DUPFD_CLOEXEC
+@table_2c_second
+
+@table_2c_section Ioctls:
+@table_2c_first SIOCGSTAMP
+@table_2c_second
+@table_2c_first SIOCGSTAMPNS
+@table_2c_second
+
+@table_2c_section Function availability requirements:
+@table_2c_first ACCEPT4
+@table_2c_second
+@table_2c_first PIPE2
+@table_2c_second
+@table_2c_first RECVMMSG
+@table_2c_second
+@table_2c_first SENDMMSG
+@table_2c_second
+@table_2c_first CHK_FUNC
+@table_2c_second    Tests checking __[func]_chk() versions of some functions
+@table_2c_first NO_CHK_FUNCS
+@table_2c_second    Tests which should not be run with --ool=use_chk_funcs
+@table_2c_first SETUID
+@table_2c_second    Tests which use setuid() function
+
+@table_2c_section Others:
+@table_2c_first TAPI_TCP_STATES
+@table_2c_second       Tests using tapi_tcp_states (TSA) library
+                            to test TCP states. This library uses
+                            TCP_INFO socket option, but it does not
+                            imply setting TCP_INFO requirement since
+                            only tcpi_state field is used.
+@table_2c_first MANY_SOCKETS
+@table_2c_second        Tests which create maximum number of sockets
+@table_2c_first BIND_BROADCAST
+@table_2c_second      Bind to broadcast address
+@table_2c_first READ_WRITE
+@table_2c_second          read() and write() of sockets
+@table_2c_first READV_WRITEV
+@table_2c_second        readv() and writev() of sockets
+@table_2c_first SENDMSG_RECVMSG
+@table_2c_second     sendmsg() and recvmsg()
+@table_2c_first LISTEN_WITHOUT_BIND
+@table_2c_second listen() call on non-binded socket
+@table_2c_first IF_NAMEINDEX
+@table_2c_second        if_nameindex() 
+@table_2c_first SELECT_FILE
+@table_2c_second         select() for non-socket file descriptors
+@table_2c_first LINUX_SPECIFIC
+@table_2c_second      Tests on Linux-specific features
+@table_2c_first LINUX_BEHAVIOUR
+@table_2c_second     Tests on Linux-like behaviour
+@table_2c_first ARP
+@table_2c_second                 ARP tests
+@table_2c_first ROUTE
+@table_2c_second               Routing tests
+@table_2c_first SERVICES
+@table_2c_second            Tests on services
+@table_2c_first ATTACKS
+@table_2c_second             Tests on attacks
+@table_2c_first UDP
+@table_2c_second                 Tests on UDP issues (udp package)
+@table_2c_first DANGEROUS
+@table_2c_second           Tests which may break LAN (for example, tests
+                          changing default gateway on the host)
+@table_2c_first ACCEPT_EX
+@table_2c_second           Test which calls AcceptEx()
+@table_2c_first CONNECT_EX
+@table_2c_second          Test which calls ConnectEx()
+@table_2c_first DISCONNECT_EX
+@table_2c_second       Test which calls DisconnectEx()
+@table_2c_first TRANSMIT_FILE
+@table_2c_second       Test which calls TransmitFile()
+@table_2c_first TRANSMIT_PACKETS
+@table_2c_second    Test which calls TransmitPackets()
+@table_2c_first LISTEN_SHUTDOWN
+@table_2c_second     Call listen() after shutdown
+@table_2c_first MTU_CONFIG
+@table_2c_second          Test requires MTU address re-configuration
+
+@table_2c_first IF_LL_ADDRESS_CONFIG
+@table_2c_second        Test requires interface MAC address
+                                  re-configuration
+@table_2c_first IF_LL_BCAST_ADDRESS_GET
+@table_2c_second     Test requires interface broadcast MAC address get
+@table_2c_first IF_LL_BCAST_ADDRESS_CONFIG
+@table_2c_second  Test requires interface broadcast MAC address
+                                  re-configuration
+
+@table_2c_first SMALL_RLIMIT_NOFILE
+@table_2c_second Tests which set small RLIMIT_NOFILE value
+
+@table_2c_first RPC_RESTART
+@table_2c_second Tests in which it's required to restart the RPC server or
+                 recreate Onload stack
+
+@table_2c_first TCP_TS_ENABLED
+@table_2c_second Tests which require enabled TCP timestamps
+@table_2c_first TCP_TS_DISABLED
+@table_2c_second Tests which require disabled TCP timestamps
+@table_2c_first CHANGE_DEFAULT_ROUTE
+@table_2c_second Tests which change default route
+
+@table_2c_first TCP_ISN_REUSE
+@table_2c_second TCP tests which check ISN selection when reusing 4-tuple
+
+@table_2c_first TCP_BLIND_WINDOW
+@table_2c_second TCP tests which check resilience to Blind Window Attacks
+
+@table_2c_first BNB_PARAM_CHECK
+@table_2c_second Tests which require handling bad input parameters in various
+                 socket function (such as sockopt and ioctl)
+
+@table_2c_first BNB_PARAM_CHECK_ACCEPT
+@table_2c_second Tests which require handling bad input parameters in various
+                 socket function for accepted sockets.
+                 A special case of BNB_PARAM_CHECK.
+
+@table_2c_first HUGE_PAGES
+@table_2c_second Tests which use huge memory pages
+
+@table_2c_first TRANSPARENT_HUGE_PAGES
+@table_2c_second Tests which use transparent huge memory pages
+
+@table_2c_first SYSCTL_TCP_EARLY_RETRANS
+@table_2c_second Tests which set @c /proc/sys/net/ipv4/tcp_early_retrans option
+
+@table_2c_first RT_SRC_NONSFC
+@table_2c_second Tests with a route having preferred source address on a
+                 non-Solarflare interface
+
+@table_2c_first MEMORY_HOG
+@table_2c_second Tests which consume a lot of memory and may invoke oom-killer
+                 on some hosts, e.g. virtual hosts or SOCs
+
+@table_2c_first RX_CHECKSUM
+@@table_2c_second Tests which verify RX checksumming
+
+@table_2c_end
+
+@}
+*/

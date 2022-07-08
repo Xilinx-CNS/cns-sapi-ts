@@ -1,0 +1,63 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup usecases Reliability in Normal Use
+@ingroup sockapi
+@{
+
+Test suite on reliability in normal use following Socket API functions:
+@b socket(), @b close(), @b shutdown(), @b read(), @b write(), @b readv(),
+@b writev(), @b send(), @b recv(), @b sendto(), @b recvfrom(), 
+@b sendmsg(), @b recvmsg(), @b bind(), @b connect(), @b listen(),
+@b accept(), @b pselect(),
+@b getsockopt(), @b setsockopt(), @b ioctl(), @b getsockname(), 
+@b getpeername(), @b if_nameindex(), @b if_nametoindex(),
+@b if_indextoname(), @b if_freenameindex().
+
+Classical TCP server using @b fork() is tested with remotely and locally
+connected clients.
+
+Advanced features are not checked here.
+Semantic of the socket options and IOCTL requests are not explored here, 
+but a possibility of using both @b getsockopt()/setsockopt() and @b ioctl() 
+is checked.
+
+Interoperability with Linux BSD Socket implementation is verified by means
+of applying following testing scheme. There are two sides involved 
+in interoperations:
+ - TESTER side (running on native Linux OS);
+ - IUT side (using tested functionality).
+
+Both sides carry out differ roles (server/client, master/slave) in 
+interoperations.
+
+@author Igor Vasiliev <Igor.Vasiliev@oktetlabs.ru>
+
+@par Tests:
+
+-# @ref usecases-socket_close
+-# @ref usecases-read_write
+-# @ref usecases-readv_writev
+-# @ref usecases-shutdown_wr
+-# @ref usecases-shutdown_rd
+-# @ref usecases-shutdown_rdwr
+-# @ref usecases-shutdown
+-# @ref usecases-send_recv
+-# @ref usecases-sendto_recvfrom
+-# @ref usecases-sendmsg_recvmsg
+-# @ref usecases-server
+-# @ref usecases-getsockname_getpeername
+-# @ref usecases-ioctl
+-# @ref usecases-get_setsockopt
+-# @ref usecases-if_nameindex
+-# @ref usecases-multi_clients_handler
+-# @ref usecases-pipe
+-# @ref usecases-sendmmsg
+-# @ref usecases-multiple_listen
+-# @ref usecases-splice
+-# @ref usecases-ipv6_del_ll_addrs_transmit
+
+@} usecases
+
+*/

@@ -1,0 +1,62 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup services UNIX daemons and utilities
+@ingroup sockapi
+@{
+
+The package tests successful work of following UNIX daemons and utilities:
+
+- sshd, SSH client, SSH port forwarding and SSH X forwarding;
+- telnet server/client;
+- remote shell server/client;
+- VNC server/client;
+- DHCP server (serving both DHCP and BOOTP clients);
+- FTP servers: vsftpd (standalone/xinetd), wuftpd, proftpd (standalone/xinetd);
+- FTP clients: ftp, lftp, ncftp;
+- X server and X client;
+- SMTP daemons (sendmail, postfix, exim, qmail) - both server and client
+  functionality;
+- DNS server;
+- ifconfig, netstat and /proc network monitoring interfaces.
+
+Simple use-case tests are created for each daemon (starting, connection
+establishing, one or several requests processing). 
+
+@author Elena Vengerova <Elena.Vengerova@oktetlabs.ru>
+
+@par Tests:
+
+-# @ref services-dhcp_srv
+-# @ref services-dhcp_srv_bootp
+-# @ref services-dns_srv
+-# @ref services-ftp_client
+-# @ref services-ftp_put_get
+-# @ref services-ftp_file
+-# @ref services-ftp_many
+-# @ref services-ifconfig_get
+-# @ref services-ifconfig_set
+-# @ref services-ifconfig_stat
+-# @ref services-ifconfig_a
+-# @ref services-netstat
+-# @ref services-rsh_client
+-# @ref services-rsh_server
+-# @ref services-smtp_srv_clnt
+-# @ref services-ssh_client
+-# @ref services-ssh_server
+-# @ref services-ssh_port_fwd_srv
+-# @ref services-ssh_port_fwd_clnt
+-# @ref services-ssh_x_fwd_srv
+-# @ref services-ssh_x_fwd_clnt
+-# @ref services-ssh_complex
+-# @ref services-telnet_client
+-# @ref services-telnet_server
+-# @ref services-vnc_server
+-# @ref services-vnc_client
+-# @ref services-x_server
+-# @ref services-x_client
+-# @ref services-slapd_ldapsearch
+
+@}
+*/

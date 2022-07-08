@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<test name="pmtu" type="package">
+  <objective>Testing of internal send buffers reorganization after path MTU changes.</objective>
+  <notes/>
+  <iter result="PASSED">
+    <notes/>
+    <test name="prologue" type="script" auxiliary="true">
+      <objective>Convert existing network model to model required for PMTU testing.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="mtu"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="steps" type="script">
+      <objective>Check correctness of TCP processing in the case of decreasing next hop MTU. This test checks correctness of retransmit queue processing by transmitting TCP.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="before_start"/>
+        <arg name="env"/>
+        <arg name="mtu_seq"/>
+        <arg name="passive">TRUE</arg>
+        <arg name="recv_buf_size"/>
+        <arg name="retr_queue"/>
+        <arg name="send_buf_size"/>
+        <arg name="send_params">sendfile,sys_sendfile,writev,sys_writev</arg>
+        <arg name="time_limit"/>
+        <notes/>
+        <results tags="v5&amp;scalable_passive" key="ON-5760,ON-8565" notes="For sendfile() partial send is generally fine, so there may be no verdict about it">
+          <result value="FAILED">
+            <verdict>Too many attempts were made to wait for termination of all the threads without any new data being sent from them</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>Too many attempts were made to wait for termination of all the threads without any new data being sent from them</verdict>
+            <verdict>Partial send was detected</verdict>
+          </result>
+          <result value="PASSED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="before_start"/>
+        <arg name="env"/>
+        <arg name="mtu_seq"/>
+        <arg name="passive">TRUE</arg>
+        <arg name="recv_buf_size"/>
+        <arg name="retr_queue"/>
+        <arg name="send_buf_size"/>
+        <arg name="send_params">sendfile,sys_sendfile</arg>
+        <arg name="time_limit"/>
+        <notes/>
+        <results tags="v5&amp;scalable_passive" key="ON-5760,ON-8565" notes="For sendfile() partial send is generally fine, so no verdict about it">
+          <result value="FAILED">
+            <verdict>Too many attempts were made to wait for termination of all the threads without any new data being sent from them</verdict>
+          </result>
+          <result value="PASSED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="before_start"/>
+        <arg name="env"/>
+        <arg name="mtu_seq"/>
+        <arg name="passive">TRUE</arg>
+        <arg name="recv_buf_size"/>
+        <arg name="retr_queue"/>
+        <arg name="send_buf_size"/>
+        <arg name="send_params">send</arg>
+        <arg name="time_limit"/>
+        <notes/>
+        <results tags="v5&amp;scalable_passive" key="ON-5760,ON-8565">
+          <result value="FAILED">
+            <verdict>Too many attempts were made to wait for termination of all the threads without any new data being sent from them</verdict>
+            <verdict>Partial send was detected</verdict>
+          </result>
+          <result value="PASSED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="before_start"/>
+        <arg name="env"/>
+        <arg name="mtu_seq"/>
+        <arg name="passive">TRUE</arg>
+        <arg name="recv_buf_size"/>
+        <arg name="retr_queue"/>
+        <arg name="send_buf_size"/>
+        <arg name="send_params">write,sys_write,writev,sys_writev</arg>
+        <arg name="time_limit"/>
+        <notes/>
+        <results tags="v5&amp;scalable_passive" key="ON-5760,ON-8565">
+          <result value="FAILED">
+            <verdict>Too many attempts were made to wait for termination of all the threads without any new data being sent from them</verdict>
+            <verdict>Partial send was detected</verdict>
+          </result>
+          <result value="PASSED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="before_start"/>
+        <arg name="env"/>
+        <arg name="mtu_seq"/>
+        <arg name="passive">TRUE</arg>
+        <arg name="recv_buf_size"/>
+        <arg name="retr_queue"/>
+        <arg name="send_buf_size"/>
+        <arg name="send_params">write,write,writev,writev</arg>
+        <arg name="time_limit"/>
+        <notes/>
+        <results tags="v5&amp;scalable_passive" key="ON-5760,ON-8565">
+          <result value="FAILED">
+            <verdict>Too many attempts were made to wait for termination of all the threads without any new data being sent from them</verdict>
+            <verdict>Partial send was detected</verdict>
+          </result>
+          <result value="PASSED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="before_start"/>
+        <arg name="env"/>
+        <arg name="mtu_seq"/>
+        <arg name="passive">FALSE</arg>
+        <arg name="recv_buf_size"/>
+        <arg name="retr_queue"/>
+        <arg name="send_buf_size"/>
+        <arg name="send_params"/>
+        <arg name="time_limit"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="epilogue" type="script" auxiliary="true">
+      <objective/>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+  </iter>
+</test>

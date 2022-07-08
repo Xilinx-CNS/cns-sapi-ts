@@ -1,0 +1,526 @@
+#!/usr/bin/perl
+# SPDX-License-Identifier: Apache-2.0
+# (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved.
+use strict;
+use warnings;
+use Date::Manip;
+use File::Temp qw/ tempfile /;
+use IPC::Open2;
+use File::Basename;
+
+# Link to testing logs should to be exported here or by --logs-path option
+my $logs_path = "";
+
+my $curl_common = "curl -s -u : --negotiate -L";
+
+my $sh_path;
+
+my $pid = open2(*RDR, undef, $ENV{"TE_BASE"}."/scripts/guess_to_perl.sh");
+while (<RDR>)
+{
+    eval($_);
+}
+
+sub escape_str
+{
+    my $str = $_[0];
+    $str =~ s/([\\"\$])/\\$1/g;
+    return $str;
+}
+
+sub escape_file
+{
+    my $str = $_[0];
+    $str =~ s/[!]/_not_/g;
+    return $str;
+}
+
+sub download_log
+{
+    my $file_to_load = $_[0];
+    my $file_to_save = $_[1];
+
+    if ($file_to_load =~ m/https:\/\//)
+    {
+        return system("$curl_common ".
+                      $file_to_load." -f".
+                      " -o ".$file_to_save);
+    }
+    else
+    {
+        return system("scp -q ".$file_to_load.
+                      " ".$file_to_save);
+    }
+}
+
+my @tmp_files = ();
+my $path_to_save;
+my $inspect_txt = 0;
+my $inspect_txt_l = 0;
+my $inspect_for = "";
+
+sub download_prepare_log
+{
+    my $file_to_load = $_[0];
+    (undef, $tmp_files[$#tmp_files + 1]) = tempfile("log-XXXX");
+
+    print "Download/Prepare $file_to_load\n";
+
+    my $proto;
+    my $initial_name = $file_to_load;
+    my $log_name;
+    my $file_to_save;
+    my $file_name = "";
+    my $mfn = "";
+
+    $file_to_load =~ /.*\/([^\/]*)\/\s*$/;
+    $log_name = $1;
+
+    if ($file_to_load =~ m/^(.*):/)
+    {
+        $proto = $1;
+    }
+
+    if (defined($proto) && length($proto) > 0)
+    {
+        my $rname;
+        my $rc = 0;
+        if ($file_to_load =~ m/^.*\/(.*)/)
+        {
+            $rname = $1;
+        }
+
+        if (defined($rname) && length($rname) > 0)
+        {
+            $rc = download_log($file_to_load, $tmp_files[$#tmp_files]);
+        }
+        else
+        {
+            $rc = download_log($file_to_load."log_gist.raw",
+                               $tmp_files[$#tmp_files]);
+            if ($rc != 0)
+            {
+                $rc = download_log($file_to_load."log.raw.bz2",
+                                   $tmp_files[$#tmp_files]);
+
+                if ($rc != 0)
+                {
+                    print "Failed to fetch XML log. Downloading XML log.\n";
+                    $rc = download_log($file_to_load."log.xml.bz2",
+                                       $tmp_files[$#tmp_files]);
+
+                    if ($rc != 0)
+                    {
+                        warn "Failed to fetch XML log";
+                        return -1;
+                    }
+                    else
+                    {
+                        $initial_name = "log.xml.bz2";
+                    }
+                }
+                else
+                {
+                    $initial_name = "log.raw.bz2";
+                }
+            }
+            else
+            {
+                $initial_name = "log_gist.raw";
+            }
+        }
+
+        $file_name = $tmp_files[$#tmp_files];
+    }
+    else
+    {
+        $file_name = $file_to_load;
+    }
+
+    (undef, $tmp_files[$#tmp_files + 1]) = tempfile("log-XXXX");
+    system("cp ".escape_str($file_name)." ".$tmp_files[$#tmp_files]);
+    $file_name = $tmp_files[$#tmp_files];
+
+    if ($initial_name =~ m/^(.*)[.]bz2$/)
+    {
+        $initial_name = $1;
+        (undef, $tmp_files[$#tmp_files + 1]) = tempfile("log-XXXX");
+        system("bzcat ".$file_name." > ".
+               $tmp_files[$#tmp_files]);
+        $file_name = $tmp_files[$#tmp_files];
+    }
+
+    $file_to_save = escape_file($log_name);
+    $file_to_load =~ /.*\/session_([^\/]*)\/[^\/]*\/[^\/]*$/;
+    $file_to_save = "$1-$file_to_save";
+    if ($initial_name =~ m/^(.*)[.]raw/ ||
+        !($initial_name =~ m/^(.*)[.]xml/))
+    {
+        system("cp $file_name ".$path_to_save."/".
+               $file_to_save.".raw");
+        (undef, $tmp_files[$#tmp_files + 1]) = tempfile("log-XXXX");
+        system("PATH=$sh_path te-trc-log ".$file_name.
+               " > ".$tmp_files[$#tmp_files]);
+        system("cp $tmp_files[$#tmp_files] ".$path_to_save."/".
+               $file_to_save.".xml");
+    }
+    else
+    {
+        system("cp $file_name ".$path_to_save."/".
+               $file_to_save.".xml");
+    }
+    return 0;
+}
+
+my $max_unexp = -1;
+
+sub download_logs
+{
+    my $start_date = $_[0];
+    my $end_date = $_[1];
+    my $delta_month = new Date::Manip::Delta;
+    my $date = new Date::Manip::Date;
+    my $month_path;
+    my @logs_arr = ();
+    my @logs_arr_corr = ();
+    my @cur_logs = ();
+    my @cur_logs_session = ();
+    my @cur_txt = ();
+    my @tests = ();
+    my @log_ids = ();
+    my $cur_test;
+    my $log_date_str;
+    my $prev_log_date_str = "";
+    my $str;
+    my $log_date;
+    my $i;
+    my $s;
+    my $s1;
+    my $month_session_path;
+    my $txt_str;
+    my $tmp_downloaded;
+
+    (undef, $tmp_downloaded) = tempfile("download-XXXX");
+
+    $delta_month->parse("0:1:0:0:0:0:0");
+    $date->parse($start_date->printf("%Y-%m"));
+
+    while ($date->cmp($end_date) <= 0)
+    {
+        $month_path = $logs_path.$date->printf("%y.%m/");
+        @cur_logs = `$curl_common $month_path`;
+
+        foreach $s (@cur_logs)
+        {
+            if ($s =~ /src="\/icons\/folder.gif".*<a.*href="(.*)"/)
+            {
+                $month_session_path = $1;
+                if ($1 =~ /session_/)
+                {
+                    $month_session_path = "$month_path$month_session_path";
+                    @cur_logs_session = `$curl_common $month_session_path`;
+                    foreach $s1 (@cur_logs_session)
+                    {
+                        if ($s1 =~ /src="\/icons\/folder.gif".*<a.*href="(.*)"/)
+                        {
+                            push(@logs_arr, $month_session_path.$1);
+                        }
+                    }
+                }
+                else
+                {
+                    push(@logs_arr, $month_path.$1);
+                }
+            }
+        }
+
+        $date = $date->calc($delta_month);
+    }
+
+    foreach $s (@logs_arr)
+    {
+        if ($s =~ m/\.\.\//)
+        {
+            next;
+        }
+        if (!($s =~ m/session_/))
+        {
+            # Do not parse logs from pre-sessions directories
+            next;
+        }
+        $s =~ /.*\/session_([^\/]*)\/[^\/]*\/[^\/]*$/;
+        $log_date_str = $1;
+        $s =~ /.*\/([0-9][0-9].[0-9][0-9])[^\/]*\/[^\/]*$/;
+        $log_date_str = "$log_date_str-$1";
+        $log_date = new Date::Manip::Date;
+        $log_date->parse_format('%y\\.%m\\.%d\\-%H\\.%M', $log_date_str);
+
+        if ($log_date->cmp($start_date) >= 0 &&
+            $log_date->cmp($end_date) <= 0)
+        {
+            if ($inspect_txt != 0)
+            {
+                if ($log_date_str ne $prev_log_date_str)
+                {
+                    print "parsing logs for ".$log_date_str."\n";
+                    $prev_log_date_str = $log_date_str;
+                }
+            }
+            if ($inspect_txt == 0)
+            {
+                if ($max_unexp >= 0)
+                {
+                    @cur_logs = `$curl_common $s/trc-stats.txt`;
+                    next if (!($cur_logs[1] =~ /Run \(total\)\s*([0-9]*)/));
+                    my $total = int($1);
+                    next if (!($cur_logs[2] =~
+                                /Passed, as expected\s*([0-9]*)/));
+                    my $exp_pass = int($1);
+                    next if (!($cur_logs[3] =~
+                                /Failed, as expected\s*([0-9]*)/));
+                    my $exp_fail = int($1);
+                    next if ($total - $exp_pass - $exp_fail > $max_unexp);
+                }
+
+                push(@logs_arr_corr, $s);
+                if (download_prepare_log($s) != 0)
+                {
+                    warn "Failed to retrieve $s";
+                }
+            }
+            else
+            {
+                my $assertion = 0;
+                my $kernel_bug = 0;
+                my $int_error = 0;
+                my $segfault = 0;
+                my $oom_killer = 0;
+                my $user_text = 0;
+                my $rc = 0;
+                my $grep_str = "";
+                my $skip_rest = 0;
+                my $update_log_ids = 0;
+
+                $rc = system("$curl_common $s/log.txt ".
+                             "-o $tmp_downloaded");
+                if ($rc != 0)
+                {
+                    print("Failed to download $s/log.txt; rc=".$rc."\n");
+                    system("rm -f ".$tmp_downloaded);
+                    return -1;
+                }
+
+                $grep_str = "\\(^TEST\\|^PACKAGE\\|^SESSION\\|^Node ID\\|";
+
+                if (!(defined ($inspect_for) && length($inspect_for) > 0))
+                {
+                    $grep_str = $grep_str.
+                        "\\(\\[onload\\]\\|oo:\\).*ci[_a-zA-Z]*assert\\|".
+                        "Internal error\\|".
+                        "segfault at\\|".
+                        "oom-killer\\|".
+                        "kernel\\s+BUG\\s+at\\|".
+                        "kernel\\s+panic\\)";
+                }
+                else
+                {
+                    $grep_str = $grep_str."$inspect_for\\)";
+                }
+
+                #print("cat $tmp_downloaded | grep \"$grep_str\"\n");
+                @cur_txt = `grep "$grep_str" $tmp_downloaded`;
+                #print("Log:\n".join(" ", @cur_txt)."\n");
+
+                for $txt_str (@cur_txt)
+                {
+                    if ($txt_str =~
+                          /^(TEST|PACKAGE|SESSION)\s+"([^\s]*)"\s*started/)
+                    {
+                        if ($1 ne "SESSION")
+                        {
+                            push(@tests, $2);
+                        }
+                        else
+                        {
+                            push(@tests, "");
+                        }
+                        $update_log_ids = 1;
+                    }
+                    elsif ($txt_str =~ /^Node ID/)
+                    {
+                        if ($update_log_ids)
+                        {
+                            $update_log_ids = 0;
+                            push(@log_ids, $txt_str);
+                        }
+                    }
+                    elsif ($txt_str =~
+                            /^(TEST|PACKAGE|SESSION)\s+"([^\s]*)"\s*finished/)
+                    {
+                        $cur_test = join("/", @tests);
+                        $cur_test =~ s/\/+/\//g;
+                        if ($skip_rest == 0) {
+                            if ($assertion == 1 || $kernel_bug == 1 ||
+                                $int_error == 1 || $segfault == 1 ||
+                                $user_text == 1)
+                            {
+                                print "$s\n";
+                                print $log_ids[$#log_ids];
+                                $skip_rest = 1 if ($inspect_txt_l == 1);
+                            }
+
+                            if ($assertion == 1)
+                            {
+                                print "Onload assertion in ".$cur_test."\n";
+                            }
+                            if ($kernel_bug == 1)
+                            {
+                                print "Kernel bug in ".$cur_test."\n";
+                            }
+                            if ($int_error == 1)
+                            {
+                                print "Internal error in ".$cur_test."\n";
+                            }
+                            if ($segfault == 1)
+                            {
+                                print "Segfault in ".$cur_test."\n";
+                            }
+                            if ($oom_killer == 1)
+                            {
+                                print "oom-killer invoked in ".$cur_test."\n";
+                            }
+                            if ($user_text == 1)
+                            {
+                                print "[user text] ".$cur_test."\n";
+                            }
+                        }
+                        $assertion = 0;
+                        $kernel_bug = 0;
+                        $int_error = 0;
+                        $segfault = 0;
+                        $oom_killer = 0;
+                        $user_text = 0;
+                        pop(@tests);
+                        pop(@log_ids);
+                    }
+                    else
+                    {
+                        if (defined($inspect_for) &&
+                                          length($inspect_for) > 0)
+                        {
+                            if ($txt_str =~ /$inspect_for/)
+                            {
+                                $user_text = 1;
+                            }
+                        }
+                        else
+                        {
+                            if ($txt_str =~
+                                      /(\[onload\]|oo:).*ci[_a-zA-Z]*assert/)
+                            {
+                                $assertion = 1;
+                            }
+                            if ($txt_str =~ /^Internal error/)
+                            {
+                                $int_error = 1;
+                            }
+                            if ($txt_str =~ /segfault at/)
+                            {
+                                $segfault = 1;
+                            }
+                            if ($txt_str =~ /oom-killer/)
+                            {
+                                $oom_killer = 1;
+                            }
+                            if ($txt_str =~ /kernel\s+BUG\s+at/ ||
+                                $txt_str =~ /Kernel\s+panic/ )
+                            {
+                                $kernel_bug = 1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    system("rm -f ".$tmp_downloaded);
+}
+
+my $date_from = new Date::Manip::Date;
+my $date_to = new Date::Manip::Date;
+my $arg;
+
+$date_from->parse_format("%Y\\.%m\\.%d", "2000.01.01");
+$date_to->parse_format("%Y\\.%m\\.%d", "2100.01.01");
+$path_to_save = "night_logs";
+
+if (defined($ARGV[3]))
+{
+    $max_unexp = $ARGV[3];
+}
+
+foreach $arg (@ARGV)
+{
+    if ($arg =~ m/^--from=(.*)$/ || $arg =~ m/^-f(.*)$/)
+    {
+        $date_from->parse($1);
+    }
+    elsif ($arg =~ m/^--to=(.*)$/ || $arg =~ m/^-t(.*)$/)
+    {
+        $date_to->parse($1);
+    }
+    elsif ($arg =~ m/^--max-unexp=(.*)$/ || $arg =~ m/^-m(.*)$/)
+    {
+        $max_unexp = int($1);
+    }
+    elsif ($arg =~ m/^--path=(.*)$/ || $arg =~ m/^-p(.*)$/)
+    {
+        $path_to_save = $1;
+    }
+    elsif ($arg =~ m/^--log-path=(.*)$/ || $arg =~ m/^-l(.*)$/)
+    {
+        $logs_path = $1;
+    }
+    elsif ($arg =~ m/^--inspect-txt$/)
+    {
+        $inspect_txt = 1;
+    }
+    elsif ($arg =~ m/^--inspect-txt=(.*)$/)
+    {
+        $inspect_txt = 1;
+        $inspect_for = $1;
+    }
+    elsif ($arg =~ m/^--inspect-txt-l$/)
+    {
+        $inspect_txt = 1;
+        $inspect_txt_l = 1;
+    }
+    elsif ($arg =~ m/^--inspect-txt-l=(.*)$/)
+    {
+        $inspect_txt = 1;
+        $inspect_for = $1;
+        $inspect_txt_l = 1;
+    }
+    elsif ($arg =~ m/^--help$/ || $arg =~ m/^-h$/)
+    {
+        print "This script is for downloading night testing logs\n".
+              "--from=, -f              From which date to load\n".
+              "--to=, -t                To which date to load\n".
+              "--max-unexp=, -m         Maximum number of unexpected \n".
+              "                         results\n".
+              "--path=, -p              Where to save loaded logs\n".
+              "--log-path=, -l          From where to load logs\n".
+              "--inspect-txt[=string]   Investigate TXT logs instead\n".
+              "                         of downloading.\n".
+              "--inspect-txt-l[=string] The same as --inspect-txt but print\n".
+                                        "only the first occurence\n".
+              "                         of searched string(s) per TXT log\n".
+              "--help, -h               Display this message\n";
+        exit(0);
+    }
+}
+
+system("mkdir -p $path_to_save");
+download_logs($date_from, $date_to);
+system("rm -f ".join(" ", @tmp_files));

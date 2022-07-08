@@ -1,0 +1,260 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+
+/** @page lib-stream_server-alg Algorithm of creating a server socket of type @c SOCK_STREAM
+ *
+ * -# Call @b socket() on @p srvr PCO with the following parameters:
+ *    @p domain, @c SOCK_STREAM, @p proto.
+ *    Created socket is referred as @p srvr_s below;
+ * -# If @p srvr_wild is true, fill in network address part of 
+ *    @p srvr_bind_addr with wildcard network address;
+ * -# Copy port part of @p srvr_addr to port part of @p srvr_bind_addr
+ *    address;
+ * -# Bind @p srvr_s socket to @p srvr_bind_addr address.
+ * -# If port part of @p srvr_addr is zero (not specified), then call
+ *    @b getsockname() on @p srvr_s socket to obtain the assigned port 
+ *    and set it to the port part of @p srvr_addr.
+ * -# Call @b listen() for @p srvr_s socket with default @a backlog.
+ */
+
+/** @page lib-stream_client-alg Algorithm of creating a client socket of type
+ * @c SOCK_STREAM
+ *
+ * -# Call @b socket() on @a clnt PCO with the following parameters:
+ *    @p domain, @c SOCK_STREAM, @p proto.
+ *    Created socket is referred as @p clnt_s below.
+ * -# If @p clnt_addr is not equal to @c NULL, @b bind() @p clnt_s socket
+ *    to @p clnt_addr address.
+ */
+
+/** @page lib-stream_client_server Create a connection with connection oriented sockets
+ *
+ * @param srvr          PCO for server
+ * @param clnt          PCO for client
+ * @param domain        Domain used in the connection
+ * @param proto         Protocol used in the connection
+ * @param srvr_addr     server address (cannot be @c NULL) to be used as 
+ *                      a template for @b bind() on server side and for 
+ *                      @b connect() on client side. Network address part of
+ *                      the @p srvr_addr must be specified, but it is
+ *                      allowed to left port part of @p srvr_addr
+ *                      unspecified, which means we do not mind which
+ *                      address the server is bound to (on return the actual
+ *                      port used in established connection is set to the
+ *                      port part of @p srvr_addr).
+ * @param srvr_wild     bind server to wildcard address or not (although we
+ *                      must specify network address in @p srvr_addr
+ *                      parameter, it is still allowed to bind server socket
+ *                      to the wildcard address)
+ * @param clnt_addr     address to bind client to or @c NULL
+ *
+ * @par Step 1: Open @c SOCK_STREAM server socket
+ * @copydoc lib-stream_server-alg
+ *
+ * @par Step 2: Open @c SOCK_STREAM client socket
+ * @copydoc lib-stream_client-alg
+ *
+ * @par Step 3: Open connection
+ * -# Initiate @b accept() for @p srvr_s socket;
+ * -# Call @b connect() to connect client socket @p clnt_s to server
+ *    with @p srvr_addr address;
+ * -# Wait for @b accept() completion to get @p accepted_s socket;
+ * -# Close srvr_s socket
+ * -# Set @p accepted_s to @p srvr_s variable.
+ *
+ * @retval srvr_s       @c SOCK_STREAM socket reside on @p srvr
+ * @retval clnt_s       @c SOCK_STREAM socket reside on @p clnt
+ *
+ * @author Andrew Rybchenko <Andrew.Rybchenko@oktetlabs.ru>
+ */
+
+/** @page lib-dgram_client_server Create a connectionless pair of sockets that can communicate with each other without specifying any addresses in their I/O operations 
+ *
+ * @param srvr          PCO for server part of connection
+ * @param clnt          PCO for client part of connection
+ * @param domain        Domain used in the connection
+ * @param proto         Protocol used in the connection
+ * @param srvr_addr     server address (cannot be @c NULL) to be used as 
+ *                      a template for @b bind() on server side and for 
+ *                      @b connect() on client side.
+ * @param clnt_addr     address to bind client to (cannot be @c NULL)
+ *
+ * -# Open @c SOCK_DGRAM socket @p srvr_s on @p srvr and bind it 
+ *    to @p srvr_addr address;
+ * -# Open @c SOCK_DGRAM socket @p clnt_s on @p clnt and bind it 
+ *    to to @p clnt_addr address;
+ * -# @b connect() @p clnt_s socket to @p srvr_s socket;
+ * -# @b connect() @p srvr_s socket to @p clnt_s socket.
+ *
+ * @retval srvr_s       @c SOCK_DGRAM socket reside on @p srvr
+ * @retval clnt_s       @c SOCK_DGRAM socket reside on @p clnt
+ *
+ * @author Oleg Kravtsov <Oleg.Kravtsov@oktetlabs.ru>
+ */
+
+/** @page lib-gen_connection Create a connection of an arbitrary type
+ *
+ * @objective Provide a generic way to create a connection of an arbitrary
+ * type and from a particular domain
+ *
+ * @param srvr          PCO where server socket is created
+ * @param clnt          PCO where client socket is created
+ * @param sock_type     Socket type used in the connection
+ * @param proto         Protocol for the connection
+ * @param srvr_addr     Server address to be used as a template
+ *                      for @b bind() on server side
+ * @param clnt_addr     Address to bind client to
+ * @param srvr_s        Descriptor of the socket reside on @p srvr
+ *                      (accepted socket in the case of stream connection)
+ *                      (OUT)
+ * @param clnt_s        Descriptor of the socket reside on @p clnt (OUT)
+ *
+ * @note Division of two peers on server and client is purely abstract,
+ *       because actually just after creating a connection of type 
+ *       @c SOCK_STREAM we close real server socket and associate its
+ *       child socket, with @p srvr_s parameter of the function.
+ *
+ * For connection of type @c SOCK_STREAM use algorithm
+ * @ref lib-stream_client_server.
+ *
+ * For connection of type @c SOCK_DGRAM use algorithm
+ * @ref lib-dgram_client_server.
+ */
+
+/** @page lib-simple_echo Echo service on one connected socket
+ *
+ * @objective Remote routine with simple @e echo service on one
+ *            connected socket.
+ *
+ * @param pco               - a PCO
+ * @param s                 - a socket on @b pco
+ * @param delay_min         - minimum delay in microseconds
+ * @param delay_max         - maximum delay in microseconds
+ * @param delay_rnd_once    - if true, random delay should be calculated
+ *                            only once and used for all messages;
+ *                            if false, random dalay is calculated for
+ *                            each message
+ *
+ * @pre Socket @b s is connected. I.e. @b send() and @b recv()
+ *      functions may be used to send and receive data.
+ *
+ * @par Actions:
+ * 
+ * -# Generate random number from the range [@b delay_min, @b delay_max]
+ *    and it in @b delay variable.
+ * -# Call @b recv() function on socket @b s to wait for arrived data.
+ * -# If @b recv() function returns not positive number, log an error
+ *    and exit from the function.
+ * -# Wait @b delay microseconds using @b usleep() function.
+ * -# Send received data back to the socket @b s using @b send() 
+ *    function.
+ * -# Add size of received/sent message to @b processed variable.
+ * -# If @b delay_rnd_once is true, go to the step 2, else go to the 
+ *    step 1.
+ *
+ * @return Number received/sent bytes accumulated in @b processed
+ *         variable.
+ *
+ * @post Socket is kept opened and connected.
+ * 
+ * @author Andrew Rybchenko <Andrew.Rybchenko@oktetlabs.ru>
+ */
+
+/** @page lib-simple_receiver Receiver of data from a socket
+ *
+ * @objective Remote routine which receives data from a socket.
+ *
+ * @param pco       - a PCO
+ * @param s         - a socket on @b pco
+ *
+ * @pre Socket @b s is bound. I.e. @b recv() functions may be used
+ *      to receive data.
+ *
+ * @par Actions:
+ * 
+ * -# Call @b select() function to block on the socket during 1 second.
+ * -# If timeout occurs and 0 is in @b received, go to step 1. Otherwise exit.
+ * -# Call @b recv() function on socket @b s to receive arrived data.
+ * -# If @b recv() function returns not positive number, log an error
+ *    and exit from the function.
+ * -# Add size of received data to @b received variable.
+ * -# Go to the step 1.
+ *
+ * @return Number of received bytes accumulated in @b recevied variable.
+ *
+ * @post Socket is kept opened and connected.
+ * 
+ * @author Andrew Rybchenko <Andrew.Rybchenko@oktetlabs.ru>
+ */
+
+/** @page lib-simple_sender Remote routine to generate data
+ *
+ * @objective Send random amount of data with random delays.
+ *
+ * @param pco               - PCO
+ * @param s                 - a socket on @b pco
+ * @param size_min          - minimum size of data to send in bytes
+ * @param size_max          - maximum size of data to send in bytes
+ * @param size_rnd_once     - if true, random size should be calculated
+ *                            only once and used for all messages;
+ *                            if false, random size is calculated for
+ *                            each message
+ * @param delay_min         - minimum delay in microseconds
+ * @param delay_max         - maximum delay in microseconds
+ * @param delay_rnd_once    - if true, random delay should be calculated
+ *                            only once and used for all messages;
+ *                            if false, random delay is calculated for
+ *                            each message
+ * @param time2run          - how long run (in seconds)
+ *
+ * @pre Socket @b s is connected. I.e. @b send() function may be used
+ *      to send data.
+ *
+ * @par Actions:
+ * @copydoc lib-simple_sender-seq
+ *
+ * @return Number of sent bytes accumulated in @b sent variable.
+ *
+ * @post Socket is kept opened and connected.
+ * 
+ * @author Andrew Rybchenko <Andrew.Rybchenko@oktetlabs.ru>
+ */
+
+/** @page lib-simple_sender-seq
+ * 
+ * -# If @b size_rnd_once is true, then the step is executed only once.
+ *    Generate random number from the range [@b size_min, @b size_max]
+ *    and save it in @b size variable.
+ * -# If @b delay_rnd_once is true, then the step is executed only once.
+ *    Generate random number from the range [@b delay_min, @b delay_max]
+ *    and save it in @b delay variable.
+ * -# Wait until @b delay or total timeout defined by @b time2run expires.
+ *    If @b time2run expired exit from function.
+ * -# Send data of generated random @b size to the socket @b s using
+ *    @b send() function.  If @b send() return negative number, log an
+ *    error and exit from the function.
+ * -# Add return value of @b send() function to @b sent variable.
+ * -# Go to the step 1.
+ */
+
+/** @page lib-create_child_process_socket create_child_process_socket()
+ *
+ * @objective Creates a child process
+ *
+ * @type performance, stress
+ *
+ * @param pco_father     RPC server handle
+ * @param father_s       socket on @p pco_father
+ * @param domain         domain, used in test
+ * @param sock_type      type of socket, used in test
+ * @param pco_child      new process
+ * @param child_s        duplicated socket on @p pco_child
+ *
+ * @par Actions:
+ *
+ * -# Create a new process on @p pco_father, using
+ *    @b rcf_rpc_server_fork()
+ * -# Make @p child_s socket descriptor equal to @p father_s
+ *
+ * @author Georgij Volfson <Georgij.Volfson@oktetlabs.ru> 
+ */

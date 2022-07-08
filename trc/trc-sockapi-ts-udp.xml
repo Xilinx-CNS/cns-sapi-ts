@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<test name="udp" type="package">
+  <objective>UDP connections and round-trip</objective>
+  <notes/>
+  <iter result="PASSED">
+    <notes/>
+    <test name="round_trip_1" type="script">
+      <objective>send/receive messages to distinct destination in a timely manner</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="disable_tunnelling">TRUE</arg>
+        <arg name="env">'net1':IUT                            {                                'iut'                                {                                    {'pco_iut':IUT},                                    addr:'wldc':inet:wildcard,                                    addr:'net1_local':inet:unicast,                                    if:'net1_iut_if'                                },                                {                                    {'pco_iut1':IUT},                                     addr:'net1_remote':inet:unicast,                                    if:'net1_tst_if'                                }                            },                            'net2':IUT                            {                                'iut'                                {                                    addr:'net2_local':inet:unicast,                                    if:'net2_iut_if'                                },                                {                                    {'pco_iut2':IUT},                                    addr:'net2_remote':inet:unicast,                                    if:'net2_tst_if'                                }                            }</arg>
+        <arg name="size">100</arg>
+        <arg name="num">5</arg>
+        <arg name="timeout">300</arg>
+        <arg name="time2wait">2</arg>
+        <notes/>
+        <results tags="v5" key="ON-49">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="disable_tunnelling">TRUE</arg>
+        <arg name="env">'net1':IUT                            {                                'iut'                                {                                    {'pco_iut':IUT},                                    addr:'wldc':inet:wildcard,                                    addr:'net1_local':inet:unicast,                                    if:'net1_iut_if'                                },                                {                                    {'pco_iut1':IUT},                                     addr:'net1_remote':inet:unicast,                                    if:'net1_tst_if'                                }                            },                            'net2':IUT                            {                                'iut'                                {                                    addr:'net2_local':inet:unicast,                                    if:'net2_iut_if'                                },                                {                                    {'pco_iut2':IUT},                                    addr:'net2_remote':inet:unicast,                                    if:'net2_tst_if'                                }                            }</arg>
+        <arg name="size">5000</arg>
+        <arg name="num">5</arg>
+        <arg name="timeout">300</arg>
+        <arg name="time2wait">2</arg>
+        <notes/>
+        <results tags="v5" key="ON-49">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="disable_tunnelling">FALSE</arg>
+        <arg name="env">'net1':IUT                            {                                'iut'                                {                                    {'pco_iut':IUT},                                    addr:'wldc':inet:wildcard,                                    addr:'net1_local':inet:unicast,                                    if:'net1_iut_if'                                },                                {                                    {'pco_iut1':IUT},                                     addr:'net1_remote':inet:unicast,                                    if:'net1_tst_if'                                }                            },                            'net2':IUT                            {                                'iut'                                {                                    addr:'net2_local':inet:unicast,                                    if:'net2_iut_if'                                },                                {                                    {'pco_iut2':IUT},                                    addr:'net2_remote':inet:unicast,                                    if:'net2_tst_if'                                }                            }</arg>
+        <arg name="size">100</arg>
+        <arg name="num">5</arg>
+        <arg name="timeout">300</arg>
+        <arg name="time2wait">2</arg>
+        <notes/>
+        <results tags="v5" key="ON-49">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="disable_tunnelling">FALSE</arg>
+        <arg name="env">'net1':IUT                            {                                'iut'                                {                                    {'pco_iut':IUT},                                    addr:'wldc':inet:wildcard,                                    addr:'net1_local':inet:unicast,                                    if:'net1_iut_if'                                },                                {                                    {'pco_iut1':IUT},                                     addr:'net1_remote':inet:unicast,                                    if:'net1_tst_if'                                }                            },                            'net2':IUT                            {                                'iut'                                {                                    addr:'net2_local':inet:unicast,                                    if:'net2_iut_if'                                },                                {                                    {'pco_iut2':IUT},                                    addr:'net2_remote':inet:unicast,                                    if:'net2_tst_if'                                }                            }</arg>
+        <arg name="size">5000</arg>
+        <arg name="num">5</arg>
+        <arg name="timeout">300</arg>
+        <arg name="time2wait">2</arg>
+        <notes/>
+        <results tags="v5" key="ON-49">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="round_trip_2" type="script">
+      <objective>receive/send messages to distinct destination in a timely manner</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="disable_tunnelling">TRUE</arg>
+        <arg name="env">'net1':IUT                            {                                'iut'                                {                                    {'pco_iut':IUT},                                    addr:'wldc':inet:wildcard,                                    addr:'net1_local':inet:unicast,                                    if:'net1_iut_if'                                },                                {                                    {'pco_tst1':IUT},                                     addr:'net1_remote':inet:unicast,                                    if:'net1_tst_if'                                }                            },                            'net2':IUT                            {                                'iut'                                {                                    addr:'net2_local':inet:unicast,                                    if:'net2_iut_if'                                },                                {                                    {'pco_tst2':IUT},                                    addr:'net2_remote':inet:unicast,                                    if:'net2_tst_if'                                }                            }</arg>
+        <arg name="size">100</arg>
+        <arg name="num">5</arg>
+        <arg name="timeout">300</arg>
+        <arg name="time2wait">2</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="disable_tunnelling">TRUE</arg>
+        <arg name="env">'net1':IUT                            {                                'iut'                                {                                    {'pco_iut':IUT},                                    addr:'wldc':inet:wildcard,                                    addr:'net1_local':inet:unicast,                                    if:'net1_iut_if'                                },                                {                                    {'pco_tst1':IUT},                                     addr:'net1_remote':inet:unicast,                                    if:'net1_tst_if'                                }                            },                            'net2':IUT                            {                                'iut'                                {                                    addr:'net2_local':inet:unicast,                                    if:'net2_iut_if'                                },                                {                                    {'pco_tst2':IUT},                                    addr:'net2_remote':inet:unicast,                                    if:'net2_tst_if'                                }                            }</arg>
+        <arg name="size">5000</arg>
+        <arg name="num">5</arg>
+        <arg name="timeout">300</arg>
+        <arg name="time2wait">2</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="disable_tunnelling">FALSE</arg>
+        <arg name="env">'net1':IUT                            {                                'iut'                                {                                    {'pco_iut':IUT},                                    addr:'wldc':inet:wildcard,                                    addr:'net1_local':inet:unicast,                                    if:'net1_iut_if'                                },                                {                                    {'pco_tst1':IUT},                                     addr:'net1_remote':inet:unicast,                                    if:'net1_tst_if'                                }                            },                            'net2':IUT                            {                                'iut'                                {                                    addr:'net2_local':inet:unicast,                                    if:'net2_iut_if'                                },                                {                                    {'pco_tst2':IUT},                                    addr:'net2_remote':inet:unicast,                                    if:'net2_tst_if'                                }                            }</arg>
+        <arg name="size">100</arg>
+        <arg name="num">5</arg>
+        <arg name="timeout">300</arg>
+        <arg name="time2wait">2</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="disable_tunnelling">FALSE</arg>
+        <arg name="env">'net1':IUT                            {                                'iut'                                {                                    {'pco_iut':IUT},                                    addr:'wldc':inet:wildcard,                                    addr:'net1_local':inet:unicast,                                    if:'net1_iut_if'                                },                                {                                    {'pco_tst1':IUT},                                     addr:'net1_remote':inet:unicast,                                    if:'net1_tst_if'                                }                            },                            'net2':IUT                            {                                'iut'                                {                                    addr:'net2_local':inet:unicast,                                    if:'net2_iut_if'                                },                                {                                    {'pco_tst2':IUT},                                    addr:'net2_remote':inet:unicast,                                    if:'net2_tst_if'                                }                            }</arg>
+        <arg name="size">5000</arg>
+        <arg name="num">5</arg>
+        <arg name="timeout">300</arg>
+        <arg name="time2wait">2</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="udp_checksum" type="script">
+      <objective>Checking UDP checksum functionality.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="connect_iut"/>
+        <arg name="env"/>
+        <arg name="fragmented"/>
+        <arg name="last_frag_small"/>
+        <arg name="mtu_size"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="bad_udp_csum" type="script">
+      <objective>Check that socket receives packets with correct or zero checksum and drops packets with bad checksum.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="checksum">bad</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="fragmented">TRUE</arg>
+        <arg name="mtu_size"/>
+        <notes/>
+        <results tags="v5">
+          <result value="FAILED" key="ON-12870">
+            <verdict>IUT socket is readable but it should not be</verdict>
+            <verdict>recv() on IUT unexpectedly failed with error RPC-EAGAIN</verdict>
+          </result>
+          <result value="PASSED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="checksum">bad</arg>
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="fragmented">TRUE</arg>
+        <arg name="mtu_size"/>
+        <notes/>
+        <results tags="v5">
+          <result value="FAILED" key="ON-12870">
+            <verdict>IUT socket is readable but it should not be</verdict>
+            <verdict>recv() on IUT unexpectedly failed with error RPC-EAGAIN</verdict>
+          </result>
+          <result value="PASSED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="checksum">bad</arg>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="fragmented"/>
+        <arg name="mtu_size"/>
+        <notes/>
+        <results tags="v5&amp;laddr_all" key="ON-12870">
+          <result value="FAILED">
+            <verdict>IUT socket is readable but it should not be</verdict>
+            <verdict>recv() on IUT unexpectedly failed with error RPC-EAGAIN</verdict>
+          </result>
+          <result value="PASSED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="checksum">bad</arg>
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="fragmented"/>
+        <arg name="mtu_size"/>
+        <notes/>
+        <results tags="v5&amp;laddr_all" key="ON-12870">
+          <result value="FAILED">
+            <verdict>IUT socket is readable but it should not be</verdict>
+            <verdict>recv() on IUT unexpectedly failed with error RPC-EAGAIN</verdict>
+          </result>
+          <result value="PASSED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="checksum">bad</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="fragmented">FALSE</arg>
+        <arg name="mtu_size"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="checksum">bad</arg>
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="fragmented">FALSE</arg>
+        <arg name="mtu_size"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="checksum">correct</arg>
+        <arg name="env"/>
+        <arg name="fragmented"/>
+        <arg name="mtu_size"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="checksum">zero</arg>
+        <arg name="env"/>
+        <arg name="fragmented"/>
+        <arg name="mtu_size"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="recv_connect" type="script">
+      <objective>Perform connect() to non-Onload destination on UDP socket with non-empty recv queue.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="packetsize_max">10000</arg>
+        <arg name="packetsize_min"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="packetsize_max">1000</arg>
+        <arg name="packetsize_min"/>
+        <notes/>
+        <results tags="v5&amp;!udp_connect_no_handover" key="ON-3947">
+          <result value="FAILED">
+            <verdict>Received data on IUT was lost after connect()</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="udp_fork_distrib" type="script">
+      <objective>Check that the child and parent get more-or-less the same number of datagrams.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="block"/>
+        <arg name="env"/>
+        <arg name="num"/>
+        <arg name="length"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="udp_send_flow" type="script">
+      <objective>Send datagrams flow with various write functions</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="change_route"/>
+        <arg name="env"/>
+        <arg name="epsilon"/>
+        <arg name="func"/>
+        <arg name="length_max"/>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="total"/>
+        <notes/>
+        <results tags="nonsf" key="ST-1411">
+          <result value="PASSED">
+            <verdict>Tester failed to receive datagram</verdict>
+          </result>
+          <result value="PASSED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="reuseaddr_connect" type="script">
+      <objective>Check datagrams spreading between two sockets in dependence on using wildcard addresses and using connect.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="connect_first"/>
+        <arg name="connect_second"/>
+        <arg name="env"/>
+        <arg name="wcard_first"/>
+        <arg name="wcard_second"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="varied_send" type="script">
+      <objective>Transmit datagrams during a time, sent datagrams have differnt size and iovcnt on each iteration.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="share_remove_addr" type="script">
+      <objective>Check what happens when an address removed to which several UDP sockets are bound with SO_REUSEADDR.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="connect_after_remove">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <notes>Sending to a non-existent IPv6 address does not result in an error</notes>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>connect() succeeded after removing bound address</verdict>
+            <verdict>sendto() sent data from iut_s1</verdict>
+            <verdict>sendto() sent data from iut_s2</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connect_after_remove">FALSE</arg>
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <notes>Sending to a non-existent IPv6 address does not result in an error</notes>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>sendto() sent data from iut_s1</verdict>
+            <verdict>sendto() sent data from iut_s2</verdict>
+            <verdict>sendto() sent data from iut_s3</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connect_after_remove"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="close_tx_active" type="script">
+      <objective>Perform close() or connect() to non-SFC destination on UDP socket with non-empty TX queue.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="disconnect_way"/>
+        <arg name="env"/>
+        <arg name="msg_num"/>
+        <notes/>
+        <results tags="linux&amp;!v5" key="ST-1310" >
+          <result value="FAILED" notes="non-Onload allways fails">
+            <verdict>sendmmsg() did not return error</verdict>
+          </result>
+        </results>
+        <results tags="v5">
+          <result value="PASSED"/>
+          <result value="FAILED" key="ST-1310" notes="Sometimes test fails to reach the condition it tries to test">
+            <verdict>sendmmsg() did not return error</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="check_double_bind" type="script">
+      <objective>Сheck incoming UDP traffic after double bind.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="transmit_between_bind"/>
+        <notes/>
+        <results tags="linux&amp;!v5">
+          <result value="FAILED">
+            <verdict>Received packets are not accelerated</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="receive_before_and_after_connect" type="script">
+      <objective>Check that the socket receives and accelerates everything we expect</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="wildcard"/>
+        <arg name="socket_domain"/>
+        <arg name="addr_domain"/>
+        <arg name="connect_addr_domain"/>
+        <arg name="set_v6only"/>
+        <notes/>
+        <results tags="linux&amp;!v5">
+          <result value="PASSED">
+            <verdict>CSAP registered data traffic</verdict>
+            <verdict>CSAP registered data traffic</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="send_via_os" type="script">
+      <objective>Send packet from onload socket via OS</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="bind_socket"/>
+        <arg name="min_data_buf_len"/>
+        <arg name="max_data_buf_len"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="recv_from_multiple_sources" type="script">
+      <objective>Check that a single UDP socket can receive datagrams from multiple sources.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="peers_num"/>
+        <arg name="max_data_len">1400</arg>
+        <arg name="diff_addrs"/>
+        <arg name="recv_func"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="peers_num"/>
+        <arg name="max_data_len">20000</arg>
+        <arg name="diff_addrs"/>
+        <arg name="recv_func"/>
+        <notes/>
+        <results tags="v5" notes="Fragmented datagrams are received via OS and retrieved after non-fragmented ones">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>Some packets were received out of order</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="recv_from_multiple_sources_two_ifs" type="script">
+      <objective>Check that a single UDP socket can receive datagrams from multiple sources over two interfaces.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.two_nets.iut_first</arg>
+        <arg name="peers_num"/>
+        <arg name="max_data_len">1400</arg>
+        <arg name="recv_func"/>
+        <notes/>
+        <results tags="v5" notes="Not accelerated datagrams are retrieved after accelerated ones">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>Some packets were received out of order</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.two_nets.iut_first_ipv6</arg>
+        <arg name="peers_num"/>
+        <arg name="max_data_len">1400</arg>
+        <arg name="recv_func"/>
+        <notes/>
+        <results tags="v5" notes="Not accelerated datagrams are retrieved after accelerated ones">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>Some packets were received out of order</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.two_nets.iut_second</arg>
+        <arg name="peers_num"/>
+        <arg name="max_data_len">1400</arg>
+        <arg name="recv_func"/>
+        <notes/>
+        <results tags="v5" notes="Not accelerated datagrams are retrieved after accelerated ones">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>Some packets were received out of order</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.two_nets.iut_second_ipv6</arg>
+        <arg name="peers_num"/>
+        <arg name="max_data_len">1400</arg>
+        <arg name="recv_func"/>
+        <notes/>
+        <results tags="v5" notes="Not accelerated datagrams are retrieved after accelerated ones">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>Some packets were received out of order</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.two_nets.iut_both</arg>
+        <arg name="peers_num"/>
+        <arg name="max_data_len">1400</arg>
+        <arg name="recv_func"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.two_nets.iut_both_ipv6</arg>
+        <arg name="peers_num"/>
+        <arg name="max_data_len">1400</arg>
+        <arg name="recv_func"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer.two_links</arg>
+        <arg name="peers_num"/>
+        <arg name="max_data_len">1400</arg>
+        <arg name="recv_func"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer.two_links_ipv6</arg>
+        <arg name="peers_num"/>
+        <arg name="max_data_len">1400</arg>
+        <arg name="recv_func"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="peers_num"/>
+        <arg name="max_data_len">20000</arg>
+        <arg name="recv_func"/>
+        <notes/>
+        <results tags="v5" notes="Fragmented datagrams are received via OS and retrieved after non-fragmented ones">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>Some packets were received out of order</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+  </iter>
+</test>

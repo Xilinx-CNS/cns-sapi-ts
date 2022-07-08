@@ -1,0 +1,2076 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+    
+    <description>epoll functionality</description>
+    
+    <author mailto="Yurij.Plotnikov@oktetlabs.ru"/>
+
+    <req id="EPOLL" sticky="true"/>
+
+    <session>
+        <enum name="epoll_ctl_early">
+            <value>FALSE</value>
+            <value reqs="EPOLL_CTL_EARLY">TRUE</value>
+        </enum>
+
+        <run>
+            <script name="derived_epoll" track_conf="silent">
+                <req id="FORK"/>
+                <req id="FORK_EPOLL"/>
+            </script>
+            <arg name="iomux" type="epoll_wait_calls">
+              <value reqs="EPOLL">epoll</value>
+              <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+            </arg>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="evts" list="">
+                <value>inout</value>
+                <value>inout</value>
+                <value>out</value>
+                <value>out</value>
+                <value>in</value>
+                <value>in</value>
+                <value>in</value>
+                <value>in</value>
+                <value>in</value>
+                <value>in</value>
+            </arg>
+            <arg name="gen_ev_before" list="">
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="gen_ev_between" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="gen_ev_after" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="call_wait_before" list="">
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="func">
+                <value reqs="FORK">fork</value>
+                <value reqs="EXEC">execve</value>
+                <value reqs="FORK,EXEC">fork_exec</value>
+                <value reqs="DUP">dup</value>
+            </arg>
+            <arg name="timeout">
+                <value>3000</value>
+            </arg>
+            <arg name="data_size">
+                <value>512</value>
+            </arg>
+            <arg name="non_blocking" type="boolean"/>
+            <arg name="early_ctl" type="epoll_ctl_early"/>
+        </run>
+        <run>
+            <script name="derived_epoll" track_conf="silent">
+                <req id="FORK"/>
+                <req id="FORK_EPOLL"/>
+            </script>
+            <arg name="iomux" type="epoll_wait_calls">
+              <value reqs="EPOLL">epoll</value>
+              <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+            </arg>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="evts" list="">
+                <value>in</value>
+                <value>inout</value>
+                <value>out</value>
+            </arg>
+            <arg name="gen_ev_before" list="">
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="gen_ev_between" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="gen_ev_after" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="call_wait_before" list="">
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="func">
+                <value reqs="FORK">fork</value>
+                <value reqs="EXEC">execve</value>
+                <value reqs="FORK,EXEC">fork_exec</value>
+                <value reqs="DUP">dup</value>
+            </arg>
+            <arg name="timeout">
+                <value>3000</value>
+            </arg>
+            <arg name="data_size">
+                <value>512</value>
+            </arg>
+            <arg name="non_blocking" type="boolean"/>
+            <arg name="early_ctl" type="epoll_ctl_early"/>
+        </run>
+
+        <run name="epoll_one_shot_session">
+            <session>
+                <arg name="iomux" type="epoll_wait_calls">
+                  <value reqs="EPOLL">epoll</value>
+                  <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+                </arg>
+                <arg name="evts">
+                    <value>in</value>
+                    <value>inout</value>
+                    <value>out</value>
+                </arg>
+                <arg name="timeout">
+                    <value>5000</value>
+                </arg>
+                <arg name="refresh">
+                    <value>none</value>
+                    <value>same</value>
+                    <value>different</value>
+                </arg>
+                <arg name="non_blocking" type="boolean"/>
+                <arg name="et_one_shot">
+                    <value reqs="EPOLLET">et</value>
+                    <value reqs="EPOLLONESHOT">one_shot</value>
+                </arg>
+
+                <run>
+                    <script name="epoll_one_shot"/>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="env">
+                        <value type="env.peer2peer_all_ipv4_ipv6"/>
+                    </arg>
+                    <arg name="early_ctl" type="epoll_ctl_early"/>
+                    <arg name="data_size">
+                        <value>512</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="epoll_one_shot_pipe">
+                        <req id="PIPE"/>
+                    </script>
+                    <arg name="env">
+                        <value ref="env.iut_only"/>
+                    </arg>
+                    <arg name="data_size">
+                        <value>128</value>
+                    </arg>
+                </run>
+            </session>
+        </run>
+
+        <run>
+          <script name="epfd_in_itself">
+            <!--ZF does not support it-->
+            <req id="ZF_INCOMPATIBLE"/>
+          </script>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="evts">
+                <value>in</value>
+                <value>inout</value>
+                <value>out</value>
+            </arg>
+            <arg name="how">
+                <value>itself</value>
+                <value reqs="DUP">dup_master</value>
+                <value reqs="DUP">dup_target</value>
+            </arg>
+        </run>
+
+        <run>
+          <script name="epoll_close_on_exec">
+            <req id="EXEC"/>
+          </script>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="create_func">
+                <value>epoll_create</value>
+                <value reqs="EPOLL_CREATE1">epoll_create1</value>
+            </arg>
+            <arg name="evts">
+                <value>in</value>
+                <value>inout</value>
+                <value>out</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="ioctl_on_epfd">
+              <!--ZF does not support it-->
+              <req id="ZF_INCOMPATIBLE"/>
+            </script>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},if:'iut_if',addr:'iut_addr':inet:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},if:'iut_if',addr:'iut_addr':inet6:unicast}}</value>
+            </arg>
+            <arg name="req" list="">
+                <value reqs="FIONBIO">FIONBIO</value>
+                <value reqs="FIONREAD">FIONREAD</value>
+                <value reqs="SIOCATMARK">SIOCATMARK</value>
+                <value reqs="SIOCGIFNETMASK">SIOCGIFNETMASK</value>
+                <value reqs="SIOCSIFNETMASK">SIOCSIFNETMASK</value>
+                <value reqs="SIOCGIFADDR">SIOCGIFADDR</value>
+                <value reqs="SIOCSIFADDR">SIOCSIFADDR</value>
+                <value reqs="SIOCGIFBRDADDR">SIOCGIFBRDADDR</value>
+                <value reqs="SIOCSIFBRDADDR">SIOCSIFBRDADDR</value>
+                <value reqs="SIOCGIFFLAGS">SIOCGIFFLAGS</value>
+                <value reqs="SIOCSIFFLAGS">SIOCSIFFLAGS</value>
+                <value reqs="SIOCGIFMTU">SIOCGIFMTU</value>
+                <value reqs="SIOCSIFMTU">SIOCSIFMTU</value>
+                <value reqs="SIOCGIFDSTADDR">SIOCGIFDSTADDR</value>
+                <value reqs="SIOCSIFDSTADDR">SIOCSIFDSTADDR</value>
+                <value reqs="SIOCGIFHWADDR">SIOCGIFHWADDR</value>
+            </arg>
+            <arg name="error" list="">
+                <value>0</value>
+                <value>ENOTTY</value>
+                <value>ENOTTY</value>
+                <value>ENOTTY</value>
+                <value>ENOTTY</value>
+                <value>ENOTTY</value>
+                <value>ENOTTY</value>
+                <value>ENOTTY</value>
+                <value>ENOTTY</value>
+                <value>ENOTTY</value>
+                <value>ENOTTY</value>
+                <value>ENOTTY</value>
+                <value>ENOTTY</value>
+                <value>ENOTTY</value>
+                <value>ENOTTY</value>
+                <value>ENOTTY</value>
+            </arg>
+            <arg name="exp_ret" list="">
+                <value>0</value>
+                <value>-1</value>
+                <value>-1</value>
+                <value>-1</value>
+                <value>-1</value>
+                <value>-1</value>
+                <value>-1</value>
+                <value>-1</value>
+                <value>-1</value>
+                <value>-1</value>
+                <value>-1</value>
+                <value>-1</value>
+                <value>-1</value>
+                <value>-1</value>
+                <value>-1</value>
+                <value>-1</value>
+            </arg>
+            <arg name="evts">
+                <value>in</value>
+                <value>inout</value>
+                <value>out</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="multi_level_iomux">
+                <req id="EPOLL_MULTI_LEVEL"/>
+            </script>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="evts" list="">
+                <value>in</value>
+                <value>in</value>
+                <value>inout</value>
+                <value>out</value>
+            </arg>
+            <arg name="send_data" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="data_size">
+                <value>512</value>
+            </arg>
+            <arg name="timeout">
+                <value>3000</value>
+            </arg>
+            <arg name="iomux" type="iomux_with_oo_epoll"/>
+            <arg name="early_ctl" type="epoll_ctl_early"/>
+            <arg name="use_et" type="boolean" list="et_one_shot">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="use_one_shot" type="boolean" list="et_one_shot">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="get_ev_before" type="boolean" list="et_one_shot">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+         <run>
+            <script name="multi_level_iomux">
+                <req id="EPOLL_MULTI_LEVEL"/>
+            </script>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="evts">
+                <value>in</value>
+                <value>inout</value>
+                <value>out</value>
+            </arg>
+            <arg name="send_data" type="boolean"/>
+            <arg name="data_size">
+                <value>512</value>
+            </arg>
+            <arg name="timeout">
+                <value>3000</value>
+            </arg>
+            <arg name="iomux" type="iomux"/>
+            <arg name="early_ctl" type="epoll_ctl_early"/>
+            <arg name="use_et" type="boolean" list="et_one_shot">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="use_one_shot" type="boolean" list="et_one_shot">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="get_ev_before" type="boolean" list="et_one_shot">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+       <run>
+            <script name="create_close_wait">
+              <!--ZF does not support it-->
+              <req id="ZF_INCOMPATIBLE"/>
+            </script>
+            <arg name="iomux" type="epoll_wait_calls"/>
+            <arg name="sock_type1" type="sock_stream_dgram"/>
+            <arg name="sock_type2" type="sock_stream_dgram"/>
+            <arg name="env">
+                <!-- IPv4 env -->
+                <value>{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast},{{'pco_tst':tester},addr:'tst_addr1':inet:unicast,addr:'tst_addr2':inet:unicast}}</value>
+                <value reqs="ENV-2PEERS,ENV-TST-LINK">tester{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast},{{'pco_tst':tester},addr:'tst_addr1':inet:unicast,addr:'tst_addr2':inet:unicast}}</value>
+                <value>{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast}},'tst_addr1'='iut_addr1','tst_addr2'='iut_addr2'</value>
+                <!-- IPv6 env -->
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr1':inet6:unicast,addr:'tst_addr2':inet6:unicast}}</value>
+                <value reqs="ENV-2PEERS,ENV-TST-LINK,IP6,IP6_ONLOAD">tester{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr1':inet6:unicast,addr:'tst_addr2':inet6:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast}},'tst_addr1'='iut_addr1','tst_addr2'='iut_addr2'</value>
+            </arg>
+            <arg name="data_size">
+                <value>512</value>
+            </arg>
+            <arg name="timeout">
+                <value>2000</value>
+            </arg>
+            <arg name="non_blocking" type="boolean"/>
+            <arg name="duplication">
+                <value>none</value>
+                <value reqs="DUP">dup</value>
+                <value reqs="FORK,FORK_EPOLL">fork</value>
+            </arg>
+            <arg name="early_ctl" type="epoll_ctl_early"/>
+        </run>
+        
+       <run>
+            <!-- There are the problems with this test on 3.2.6 and 3.2.9
+                 kernels. See bug 29219 -->
+            <script name="epoll_dead_circle">
+                <req id="EPOLL_MULTI_LEVEL"/>
+            </script>
+            <arg name="iomux" type="epoll_wait_calls">
+                <value reqs="EPOLL">epoll</value>
+            </arg>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="set_sock_evt" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="epoll_reused_descriptor">
+                <req id="EPOLL_CTL_EARLY"/>
+            </script>
+            <arg name="iomux" type="epoll_wait_ext"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="timeout">
+                <value>2000</value>
+                <value>0</value>
+            </arg>
+            <arg name="duplication">
+                <value>none</value>
+                <value reqs="DUP">dup</value>
+                <value reqs="FORK,FORK_EPOLL">fork</value>
+            </arg>
+            <arg name="fast_reopen" type="boolean"/>
+            <arg name="add_to_set" type="boolean"/>
+            <arg name="operation">
+                <value>read</value>
+                <value>write</value>
+                <value>none</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="edge_triggered_refresh">
+                <req id="EPOLLET"/>
+            </script>
+            <arg name="is_pipe">
+                <value>FALSE</value>
+            </arg>
+            <arg name="sock_type"  type="sock_stream_dgram" list="">
+                <value>SOCK_STREAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="sock_state" list="">
+                <value>just_created</value>
+                <value>connected</value>
+                <value>connected</value>
+                <value>connected</value>
+                <value>connected</value>
+            </arg>
+            <arg name="early_ctl" type="epoll_ctl_early" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="iomux" type="epoll_wait_calls">
+                <value>epoll</value>
+                <value reqs="EPOLL_PWAIT">epoll_pwait</value>
+            </arg>
+            <arg name="data_size">
+                <value>512</value>
+            </arg>
+            <arg name="evts">
+                <value>in</value>
+                <value>inout</value>
+                <value>out</value>
+            </arg>
+            <arg name="timeout1">
+                <value>2000</value>
+            </arg>
+            <arg name="timeout2">
+                <value>0</value>
+                <value>1</value>
+            </arg>
+            <arg name="non_blocking" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="edge_triggered_refresh">
+                <req id="EPOLLET"/>
+            </script>
+            <arg name="is_pipe">
+                <value reqs="PIPE">TRUE</value>
+            </arg>
+            <arg name="env">
+                <value ref="env.iut_only"/>
+            </arg>
+            <arg name="iomux" type="epoll_wait_calls">
+                <value>epoll</value>
+                <value reqs="EPOLL_PWAIT">epoll_pwait</value>
+            </arg>
+            <arg name="data_size">
+                <value>512</value>
+            </arg>
+            <arg name="evts">
+                <value>in</value>
+                <value>inout</value>
+                <value>out</value>
+            </arg>
+            <arg name="timeout1">
+                <value>2000</value>
+            </arg>
+            <arg name="timeout2">
+                <value>0</value>
+                <value>1</value>
+            </arg>
+            <arg name="non_blocking" type="boolean"/>
+            <arg name="early_ctl" type="epoll_ctl_early" list="">
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="wait_epollet_wait">
+                <req id="EPOLLET"/>
+            </script>
+            <arg name="is_pipe">
+                <value>FALSE</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="data_size">
+                <value>512</value>
+            </arg>
+            <arg name="timeout">
+                <value>2000</value>
+            </arg>
+            <arg name="evts">
+                <value>in</value>
+                <value>inout</value>
+                <value>out</value>
+            </arg>
+            <arg name="non_blocking" type="boolean"/>
+            <arg name="early_ctl" type="epoll_ctl_early"/>
+        </run>
+
+        <run>
+            <script name="wait_epollet_wait">
+                <req id="EPOLLET"/>
+            </script>
+            <arg name="is_pipe">
+                <value reqs="PIPE">TRUE</value>
+            </arg>
+            <arg name="env">
+                <value ref="env.iut_only"/>
+            </arg>
+            <arg name="data_size">
+                <value>512</value>
+            </arg>
+            <arg name="timeout">
+                <value>2000</value>
+            </arg>
+            <arg name="evts">
+                <value>in</value>
+                <value>inout</value>
+                <value>out</value>
+            </arg>
+            <arg name="non_blocking" type="boolean"/>
+            <arg name="early_ctl" type="epoll_ctl_early">
+              <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="epoll_evnt_queue"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="data_size">
+                <value>512</value>
+            </arg>
+            <arg name="timeout">
+                <value>2000</value>
+            </arg>
+            <arg name="conn_num">
+                <value>5</value>
+            </arg>
+            <arg name="evt_num">
+                <value>3</value>
+            </arg>
+            <arg name="maxevents">
+                <value>2</value>
+            </arg>
+            <arg name="non_blocking" type="boolean"/>
+            <arg name="early_ctl" type="epoll_ctl_early"/>
+        </run>
+
+        <run>
+            <script name="multiple_same_epfd">
+                <req id="SOCK_STREAM"/>
+                <req id="EPOLL_NON_MT_SAFE"/>
+                <req id="THREADS"/>
+                <!-- Disable test in case of epoll3, see ON-11772 -->
+                <req id="NO_EF_UL_EPOLL_THREE"/>
+            </script>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="iomux" type="epoll_wait_calls">
+                <value reqs="EPOLL">epoll</value>
+                <value reqs="EPOLL">epoll_pwait</value>
+                <!-- Do not run this test with oo_epoll according to bug
+                     71811 -->
+            </arg>
+            <arg name="data_size">
+                <value>512</value>
+            </arg>
+            <arg name="timeout">
+                <value>4500</value>
+            </arg>
+            <arg name="call_num">
+                <value>5</value>
+            </arg>
+            <arg name="epfd_num">
+                <value>3</value>
+            </arg>
+            <arg name="close_num">
+                <value>0</value>
+                <value>1</value>
+            </arg>
+            <arg name="evts">
+                <value>in</value>
+                <value>inout</value>
+                <value>out</value>
+            </arg>
+            <arg name="send_data" type="boolean"/>
+            <arg name="early_ctl" type="epoll_ctl_early"/>
+        </run>
+
+        <run>
+            <script name="strange_op_on_epfd">
+                <req id="BNBVALUE"/>
+            </script>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="func" list="">
+                <value>accept</value>
+                <value>bind</value>
+                <value>connect</value>
+                <value>getpeername</value>
+                <value>getsockname</value>
+                <value>listen</value>
+                <value reqs="READ_WRITE">read</value>
+                <value reqs="READV_WRITEV">readv</value>
+                <value>recv</value>
+                <value>recvfrom</value>
+                <value reqs="SENDMSG_RECVMSG">recvmsg</value>
+                <value>send</value>
+                <value reqs="SENDMSG_RECVMSG">sendmsg</value>
+                <value reqs="SENDMMSG">sendmmsg_alt</value>
+                <value>sendto</value>
+                <value>shutdown</value>
+                <value reqs="READ_WRITE">write</value>
+                <value reqs="READV_WRITEV">writev</value>
+                <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND">simple_zc_send</value>
+                <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND,ONLOAD_ZC_SEND_USER_BUF">simple_zc_send_user_buf</value>
+                <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_IOV,SF_TEMPLATE_SEND">template_send</value>
+                <value reqs="ONLOAD_ONLY,SEND_FLAG,SF_ODS,SF_ODS_COMPL">od_send</value>
+            </arg>
+            <arg name="error" list="">
+                <value>ENOTSOCK</value>
+                <value>ENOTSOCK</value>
+                <value>ENOTSOCK</value>
+                <value>ENOTSOCK</value>
+                <value>ENOTSOCK</value>
+                <value>ENOTSOCK</value>
+                <value>EINVAL</value>
+                <value>EINVAL</value>
+                <value>ENOTSOCK</value>
+                <value>ENOTSOCK</value>
+                <value>ENOTSOCK</value>
+                <value>ENOTSOCK</value>
+                <value>ENOTSOCK</value>
+                <value>ENOTSOCK</value>
+                <value>ENOTSOCK</value>
+                <value>ENOTSOCK</value>
+                <value>EINVAL</value>
+                <value>EOPNOTSUPP</value>
+                <value>ENOTSOCK</value>
+                <value>ENOTSOCK</value>
+                <value>EOPNOTSUPP</value>
+                <value>ENOTSOCK</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="strange_op_on_epfd"/>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="func">
+                <value reqs="RECVMMSG">recvmmsg_alt</value>
+                <value reqs="ONLOAD_ONLY,ONLOAD_ZC_RECV">simple_zc_recv</value>
+                <value reqs="ONLOAD_ONLY,ONLOAD_ZC_HLRX">simple_hlrx_recv_zc</value>
+                <value reqs="ONLOAD_ONLY,ONLOAD_ZC_HLRX,ONLOAD_ZC_HLRX_COPY">simple_hlrx_recv_copy</value>
+            </arg>
+            <arg name="error">
+                <value>ENOTSOCK</value>
+            </arg>
+        </run>
+        <run>
+            <script name="strange_op_on_epfd"/>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="func">
+                <value reqs="ONLOAD_ONLY,ONLOAD_ZC_RECV">simple_zc_recv</value>
+                <value reqs="ONLOAD_ONLY,ONLOAD_ZC_HLRX">simple_hlrx_recv_zc</value>
+                <value reqs="ONLOAD_ONLY,ONLOAD_ZC_HLRX,ONLOAD_ZC_HLRX_COPY">simple_hlrx_recv_copy</value>
+                <value reqs="ONLOAD_ONLY,ONLOAD_ZC_SEND">simple_zc_send_sock</value>
+                <value reqs="ONLOAD_ONLY,ONLOAD_ZC_SEND,ONLOAD_ZC_SEND_USER_BUF">simple_zc_send_sock_user_buf</value>
+            </arg>
+            <arg name="error">
+                <value>ENOTSOCK</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="edge_level_triggered_mod">
+                <req id="EPOLLET"/>
+            </script>
+            <arg name="is_pipe">
+                <value>FALSE</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="data_size">
+                <value>512</value>
+            </arg>
+            <arg name="evts">
+                <value>in</value>
+                <value>inout</value>
+                <value>out</value>
+            </arg>
+            <arg name="timeout">
+                <value>2000</value>
+            </arg>
+            <arg name="et_to_lt" type="boolean"/>
+            <arg name="non_blocking" type="boolean"/>
+            <arg name="early_ctl" type="epoll_ctl_early"/>
+        </run>
+        <run>
+            <script name="edge_level_triggered_mod">
+                <req id="EPOLLET"/>
+            </script>
+            <arg name="is_pipe">
+                <value reqs="PIPE">TRUE</value>
+            </arg>
+            <arg name="env">
+                <value ref="env.iut_only"/>
+            </arg>
+            <arg name="data_size">
+                <value>512</value>
+            </arg>
+            <arg name="evts">
+                <value>in</value>
+                <value>inout</value>
+                <value>out</value>
+            </arg>
+            <arg name="timeout">
+                <value>2000</value>
+            </arg>
+            <arg name="et_to_lt" type="boolean"/>
+            <arg name="non_blocking" type="boolean"/>
+            <arg name="early_ctl" type="epoll_ctl_early">
+              <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="edge_level_triggered_both">
+                <req id="EPOLLET"/>
+            </script>
+            <arg name="iomux" type="epoll_wait_ext">
+                <value>epoll</value>
+            </arg>
+            <arg name="is_pipe">
+                <value reqs="PIPE">TRUE</value>
+            </arg>
+            <arg name="env">
+                <value ref="env.iut_only"/>
+           </arg>
+            <arg name="data_size">
+                <value>512</value>
+            </arg>
+            <arg name="evts">
+                <value>in</value>
+                <value>inout</value>
+                <value>out</value>
+            </arg>
+            <arg name="timeout">
+                <value>2000</value>
+            </arg>
+            <arg name="et_first" type="boolean"/>
+            <arg name="non_blocking" type="boolean"/>
+            <arg name="early_ctl" type="epoll_ctl_early">
+              <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="edge_level_triggered_both">
+                <req id="EPOLLET"/>
+            </script>
+            <arg name="iomux" type="epoll_wait_ext">
+                <value>epoll</value>
+            </arg>
+            <arg name="is_pipe">
+                <value>FALSE</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+            <arg name="data_size">
+                <value>512</value>
+            </arg>
+            <arg name="evts">
+                <value>in</value>
+                <value>inout</value>
+                <value>out</value>
+            </arg>
+            <arg name="timeout">
+                <value>2000</value>
+            </arg>
+            <arg name="et_first" type="boolean"/>
+            <arg name="non_blocking" type="boolean"/>
+            <arg name="early_ctl" type="epoll_ctl_early"/>
+        </run>
+
+        <run>
+            <script name="edge_level_triggered_et_only">
+                <req id="EPOLLET"/>
+            </script>
+            <arg name="is_pipe">
+                <value>FALSE</value>
+            </arg>
+            <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+            <arg name="data_size">
+                <value>512</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="evts">
+                <value>in</value>
+            </arg>
+            <arg name="timeout">
+                <value>2000</value>
+            </arg>
+            <arg name="et_first" type="boolean"/>
+            <arg name="non_blocking" type="boolean"/>
+            <arg name="read_between" type="boolean"/>
+            <arg name="early_ctl" type="epoll_ctl_early"/>
+            <arg name="zf" type="zf_bool"/>
+        </run>
+        <run>
+            <script name="edge_level_triggered_et_only">
+                <req id="EPOLLET"/>
+            </script>
+            <arg name="is_pipe">
+                <value>FALSE</value>
+            </arg>
+            <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+            <arg name="data_size">
+                <value>512</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="evts">
+                <value>inout</value>
+                <value>out</value>
+            </arg>
+            <arg name="timeout">
+                <value>2000</value>
+            </arg>
+            <arg name="et_first" type="boolean"/>
+            <arg name="non_blocking" type="boolean"/>
+            <arg name="read_between">
+                <value>FALSE</value>
+            </arg>
+            <arg name="early_ctl" type="epoll_ctl_early"/>
+            <arg name="zf" type="zf_bool"/>
+        </run>
+        <run>
+            <script name="edge_level_triggered_et_only">
+                <req id="EPOLLET"/>
+            </script>
+            <arg name="is_pipe">
+                <value reqs="PIPE">TRUE</value>
+            </arg>
+            <arg name="env">
+                <value ref="env.iut_only"/>
+            </arg>
+            <arg name="data_size">
+                <value>512</value>
+            </arg>
+            <arg name="evts" list="">
+                <value>in</value>
+                <value>in</value>
+                <value>inout</value>
+                <value>out</value>
+            </arg>
+            <arg name="timeout">
+                <value>2000</value>
+            </arg>
+            <arg name="et_first" type="boolean"/>
+            <arg name="non_blocking" type="boolean"/>
+            <arg name="read_between" list="">
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="early_ctl" type="epoll_ctl_early">
+              <value>FALSE</value>
+            </arg>
+            <arg name="zf" type="zf_bool">
+              <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <session>
+                <arg name="sock_type" type="sock_stream_dgram" list="wild">
+                    <value>SOCK_STREAM</value>
+                    <value>SOCK_DGRAM</value>
+                    <value>SOCK_STREAM</value>
+                    <value>SOCK_DGRAM</value>
+
+                    <value>SOCK_STREAM</value>
+                    <value>SOCK_DGRAM</value>
+                    <value>SOCK_DGRAM</value>
+                    <value>SOCK_STREAM</value>
+                    <value>SOCK_DGRAM</value>
+                    <value>SOCK_DGRAM</value>
+
+                    <value>SOCK_STREAM</value>
+                    <value>SOCK_DGRAM</value>
+                    <value>SOCK_STREAM</value>
+                    <value>SOCK_DGRAM</value>
+                </arg>
+                <arg name="env" list="wild">
+                    <value ref="env.peer2peer"/>
+                    <value ref="env.peer2peer"/>
+                    <value ref="env.peer2peer_ipv6"/>
+                    <value ref="env.peer2peer_ipv6"/>
+
+                    <value ref="env.peer2peer_tst"/>
+                    <value ref="env.peer2peer_tst"/>
+                    <value ref="env.peer2peer_tst"/>
+                    <value ref="env.peer2peer_tst_ipv6"/>
+                    <value ref="env.peer2peer_tst_ipv6"/>
+                    <value ref="env.peer2peer_tst_ipv6"/>
+
+                    <value ref="env.peer2peer_lo"/>
+                    <value ref="env.peer2peer_lo"/>
+                    <value ref="env.peer2peer_lo_ipv6"/>
+                    <value ref="env.peer2peer_lo_ipv6"/>
+                </arg>
+                <arg name="use_wildcard" list="wild">
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                </arg>
+                <arg name="timeout">
+                    <value>3000</value>
+                </arg>
+                <arg name="data_size">
+                    <value>512</value>
+                </arg>
+                <arg name="have_events">
+                    <value>TRUE</value>
+                </arg>
+                <arg name="evts" list="">
+                    <value>in</value>
+                    <value>inout</value>
+                    <value>out</value>
+                </arg>
+                <arg name="event_before_add" list="">
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                    <value>TRUE</value>
+                </arg>
+                <arg name="wait_child" type="boolean"/>
+                <arg name="non_blocking" type="boolean"/>
+                <arg name="other_stack" type="boolean">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="remove_before_wait" type="boolean">
+                    <value>FALSE</value>
+                </arg>
+                <!--
+                     The next 2 run iterate iomux and func in a way so
+                     func=fork_exec,iomux=oo_epoll do not happen together
+                !-->
+                <run>
+                    <script name="derived_epoll_add" track_conf="silent">
+                        <req id="EPOLL"/>
+                    </script>
+                    <arg name="iomux">
+                        <value>epoll</value>
+                    </arg>
+                    <arg name="func">
+                        <value reqs="FORK,FORK_EPOLL">fork</value>
+                        <value reqs="FORK,EXEC,FORK_EPOLL">fork_exec</value>
+                        <value reqs="DUP,THREADS,EPOLL_NON_MT_SAFE">dup</value>
+                    </arg>>
+                </run>
+                <run>
+
+                    <script name="derived_epoll_add" track_conf="silent">
+                        <req id="ONLOAD_ONLY"/>
+                        <req id="EPOLL"/>
+                        <req id="SF_WODA"/>
+                        <req id="NO_EF_UL_EPOLL_ZERO"/>
+                        <req id="NO_EF_UL_EPOLL_TWO"/>
+                    </script>
+                    <arg name="iomux">
+                        <value>oo_epoll</value>
+                    </arg>
+                    <arg name="func">
+                        <value reqs="FORK,FORK_EPOLL">fork</value>
+                        <value reqs="DUP,THREADS,EPOLL_NON_MT_SAFE">dup</value>
+                    </arg>>
+                </run>
+            </session>
+        </run>
+        <run>
+            <script name="derived_epoll_add" track_conf="silent"/>
+            <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+            <arg name="func">
+                <value reqs="THREADS,EPOLL_NON_MT_SAFE">thread_create</value>
+            </arg>
+            <arg name="timeout">
+                <value>3000</value>
+            </arg>
+            <arg name="data_size">
+                <value>1024</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="use_wildcard">
+                <value>FALSE</value>
+            </arg>
+            <arg name="evts">
+                <value>in</value>
+                <value>inout</value>
+                <value>out</value>
+            </arg>
+            <arg name="have_events" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="event_before_add" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="wait_child" type="boolean"/>
+            <arg name="non_blocking" type="boolean" list="seq_list">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="remove_before_wait" type="boolean" list="seq_list">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="other_stack" type="boolean" list="seq_list">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value reqs="ONLOAD_ONLY,NO_REUSE_STACK">TRUE</value>
+                <value reqs="ONLOAD_ONLY,NO_REUSE_STACK">TRUE</value>
+                <value reqs="ONLOAD_ONLY,NO_REUSE_STACK">TRUE</value>
+            </arg>
+            <arg name="iomux" type="epoll_wait_ext" list="seq_list">
+                <value>oo_epoll</value>
+                <value>oo_epoll</value>
+                <value>epoll</value>
+                <value>epoll</value>
+                <value>epoll</value>
+                <value>epoll</value>
+                <value>epoll</value>
+            </arg>
+        </run>
+        <run>
+            <script name="derived_epoll_add" track_conf="silent"/>
+            <arg name="env" list="wild">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_tst"/>
+                <value ref="env.peer2peer_tst"/>
+                <value ref="env.peer2peer_lo"/>
+            </arg>
+            <arg name="use_wildcard" list="wild">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="func">
+                <value reqs="THREADS,EPOLL_NON_MT_SAFE">thread_create</value>
+            </arg>
+            <arg name="timeout">
+                <value>3000</value>
+            </arg>
+            <arg name="data_size">
+                <value>1024</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="have_events" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="evts" list="">
+                <value>in</value>
+                <value>in</value>
+                <value>in</value>
+                <value>inout</value>
+                <value>out</value>
+            </arg>
+            <arg name="event_before_add" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="wait_child" type="boolean"/>
+            <arg name="non_blocking" type="boolean" list="seq_list">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="remove_before_wait" type="boolean" list="seq_list">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="other_stack" type="boolean" list="seq_list">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value reqs="ONLOAD_ONLY,NO_REUSE_STACK">TRUE</value>
+                <value reqs="ONLOAD_ONLY,NO_REUSE_STACK">TRUE</value>
+            </arg>
+            <arg name="iomux" type="epoll_wait_ext" list="seq_list">
+                <value>oo_epoll</value>
+                <value>epoll</value>
+                <value>epoll</value>
+                <value>epoll</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="derived_epoll_mod" track_conf="silent">
+                <req id="FORK"/>
+                <req id="FORK_EPOLL"/>
+            </script>
+            <arg name="sock_type" type="sock_stream_dgram" list="wild">
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_DGRAM</value>
+
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="env" list="wild">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_ipv6"/>
+
+                <value ref="env.peer2peer_tst"/>
+                <value ref="env.peer2peer_tst"/>
+                <value ref="env.peer2peer_tst"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+
+                <value ref="env.peer2peer_lo"/>
+                <value ref="env.peer2peer_lo"/>
+                <value ref="env.peer2peer_lo_ipv6"/>
+                <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="use_wildcard" list="wild">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="iomux" type="epoll_wait_ext"/>
+            <arg name="func">
+                <value reqs="FORK">fork</value>
+                <value reqs="FORK,EXEC">fork_exec</value>
+                <value reqs="DUP,THREADS,EPOLL_NON_MT_SAFE">dup</value>
+            </arg>
+            <arg name="timeout">
+                <value>3000</value>
+            </arg>
+            <!-- ST-2653: It's needed to enlarge buffer to minimize
+                 amount of recv() calls and prevent epoll_wait from fail -->
+            <arg name="data_size">
+                <value>10240</value>
+            </arg>
+            <arg name="have_events">
+                <value>TRUE</value>
+            </arg>
+            <arg name="evts" list="">
+                <value>in</value>
+                <value>inout</value>
+                <value>out</value>
+            </arg>
+            <arg name="event_before_mod" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="wait_child" type="boolean"/>
+            <arg name="non_blocking" type="boolean"/>
+        </run>
+        <run>
+            <script name="derived_epoll_mod" track_conf="silent"/>
+            <arg name="iomux" type="epoll_wait_ext"/>
+            <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+            <arg name="use_wildcard">
+                <value>FALSE</value>
+            </arg>
+            <arg name="func">
+                <value reqs="THREADS,EPOLL_NON_MT_SAFE">thread_create</value>
+            </arg>
+            <arg name="timeout">
+                <value>3000</value>
+            </arg>
+            <!-- ST-2653: It's needed to enlarge buffer to minimize
+                 amount of recv() calls and prevent epoll_wait from fail -->
+            <arg name="data_size">
+                <value>10240</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="evts">
+                <value>in</value>
+                <value>inout</value>
+                <value>out</value>
+            </arg>
+            <arg name="have_events" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="event_before_mod" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="wait_child" type="boolean"/>
+            <arg name="non_blocking" type="boolean"/>
+        </run>
+        <run>
+            <script name="derived_epoll_mod" track_conf="silent">
+                <req id="FORK"/>
+                <req id="FORK_EPOLL"/>
+            </script>
+            <arg name="env" list="wild">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_tst"/>
+                <value ref="env.peer2peer_tst"/>
+                <value ref="env.peer2peer_lo"/>
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+                <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="use_wildcard" list="wild">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="iomux" type="epoll_wait_ext"/>
+            <arg name="func">
+                <value reqs="FORK">fork</value>
+                <value reqs="FORK,EXEC">fork_exec</value>
+                <value reqs="DUP,THREADS,EPOLL_NON_MT_SAFE">dup</value>
+            </arg>
+            <arg name="timeout">
+                <value>3000</value>
+            </arg>
+            <!-- ST-2653: It's needed to enlarge buffer to minimize
+                 amount of recv() calls and prevent epoll_wait from fail -->
+            <arg name="data_size">
+                <value>10240</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="have_events" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="evts">
+                <value>in</value>
+            </arg>
+            <arg name="event_before_mod" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="wait_child" type="boolean"/>
+            <arg name="non_blocking" type="boolean"/>
+        </run>
+
+        <run name="derived_epoll_del_session">
+            <session>
+                <arg name="iomux" type="epoll_wait_ext"/>
+                <arg name="func">
+                    <value reqs="FORK">fork</value>
+                    <value reqs="FORK,EXEC">fork_exec</value>
+                    <value reqs="DUP,THREADS">dup</value>
+                </arg>
+                <arg name="timeout">
+                    <value>2000</value>
+                </arg>
+                <arg name="data_size">
+                    <value>512</value>
+                </arg>
+                <arg name="wait_child" type="boolean"/>
+                <arg name="non_blocking" type="boolean"/>
+
+                <run>
+                    <script name="derived_epoll_del" track_conf="silent">
+                        <req id="FORK"/>
+                        <req id="FORK_EPOLL"/>
+                        <req id="EPOLL_NON_MT_SAFE"/>
+                    </script>
+                    <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+                    <arg name="sock_type"  type="sock_stream_dgram" list="">
+                        <value>SOCK_STREAM</value>
+                        <value>SOCK_DGRAM</value>
+                        <value>SOCK_STREAM</value>
+                        <value>SOCK_STREAM</value>
+                    </arg>
+                    <arg name="evts" list="">
+                        <value>in</value>
+                        <value>in</value>
+                        <value>inout</value>
+                        <value>out</value>
+                    </arg>
+                    <arg name="use_wildcard">
+                        <value>FALSE</value>
+                    </arg>
+                </run>
+                <run>
+                    <script name="derived_epoll_del" track_conf="silent">
+                        <req id="FORK"/>
+                        <req id="FORK_EPOLL"/>
+                        <req id="EPOLL_NON_MT_SAFE"/>
+                    </script>
+                    <arg name="env">
+                        <value ref="env.peer2peer_tst"/>
+                        <value ref="env.peer2peer_tst_ipv6"/>
+                    </arg>
+                    <arg name="sock_type"  type="sock_stream_dgram">
+                        <value>SOCK_DGRAM</value>
+                    </arg>
+                    <arg name="evts">
+                        <value>in</value>
+                    </arg>
+                    <arg name="use_wildcard">
+                        <value>TRUE</value>
+                    </arg>
+                </run>
+            </session>
+        </run>
+
+        <run>
+            <script name="edge_triggered_listen">
+                <req id="EPOLLET"/>
+            </script>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="group_num">
+                <value>16</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="epoll_ctl_early">
+                <req id="EPOLL_CTL_EARLY"/>
+            </script>
+            <arg name="env" list="">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_tst"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+                <value ref="env.peer2peer_tst"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+            </arg>
+            <arg name="destroy_stack" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value reqs="FORK,FORK_EPOLL">TRUE</value>
+                <value reqs="FORK,FORK_EPOLL">TRUE</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="iomux" type="epoll_wait_calls"/>
+            <arg name="multithread" type="boolean"/>
+            <arg name="blocking" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="epoll_ctl_del_after_exec">
+                <req id="EXEC"/>
+            </script>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="use_wildcard">
+                <value>FALSE</value>
+            </arg>
+        </run>
+        <run>
+            <script name="epoll_ctl_del_after_exec">
+                <req id="EXEC"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_tst"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="use_wildcard">
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="create_close_many">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="iter_num">
+                <value>10000</value>
+            </arg>
+            <arg name="domain" type="socket_domain"/>
+        </run>
+
+        <run>
+            <script name="ctl_handover_wait">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_tst"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+            </arg>
+            <arg name="iomux" type="epoll_wait_calls"/>
+            <arg name="timeout">
+                <value>0</value>
+                <value>1000</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="epoll_nbio_tcpconnect"/>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="timeout">
+                <value>0</value>
+                <value>1000</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+
+        <run>
+            <script name="epoll_one_shot_out">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="iomux" type="epoll_wait_calls">
+              <value>epoll</value>
+              <value>epoll_pwait</value>
+            </arg>
+            <arg name="timeout">
+                <value>0</value>
+                <value>1000</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="few_in_events"/>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+
+        <run>
+            <script name="edge_triggered_out"/>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+
+        <run name="gw_session">
+            <session track_conf="silent">
+                <epilogue>
+                  <script name="../gateways_epilogue"/>
+                  <arg name="env">
+                    <value ref="env.peer2peer_gw"/>
+                  </arg>
+                </epilogue>
+
+                <run>
+                    <script name="tcp_ack_no_event" track_conf="silent"/>
+                    <arg name="env">
+                        <value ref="env.peer2peer_gw"/>
+                        <value ref="env.peer2peer_gw_ipv6"/>
+                    </arg>
+                    <arg name="ack_type">
+                        <value>ack</value>
+                        <value reqs="PROC_SYS_NET">keepalive</value>
+                        <value>zero_window</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="tcp_listen" track_conf="silent"/>
+                    <arg name="env">
+                        <value ref="env.peer2peer_gw"/>
+                        <value ref="env.peer2peer_gw_ipv6"/>
+                    </arg>
+                    <arg name="status" type="conn_problem">
+                        <value>refused</value>
+                        <!-- The following iteration will take two minutes on
+                             reuse_stack because changing tcp_synack_retries
+                             will not have effect. -->
+                        <value reqs="NO_REUSE_STACK">timeout</value>
+                        <value>delayed</value>
+                    </arg>
+                    <arg name="timeout">
+                        <value>-1</value>
+                        <value>0</value>
+                        <value>500</value>
+                        <value>10000</value>
+                    </arg>
+                </run>
+
+            </session>
+        </run>
+
+        <run>
+          <script name="tcp_shutdown">
+            <req id="SOCK_STREAM"/>
+          </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="evts">
+                <value>in</value>
+                <value>out</value>
+                <value>inout</value>
+            </arg>
+            <arg name="event_before" type="boolean"/>
+            <arg name="close_peer" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="epollet_early_shot" track_conf="silent"/>
+            <arg name="env">
+                <value ref="env.two_nets.iut_first"/>
+                <value ref="env.two_nets.iut_first_ipv6"/>
+            </arg>
+            <arg name="iomux" type="epoll_wait_calls">
+                <value>epoll</value>
+                <value>epoll_pwait</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="bind_to">
+                <value>iut</value>
+                <value>wild</value>
+                <value>lo</value>
+                <value>none</value>
+            </arg>
+            <arg name="peer">
+                <value>iut</value>
+                <value>tst</value>
+                <value>lo</value>
+            </arg>
+            <arg name="listening" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="blocking_iomux" type="boolean">
+                <value reqs="EPOLL_NON_MT_SAFE,FDS_NON_MT_SAFE,THREADS">TRUE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="epollet_early_shot" track_conf="silent"/>
+            <arg name="env">
+                <value ref="env.two_nets.iut_first"/>
+                <value ref="env.two_nets.iut_first_ipv6"/>
+            </arg>
+            <arg name="iomux" type="epoll_wait_calls">
+                <value>epoll</value>
+                <value>epoll_pwait</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="bind_to">
+                <value>tst</value>
+            </arg>
+            <arg name="peer">
+                <value reqs="NO_IPVLAN">iut</value>
+                <value>tst</value>
+                <value>lo</value>
+            </arg>
+            <arg name="listening" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="blocking_iomux" type="boolean">
+                <value reqs="EPOLL_NON_MT_SAFE,FDS_NON_MT_SAFE,THREADS">TRUE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="epollet_early_shot" track_conf="silent"/>
+            <arg name="env">
+                <value ref="env.two_nets.iut_first"/>
+                <value ref="env.two_nets.iut_first_ipv6"/>
+            </arg>
+            <arg name="iomux" type="epoll_wait_calls">
+                <value>epoll</value>
+                <value>epoll_pwait</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="bind_to">
+                <value>iut</value>
+                <value>wild</value>
+                <value>lo</value>
+            </arg>
+            <arg name="peer">
+                <value>iut</value>
+                <value>tst</value>
+                <value>lo</value>
+            </arg>
+            <arg name="listening" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="blocking_iomux" type="boolean">
+                <value reqs="EPOLL_NON_MT_SAFE,FDS_NON_MT_SAFE,THREADS">TRUE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="epollet_early_shot" track_conf="silent"/>
+            <arg name="env">
+                <value ref="env.two_nets.iut_first"/>
+                <value ref="env.two_nets.iut_first_ipv6"/>
+            </arg>
+            <arg name="iomux" type="epoll_wait_calls">
+                <value>epoll</value>
+                <value>epoll_pwait</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="bind_to">
+                <value>tst</value>
+            </arg>
+            <arg name="peer">
+                <value reqs="NO_IPVLAN">iut</value>
+                <value>tst</value>
+                <value>lo</value>
+            </arg>
+            <arg name="listening" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="blocking_iomux" type="boolean">
+                <value reqs="EPOLL_NON_MT_SAFE,FDS_NON_MT_SAFE,THREADS">TRUE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="epollet_early_shot" track_conf="nohistory"/>
+            <arg name="env">
+              <value ref="env.two_nets.iut_first"/>
+              <value ref="env.two_nets.iut_first_ipv6"/>
+            </arg>
+            <arg name="iomux" type="epoll_wait_calls">
+                <value>epoll</value>
+                <value>epoll_pwait</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <!-- Iteration
+                 bind_to = wild
+                 peer = lo
+                 is dropped since udp datagrams aren't delivered
+                 from tester to iut with this configuration -->
+            <arg name="bind_to" list="">
+                <value>iut</value>
+                <value>iut</value>
+                <value>iut</value>
+                <value>iut</value>
+
+                <value>tst</value>
+                <value>tst</value>
+                <value>tst</value>
+                <value>tst</value>
+
+                <value>wild</value>
+                <value>wild</value>
+                <value>wild</value>
+
+                <value>lo</value>
+                <value>lo</value>
+                <value>lo</value>
+                <value>lo</value>
+            </arg>
+            <arg name="peer" list="">
+                <value>iut</value>
+                <value>tst</value>
+                <value>lo</value>
+                <value>none</value>
+
+                <value reqs="NO_IPVLAN">iut</value>
+                <value>tst</value>
+                <value>lo</value>
+                <value>none</value>
+
+                <value>iut</value>
+                <value>tst</value>
+                <value>none</value>
+
+                <value>iut</value>
+                <value>tst</value>
+                <value>lo</value>
+                <value>none</value>
+            </arg>
+            <arg name="listening" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="blocking_iomux" type="boolean">
+                <value reqs="EPOLL_NON_MT_SAFE,FDS_NON_MT_SAFE,THREADS">TRUE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="epfd_change_stack">
+                   <!-- Useless for ZF testing, ZF shim has no API for changing stacks -->
+                <req id="ZF_INCOMPATIBLE"/>
+                <!-- Scalable mode can't operate with two stacks -->
+                   <req id="NO_SCALABLE"/>
+                   <req id="NO_REUSE_STACK"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_2addr"/>
+                <value ref="env.peer2peer_2addr_tst"/>
+                <value ref="env.peer2peer_2addr_lo"/>
+                <value ref="env.peer2peer_2addr_ipv6"/>
+                <value ref="env.peer2peer_2addr_tst_ipv6"/>
+                <value ref="env.peer2peer_2addr_lo_ipv6"/>
+            </arg>
+            <arg name="iomux" type="epoll_wait_calls">
+                <value>epoll</value>
+                <value>epoll_pwait</value>
+            </arg>
+            <arg name="sock_type1" type="sock_stream_dgram"/>
+            <arg name="sock_type2" type="sock_stream_dgram"/>
+            <arg name="data_size">
+                <value>512</value>
+            </arg>
+            <arg name="timeout">
+                <value>2000</value>
+            </arg>
+            <arg name="evts1">
+                <value>in</value>
+                <value>inout</value>
+                <value>out</value>
+            </arg>
+            <arg name="evts2">
+                <value>in</value>
+                <value>inout</value>
+                <value>out</value>
+            </arg>
+            <arg name="do_modify" type="boolean" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="evts_mod" list="">
+                <value>-</value>
+                <value>in</value>
+                <value>inout</value>
+                <value>out</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="epoll_ctl_thread">
+                <req id="SOCK_STREAM"/>
+                <req id="THREADS"/>
+                <req id="EPOLL_NON_MT_SAFE"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="check_epoll_wait" type="boolean"/>
+            <arg name="num_threads">
+                <value>1</value>
+                <value>5</value>
+            </arg>
+            <arg name="conns_per_thread">
+                <value>1</value>
+                <value>32</value>
+            </arg>
+            <arg name="iter_num">
+                <value>1</value>
+                <value>2</value>
+                <value>5</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="maxevents_two_stacks">
+                <req id="SOCK_STREAM"/>
+                <req id="FEW_ACCEL_PROCESSES"/>
+                <req id="NO_REUSE_STACK"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="iomux" type="epoll_wait_calls">
+                <value reqs="EPOLL">epoll</value>
+                <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+            </arg>
+            <arg name="maxevents">
+                <value>5</value>
+            </arg>
+            <arg name="first_group">
+                <value>less</value>
+                <value>equal</value>
+                <value>more</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="event_order">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="iomux" type="epoll_wait_calls">
+                <value reqs="EPOLL">epoll</value>
+                <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+            </arg>
+            <arg name="maxevents">
+                <value>1</value>
+                <value>2</value>
+            </arg>
+            <arg name="with_delay" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="create_many_close_all">
+                <req id="SOCK_STREAM"/>
+                <!-- No Onload stack from previous iterations should exist -->
+                <req id="NO_REUSE_PCO"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="create_socket" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="small_maxevents">
+                <req id="SOCK_STREAM"/>
+                <req id="SOCK_DGRAM"/>
+                <!-- ON-13433 -->
+                <req id="ZF_INCOMPATIBLE"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="iomux" type="epoll_wait_calls">
+                <value reqs="EPOLL">epoll</value>
+                <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+            </arg>
+            <arg name="maxevents">
+                <value>3</value>
+            </arg>
+        </run>
+
+    </session>
+</package>
+

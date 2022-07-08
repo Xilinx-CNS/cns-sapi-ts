@@ -1,0 +1,595 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+    
+    <description>IOCTL Requests</description>
+    
+    <author mailto="Oleg.Kravtsov@oktetlabs.ru"/>
+
+    <req id="IOCTLS" sticky="true"/>
+
+    <session>
+        <run>
+            <script name="siocgstamp">
+                <req id="SIOCGSTAMP"/>
+                <req id="MSG_CONTROL"/>
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+            </arg>
+            <arg name="func" type="recv_func_with_ctl"/>
+            <arg name="use_so_timestamp">
+                <value>TRUE</value>
+            </arg>
+            <arg name="use_ns">
+                <value reqs="SO_TIMESTAMPNS">TRUE</value>
+                <value reqs="SO_TIMESTAMP">FALSE</value>
+            </arg>
+            <arg name="get_ioctl_after_sockopt" list="">
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="recv_before_sockopt" list="">
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+        <run>
+            <script name="siocgstamp">
+                <req id="SIOCGSTAMP"/>
+                <req id="MSG_CONTROL"/>
+                <req id="SOCK_DGRAM"/>
+                <req id="EPOLL"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+            </arg>
+            <arg name="func" type="recv_func">
+                <!-- Argument is not used with
+                     use_so_timestamp = FALSE -->
+                <value>recvmsg</value>
+            </arg>
+            <arg name="use_so_timestamp">
+                <value>FALSE</value>
+            </arg>
+            <arg name="use_ns">
+                <value reqs="SIOCGSTAMPNS">TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="get_ioctl_after_sockopt">
+                <value>FALSE</value>
+            </arg>
+            <arg name="recv_before_sockopt">
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="siocgstamp_null">
+                <req id="SIOCGSTAMP"/>
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+            </arg>
+            <arg name="is_null" type="boolean"/>
+            <arg name="req">
+                <value>SIOCGSTAMP</value>
+                <value reqs="SIOCGSTAMPNS">SIOCGSTAMPNS</value>
+            </arg>
+        </run>
+        <run>
+            <script name="siocgstamp_two_senders">
+                <req id="SIOCGSTAMP"/>
+                <req id="MSG_CONTROL"/>
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+                <value reqs="ENV-2PEERS-IUT">IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:wildcard,addr:'iut1_addr':inet:unicast},{{'pco_tst':tester},addr:'tst1_addr':inet:unicast}},IUT{'iut_host'{addr:'iut2_addr':inet:unicast},{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}},'pco_tst1'='pco_tst'</value>
+                <value reqs="ENV-2PEERS">IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:wildcard,addr:'iut1_addr':inet:unicast},{{'pco_tst':tester},addr:'tst1_addr':inet:unicast}},tester{'iut_host'{addr:'iut2_addr':inet:unicast},{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}},'pco_tst1'='pco_tst'</value>
+                <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},'pco_tst2'='pco_tst','pco_tst1'='pco_tst','iut1_addr'='iut_addr','iut2_addr'='iut_addr'</value>
+                <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,{'pco_tst':tester}}},'pco_tst2'='pco_tst','pco_tst1'='pco_tst','iut1_addr'='iut_addr','iut2_addr'='iut_addr'</value>
+                <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,{'pco_tst':IUT}}},'pco_tst2'='pco_tst','pco_tst1'='pco_tst','iut1_addr'='iut_addr','iut2_addr'='iut_addr'</value>
+                <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,{'pco_tst2':tester}},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},'pco_tst1'='pco_tst','iut1_addr'='iut_addr','iut2_addr'='iut_addr'</value>
+                <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,{'pco_tst2':IUT}},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},'pco_tst1'='pco_tst','iut1_addr'='iut_addr','iut2_addr'='iut_addr'</value>
+                <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,{'pco_tst1':tester}},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},'pco_tst2'='pco_tst','iut1_addr'='iut_addr','iut2_addr'='iut_addr'</value>
+                <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,{'pco_tst1':IUT}},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},'pco_tst2'='pco_tst','iut1_addr'='iut_addr','iut2_addr'='iut_addr'</value>
+            </arg>
+            <arg name="use_so_timestamp" list="">
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="use_ns" list="">
+                <value reqs="SO_TIMESTAMPNS">TRUE</value>
+                <value reqs="SO_TIMESTAMP">FALSE</value>
+                <value reqs="SIOCGSTAMPNS">TRUE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="siocpgrp">
+                <req id="SIOCGPGRP"/>
+                <req id="SIOCSPGRP"/>
+                <req id="FIOASYNC"/>
+            </script>
+            <arg name="env" list="">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_lo"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram" list="">
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="use_wildcard" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="close_inherited_sock" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="fionbio_accept">
+                <req id="FIONBIO"/>
+                <req id="SOCK_STREAM"/>
+                <req id="V5_SANITY"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="func">
+	        <value>accept</value>
+	    </arg>
+	    <arg name="func_flag" type="socket_flags">
+		<value>none</value>
+	    </arg>
+        </run>
+        <run>
+            <script name="fionbio_accept">
+                <req id="FIONBIO"/>
+                <req id="SOCK_STREAM"/>
+                <req id="V5_SANITY"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="func">
+	        <value reqs="ACCEPT4">accept4</value>
+	    </arg>
+	    <arg name="func_flag" type="socket_flags">
+		<value>none</value>
+                <value>nonblock</value>
+		<value>cloexec</value>
+	    </arg>
+        </run>
+
+        <run>
+            <script name="fionbio_connect" track_conf="silent">
+                <req id="FIONBIO"/>
+                <req id="SOCK_STREAM"/>
+                <req id="TEST_HARNESS_SANITY"/>
+            </script>
+            <arg name="env" list="">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_tst"/>
+                <value ref="env.peer2peer_lo"/>
+                <value reqs="ENV-2PEERS">{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},'gw'{{'pco_gw':tester},addr:'gw_iut_addr':inet:unicast}},{'gw'{addr:'gw_tst_addr':inet:unicast,addr:'alien_link_addr':ether:alien},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+            </arg>
+            <arg name="gw_exists" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="bind_iut" type="boolean"/>
+        </run>
+        <run>
+            <script name="fionbio">
+                <req id="FIONBIO"/>
+            </script>
+            <arg name="env">
+              <value reqs="V5_SANITY" ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value reqs="V5_SANITY" ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="func" type="recv_func"/>
+        </run>
+
+        <run>
+            <script name="fionbio_thread_unblock_accept">
+                <req id="FIONBIO"/>
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'alien_hwaddr':ether:alien},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+            </arg>
+        </run>
+        <run>
+            <script name="fionbio_thread_unblock_connect" track_conf="silent">
+                <req id="FIONBIO"/>
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'alien_hwaddr':ether:alien},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+            </arg>
+        </run>
+        <run>
+            <script name="fionbio_thread_unblock_send" track_conf="silent">
+                <req id="FIONBIO"/>
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+            </arg>
+        </run>
+        <run>
+            <script name="fionbio_thread_unblock_recv" track_conf="silent">
+                <req id="FIONBIO"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+
+        <run>
+          <script name="fionread_pipe">
+            <req id="PIPE"/>
+          </script>
+          <arg name="env" ref="env.iut_only"/>
+          <arg name="data_size" list="">
+            <value>512</value>
+          </arg>
+          <arg name="writes_num" list="">
+            <value>2</value>
+          </arg>
+        </run>
+
+        <run>
+            <session>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                  <value ref="env.peer2peer_tst"/>
+                  <value ref="env.peer2peer_lo"/>
+                </arg>
+                <arg name="req">
+                    <value reqs="FIONREAD">FIONREAD</value>
+                    <value reqs="SIOCINQ">SIOCINQ</value>
+                </arg>
+
+                <run>
+                    <script name="fionread_udp">
+                        <req id="FIONREAD"/>
+                        <req id="SOCK_DGRAM"/>
+                    </script>
+                    <arg name="n_bufs">
+                        <value>4</value>
+                        <value>31</value>
+                    </arg>
+                </run> 
+                <run>
+                    <script name="fionread_tcp">
+                        <req id="FIONREAD"/>
+                        <req id="SOCK_STREAM"/>
+                    </script>
+                    <arg name="env">
+                        <value ref="env.peer2peer"/>
+                        <value ref="env.peer2peer_tst"/>
+                        <value ref="env.peer2peer_lo"/>
+                        <value ref="env.peer2peer_fake"/>
+                    </arg>
+                </run>
+                <run>
+                    <script name="fionread_oob">
+                        <req id="FIONREAD"/>
+                        <req id="SOCK_STREAM"/>
+                        <req id="OOB"/>
+                    </script>
+                    <arg name="env">
+                        <value ref="env.peer2peer"/>
+                        <value ref="env.peer2peer_tst"/>
+                        <value ref="env.peer2peer_lo"/>
+                        <value ref="env.peer2peer_fake"/>
+                    </arg>
+                    <arg name="oob_inline" type="boolean"/>
+                </run>
+                <run>
+                    <script name="fionread_listening">
+                        <req id="FIONREAD"/>
+                    </script>
+                </run>
+                <run>
+                    <script name="fionread_syn_sent" track_conf="silent">
+                        <req id="FIONREAD"/>
+                    </script>
+                    <arg name="env"> 
+                        <value reqs="ENV-2PEERS">{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},'gw'{{'pco_gw':tester},addr:'gw_iut_addr':inet:unicast}},{'gw'{addr:'gw_tst_addr':inet:unicast,addr:'alien_link_addr':ether:alien},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+                    </arg>
+                </run>
+            </session>
+        </run>
+
+        <run>
+            <script name="siocatmark">
+                <req id="SIOCATMARK"/>
+                <req id="SOCK_STREAM"/>
+                <req id="OOB"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_fake"/>
+            </arg>
+            <arg name="buf1_len">
+              <value>1</value>
+              <value>2</value>
+              <value>3</value>
+            </arg>
+            <arg name="buf2_len">
+              <value>1</value>
+              <value>2</value>
+              <value>3</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="siocatmark_oobinline">
+                <req id="SIOCATMARK"/>
+                <req id="SOCK_STREAM"/>
+                <req id="OOB"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_fake"/>
+            </arg>
+        </run>
+
+        <run>
+            <script name="oob_marker_moves">
+                <req id="SIOCATMARK"/>
+                <req id="SOCK_STREAM"/>
+                <req id="OOB"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_fake"/>
+            </arg>
+            <arg name="oob_inline" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="siocethtool_gpermaddr" track_conf="nohistory">
+                <req id="SIOCETHTOOL"/>
+                <!-- Changing of MAC on IPVLAN interface is impossible. ST-2124 -->
+                <req id="NO_IPVLAN"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},if:'iut_if',addr:'alien_link_addr':ether:alien}}</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+        <run>
+            <session>
+                <arg name="env">
+                    <value>{{{'pco_iut':IUT},if:'iut_if'}}</value>
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram"/>
+
+                <run>
+                    <script name="siocgifconf" track_conf="silent">
+                        <req id="SIOCGIFCONF"/>
+                        <req id="L2_TS"/>
+                    </script>
+                </run>
+                <run>
+                    <script name="siocgifbrdaddr">
+                        <req id="SIOCGIFBRDADDR"/>
+                        <req id="L2_TS"/>
+                    </script>
+                </run>
+                <run>
+                    <script name="siocgifhwaddr">
+                        <req id="SIOCGIFHWADDR"/>
+                        <req id="L2_TS"/>
+                    </script>
+                </run>
+                <run>
+                    <script name="siocifmtu" track_conf="nohistory">
+                        <req id="SIOCIFMTU"/>
+                        <req id="L2_TS"/>
+                        <req id="IF_DOWN_UP"/>
+                    </script>
+                </run>
+                <run>
+                    <script name="siocgifaddr">
+                        <req id="SIOCGIFADDR"/>
+                        <req id="L2_TS"/>
+                    </script>
+                </run>
+                <run>
+                    <script name="siocethtool_glink" track_conf="nohistory">
+                        <req id="SIOCETHTOOL"/>
+                        <req id="ETHTOOL_GLINK"/>
+                        <req id="NO_BOND"/>
+                        <req id="IF_DOWN_UP"/>
+                    </script>
+                </run>
+                <run>
+                    <script name="siocgifnameindex">
+                        <req id="L2_TS"/>
+                    </script>
+                    <arg name="ioctl">
+                        <value reqs="SIOCGIFINDEX">SIOCGIFINDEX</value>
+                        <value reqs="SIOCGIFNAME">SIOCGIFNAME</value>
+                    </arg>
+                </run>
+                <run>
+                    <script name="siocifnetmask" track_conf="silent">
+                        <req id="SIOCIFNETMASK"/>
+                        <req id="L2_TS"/>
+                    </script>
+                </run>
+                <run>
+                    <script name="siocifflags">
+                        <req id="SIOCIFFLAGS"/>
+                        <req id="L2_TS"/>
+                    </script>
+                </run>
+                <run>
+                    <script name="siocsif_inval_sa_family">
+                        <req ref="set_req"/>
+                    </script>
+                    <arg name="af">
+                        <value>AF_UNKNOWN</value>
+                    </arg>
+                    <arg name="set_req">
+                        <value>SIOCSIFNETMASK</value>
+                        <value>SIOCSIFADDR</value>
+                        <value>SIOCSIFBRDADDR</value>
+                        <value>SIOCSIFDSTADDR</value>
+                    </arg>
+                </run>
+                <run>
+                    <script name="siocsif_no_perm">
+                        <req ref="set_req"/>
+                        <!-- Onload cannot correctly configure a scalable
+                             interface for non-privileged UID -->
+                        <req id="NO_SCALABLE"/>
+                            <!-- ST-2009: The test runs an RPC server with non
+                                 priveleged permissions, and it does not work
+                                 together with reuse_stack. -->
+                        <req id="NO_REUSE_STACK"/>
+                        <req id="NO_REUSE_PCO"/>
+                        <req id="SETUID"/>
+                    </script>
+                    <arg name="set_req">
+                        <value>SIOCSIFNETMASK</value>
+                        <value>SIOCSIFADDR</value>
+                        <value>SIOCSIFBRDADDR</value>
+                        <value>SIOCSIFFLAGS</value>
+                        <value>SIOCSIFMTU</value>
+                        <value>SIOCSIFDSTADDR</value>
+                    </arg>
+                </run>
+                <run>
+                    <script name="siocif_ifr_name_nonexist">
+                        <req ref="req"/>
+                        <req id="TEST_HARNESS_SANITY"/>
+                    </script>
+                    <arg name="req">
+                        <value>SIOCGIFNETMASK</value>
+                        <value>SIOCSIFNETMASK</value>
+                        <value>SIOCGIFADDR</value>
+                        <value>SIOCSIFADDR</value>
+                        <value>SIOCGIFBRDADDR</value>
+                        <value>SIOCSIFBRDADDR</value>
+                        <value>SIOCGIFFLAGS</value>
+                        <value>SIOCSIFFLAGS</value>
+                        <value>SIOCGIFMTU</value>
+                        <value>SIOCSIFMTU</value>
+                        <value>SIOCGIFDSTADDR</value>
+                        <value>SIOCSIFDSTADDR</value>
+                        <value>SIOCGIFHWADDR</value>
+                    </arg>
+                </run>
+                <run>
+                    <script name="siocgifaddr_no_addr" track_conf="silent">
+                        <req ref="req"/>
+                    </script>
+                    <arg name="req">
+                        <value>SIOCGIFADDR</value>
+                        <value>SIOCGIFNETMASK</value>
+                        <value>SIOCGIFBRDADDR</value>
+                    </arg>
+                </run>
+           </session>
+        </run>
+
+        <run name="reset_nic_session">
+            <session>
+
+                <prologue>
+                    <script name="reset_nic_prologue"/>
+                    <arg name="env">
+                        <value ref="env.iut_only"/>
+                    </arg>
+                </prologue>
+
+                <epilogue>
+                    <script name="reset_nic_epilogue"/>
+                    <arg name="env">
+                        <value ref="env.iut_only"/>
+                    </arg>
+                </epilogue>
+
+                <run>
+                    <script name="ethtool_reset" track_conf="silent|sync">
+                        <req id="SOCK_STREAM"/>
+                        <req id="IF_DOWN_UP"/>
+                    </script>
+                    <arg name="env">
+                        <value>{{{'pco_iut':IUT},{'pco_aux':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                    </arg>
+                    <arg name="mode" type="eth_reset"/>
+                    <arg name="reset_num">
+                      <value>3</value>
+                    </arg>
+                    <arg name="traffic" type="boolean"/>
+                </run>
+
+            </session>
+        </run> <!-- end of "reset_nic_session" session -->
+
+    </session>
+</package>

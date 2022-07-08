@@ -1,0 +1,8 @@
+# SPDX-License-Identifier: Apache-2.0
+# (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved.
+option('te_cflags', type: 'string', value: '',
+       description: 'Extra TE project CFLAGS')
+option('te_ldflags', type: 'string', value: '',
+       description: 'Extra TE project LDFLAGS')
+option('ceph_use_dlsym', type : 'boolean', value : true,
+       description: 'Use dlsym to find Onload functions in ceph app')

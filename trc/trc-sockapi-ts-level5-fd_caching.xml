@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<test name="fd_caching" type="package">
+  <objective>Onload FD caching tests</objective>
+  <notes/>
+  <iter result="PASSED">
+    <notes/>
+    <test name="fd_cache_listener_closing" type="script">
+      <objective/>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="shutdown_how"/>
+        <arg name="cache_socket"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="fd_cache_reuse" type="script">
+      <objective>Accept and close TCP sockets many times with a few listeners, total opened/closed sockets number should be at least greater than EF_SOCKET_CACHE_MAX.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="active">FALSE</arg>
+        <arg name="disable_caching">TRUE</arg>
+        <arg name="ef_per_socket_cache_max"/>
+        <arg name="ef_socket_cache_max"/>
+        <arg name="env"/>
+        <arg name="iter_num"/>
+        <arg name="listener_num"/>
+        <arg name="thread_process"/>
+        <notes/>
+        <results tags="v5" key="ON-6543">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>Onload stackdump showed non-zero sockcache_contention</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="active">FALSE</arg>
+        <arg name="disable_caching">FALSE</arg>
+        <arg name="ef_per_socket_cache_max"/>
+        <arg name="ef_socket_cache_max"/>
+        <arg name="env"/>
+        <arg name="iter_num"/>
+        <arg name="listener_num"/>
+        <arg name="thread_process"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="active">TRUE</arg>
+        <arg name="disable_caching"/>
+        <arg name="ef_per_socket_cache_max"/>
+        <arg name="ef_socket_cache_max"/>
+        <arg name="env"/>
+        <arg name="iter_num"/>
+        <arg name="listener_num"/>
+        <arg name="thread_process"/>
+        <notes/>
+        <results tags="v5" key="ON-6543">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>Onload stackdump showed non-zero sockcache_contention</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ef10&amp;!(medford|ef100)&amp;(laddr_all|macvlan)" key="ST-2469">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>many_connect() call failed with error RCF_PCH-ERPCTIMEOUT</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>Onload stackdump showed non-zero sockcache_contention</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="fd_cache_limits" type="script">
+      <objective>Exercise Onload FD caching limits which can be set with env EF_PER_SOCKET_CACHE_MAX and EF_SOCKET_CACHE_MAX, check that cached sockets number cannot exceed FD table size.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="ef_per_socket_cache_max"/>
+        <arg name="ef_socket_cache_max"/>
+        <arg name="env"/>
+        <arg name="hard_rlimit"/>
+        <arg name="soft_rlimit"/>
+        <arg name="open_way"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="fd_cache_fork" type="script">
+      <objective/>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="position"/>
+        <arg name="sockets_num"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="fd_cache_wild" type="script">
+      <objective/>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="fd_cache_dup" type="script">
+      <objective>Check thea sockets duplication disables caching.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="dup_way">f_dupfd_cloexec</arg>
+        <arg name="env"/>
+        <arg name="state">listener</arg>
+        <arg name="active"/>
+        <notes/>
+        <results tags="linux-2.6&lt;27">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="dup_way">f_dupfd_cloexec</arg>
+        <arg name="env"/>
+        <arg name="state">established</arg>
+        <arg name="active"/>
+        <notes/>
+        <results tags="linux-2.6&lt;27">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="dup_way">dup3</arg>
+        <arg name="env"/>
+        <arg name="state"/>
+        <arg name="active"/>
+        <notes/>
+        <results tags="linux-2.6&lt;27|linux-2.6.32-bpo.5">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="dup_way">f_dupfd_cloexec</arg>
+        <arg name="env"/>
+        <arg name="state">closed</arg>
+        <arg name="active"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="dup_way">dup</arg>
+        <arg name="env"/>
+        <arg name="state"/>
+        <arg name="active"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="dup_way">dup2</arg>
+        <arg name="env"/>
+        <arg name="state"/>
+        <arg name="active"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="dup_way">f_dupfd</arg>
+        <arg name="env"/>
+        <arg name="state"/>
+        <arg name="active"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="dup_way">unix</arg>
+        <arg name="env"/>
+        <arg name="state"/>
+        <arg name="active"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="fd_cache_linger" type="script">
+      <objective>Check that FD caching is disbled when SO_LINGER is set.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="linger">FALSE</arg>
+        <arg name="listener"/>
+        <arg name="overfill">TRUE</arg>
+        <arg name="active"/>
+        <notes/>
+        <results tags="v5&amp;default_iomux_epoll&amp;!(ool_epoll=3)">
+          <result value="FAILED">
+            <verdict>The socket was not cached</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="linger">FALSE</arg>
+        <arg name="listener"/>
+        <arg name="overfill">FALSE</arg>
+        <arg name="active"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="linger">TRUE</arg>
+        <arg name="listener"/>
+        <arg name="overfill"/>
+        <arg name="active"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="fd_cache_exec" type="script">
+      <objective>Check cached FD handling through execve.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="cloexec"/>
+        <arg name="close_after_exec"/>
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="fd_cache_opt" type="script">
+      <objective>Check that reused accepted socket inheritances correct socket option value.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="opt_name"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="fd_cache_inherit_flag" type="script">
+      <objective>Check that reused active open socket does not inherit flags.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_flag"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="fd_cache_nonblock_sync" type="script">
+      <objective>Check that Onload retains knowledge of nonblock sync state after trip through cache.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="use_libc"/>
+        <arg name="nonblock_func"/>
+        <arg name="nonblock_first"/>
+        <arg name="check_first"/>
+        <arg name="func"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="fd_cache_reused_opt" type="script">
+      <objective>Check that reused accepted socket inherits correct socket option value.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="opt_name">SO_BINDTODEVICE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="opt_name">SO_LINGER_ZERO</arg>
+        <notes/>
+        <results tags="v5">
+          <result value="FAILED">
+            <verdict>IUT socket was not cached</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="opt_name">SO_LINGER_NON_ZERO</arg>
+        <notes/>
+        <results tags="v5">
+          <result value="FAILED">
+            <verdict>IUT socket was not cached</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="opt_name">SO_KEEPALIVE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="opt_name">TCP_KEEPCNT</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="opt_name">TCP_KEEPIDLE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="opt_name">TCP_KEEPINTVL</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="opt_name">TCP_MAXSEG</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="fd_cache_shutdown_reuse" type="script">
+      <objective>Try to reuse socket after calling shutdown().</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="cache_socket"/>
+        <arg name="close_iut"/>
+        <arg name="close_iut_later"/>
+        <arg name="close_tst"/>
+        <arg name="shutdown_how"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="fd_cache_ipv4_ipv6" type="script">
+      <objective>Check that IPv6 sockets can be cached and later reused as IPv4 sockets and vice versa.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="active">FALSE</arg>
+        <arg name="env"/>
+        <arg name="first_ipv4">FALSE</arg>
+        <arg name="second_ipv4">TRUE</arg>
+        <arg name="set_bindtodevice">FALSE</arg>
+        <arg name="sockets_num"/>
+        <notes/>
+        <results tags="v5&amp;(rss_scalable_active_passive|!scalable_passive|scalable_passive&amp;!scalable_any)" key="ON-10328">
+          <result value="PASSED">
+            <verdict>No sockets were reused</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;scalable_passive&amp;scalable_any">
+          <result value="PASSED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="active">FALSE</arg>
+        <arg name="env"/>
+        <arg name="first_ipv4">FALSE</arg>
+        <arg name="second_ipv4">TRUE</arg>
+        <arg name="set_bindtodevice">TRUE</arg>
+        <arg name="sockets_num"/>
+        <notes/>
+        <results tags="v5&amp;(!scalable_passive|rss_scalable_active_passive)" key="ON-10328">
+          <result value="PASSED">
+            <verdict>No sockets were reused</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;scalable_passive&amp;!rss_scalable_active_passive">
+          <result value="PASSED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="active">FALSE</arg>
+        <arg name="env"/>
+        <arg name="first_ipv4">TRUE</arg>
+        <arg name="second_ipv4">FALSE</arg>
+        <arg name="set_bindtodevice">FALSE</arg>
+        <arg name="sockets_num"/>
+        <notes/>
+        <results tags="v5&amp;(rss_scalable_active_passive|!scalable_passive|scalable_passive&amp;!scalable_any)" key="ON-10328">
+          <result value="PASSED">
+            <verdict>No sockets were reused</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;scalable_passive&amp;scalable_any&amp;!rss_scalable_active_passive">
+          <result value="PASSED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="active">FALSE</arg>
+        <arg name="env"/>
+        <arg name="first_ipv4">TRUE</arg>
+        <arg name="second_ipv4">FALSE</arg>
+        <arg name="set_bindtodevice">TRUE</arg>
+        <arg name="sockets_num"/>
+        <notes/>
+        <results tags="v5&amp;(!scalable_passive|rss_scalable_active_passive)" key="ON-10328">
+          <result value="PASSED">
+            <verdict>No sockets were reused</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;scalable_passive&amp;!rss_scalable_active_passive">
+          <result value="PASSED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="active">FALSE</arg>
+        <arg name="env"/>
+        <arg name="first_ipv4">FALSE</arg>
+        <arg name="second_ipv4">FALSE</arg>
+        <arg name="set_bindtodevice"/>
+        <arg name="sockets_num"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="active">FALSE</arg>
+        <arg name="env"/>
+        <arg name="first_ipv4">TRUE</arg>
+        <arg name="second_ipv4">TRUE</arg>
+        <arg name="set_bindtodevice"/>
+        <arg name="sockets_num"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="active">TRUE</arg>
+        <arg name="env"/>
+        <arg name="first_ipv4"/>
+        <arg name="second_ipv4"/>
+        <arg name="set_bindtodevice"/>
+        <arg name="sockets_num"/>
+        <notes/>
+      </iter>
+    </test>
+  </iter>
+</test>

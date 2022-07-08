@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<test name="arp" type="package">
+  <objective>ARP Table</objective>
+  <notes/>
+  <iter result="PASSED">
+    <notes/>
+    <test name="prologue" type="script" auxiliary="true">
+      <objective>Configure test hosts for ARP package.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="tcp_udp_reinforce" type="script">
+      <objective>Check that outgoing TCP or UDP traffic to a given IP address prevents ARP table entry for that address from removal due to timeout.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="repetitions"/>
+        <arg name="period"/>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="invalid_arp_entry_timeout" type="script">
+      <objective>Check that establishing TCP connection or sending/receiving UDP packets will not reinforce invalid ARP entry.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <arg name="active"/>
+        <arg name="call_connect"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="stale_entry" type="script">
+      <objective>Check that ARP entry dissapear from ARP cache because of timeout</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="available_time"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="incomplete_entry" type="script">
+      <objective>Check that ARP cache works fine with incomplete entry</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="arp_change" type="script">
+      <objective>Check that arp request is sent after a while in case MAC address is changed on receiving side.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <arg name="data_size"/>
+        <arg name="timeout"/>
+        <results tags="v5_eol2" key="ON-45">
+          <result value="FAILED">
+            <verdict>Failed to send data from IUT to Tester</verdict>
+          </result>
+          <result value="PASSED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="arp_flooding" type="script">
+      <objective>ARP table is flooded</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="num_of_requests">10</arg>
+        <arg name="num_of_replies">10</arg>
+        <arg name="is_unicast">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="num_of_requests">10</arg>
+        <arg name="num_of_replies">10</arg>
+        <arg name="is_unicast">TRUE</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="gateway_addr" type="script">
+      <objective>Check that if there is a route to a given IP address via gateway, then a packet sent to that IP address has destination MAC address of the gateway.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="different_subnets" type="script">
+      <objective>Check that different subnets handled correctly</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="permanent_entry_untouched_by_reply" type="script">
+      <objective>Send() or connect() to an unknown address to provoke ARP request. Add permanent ARP table entry. Send ARP reply from a peer with a different MAC address. Check that permanent ARP table entry remains unchanged.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="permanent_entry_untouched_by_request" type="script">
+      <objective>Check that permanent ARP entry remains untouched by receiving ARP request</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="arp_packet_pool_empty" type="script">
+      <objective>ARP packet pool empty. The ARP code maintains its own buffer pool. Empty this pool by sending IP traffic to many different hosts.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">'net'{'host1'{{'pco1_iut':IUT},{'pco2_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},'host2'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="conn_num">220</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">'net'{'host1'{{'pco1_iut':IUT},{'pco2_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},'host2'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="conn_num">220</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="arp_table_full" type="script">
+      <objective>Create a connected pair of sockets on IUT and Tester. Start sending data from IUT to Tester. While this is being done, fill ARP table on IUT with a lot of entries by sending many ARP requests to IUT from different addresses. After that check that data sent from IUT can be received on Tester (or, in case of UDP, not too many packets are lost).</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="req_nums">200</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="req_nums">200</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="if_arp_disabled" type="script">
+      <objective>Check the stack's behaviour when the arp processing on interface is disabled and there is not an appropriate arp entry in the table</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="if_ll_addr_1" type="script">
+      <objective>Change MAC address of an interface after a socket is created. Check that the new MAC address is used by the traffic originated from the socket.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="local_server">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="local_server">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="local_server">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="local_server">FALSE</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="if_ll_addr_2" type="script">
+      <objective>Create a socket and connect it. Change MAC address. Check that the new MAC address is used by the traffic originated from the socket.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="local_server">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="local_server">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="local_server">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="local_server">FALSE</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="invalid_arp_request" type="script">
+      <objective>Check that if sender protocol address in received ARP request is broadcast/multicast, then corresponding ARP entry does not appear in ARP table.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="isbroad">TRUE</arg>
+        <notes/>
+        <results tags="(linux-2.6&gt;=46)&amp;(linux-2.6&lt;61)&amp;!el&amp;!ubu">
+          <result value="FAILED">
+            <verdict>Test expected that ARP entry with broadcast address doesn't exist</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="isbroad">FALSE</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="new_broadcast_arp" type="script">
+      <objective>Check that after changing hardware broadcast address of outgoing interface it is used for arp resolution.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="hw_broadcast">FF:FF:FF:FF:FF:00</arg>
+        <results tags="linux&amp;ul-32&amp;kernel-64&amp;(linux-2.6&lt;20)" key="linux 6502">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="common_broadcast" type="script">
+      <objective>Check that broadcast packet to be sent towards 255.255.255.255 go out through the right interface and MAC address is broadcast</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">'net1'{'host1'{{'pco_iut':IUT},addr:'iut_to_tst1_addr':inet:unicast,if:'iut_to_tst1_if'},'host2'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},'net2'{'host1'{addr:'iut_to_tst2_addr':inet:unicast,if:'iut_to_tst2_if'},'host3'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</arg>
+        <arg name="hw_broadcast">FF:FF:FF:FF:FF:FF</arg>
+        <notes/>
+        <results tags="linux&amp;ul-32&amp;kernel-64&amp;(linux-2.6&lt;20)" key="linux 6502">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">'net1'{'host1'{{'pco_iut':IUT},addr:'iut_to_tst1_addr':inet:unicast,if:'iut_to_tst1_if'},'host2'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},'net2'{'host1'{addr:'iut_to_tst2_addr':inet:unicast,if:'iut_to_tst2_if'},'host2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</arg>
+        <arg name="hw_broadcast">FF:FF:FF:FF:FF:00</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="broadcast" type="script">
+      <objective>Check that broadcast packet to be sent go out through the right interface and MAC address is broadcast</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="hw_broadcast">FF:FF:FF:FF:FF:FF</arg>
+        <notes/>
+        <results tags="linux" key="OL 4790">
+          <result value="PASSED"/>
+          <result value="FAILED"/>
+        </results>
+        <results tags="linux&amp;ul-32&amp;kernel-64&amp;(linux-2.6&lt;20)" key="linux 6502">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="hw_broadcast">FF:FF:FF:FF:FF:00</arg>
+        <notes/>
+        <results tags="linux" key="OL 4790">
+          <result value="PASSED"/>
+          <result value="FAILED"/>
+        </results>
+        <results tags="linux&amp;ul-32&amp;kernel-64&amp;(linux-2.6&lt;20)" key="linux 6502">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="no_outgoing_traffic" type="script">
+      <objective>Create two sockets on the same host and bind them to addresses of different interfaces. Send a packet from one socket to another one. Check that nothing is sent to network.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="if_scope_check" type="script">
+      <objective>Add static ARP entry for an IP address for the first interface. Configure a route to that IP address via the second interface. Connect TCP socket to the IP address and check that packets are sent only via the second interface.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'alien_addr':inet:alien,addr:'alien_gw':inet:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tester_1'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},IUT{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tester_2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'alien_addr':inet:alien,addr:'alien_gw':inet:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tester_1'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},tester{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tester_2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">'net1':tester{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'alien_addr':inet:alien,addr:'alien_gw':inet:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tester_1'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},IUT{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tester_2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="many_addresses" type="script">
+      <objective>Check that ARP is resolved when a few local and a few remote IP addresses are used.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <arg name="diff_subnet"/>
+        <arg name="addr_num"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="udp_send_unavailable_arp" type="script">
+      <objective> Check that the sending packet with unresolvable ARP is OK.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="bind"/>
+        <arg name="func"/>
+        <arg name="mtu"/>
+        <arg name="pkt_size"/>
+        <arg name="is_recverr">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="bind"/>
+        <arg name="func"/>
+        <arg name="mtu"/>
+        <arg name="pkt_size">128</arg>
+        <arg name="is_recverr">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="bind"/>
+        <arg name="func"/>
+        <arg name="mtu"/>
+        <arg name="pkt_size">7000</arg>
+        <arg name="is_recverr">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="bind"/>
+        <arg name="func"/>
+        <arg name="mtu"/>
+        <arg name="pkt_size">64000</arg>
+        <arg name="is_recverr">TRUE</arg>
+        <notes/>
+        <results tags="linux-4&lt;15&amp;!v5" key="ON-11894" notes="linux-4.9 is definitely old and the middle is unknown">
+          <result value="FAILED">
+            <verdict>getsockopt(SO_ERROR) returns unexpected errno: OK instead of EHOSTUNREACH</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+
+    <test name="sa_first_arp_request" type="script">
+      <objective>Check source address and destination MAC in ARP request.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+    </test>
+
+  </iter>
+</test>

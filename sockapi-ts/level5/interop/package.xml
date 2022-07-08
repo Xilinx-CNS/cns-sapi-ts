@@ -1,0 +1,544 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+    
+    <description>L5 stack/system stack interoperabilty test</description>
+    
+    <author mailto="Oleg.Kravtsov@oktetlabs.ru"/>
+
+    <req id="OOL_INTEROP" sticky="true"/>
+    <req id="ONLOAD_ONLY" sticky="true"/>
+
+    <session>
+        <enum name="env.p2p_local">
+            <value>{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:loopback}}</value>
+        </enum>
+
+        <run>
+            <script name="send_only"/>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'alien_mac':ether:alien},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="sys_first" type="boolean"/>
+            <arg name="iut_serv" type="boolean"/>
+            <arg name="delayed_ack" type="boolean"/>
+            <arg name="send_func">
+                <value reqs="READ_WRITE">write</value>
+                <value reqs="READV_WRITEV">writev</value>
+            </arg>
+        </run>
+        <run>
+            <script name="send_only"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="sys_first" type="boolean"/>
+            <arg name="send_func">
+                <value reqs="READ_WRITE">write</value>
+                <value reqs="READV_WRITEV">writev</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="recv_only"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="sys_first" type="boolean"/>
+            <arg name="iut_serv" type="boolean"/>
+            <arg name="recv_func">
+                <value reqs="READ_WRITE">read</value>
+                <value reqs="READV_WRITEV">readv</value>
+            </arg>
+            <arg name="nonblock" type="boolean"/>
+        </run>
+        <run>
+            <script name="recv_only"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="sys_first" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="iut_serv" type="boolean"/>
+            <arg name="recv_func">
+                <value reqs="READ_WRITE">read</value>
+                <value reqs="READV_WRITEV">readv</value>
+            </arg>
+            <arg name="nonblock" type="boolean"/>
+        </run>
+
+      <run name="close_os">
+        <session>
+          <arg name="syscall_method"/>
+
+          <run>
+              <script name="close_create_socket">
+                  <req id="SF_TRAMPOLING"/>
+              </script>
+              <arg name="env" ref="env.iut_ucast"/>
+              <arg name="sock_type" type="sock_stream_dgram"/>
+              <arg name="bind" type="boolean"/>
+          </run>
+          <run>
+            <script name="close_udp_readable_socket">
+                <req id="SOCK_DGRAM"/>
+                <req id="SF_TRAMPOLING"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value type="env.p2p_local"/>
+            </arg>
+          </run>
+          <run>
+            <script name="close_listening_socket">
+                <req id="SOCK_STREAM"/>
+                <req id="SF_TRAMPOLING"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value type="env.p2p_local"/>
+            </arg>
+            <arg name="pending" type="boolean"/>
+          </run>
+          <run>
+            <script name="close_connected_socket">
+                <req id="SOCK_STREAM"/>
+                <req id="SF_TRAMPOLING"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="data" type="boolean" list="">
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="s_buf" type="boolean" list="">
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+          </run>
+          <run>
+            <script name="close_shutdown_socket">
+                <req id="SOCK_STREAM"/>
+                <req id="SF_TRAMPOLING"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+          </run>
+          <run>
+            <script name="close_after_close">
+                <req id="SF_TRAMPOLING"/>
+            </script>
+            <arg name="env" ref="env.iut_ucast"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+          </run>
+          <run>
+            <script name="close_accept">
+                <req id="SOCK_STREAM"/>
+                <req id="SF_TRAMPOLING"/>
+            </script>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT,'pco_aux':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester}}}</value>
+            </arg>
+          </run>
+          <run>
+            <script name="close_linger_close">
+                <req id="SOCK_STREAM"/>
+                <req id="SF_TRAMPOLING"/>
+            </script>
+            <arg name="system_first" type="boolean"/>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT,'pco_aux':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+            </arg>
+          </run>
+
+          <run>
+            <session track_conf="nohistory">
+                <req id="FDS_NON_MT_SAFE" sticky="true"/>
+
+                <run>
+                    <script name="close_iomux">
+                        <req id="SF_TRAMPOLING"/>
+                    </script>
+                    <arg name="env">
+                        <value>{{{'pco_iut':IUT,'pco_aux':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                    </arg>
+                    <arg name="syscall_method"/>
+                    <arg name="iomux" type="iomux_with_oo_epoll"/>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                </run>
+
+                <run>
+                <script name="close_read">
+                    <req id="SF_TRAMPOLING"/>
+                </script>
+                <arg name="env">
+                    <value>{{{'pco_iut':IUT,'pco_aux':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                </arg>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="syscall_method"/>
+                </run>
+            </session>
+          </run>
+
+
+          <run>
+            <script name="pipe_close_pipe">
+                <req id="PIPE"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="close_end">
+                <value>read</value>
+                <value>write</value>
+                <value>both</value>
+            </arg>
+          </run>
+        </session>
+        <arg name="syscall_method">
+          <value>libc</value>
+          <value reqs="CLOSE_INT,UL_32,PPC64_SF_DISABLED">interrupt</value>
+          <!-- What is the point? syscall == libc always (x86_64);
+               sysenter == libc (i686) iff it works, because vsyscall page
+               should be set up for sysenter to make it work.
+
+               Additionally, it is broken when using latest libc at build
+               time, at least for sysenter...
+          <value reqs="CLOSE_SYSCALL,UL_64">syscall</value>
+          <value reqs="CLOSE_SYSENTER,UL_32">sysenter</value>
+          -->
+        </arg>
+      </run>
+        
+          <run>
+            <script name="close_fdopen_fclose">
+                <req id="SF_TRAMPOLING"/>
+                <req id="V5_SANITY"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="is_pipe">
+                <value>FALSE</value>
+            </arg>
+          </run>
+          <run>
+            <script name="close_fdopen_fclose">
+                <req id="SF_TRAMPOLING"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="is_pipe">
+                <value>TRUE</value>
+            </arg>
+          </run>
+        
+        <run>
+            <session track_conf="silent">
+                <arg name="env" ref="env.peer2peer"/>
+                <arg name="child_sys_call" type="syscall_bool"/>
+
+                <run>
+                    <script name="fcntl_nonblock"/>
+                    <arg name="is_pipe">
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="start_blocking" type="boolean"/>
+                    <arg name="change_iut" list="iut_sys">
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="fcntl_sys_call" list="iut_sys">
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="iut_sys_call">
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="sock_type" type="sock_stream_dgram" list="">
+                        <value>SOCK_STREAM</value>
+                        <value>SOCK_DGRAM</value>
+                        <value>SOCK_STREAM</value>
+                    </arg>
+                    <arg name="func" list="">
+                        <value>read</value>
+                        <value>read</value>
+                        <value>write</value>
+                    </arg>
+                    <arg name="nonblock_func">
+                        <value>fcntl</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="fcntl_nonblock"/>
+                    <arg name="is_pipe">
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="start_blocking" type="boolean"/>
+                    <arg name="change_iut" list="iut_sys">
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="fcntl_sys_call" list="iut_sys">
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="iut_sys_call" list="iut_sys">
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="sock_type" type="sock_stream_dgram" list="">
+                        <value>SOCK_STREAM</value>
+                        <value>SOCK_DGRAM</value>
+                        <value>SOCK_STREAM</value>
+                    </arg>
+                    <arg name="func" list="">
+                        <value>read</value>
+                        <value>read</value>
+                        <value>write</value>
+                    </arg>
+                    <arg name="nonblock_func">
+                        <value>fcntl</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="fcntl_nonblock">
+                      <req id="SOCK_NONBLOCK"/>
+                    </script>
+                    <arg name="is_pipe">
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="change_iut" type="boolean"/>
+                    <arg name="fcntl_sys_call" type="syscall_bool"/>
+                    <arg name="iut_sys_call" type="syscall_bool"/>
+                    <arg name="start_blocking" type="boolean">
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="sock_type" type="sock_stream_dgram" list="">
+                        <value>SOCK_STREAM</value>
+                        <value>SOCK_DGRAM</value>
+                        <value>SOCK_STREAM</value>
+                    </arg>
+                    <arg name="func" list="">
+                        <value>read</value>
+                        <value>read</value>
+                        <value>write</value>
+                    </arg>
+                    <arg name="nonblock_func">
+                        <value>socket</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="fcntl_nonblock">
+                      <req id="ACCEPT4"/>
+                      <req id="SOCK_NONBLOCK"/>
+                    </script>
+                    <arg name="is_pipe">
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="change_iut" type="boolean"/>
+                    <arg name="fcntl_sys_call" type="syscall_bool"/>
+                    <arg name="iut_sys_call" type="syscall_bool"/>
+                    <arg name="start_blocking" type="boolean">
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="sock_type" type="sock_stream_dgram">
+                        <value>SOCK_STREAM</value>
+                    </arg>
+                    <arg name="func">
+                        <value>read</value>
+                        <value>write</value>
+                    </arg>
+                    <arg name="nonblock_func">
+                        <value>accept4</value>
+                    </arg>
+                </run>
+            </session>
+        </run>
+        <run>
+            <script name="fcntl_nonblock">
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="is_pipe">
+                <value>TRUE</value>
+            </arg>
+            <arg name="child_sys_call" type="syscall_bool"/>
+            <arg name="start_blocking" type="boolean"/>
+            <arg name="change_iut" type="boolean"/>
+            <arg name="fcntl_sys_call" type="boolean"/>
+            <arg name="iut_sys_call" type="boolean"/>
+            <arg name="func">
+                <value>read</value>
+                <value>write</value>
+            </arg>
+            <arg name="nonblock_func">
+                <value>fcntl</value>
+                <value reqs="PIPE2">pipe2</value>
+            </arg>
+        </run>
+
+        <run>
+            <session>
+                <arg name="env" ref="env.peer2peer"/>
+                <arg name="l5_fcntl" type="boolean"/>
+
+                <run>
+                    <script name="nonblock" track_conf="silent"/>
+                    <arg name="sock_type" type="sock_stream_dgram">
+                        <value>SOCK_STREAM</value>
+                    </arg>
+                    <arg name="test_func">
+                        <value>read</value>
+                        <value>readv</value>
+                        <value>write</value>
+                        <value>writev</value>
+                    </arg>
+                    <arg name="nonblock_func">
+                        <value>fcntl</value>
+                        <value reqs="SOCK_NONBLOCK">socket</value>
+                        <value reqs="ACCEPT4,SOCK_NONBLOCK">accept4</value>
+                    </arg>
+                </run>
+                <run>
+                    <script name="nonblock" track_conf="silent"/>
+                    <arg name="sock_type" type="sock_stream_dgram">
+                        <value>SOCK_DGRAM</value>
+                    </arg>
+                    <arg name="test_func">
+                        <value>read</value>
+                        <value>readv</value>
+                    </arg>
+                    <arg name="nonblock_func">
+                        <value>fcntl</value>
+                        <value reqs="SOCK_NONBLOCK">socket</value>
+                    </arg>
+                </run>
+            </session>
+        </run>
+        <run>
+            <script name="nonblock_handover"/>
+            <arg name="env" ref="env.two_nets.iut_first"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="test_func">
+                <value>read</value>
+                <value>readv</value>
+            </arg>
+            <arg name="nonblock_set" type="boolean"/>
+            <arg name="nonblock_func">
+                <value>fcntl</value>
+                <value reqs="SOCK_NONBLOCK">socket</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="onload_msg_recv_os_inline">
+                <req id="ONLOAD_ZC_RECV"/>
+            </script>
+            <arg name="env" ref="env.two_nets.iut_first"/>
+            <arg name="os_inline" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="kernel_traffic" type="boolean"/>
+            <arg name="release_zc_bufs" type="boolean"/>
+        </run>
+        <run>
+            <script name="onload_msg_recv_os_inline">
+                <req id="ONLOAD_ZC_RECV"/>
+            </script>
+            <arg name="env" ref="env.two_nets.iut_first"/>
+            <arg name="os_inline" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="kernel_traffic" type="boolean" list="">
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="release_zc_bufs" type="boolean" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value reqs="ONLOAD_ZC_RELEASE_OS_INLINE">TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="sock_with_flags_acc"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="sock_flags">
+                <value>none</value>
+                <value reqs="SOCK_NONBLOCK">nonblock</value>
+                <value reqs="SOCK_CLOEXEC">cloexec</value>
+            </arg>
+            <arg name="connection" list="">
+                <value>FALSE</value>
+            </arg>
+            <arg name="active" list="">
+                <value>FALSE</value>
+            </arg>
+        </run>
+        <run>
+            <script name="sock_with_flags_acc"/>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.p2p_ip6ip4mapped"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram" list="">
+                <value>SOCK_DGRAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="sock_flags">
+                <value>none</value>
+                <value reqs="SOCK_NONBLOCK">nonblock</value>
+                <value reqs="SOCK_CLOEXEC">cloexec</value>
+            </arg>
+            <arg name="connection">
+                <value>TRUE</value>
+            </arg>
+            <arg name="active" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+        </run>
+        <run>
+            <script name="sock_with_flags_acc"/>
+            <arg name="env">
+              <value ref="env.peer2peer_lo"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram" list="">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="sock_flags">
+                <value>none</value>
+                <value reqs="SOCK_NONBLOCK">nonblock</value>
+                <value reqs="SOCK_CLOEXEC">cloexec</value>
+            </arg>
+            <arg name="connection">
+                <value>TRUE</value>
+            </arg>
+            <arg name="active" type="boolean"/>
+        </run>
+    </session>
+</package>

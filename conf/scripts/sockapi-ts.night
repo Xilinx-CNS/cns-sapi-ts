@@ -1,0 +1,75 @@
+# SPDX-License-Identifier: Apache-2.0
+# (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved.
+TE_EXTRA_OPTS=
+
+# Draft tests are not run at night, since they are are not ready yet.
+TE_EXTRA_OPTS="$TE_EXTRA_OPTS --tester-req=!DRAFT --trc-tag=no-draft"
+
+# Real IPv6 tests are not run at night.
+# There are some instabilities in IPv6 tests.
+# TE_EXTRA_OPTS="$TE_EXTRA_OPTS --tester-req=!IP6_FULL --trc-tag=no-ip6-full"
+
+# Extra time consuming tests are excluded everywhere at night
+#TE_EXTRA_OPTS="$TE_EXTRA_OPTS --tester-req=!EXTRA_TIME_CONSUMING"
+#TE_EXTRA_OPTS="$TE_EXTRA_OPTS --trc-tag=no-extra-time-consuming"
+
+# Unstable tests are excluded everywhere at night
+TE_EXTRA_OPTS="$TE_EXTRA_OPTS --tester-req=!UNSTABLE --trc-tag=no-unstable"
+
+#
+# IUT dependent night testing options
+#
+if test -n "${TE_IUT}" ; then
+    # The following configurations has SolarFlare NIC so:
+    case "${TE_IUT}" in dori|nori|ori|thorin|thrain)
+        TE_EXTRA_OPTS="$TE_EXTRA_OPTS --tester-req=!SF_BLACKLIST"
+    esac
+    # The following configurations run set of tests reasonable for SolarFlare
+    case "${TE_IUT}" in dain|nori|ori|thorin)
+        # Time consuming tests are excluded
+        TE_EXTRA_OPTS="$TE_EXTRA_OPTS --trc-tag=no-time-consuming"
+        TE_EXTRA_OPTS="$TE_EXTRA_OPTS --tester-req=!TIME_CONSUMING"
+        case "${TE_IUT_TA_TYPE}" in solaris2*)
+            # Exclude Solaris-specific time consuming tests
+            TE_EXTRA_OPTS="$TE_EXTRA_OPTS --tester-req=!TIME_CONSUMING_ON_SOLARIS"
+        esac
+    esac
+    # VNC server does not work on x86_64
+    case "${TE_IUT}" in thorin)
+        TE_EXTRA_OPTS="$TE_EXTRA_OPTS --tester-req=!(VNC&SERVER)"
+    esac
+    # FD caching tests are skipped on
+    case "${TE_IUT}" in nori|thorin)
+        TE_EXTRA_OPTS="$TE_EXTRA_OPTS --tester-req=!FD_CACHING"
+        TE_EXTRA_OPTS="$TE_EXTRA_OPTS --tester-req=!FD_CACHING_TARGETED"
+    esac
+
+    # Some services are not installed on
+    case "${TE_IUT}" in ori)
+        TE_EXTRA_OPTS="$TE_EXTRA_OPTS --trc-tag=no-vsftpd"
+        TE_EXTRA_OPTS="$TE_EXTRA_OPTS --tester-req=!VSFTPD"
+        TE_EXTRA_OPTS="$TE_EXTRA_OPTS --trc-tag=no-wuftpd"
+        TE_EXTRA_OPTS="$TE_EXTRA_OPTS --tester-req=!WUFTPD"
+        TE_EXTRA_OPTS="$TE_EXTRA_OPTS --trc-tag=no-sendmail"
+        TE_EXTRA_OPTS="$TE_EXTRA_OPTS --tester-req=!SENDMAIL"
+        TE_EXTRA_OPTS="$TE_EXTRA_OPTS --trc-tag=no-postfix"
+        TE_EXTRA_OPTS="$TE_EXTRA_OPTS --tester-req=!POSTFIX"
+    esac
+fi
+
+#
+# IUT OS dependent night testing options
+#
+case "${TE_IUT_TA_TYPE}" in
+    solaris2*)
+        # PMTU is not currently supported for SolarFlare Solaris.
+        # This test behaves badly with SolarFlare, breaking night testing.
+        #  -- Sasha
+        TE_EXTRA_OPTS="$TE_EXTRA_OPTS --tester-req=!SENDFILE_MTU"
+        case "${TE_IUT}" in dain|thorin)
+            # SolarFlare does not support trampoling on Solaris
+            TE_EXTRA_OPTS="$TE_EXTRA_OPTS --tester-req=!SF_TRAMPOLING"
+            TE_EXTRA_OPTS="$TE_EXTRA_OPTS --trc-tag=no-sf-trampoling"
+        esac
+        ;;
+esac

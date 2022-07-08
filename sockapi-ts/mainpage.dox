@@ -1,0 +1,41 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/** @mainpage
+
+@tableofcontents
+
+@section copyright_notice Copyright Notice
+
+(c) Copyright 2021 - 2022 Xilinx, Inc. All rights reserved.
+
+@section sapi_introduction Introduction
+
+Socket API Test Suite is aimed to check certain implementation of the socket
+API functions agains the native OS behaviour. It uses @te_ref te as it's
+engine.
+
+The suite consists of several packages, see @ref sapi_specification for top
+level packages list of <a href="modules.html"><b>Table of Contents</b></a> for full packages tree. 
+
+See @ref sapi_term_abrev for details on the subject.
+
+@section sapi_refs References
+- Find list of documentation mentioned @ref sapi_refs_details.
+- @ref tester_requirements
+- @ref sapi_tags_details
+
+@section sapi_conv Conventions
+- Parameters of tests are referred in the text using bold italic
+  (for example, @p pco_iut).
+
+- Names of formal arguments of Socket API functions appear in italic
+  (for example, @a addrlen).
+
+- Standard defines, elements of enumerations as well as @b errno values
+  appear in monotype font (for example, @c AF_INET, @c ENOMEM).
+
+@section sapi_specification Test Specification
+
+@copydoc sockapi
+
+*/

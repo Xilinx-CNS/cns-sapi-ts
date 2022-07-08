@@ -1,0 +1,799 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<test name="reuseport" type="package">
+  <objective>SO_REUSEPORT socket option tests</objective>
+  <notes/>
+  <iter result="PASSED">
+    <notes/>
+
+    <test name="reuseport_prologue" type="script">
+      <objective>Proglogue for SO_REUSEPORT socket option testing.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="ef_cluster_size"/>
+        <notes/>
+      </iter>
+    </test>
+
+    <test name="reuseport_epilogue" type="script">
+      <objective>Epilogue for SO_REUSEPORT socket option testing.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <notes/>
+      </iter>
+    </test>
+
+    <test name="reuseport_del_addr_connect" type="script">
+      <objective>Test what happens when after binding two TCP listeners with SO_REUSEPORT bind address is removed, then connect() is called from peer, then bind address is restored, then process is terminated without accepting connections.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <notes/>
+      </iter>
+    </test>
+
+    <test name="reuseport_two_interfaces" type="script">
+      <objective>Test port sharing with SO_REUSEPORT across two interfaces.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="max_packet_size"/>
+        <arg name="min_packet_size"/>
+        <arg name="packets_num"/>
+        <arg name="reuseport_first"/>
+        <arg name="reuseport_second"/>
+        <arg name="sock_type"/>
+        <arg name="thread_process"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="reuseport_vs_reuseaddr" type="script">
+      <objective>Bind two sockets using various combinations of SO_REUSEADDR and SO_REUSEPORT options, check that SO_REUSEADDR does not grant privileges to use the same address even if SO_REUSEPORT is set for one of sockets.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="reuseaddr_first">TRUE</arg>
+        <arg name="reuseaddr_second">TRUE</arg>
+        <arg name="reuseport_first">FALSE</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="wild_first">FALSE</arg>
+        <arg name="wild_second">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-5619">
+          <result value="PASSED">
+            <verdict>bind() for the second socket failed unexpectedly with errno RPC-EADDRINUSE</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="reuseaddr_first">TRUE</arg>
+        <arg name="reuseaddr_second">TRUE</arg>
+        <arg name="reuseport_first">FALSE</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="wild_first">TRUE</arg>
+        <arg name="wild_second">TRUE</arg>
+        <notes/>
+        <results tags="v5" key="ON-5619">
+          <result value="PASSED">
+            <verdict>bind() for the second socket failed unexpectedly with errno RPC-EADDRINUSE</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="reuseaddr_first">TRUE</arg>
+        <arg name="reuseaddr_second">TRUE</arg>
+        <arg name="reuseport_first">FALSE</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="wild_first">FALSE</arg>
+        <arg name="wild_second">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-5605">
+          <result value="FAILED">
+            <verdict>listen() for the first socket failed with errno RPC-EADDRINUSE</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="reuseaddr_first">TRUE</arg>
+        <arg name="reuseaddr_second">TRUE</arg>
+        <arg name="reuseport_first">FALSE</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="wild_first">TRUE</arg>
+        <arg name="wild_second">TRUE</arg>
+        <notes/>
+        <results tags="v5" key="ON-5605">
+          <result value="FAILED">
+            <verdict>listen() for the first socket failed with errno RPC-EADDRINUSE</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="reuseaddr_first">TRUE</arg>
+        <arg name="reuseaddr_second">TRUE</arg>
+        <arg name="reuseport_first">FALSE</arg>
+        <arg name="sock_type"/>
+        <arg name="wild_first">FALSE</arg>
+        <arg name="wild_second">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="reuseaddr_first">TRUE</arg>
+        <arg name="reuseaddr_second">TRUE</arg>
+        <arg name="reuseport_first">FALSE</arg>
+        <arg name="sock_type"/>
+        <arg name="wild_first">TRUE</arg>
+        <arg name="wild_second">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="reuseaddr_first">TRUE</arg>
+        <arg name="reuseaddr_second">TRUE</arg>
+        <arg name="reuseport_first">TRUE</arg>
+        <arg name="sock_type"/>
+        <arg name="wild_first"/>
+        <arg name="wild_second"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="reuseaddr_first">TRUE</arg>
+        <arg name="reuseaddr_second">FALSE</arg>
+        <arg name="reuseport_first"/>
+        <arg name="sock_type"/>
+        <arg name="wild_first"/>
+        <arg name="wild_second"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="reuseaddr_first">FALSE</arg>
+        <arg name="reuseaddr_second"/>
+        <arg name="reuseport_first"/>
+        <arg name="sock_type"/>
+        <arg name="wild_first"/>
+        <arg name="wild_second"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="reuseport_tcp_time_wait" type="script">
+      <objective>Test port sharing with SO_REUSEPORT with TCP socket in TIME_WAIT state.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="reuseport_second"/>
+        <arg name="close_connection"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="reuseport_connect" type="script">
+      <objective>Try to connect to exactly same address:port twice from reusing with SO_REUSEPORT address.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="server"/>
+        <arg name="sock_type"/>
+        <arg name="wildcard"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="reuseport_reset_if" type="script">
+      <objective>Check socket behavior with SO_REUSEPORT after NIC reset or putting it down/up.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="mode"/>
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="position"/>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="reuseport_load_tcp" type="script">
+      <objective>Test connection requests distribution with SO_REUSEPORT option.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="clients_num">2000</arg>
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="listeners_num"/>
+        <arg name="skip"/>
+        <arg name="thread_process">process</arg>
+        <arg name="use_ef_force">TRUE</arg>
+        <notes/>
+        <results tags="v5&amp;!ef10" key="ON-4611">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="clients_num">1000</arg>
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="listeners_num"/>
+        <arg name="skip"/>
+        <arg name="thread_process"/>
+        <arg name="use_ef_force"/>
+        <notes/>
+        <results tags="v5&amp;!ef10" key="ON-4611">
+          <result value="PASSED">
+            <verdict>6/10 listener sockets do not accept connections</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="clients_num">2000</arg>
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="listeners_num"/>
+        <arg name="skip"/>
+        <arg name="thread_process">process</arg>
+        <arg name="use_ef_force">FALSE</arg>
+        <notes/>
+        <results tags="v5&amp;!ef10" key="ON-4611">
+          <result value="PASSED">
+            <verdict>60/64 listener sockets do not accept connections</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="clients_num">2000</arg>
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="listeners_num"/>
+        <arg name="skip"/>
+        <arg name="thread_process">none</arg>
+        <arg name="use_ef_force"/>
+        <notes/>
+        <results tags="v5&amp;!ef10" key="ON-4611">
+          <result value="PASSED">
+            <verdict>60/64 listener sockets do not accept connections</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="clients_num">2000</arg>
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="listeners_num"/>
+        <arg name="skip"/>
+        <arg name="thread_process">thread</arg>
+        <arg name="use_ef_force"/>
+        <notes/>
+        <results tags="v5&amp;!ef10" key="ON-4611">
+          <result value="PASSED">
+            <verdict>60/64 listener sockets do not accept connections</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="clients_num">0</arg>
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="listeners_num"/>
+        <arg name="skip"/>
+        <arg name="thread_process"/>
+        <arg name="use_ef_force"/>
+        <notes/>
+        <results tags="v5&amp;!ef10" key="ON-4611">
+          <result value="PASSED">
+            <verdict>Connections number limit 4000 was reached</verdict>
+            <verdict>6/10 listener sockets do not accept connections</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="reuseport_load_udp" type="script">
+      <objective>Test datagrams distribution beteween few sockets which share address and port with SO_REUSEPORT option.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="packet_max"/>
+        <arg name="packet_min"/>
+        <arg name="packets_num"/>
+        <arg name="sockets_num"/>
+        <arg name="src_addr_num">1</arg>
+        <arg name="thread_process"/>
+        <arg name="use_ef_force"/>
+        <notes/>
+        <results tags="v5" key="ST-145">
+          <result value="PASSED">
+            <verdict>There are 9/10 sockets, which did not receive any packets</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="packet_max">1000</arg>
+        <arg name="packet_min"/>
+        <arg name="packets_num">1000</arg>
+        <arg name="sockets_num"/>
+        <arg name="src_addr_num">40</arg>
+        <arg name="thread_process">none</arg>
+        <arg name="use_ef_force"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="packet_max">1000</arg>
+        <arg name="packet_min"/>
+        <arg name="packets_num">1000</arg>
+        <arg name="sockets_num"/>
+        <arg name="src_addr_num"/>
+        <arg name="thread_process">thread</arg>
+        <arg name="use_ef_force"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="packet_max"/>
+        <arg name="packet_min"/>
+        <arg name="packets_num"/>
+        <arg name="sockets_num"/>
+        <arg name="src_addr_num"/>
+        <arg name="thread_process">process</arg>
+        <arg name="use_ef_force"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="packet_max">10000</arg>
+        <arg name="packet_min"/>
+        <arg name="packets_num"/>
+        <arg name="sockets_num"/>
+        <arg name="src_addr_num"/>
+        <arg name="thread_process"/>
+        <arg name="use_ef_force"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="packet_max"/>
+        <arg name="packet_min"/>
+        <arg name="packets_num">3000</arg>
+        <arg name="sockets_num"/>
+        <arg name="src_addr_num"/>
+        <arg name="thread_process"/>
+        <arg name="use_ef_force"/>
+        <notes/>
+        <results tags="v5&amp;!ef10" key="ON-4611">
+          <result value="PASSED">
+            <verdict>There are 60/64 sockets, which did not receive any packets</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="reuseport_uids" type="script">
+      <objective>Try to share address and port with SO_REUSEPOR by different users.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="reuseport_iomux" type="script">
+      <objective>Share port with SO_REUSEPORT option between a few sockets and use blocking iomux to wait connection requests.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="iomux"/>
+        <arg name="listeners_num"/>
+        <arg name="same_port"/>
+        <arg name="same_tst"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="reuseport_threaded_iomux" type="script">
+      <objective>Using sockets with a shared port in a few blocked simultaneously called iomux functions.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="iomux"/>
+        <arg name="listeners_num"/>
+        <arg name="same_port"/>
+        <arg name="same_tst"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="reuseport_rcvtimeo" type="script">
+      <objective>Check connections distribution on a few listener sockets which use socket option SO_RCVTIMEO.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="listeners_num"/>
+        <arg name="same_port">FALSE</arg>
+        <arg name="same_tst">TRUE</arg>
+        <notes/>
+        <results tags="v5" key="ON-4986">
+          <result value="FAILED">
+            <verdict>bind() failed with RPC-ENOSPC</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="listeners_num"/>
+        <arg name="same_port">FALSE</arg>
+        <arg name="same_tst">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="listeners_num"/>
+        <arg name="same_port">TRUE</arg>
+        <arg name="same_tst"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="reuseport_udp_wild" type="script">
+      <objective>Check that datagrams are delivered to correct sockets when SO_REUSEPORT is used in set with binding to INADDR_ANY.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="iomux"/>
+        <arg name="second_wcard"/>
+        <arg name="third_iut">TRUE</arg>
+        <notes/>
+        <results tags="v5" key="ON-5552">
+          <result value="FAILED">
+            <verdict>The last datagram was received by a wrong socket</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="iomux"/>
+        <arg name="second_wcard"/>
+        <arg name="third_iut">FALSE</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="reuseport_udp_dst" type="script">
+      <objective>Check that datagrams are delivered to correct sockets if two address:port sets are shared with SO_REUSEPORT.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="first_wcard"/>
+        <arg name="iomux"/>
+        <arg name="second_wcard"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="mcast_reuseport" type="script">
+      <objective>Test multicast address sharing with SO_REUSEPORT option.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="method"/>
+        <arg name="reuseport_first">TRUE</arg>
+        <arg name="reuseport_second">TRUE</arg>
+        <notes/>
+        <results tags="v5&amp;(linux-2.6.32-5-amd64|linux-2.6.32-bpo.5)" key="ON-3968">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="method"/>
+        <arg name="reuseport_first">TRUE</arg>
+        <arg name="reuseport_second">FALSE</arg>
+        <notes/>
+        <results tags="v5&amp;(linux-2.6.32-5-amd64|linux-2.6.32-bpo.5)" key="ON-3968">
+          <result value="FAILED">
+            <verdict>Bind should fail with EADDRINUSE</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="method"/>
+        <arg name="reuseport_first">FALSE</arg>
+        <arg name="reuseport_second"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="move_fd_reuseport" type="script">
+      <objective>Try to move a socket to other stack when SO_REUSEPORT option is used.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="sock_type"/>
+        <arg name="socket_state"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="socket_closing" type="script">
+      <objective>Check that clustered socket closing after bind or listen does not affect new created sockets.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="close_after_listen"/>
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="sock_type"/>
+        <arg name="wild"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="reuseport_del_addr" type="script">
+      <objective>Check what happens when network address is removed while sockets with SO_REUSEPORT set are bound to it.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="sock_type"/>
+        <arg name="set_reuseport"/>
+        <arg name="single_process"/>
+        <arg name="remove_addr"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="reuseport_after_bind" type="script">
+      <objective>Check that enabling SO_REUSEPORT after socket binding does not take effect.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="wildcard"/>
+        <notes/>
+        <results tags="v5" notes="Expected behavior in case of incorrect setting of SO_REUSEPORT">
+          <result value="FAILED">
+            <verdict>poll() reported no events on pco_iut</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="wildcard"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="reuseport_tcp_wild" type="script">
+      <objective>Check that connection requests are delivered to correct sockets when SO_REUSEPORT is used together with binding to INADDR_ANY.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="first_wild"/>
+        <arg name="same_port">TRUE</arg>
+        <arg name="second_wild">TRUE</arg>
+        <notes/>
+        <results tags="linux-4&gt;5&amp;!v5" notes="Expected behavior, see bug 63439">
+          <result value="FAILED">
+            <verdict>Listener from the wrong pair accepted connection on IUT</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="first_wild">FALSE</arg>
+        <arg name="same_port">TRUE</arg>
+        <arg name="second_wild">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="first_wild">FALSE</arg>
+        <arg name="same_port">FALSE</arg>
+        <arg name="second_wild"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="first_wild">TRUE</arg>
+        <arg name="same_port"/>
+        <arg name="second_wild"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="reuseport_lacp_slave_up" type="script">
+      <objective>Check that if sockets are bound with SO_REUSEPORT to an address on LACP aggregation interface, they can accept connection or receive data if and only if it goes through a slave which is currently up.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="first_slave"/>
+        <arg name="sock_first"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="team"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="first_slave"/>
+        <arg name="sock_first"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="team"/>
+        <notes/>
+        <results tags="v5" notes="Expected behavior, see bug 73869 comment 6">
+          <result value="FAILED">
+            <verdict>The check after bringing a slave down: connection check succeeded for the slave which is down</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="cluster_restart_all_orphaned" type="script">
+      <objective>Check that orphaned sockets are closed after process recreating if set EF_CLUSTER_RESTART=1, otherwise binding of new socket in the same cluster fails.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="ef_cluster_restart"/>
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="tp"/>
+        <arg name="kill_iut"/>
+        <arg name="state"/>
+        <arg name="wildcard"/>
+        <arg name="close_listeners"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="cluster_restart_one_killed" type="script">
+      <objective>Check that if set EF_CLUSTER_RESTART=1 then orphaned socket is destroyed after cluster stack recreating, but non-orphaned socket is not affected. One of clustered processes is killed to get the orphaned socket.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="first_close"/>
+        <arg name="new_bind_first"/>
+        <arg name="second_close_accepted"/>
+        <arg name="second_close_listener"/>
+        <arg name="state"/>
+        <arg name="wildcard"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="cluster_restart_one_closed" type="script">
+      <objective>Check that if set EF_CLUSTER_RESTART=1 then orphaned socket is destroyed after cluster stack recreating, but non-orphaned socket is not affected. Orphaned socket is obtained by closing both listener and accepted sockets.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="first_close"/>
+        <arg name="new_bind_first"/>
+        <arg name="second_close_listener"/>
+        <arg name="second_state"/>
+        <arg name="tp"/>
+        <arg name="wildcard"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="tcp_close_listener" type="script">
+      <objective>Close listener sockets in different order in relation to accepted sockets. Check that after sockets closing it is possible to bind to the same/different port on the same address using SO_REUSEPORT.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="wildcard"/>
+        <arg name="first_listener_early"/>
+        <arg name="second_listener_early"/>
+        <arg name="listeners_closing_order"/>
+        <arg name="orphaned">TRUE</arg>
+        <arg name="same_port"/>
+        <arg name="ef_cluster_restart">0</arg>
+        <arg name="tp"/>
+        <notes/>
+        <results tags="v5" key="ON-9471">
+          <result value="FAILED">
+              <verdict>bind() failed with RPC-ENOSPC</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="wildcard"/>
+        <arg name="first_listener_early"/>
+        <arg name="second_listener_early"/>
+        <arg name="listeners_closing_order"/>
+        <arg name="orphaned">FALSE</arg>
+        <arg name="same_port"/>
+        <arg name="ef_cluster_restart">0</arg>
+        <arg name="tp"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="wildcard"/>
+        <arg name="first_listener_early"/>
+        <arg name="second_listener_early"/>
+        <arg name="listeners_closing_order"/>
+        <arg name="orphaned"/>
+        <arg name="same_port"/>
+        <arg name="ef_cluster_restart">1</arg>
+        <arg name="tp"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="several_clusters" type="script">
+      <objective>Create several clusters binding TCP listener and UDP sockets to different ports.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="clusters_num"/>
+        <arg name="bind_to"/>
+        <arg name="tp">none</arg>
+        <arg name="personal_thread"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="clusters_num"/>
+        <arg name="bind_to"/>
+        <arg name="tp">thread</arg>
+        <arg name="personal_thread"/>
+        <notes/>
+        <results tags="v5" key="ST-1187">
+          <result value="FAILED">
+              <verdict>bind() failed with RPC-ENOSPC</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="scalable_filters_enable"/>
+        <arg name="clusters_num"/>
+        <arg name="bind_to"/>
+        <arg name="tp">process</arg>
+        <arg name="personal_thread"/>
+        <notes/>
+        <results tags="v5" key="ST-1187">
+          <result value="FAILED">
+              <verdict>bind() failed with RPC-ENOSPC</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+  </iter>
+</test>
+

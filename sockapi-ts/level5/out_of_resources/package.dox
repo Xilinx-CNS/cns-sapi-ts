@@ -1,0 +1,29 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup level5-out_of_resources Tests on handling out of resources situations in L5 stack
+@ingroup level5
+@{
+
+It is checked that L5 stack correctly handles situations when there are
+no more resources to allocate. In such situations when L5 stack cannot
+execute some socket operations due to its resources exhaustion L5 stack
+should use natural OS socket operation.
+
+@author Alexander Kukuta <Alexander.Kukuta@oktetlabs.ru>
+  
+@par Tests:
+
+-# @ref level5-out_of_resources-out_of_hw_filters_udp_bind_connect
+-# @ref level5-out_of_resources-out_of_hw_filters_tcp
+-# @ref level5-out_of_resources-out_of_hw_filters_tcp_listen
+-# @ref level5-out_of_resources-out_of_hw_filters_udp_recvfrom
+-# @ref level5-out_of_resources-out_of_netifs
+-# @ref level5-out_of_resources-oof_multicast_gradual
+-# @ref level5-out_of_resources-out_of_packets
+-# @ref level5-out_of_resources-data_flows_few_pkts
+
+@}
+
+*/

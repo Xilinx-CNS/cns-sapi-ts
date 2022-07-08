@@ -1,0 +1,3272 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+
+    <description>TCP protocol special cases</description>
+
+    <author mailto="Alexandra.Kossovsky@oktetlabs.ru"/>
+
+    <session>
+
+        <!--- IUT and tester are located on the same host. "lo" is used as IUT
+              interface. IPv4 addresses are issued for testing. -->
+        <var name="env.p2p_lo" global="true">
+            <value reqs="ENV-LOOPBACK">'net1':IUT{'iut_host'{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr1':inet:unicast,if:'lo'}},'iut_if'='lo'</value>
+        </var>
+
+        <!--- IUT and tester are located on the same host. "lo" is used as IUT
+              interface. IPv6 addresses are issued for testing. -->
+        <var name="env.p2p_lo_ipv6" global="true">
+            <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">'net1':IUT{'iut_host'{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr1':inet6:unicast,if:'lo'}},'iut_if'='lo'</value>
+        </var>
+
+        <!--- IUT and tester are located on the same host. The second IUT
+              address uses address from the tester link. "lo" is used as IUT
+              interface. IPv4 addresses are issued for testing. -->
+        <var name="env.p2p_lo_tst" global="true">
+            <value reqs="ENV-LOOPBACK,ENV-2PEERS">'net1':IUT{'iut_host'{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr1':inet:unicast,if:'lo'}},tester{'iut_host'{addr:'iut_addr2':inet:unicast}},'iut_if'='lo'</value>
+        </var>
+
+        <!--- IUT and tester are located on the same host. The second IUT
+              address uses address from the tester link. "lo" is used as IUT
+              interface. IPv6 addresses are issued for testing. -->
+        <var name="env.p2p_lo_tst_ipv6" global="true">
+            <value reqs="ENV-LOOPBACK,ENV-2PEERS,IP6,IP6_ONLOAD">'net1':IUT{'iut_host'{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr1':inet6:unicast,if:'lo'}},tester{'iut_host'{addr:'iut_addr2':inet6:unicast}},'iut_if'='lo'</value>
+        </var>
+
+        <run>
+             <script name="tcp_small_window" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+             </script>
+             <arg name="env" list="">
+               <value ref="env.peer2peer"/>
+               <value ref="env.peer2peer"/>
+               <value ref="env.peer2peer_tst"/>
+               <value ref="env.peer2peer_lo"/>
+               <value ref="env.peer2peer_ipv6"/>
+               <value ref="env.peer2peer_ipv6"/>
+               <value ref="env.peer2peer_tst_ipv6"/>
+               <value ref="env.peer2peer_lo_ipv6"/>
+             </arg>
+             <arg name="tst_rcvbuf">
+                 <value>1</value>
+                 <value>723</value>
+             </arg>
+             <arg name="active" type="socket_tcp_boolean"/>
+             <arg name="early" type="boolean"/>
+             <arg name="use_sendfile" type="boolean">
+                <value>FALSE</value>
+                <value reqs="SENDFILE">TRUE</value>
+             </arg>
+             <arg name="cache_socket" type="cache_socket_type" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+             <script name="tcp_zero_window">
+                <req id="TIME_CONSUMING"/>
+                <req id="SOCK_STREAM"/>
+                <req id="TCP_ACTIVE"/>
+             </script>
+             <arg name="env">
+                 <value ref="env.peer2peer"/>
+                 <value ref="env.peer2peer_ipv6"/>
+                 <value ref="env.peer2peer_fake"/>
+             </arg>
+             <arg name="cache_socket" type="cache_socket_type"/>
+        </run>
+
+        <run>
+             <script name="ip_fragments">
+                <req id="SOCK_STREAM"/>
+                <!-- ZF does not handle IP fragments.  At all. -->
+                <req id="ZF_INCOMPATIBLE"/>
+                <req id="L2_TS"/>
+             </script>
+             <arg name="env" list="">
+                 <value ref="env.peer2peer"/>
+                 <value ref="env.peer2peer_ipv6"/>
+             </arg>
+             <arg name="frag_len" list="">
+                 <value>64</value>
+                   <!-- 1232 is a minimum size of payload which should
+                        always be possible to send in an IPv6 fragment,
+                        given that guaranteed minimum for IPv6 packet is
+                        1280 bytes, and IPv6 header + Fragment extension
+                        header = 40 + 8 = 48 bytes. RHEL may ignore
+                        smaller fragments, at least in case of TCP. -->
+                 <value>1232</value>
+             </arg>
+        </run>
+
+        <run>
+             <script name="shutdown_fin">
+                <req id="SOCK_STREAM"/>
+                <req id="TCP_ACTIVE"/>
+             </script>
+             <arg name="env">
+                 <value ref="env.peer2peer"/>
+                 <value ref="env.peer2peer_ipv6"/>
+                 <value ref="env.peer2peer_fake"/>
+             </arg>
+             <arg name="cache_socket" type="cache_socket_type"/>
+        </run>
+
+        <run>
+             <script name="shutdown_rst">
+                <req id="SOCK_STREAM"/>
+             </script>
+             <arg name="env">
+                 <value ref="env.peer2peer"/>
+                 <value ref="env.peer2peer_ipv6"/>
+                 <value ref="env.peer2peer_fake"/>
+             </arg>
+        </run>
+
+        <run>
+            <script name="connect_impossible_icmp" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+                <req id="ICMP"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+            </arg>
+            <arg name="iomux" type="iomux_with_oo_epoll"/>
+            <arg name="select_err_queue" type="select_err_queue_bool"/>
+            <arg name="error_code">
+                <value>ICMP_NET_UNREACH</value>
+                <value>ICMP_HOST_UNREACH</value>
+                <value>ICMP_PROT_UNREACH</value>
+                <value>ICMP_PORT_UNREACH</value>
+            </arg>
+            <arg name="blocking" type="boolean">
+                <value>FALSE</value>
+                <value reqs="FORK">TRUE</value>
+            </arg>
+        </run>
+        <run>
+            <script name="connect_impossible_icmp" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+                <req id="ICMP"/>
+            </script>
+            <arg name="env">
+                 <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="iomux" type="iomux_with_oo_epoll"/>
+            <arg name="select_err_queue" type="select_err_queue_bool"/>
+            <arg name="error_code">
+                 <value>ICMPV6_NOROUTE</value>
+                 <value>ICMPV6_ADM_PROHIBITED</value>
+                 <value>ICMPV6_NOT_NEIGHBOUR</value>
+                 <value>ICMPV6_ADDR_UNREACH</value>
+                 <value>ICMPV6_PORT_UNREACH</value>
+                 <value>ICMPV6_POLICY_FAIL</value>
+                 <value>ICMPV6_REJECT_ROUTE</value>
+            </arg>
+            <arg name="blocking" type="boolean">
+                <value>FALSE</value>
+                <value reqs="FORK">TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="connect_nb_impossible_icmp">
+                <req id="ICMP"/>
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+            </arg>
+            <arg name="icmp_code">
+                 <value>ICMP_NET_UNREACH</value>
+                 <value>ICMP_HOST_UNREACH</value>
+                 <value>ICMP_PROT_UNREACH</value>
+                 <value>ICMP_PORT_UNREACH</value>
+            </arg>
+            <arg name="func">
+                <value>connect</value>
+                <value>send</value>
+                <value>recv</value>
+                <value reqs="SENDMSG_RECVMSG">recvmsg</value>
+                <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,ONLOAD_ZC_RECV">onload_zc_recv</value>
+                <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_CTL,RECV_IOV,ONLOAD_ZC_HLRX">onload_zc_hlrx_recv_zc</value>
+                <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_CTL,RECV_IOV,ONLOAD_ZC_HLRX,ONLOAD_ZC_HLRX_COPY">onload_zc_hlrx_recv_copy</value>
+                <value>select</value>
+                <value reqs="SO_ERROR">getsockopt</value>
+                <value reqs="POLL">poll</value>
+                <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND">onload_zc_send</value>
+                <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND,ONLOAD_ZC_SEND_USER_BUF">onload_zc_send_user_buf</value>
+               <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_IOV,SF_TEMPLATE_SEND">template_send</value>
+               <value reqs="ONLOAD_ONLY,SEND_FLAG,SF_ODS,SF_ODS_COMPL">od_send</value>
+               <value reqs="ONLOAD_ONLY,SEND_FLAG,SF_ODS,SF_ODS_RAW">od_send_raw</value>
+            </arg>
+        </run>
+        <run>
+            <script name="connect_nb_impossible_icmp">
+                <req id="ICMP"/>
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="icmp_code">
+                 <value>ICMPV6_NOROUTE</value>
+                 <value>ICMPV6_ADM_PROHIBITED</value>
+                 <value>ICMPV6_NOT_NEIGHBOUR</value>
+                 <value>ICMPV6_ADDR_UNREACH</value>
+                 <value>ICMPV6_PORT_UNREACH</value>
+                 <value>ICMPV6_POLICY_FAIL</value>
+                 <value>ICMPV6_REJECT_ROUTE</value>
+            </arg>
+            <arg name="func">
+                <value>connect</value>
+                <value>send</value>
+                <value>recv</value>
+                <value reqs="SENDMSG_RECVMSG">recvmsg</value>
+                <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_ADDR,RECV_CTL,RECV_IOV,RECV_MSGS,ONLOAD_ZC_RECV">onload_zc_recv</value>
+                <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_CTL,RECV_IOV,ONLOAD_ZC_HLRX">onload_zc_hlrx_recv_zc</value>
+                <value reqs="ONLOAD_ONLY,RECV_FLAG,RECV_CTL,RECV_IOV,ONLOAD_ZC_HLRX,ONLOAD_ZC_HLRX_COPY">onload_zc_hlrx_recv_copy</value>
+                <value>select</value>
+                <value reqs="SO_ERROR">getsockopt</value>
+                <value reqs="POLL">poll</value>
+                <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND">onload_zc_send</value>
+                <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND,ONLOAD_ZC_SEND_USER_BUF">onload_zc_send_user_buf</value>
+               <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_IOV,SF_TEMPLATE_SEND">template_send</value>
+               <value reqs="ONLOAD_ONLY,SEND_FLAG,SF_ODS,SF_ODS_COMPL">od_send</value>
+               <value reqs="ONLOAD_ONLY,SEND_FLAG,SF_ODS,SF_ODS_RAW">od_send_raw</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="tcp_handle_rst" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+                <req id="SO_ERROR"/>
+                <req id="TAPI_TCP_STATES"/>
+                <req id="TCP_BLIND_WINDOW"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_lo"/>
+                <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="close_iut" type="boolean" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <!-- CLOSE_WAIT cannot be checked with close_iut=TRUE
+                     since after closing IUT socket its peer will move
+                     to TIME_WAIT state, and calling close() on it
+                     will not result in sending RST to IUT even if
+                     SO_LINGER with zero linger value was set. -->
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="tcp_state" list="">
+                <!-- TIME_WAIT cannot be checked here since it
+                     means that connection is fully terminated on
+                     Tester and closing socket there will not result
+                     in sending RST even if SO_LINGER with zero linger
+                     value was set. -->
+                <value>TCP_CLOSE_WAIT</value>
+                <value>TCP_ESTABLISHED</value>
+                <value>TCP_FIN_WAIT2</value>
+                <value>TCP_ESTABLISHED</value>
+                <value>TCP_FIN_WAIT2</value>
+            </arg>
+            <arg name="tst_type">
+                <value>TSA_TST_SOCKET</value>
+            </arg>
+            <arg name="loopback">
+                <value>TRUE</value>
+            </arg>
+            <arg name="send_data">
+                <value>FALSE</value>
+            </arg>
+            <arg name="seqn_val">
+                <value>next</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="shutdown_states" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+                <req id="TAPI_TCP_STATES"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_lo"/>
+                <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="shutdown_how">
+                <value>SHUT_WR</value>
+            </arg>
+            <arg name="iut_send_before">
+                <value>TRUE</value>
+            </arg>
+            <arg name="tst_send_before">
+                <value>FALSE</value>
+            </arg>
+            <arg name="tst_send_after">
+                <value>FALSE</value>
+            </arg>
+            <arg name="tcp_state">
+                <value>TCP_CLOSE_WAIT</value>
+                <value>TCP_ESTABLISHED</value>
+            </arg>
+            <arg name="tst_type">
+                <value>TSA_TST_SOCKET</value>
+            </arg>
+            <arg name="loopback">
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="shutdown_states" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+                <req id="TAPI_TCP_STATES"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_lo"/>
+                <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="shutdown_how" list="">
+                <value reqs="ZF_INCOMPATIBLE">SHUT_RD</value>
+                <value reqs="ZF_INCOMPATIBLE">SHUT_RD</value>
+                <value>SHUT_WR</value>
+            </arg>
+            <arg name="iut_send_before" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="tst_send_before" list="">
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="tst_send_after" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="tcp_state">
+                <value>TCP_ESTABLISHED</value>
+                <value>TCP_FIN_WAIT2</value>
+            </arg>
+            <arg name="tst_type">
+                <value>TSA_TST_SOCKET</value>
+            </arg>
+            <arg name="loopback">
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="shutdown_states" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+                <req id="TAPI_TCP_STATES"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_lo"/>
+                <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="shutdown_how" list="">
+                <value reqs="ZF_INCOMPATIBLE">SHUT_RD</value>
+                <value>SHUT_WR</value>
+            </arg>
+            <arg name="iut_send_before">
+                <value>FALSE</value>
+            </arg>
+            <arg name="tst_send_before" list="">
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="tst_send_after">
+                <value>FALSE</value>
+            </arg>
+            <arg name="tcp_state">
+                <value>TCP_CLOSE_WAIT</value>
+                <value>TCP_TIME_WAIT</value>
+            </arg>
+            <arg name="tst_type">
+                <value>TSA_TST_SOCKET</value>
+            </arg>
+            <arg name="loopback">
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="non_accepted_closed">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_lo"/>
+                <value ref="env.peer2peer_tst"/>
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_lo_ipv6"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+            </arg>
+            <arg name="iut_close" type="boolean"/>
+            <arg name="tst_close" type="boolean"/>
+        </run>
+
+        <!-- tcp_loopback - IPv4 only iterations with other loopback address. -->
+        <run>
+            <session track_conf="silent">
+
+                <arg name="env" list="">
+                    <value ref="env.p2p_lo"/>
+                    <value ref="env.p2p_lo_tst"/>
+                    <value ref="env.p2p_lo"/>
+                    <value ref="env.p2p_lo"/>
+                    <value ref="env.p2p_lo"/>
+                    <value ref="env.p2p_lo_tst"/>
+                    <value ref="env.p2p_lo"/>
+                    <value ref="env.p2p_lo"/>
+                    <value ref="env.p2p_lo"/>
+
+                    <value ref="env.p2p_lo"/>
+                    <value ref="env.p2p_lo_tst"/>
+                    <value ref="env.p2p_lo"/>
+                    <value ref="env.p2p_lo"/>
+
+                    <value ref="env.p2p_lo"/>
+                    <value ref="env.p2p_lo_tst"/>
+                    <value ref="env.p2p_lo"/>
+                    <value ref="env.p2p_lo"/>
+                </arg>
+                <arg name="v6only">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="server_addr" list="">
+                    <value>SFC_ADDR</value>
+                    <value>OTH_ADDR</value>
+                    <value>LO_ADDR</value>
+                    <value>OTH_LO_ADDR</value>
+                    <value>WILD_ADDR</value>
+                    <value>WILD_ADDR</value>
+                    <value>WILD_ADDR</value>
+                    <value>WILD_ADDR</value>
+                    <value>WILD_ADDR</value>
+
+                    <value>OTH_LO_ADDR</value>
+                    <value>OTH_LO_ADDR</value>
+                    <value>OTH_LO_ADDR</value>
+                    <value>OTH_LO_ADDR</value>
+
+                    <value>WILD_ADDR</value>
+                    <value>WILD_ADDR</value>
+                    <value>WILD_ADDR</value>
+                    <value>WILD_ADDR</value>
+                </arg>
+                <arg name="client_addr" list="">
+                    <value>OTH_LO_ADDR</value>
+                    <value>OTH_LO_ADDR</value>
+                    <value>OTH_LO_ADDR</value>
+                    <value>OTH_LO_ADDR</value>
+                    <value>OTH_LO_ADDR</value>
+                    <value>OTH_LO_ADDR</value>
+                    <value>OTH_LO_ADDR</value>
+                    <value>OTH_LO_ADDR</value>
+                    <value>OTH_LO_ADDR</value>
+
+                    <value>SFC_ADDR</value>
+                    <value>OTH_ADDR</value>
+                    <value>LO_ADDR</value>
+                    <value>NO_ADDR</value>
+
+                    <value>SFC_ADDR</value>
+                    <value>OTH_ADDR</value>
+                    <value>LO_ADDR</value>
+                    <value>NO_ADDR</value>
+                </arg>
+                <arg name="connect_addr" list="">
+                    <value>SFC_ADDR</value>
+                    <value>OTH_ADDR</value>
+                    <value>LO_ADDR</value>
+                    <value>OTH_LO_ADDR</value>
+                    <value>SFC_ADDR</value>
+                    <value>OTH_ADDR</value>
+                    <value>LO_ADDR</value>
+                    <value>OTH_LO_ADDR</value>
+                    <value>WILD_ADDR</value>
+
+                    <value>OTH_LO_ADDR</value>
+                    <value>OTH_LO_ADDR</value>
+                    <value>OTH_LO_ADDR</value>
+                    <value>OTH_LO_ADDR</value>
+
+                    <value>OTH_LO_ADDR</value>
+                    <value>OTH_LO_ADDR</value>
+                    <value>OTH_LO_ADDR</value>
+                    <value>OTH_LO_ADDR</value>
+                </arg>
+                <arg name="loopback_users">
+                    <value>ROOT_BOTH</value>
+                </arg>
+
+                <run>
+                    <script name="tcp_loopback">
+                        <req id="SOCK_STREAM"/>
+                        <req id="NO_REUSE_STACK"/>
+                        <req id="TIME_CONSUMING"/>
+                    </script>
+                    <arg name="accept_first" type="boolean"/>
+                    <arg name="ef_tcp_server_loopback">
+                        <value>-1</value>
+                    </arg>
+                    <arg name="ef_tcp_client_loopback">
+                        <value>-1</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="tcp_loopback">
+                        <req id="SOCK_STREAM"/>
+                        <req id="NO_REUSE_STACK"/>
+                        <req id="ONLOAD_ONLY"/>
+                        <req id="TIME_CONSUMING"/>
+                    </script>
+                    <arg name="accept_first">
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="ef_tcp_server_loopback">
+                        <value>0</value>
+                        <value>1</value>
+                        <value>2</value>
+                    </arg>
+                    <arg name="ef_tcp_client_loopback">
+                        <value>0</value>
+                        <value>1</value>
+                        <value>2</value>
+                        <value>3</value>
+                        <value>4</value>
+                    </arg>
+                </run>
+
+            </session>
+        </run>
+
+        <!-- tcp_loopback - iterations with IPv6 wildcard server and IPv4 client -->
+        <run>
+            <session track_conf="silent">
+                <var name="env.p2p_lo_tst_ipv4v6" global="true">
+                    <value reqs="ENV-LOOPBACK,ENV-2PEERS,IP6,IP6_ONLOAD">'net1':IUT{'iut_host'{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr_wild':inet6:wildcard,if:'lo'}},tester{'iut_host'{addr:'iut_addr2':inet:unicast}},'iut_if'='lo'</value>
+                </var>
+
+                <arg name="env">
+                    <value ref="env.p2p_lo_tst_ipv4v6"/>
+                </arg>
+                <arg name="client_addr">
+                    <value>SFC_ADDR</value>
+                    <value>OTH_ADDR</value>
+                    <value>LO_ADDR</value>
+                    <value>NO_ADDR</value>
+                </arg>
+                <arg name="connect_addr">
+                    <value>SFC_ADDR</value>
+                    <value>OTH_ADDR</value>
+                    <value>LO_ADDR</value>
+                    <value>WILD_ADDR</value>
+                </arg>
+                <arg name="loopback_users">
+                    <value>ROOT_BOTH</value>
+                </arg>
+
+                <run>
+                    <script name="tcp_loopback">
+                        <req id="SOCK_STREAM"/>
+                        <req id="NO_REUSE_STACK"/>
+                        <req id="TIME_CONSUMING"/>
+                    </script>
+                    <arg name="v6only" list="">
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="server_addr" list="">
+                        <value>WILD_IP4MAPPED_ADDR</value>
+                        <value>WILD_IP4MAPPED_ADDR</value>
+                        <value>WILD_ADDR</value>
+                        <value>WILD_ADDR</value>
+                        <value>WILD_ADDR</value>
+                    </arg>
+                    <arg name="accept_first" list="">
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="ef_tcp_server_loopback">
+                        <value>-1</value>
+                    </arg>
+                    <arg name="ef_tcp_client_loopback">
+                        <value>-1</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="tcp_loopback">
+                        <req id="SOCK_STREAM"/>
+                        <req id="NO_REUSE_STACK"/>
+                        <req id="ONLOAD_ONLY"/>
+                        <req id="TIME_CONSUMING"/>
+                    </script>
+                    <arg name="v6only" list="">
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="server_addr" list="">
+                        <value>WILD_IP4MAPPED_ADDR</value>
+                        <value>WILD_ADDR</value>
+                        <value>WILD_ADDR</value>
+                    </arg>
+                    <arg name="accept_first">
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="ef_tcp_server_loopback">
+                        <value>0</value>
+                        <value>1</value>
+                        <value>2</value>
+                    </arg>
+                    <arg name="ef_tcp_client_loopback">
+                        <value>0</value>
+                        <value>1</value>
+                        <value>2</value>
+                        <value>3</value>
+                        <value>4</value>
+                    </arg>
+                </run>
+
+            </session>
+        </run>
+
+        <!-- tcp_loopback - IPv4 + IPv6 iterations -->
+        <run>
+            <session track_conf="silent">
+
+                <arg name="env">
+                    <value ref="env.p2p_lo_tst"/>
+                    <value ref="env.p2p_lo_tst_ipv6"/>
+                </arg>
+                <arg name="v6only">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="server_addr" list="">
+                    <value>SFC_ADDR</value>
+                    <value>OTH_ADDR</value>
+                    <value>LO_ADDR</value>
+                    <value>WILD_ADDR</value>
+                    <value>WILD_ADDR</value>
+                    <value>WILD_ADDR</value>
+                    <value>WILD_ADDR</value>
+                </arg>
+                <arg name="client_addr">
+                    <value>SFC_ADDR</value>
+                    <value>OTH_ADDR</value>
+                    <value>LO_ADDR</value>
+                    <value>NO_ADDR</value>
+                </arg>
+                <arg name="connect_addr" list="">
+                    <value>SFC_ADDR</value>
+                    <value>OTH_ADDR</value>
+                    <value>LO_ADDR</value>
+                    <value>SFC_ADDR</value>
+                    <value>OTH_ADDR</value>
+                    <value>LO_ADDR</value>
+                    <value>WILD_ADDR</value>
+                </arg>
+                <arg name="loopback_users">
+                    <value>ROOT_BOTH</value>
+                </arg>
+
+                <run>
+                    <script name="tcp_loopback">
+                        <req id="SOCK_STREAM"/>
+                        <req id="NO_REUSE_STACK"/>
+                        <req id="TIME_CONSUMING"/>
+                    </script>
+                    <arg name="accept_first" type="boolean"/>
+                    <arg name="ef_tcp_server_loopback">
+                        <value>-1</value>
+                    </arg>
+                    <arg name="ef_tcp_client_loopback">
+                        <value>-1</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="tcp_loopback">
+                        <req id="SOCK_STREAM"/>
+                        <req id="NO_REUSE_STACK"/>
+                        <req id="ONLOAD_ONLY"/>
+                        <req id="TIME_CONSUMING"/>
+                    </script>
+                    <arg name="accept_first">
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="ef_tcp_server_loopback">
+                        <value>0</value>
+                        <value>1</value>
+                        <value>2</value>
+                    </arg>
+                    <arg name="ef_tcp_client_loopback">
+                        <value>0</value>
+                        <value>1</value>
+                        <value>2</value>
+                        <value>3</value>
+                        <value>4</value>
+                    </arg>
+                </run>
+            </session>
+        </run>
+
+        <!-- tcp_loopback - IPv4 + IPv6 iterations with various users. -->
+        <run>
+            <script name="tcp_loopback" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+                <req id="NO_REUSE_STACK"/>
+                <req id="NO_PHYS_MODE"/>
+                <req id="ONLOAD_ONLY"/>
+                <req id="TIME_CONSUMING"/>
+                <req id="SETUID"/>
+            </script>
+            <arg name="env">
+                <value ref="env.p2p_lo"/>
+                <value ref="env.p2p_lo_ipv6"/>
+            </arg>
+            <arg name="v6only">
+                <value>FALSE</value>
+            </arg>
+            <arg name="server_addr">
+                <value>SFC_ADDR</value>
+            </arg>
+            <arg name="client_addr">
+                <value>SFC_ADDR</value>
+            </arg>
+            <arg name="connect_addr">
+                <value>SFC_ADDR</value>
+            </arg>
+            <arg name="accept_first">
+                <value>FALSE</value>
+            </arg>
+            <arg name="loopback_users">
+                <value>ROOT_LISTEN</value>
+                <value>ROOT_CONN</value>
+                <value>SAME_USERS</value>
+                <value>DIFF_USERS</value>
+            </arg>
+            <arg name="ef_tcp_server_loopback">
+                <value>0</value>
+                <value>1</value>
+                <value>2</value>
+            </arg>
+            <arg name="ef_tcp_client_loopback">
+                <value>0</value>
+                <value>1</value>
+                <value>2</value>
+                <value>3</value>
+                <value>4</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="syn_recv_fin_wait1" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_gw"/>
+                <value ref="env.peer2peer_gw_ipv6"/>
+            </arg>
+            <arg name="use_shutdown" type="boolean">
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="so_reuseaddr" type="boolean">
+              <value reqs="SO_REUSEADDR">TRUE</value>
+              <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="out_of_socks_tcp_loopback">
+                <req id="ENV-LOOPBACK"/>
+                <req id="SMALL_RLIMIT_NOFILE"/>
+                <!-- See ON-12005 -->
+                <req id="FD_CACHE_INCOMPATIBLE"/>
+            </script>
+            <arg name="env">
+                <value>IUT{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr':inet:unicast,if:'lo'}},'iut_if'='lo'</value>
+                <value reqs="IP6,IP6_ONLOAD">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr':inet6:unicast,if:'lo'}},'iut_if'='lo'</value>
+            </arg>
+            <arg name="conn_stack" type="boolean"/>
+            <arg name="sock_close_num">
+                <value>1</value>
+                <value>3</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="tcp_flooder_mult">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_tst"/>
+                <value ref="env.peer2peer_lo"/>
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+                <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="iterations">
+                <value>10</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="listen_backlog_max" track_conf="silent">
+                <req id="RPC_RESTART"/>
+                <req id="SOCK_STREAM"/>
+                <req id="LISTEN_BACKLOG"/>
+                <req id="PROC_SYS_NET"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="backlog_max" list="">
+                <value>50</value>
+                <value reqs="TIME_CONSUMING">100000</value>
+            </arg>
+            <arg name="completed_conns_num" list="">
+                <value>5</value>
+                <value>20</value>
+            </arg>
+            <arg name="ef_prefault_packets" type="boolean">
+              <!-- TRUE was useful while fixing Onload bug L5 44852 -->
+              <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="tcp_window_update">
+                <req id="SOCK_STREAM"/>
+                <req id="TAPI_TCP_STATES"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+        </run>
+
+        <run>
+             <script name="tcp_small_segment" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+             </script>
+             <arg name="env" list="">
+               <value ref="env.peer2peer"/>
+               <value ref="env.peer2peer"/>
+               <value ref="env.peer2peer_ipv6"/>
+               <value ref="env.peer2peer_ipv6"/>
+               <value ref="env.peer2peer_lo"/>
+               <value ref="env.peer2peer_lo_ipv6"/>
+             </arg>
+             <arg name="active" type="socket_tcp_boolean"/>
+             <arg name="recv_loops">
+               <value>0</value>
+               <value>1</value>
+               <value>5</value>
+             </arg>
+             <arg name="with_holes" type="boolean">
+               <value>FALSE</value>
+             </arg>
+             <arg name="cache_socket" type="cache_socket_type" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+             <script name="syn_ack_distrib">
+                <req id="SOCK_STREAM"/>
+             </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_tst"/>
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+            </arg>
+            <arg name="syn_num">
+                <value>20</value>
+            </arg>
+            <arg name="delay">
+                <value>500</value>
+            </arg>
+            <arg name="max_intersects">
+                <value reqs="ZF_INCOMPATIBLE">5</value>
+                <value reqs="ZF_SPECIFIC">13</value>
+            </arg>
+        </run>
+
+        <run>
+             <script name="tcp_fork_distrib">
+                <req id="SOCK_STREAM"/>
+                <req id="FORK"/>
+             </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+                <!-- See ON-12690. -->
+                <value reqs="NO_LOOP4_M32" ref="env.peer2peer_lo"/>
+                <value reqs="NO_LOOP4_M32" ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="num">
+                <value>500</value>
+            </arg>
+            <arg name="thread" type="boolean"/>
+        </run>
+
+        <run name="zero_window_ext">
+          <session track_conf="silent">
+            <req id="RPC_RESTART" sticky="true"/>
+
+            <prologue>
+              <script name="prologue_timeouts_init">
+                <req id="PROC_SYS_NET"/>
+              </script>
+              <arg name="env" ref="env.peer2peer"/>
+            </prologue>
+
+            <epilogue>
+              <script name="../gateways_epilogue"/>
+              <arg name="env">
+                <value ref="env.peer2peer_gw"/>
+              </arg>
+            </epilogue>
+
+            <run>
+                <script name="tcp_zero_window_ext">
+                    <req id="SOCK_STREAM"/>
+                    <req id="TCP_INFO"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer_gw"/>
+                    <value ref="env.peer2peer_tst_gw"/>
+                    <value ref="env.peer2peer_gw_ipv6"/>
+                    <value ref="env.peer2peer_tst_gw_ipv6"/>
+                </arg>
+                <arg name="shut" type="boolean"/>
+                <arg name="linger" type="linger_bool"/>
+                <arg name="active" type="socket_tcp_boolean" list="">
+                    <value>TRUE</value>
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                    <value>TRUE</value>
+                </arg>
+                <arg name="handshake" type="boolean" list="">
+                    <value>TRUE</value>
+                    <value>TRUE</value>
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                </arg>
+                <arg name="data_packet_ack" type="boolean" list="">
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                    <value>FALSE</value>
+                </arg>
+                <arg name="cache_socket" type="cache_socket_type">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="overfill_sndbuf" type="boolean"/>
+            </run>
+
+            <run>
+                <script name="tcp_zero_window_ext">
+                    <req id="SOCK_STREAM"/>
+                    <req id="TCP_INFO"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer_gw"/>
+                    <value ref="env.peer2peer_gw_ipv6"/>
+                </arg>
+                <arg name="shut" type="boolean"/>
+                <arg name="linger" type="linger_bool">
+                  <value>FALSE</value>
+                </arg>
+                <arg name="active" type="socket_tcp_boolean"/>
+                <arg name="handshake" type="boolean">
+                    <value>TRUE</value>
+                </arg>
+                <arg name="data_packet_ack" type="boolean">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="cache_socket" type="cache_socket_type">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="overfill_sndbuf" type="boolean"/>
+            </run>
+
+            <!-- Iterations without caching use only one IUT RPC server
+                 and then fork() affects iterations with caching. Moving
+                 of caching testing to the end helps to solve this problem. -->
+            <run>
+                <script name="tcp_zero_window_ext">
+                    <req id="SOCK_STREAM"/>
+                    <req id="TCP_INFO"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer_two_iut_gw"/>
+                    <value ref="env.peer2peer_two_iut_gw_ipv6"/>
+                </arg>
+                <arg name="shut" type="boolean"/>
+                <arg name="linger" type="linger_bool">
+                  <value>FALSE</value>
+                </arg>
+                <arg name="active" type="socket_tcp_boolean"/>
+                <arg name="handshake" type="boolean">
+                    <value>TRUE</value>
+                </arg>
+                <arg name="data_packet_ack" type="boolean">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="cache_socket" type="cache_socket_type">
+                    <value>TRUE</value>
+                </arg>
+                <arg name="overfill_sndbuf" type="boolean"/>
+            </run>
+
+            <run>
+                <script name="closing_time_wait">
+                    <req id="SOCK_STREAM"/>
+                </script>
+                 <arg name="env">
+                   <value ref="env.peer2peer_two_iut"/>
+                   <value ref="env.peer2peer_two_iut_ipv6"/>
+                </arg>
+                <arg name="opening">
+                    <value reqs="TCP_ACTIVE">active</value>
+                    <value>passive_open</value>
+                    <value>passive_close</value>
+                </arg>
+                <arg name="cache_socket" type="cache_socket_type"/>
+            </run>
+
+            <run>
+                <script name="listener_closing_states" track_conf="nohistory">
+                    <req id="SOCK_STREAM"/>
+                    <req id="FD_CACHING"/>
+                    <req id="SO_ERROR"/>
+                    <req id="TAPI_TCP_STATES"/>
+                </script>
+                 <arg name="env">
+                   <value ref="env.peer2peer_two_iut_gw"/>
+                   <value ref="env.peer2peer_two_iut_gw_ipv6"/>
+                </arg>
+                <arg name="tcp_state">
+                    <value>TCP_FIN_WAIT1</value>
+                    <value reqs="SO_KEEPALIVE,TCP_KEEPCNT,TCP_KEEPIDLE,TCP_KEEPINTVL">TCP_FIN_WAIT2</value>
+                    <value>TCP_CLOSING</value>
+                    <value reqs="SO_KEEPALIVE,TCP_KEEPCNT,TCP_KEEPIDLE,TCP_KEEPINTVL">TCP_CLOSE_WAIT</value>
+                    <value>TCP_LAST_ACK</value>
+                </arg>
+                <arg name="cache_socket" type="cache_socket_type">
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                </arg>
+            </run>
+          </session>
+        </run>
+
+        <run>
+             <script name="default_tcp_orphan_retries" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+                <req id="TIME_CONSUMING"/>
+                <req id="RPC_RESTART"/>
+                <req id="ONLOAD_ONLY"/>
+                <req id="OOL1502"/>
+                <req id="TAPI_TCP_STATES"/>
+             </script>
+            <arg name="env">
+               <value ref="env.peer2peer"/>
+               <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="tcp_state">
+                <value>TCP_FIN_WAIT1</value>
+                <value>TCP_CLOSING</value>
+            </arg>
+            <arg name="opening">
+                <value>active</value>
+                <value>passive_open</value>
+                <value>passive_close</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="tcp_last_data">
+                <req id="SOCK_STREAM"/>
+                <req id="TCP_INFO"/>
+                <req id="TCP_ACTIVE"/>
+                <!-- ZF implements tcpi_state field only in the tcp_info
+                     structure.  This test checks tcpi_last_* fields. -->
+                <req id="ZF_INCOMPATIBLE"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_fake"/>
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_fake_ipv6"/>
+            </arg>
+            <arg name="cache_socket" type="cache_socket_type"/>
+        </run>
+
+        <run>
+             <script name="overfill_close">
+                <req id="SOCK_STREAM"/>
+                <req id="TCP_ACTIVE"/>
+             </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="shutdown" type="boolean"/>
+            <arg name="fill_rcv">
+                <value>empty</value>
+                <value>packet</value>
+                <value>full</value>
+            </arg>
+            <arg name="fill_snd" type="boolean"/>
+            <arg name="peer_close" type="boolean"/>
+            <arg name="cache_socket" type="cache_socket_type"/>
+        </run>
+
+        <run>
+             <script name="close_send_buf">
+                <req id="SOCK_STREAM"/>
+             </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="full" type="boolean"/>
+        </run>
+
+        <run>
+             <script name="send_block_unblock"/>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="socket_tcp_active_passive" list="">
+                <value>tcp_active</value>
+                <value>tcp_active</value>
+                <value>tcp_passive_close</value>
+            </arg>
+            <arg name="cache_socket" type="cache_socket_type" list="">
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+             <script name="tcp_cork_vs_nodelay" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+                <req id="TCP_NODELAY"/>
+                <req id="TCP_CORK"/>
+             </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="socket_tcp_active_passive"/>
+            <arg name="send_data_before" type="boolean"/>
+            <arg name="nonblock" type="boolean"/>
+            <arg name="tcp_nodelay_before" type="boolean"/>
+            <arg name="send_nodelay" type="boolean"/>
+            <arg name="send_usleep">
+                <value>-1</value>
+                <value>3000</value>
+            </arg>
+            <arg name="size_min" list="size">
+                <value>1</value>
+                <value>1</value>
+            </arg>
+            <arg name="size_max" list="size">
+                <value>300</value>
+                <value>2000</value>
+            </arg>
+            <arg name="packets_num">
+                <value>1</value>
+                <value>3</value>
+            </arg>
+        </run>
+
+        <run>
+             <script name="many_listeners" track_conf="nohistory">
+                <req id="SOCK_STREAM"/>
+                <req id="NO_REUSE_STACK"/>
+                <req id="ONLOAD_ONLY"/>
+             </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="cluster_ignore" type="boolean">
+                <value>FALSE</value>
+                <value reqs="SO_REUSEPORT">TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="syn_bad_addr">
+                <req id="SOCK_STREAM"/>
+                <!-- Expected test behavior is not supported in Zetaferno.
+                     See bug 86542 -->
+                <req id="ZF_INCOMPATIBLE"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="tst_src_addr_type">
+                <value>dest</value>
+                <value>all0</value>
+                <value>all1</value>
+                <value>loopback</value>
+            </arg>
+        </run>
+
+        <run>
+          <session track_conf="silent">
+            <req id="TCP_SUBPART" sticky="true"/>
+
+            <epilogue>
+              <script name="../gateways_epilogue"/>
+              <arg name="env">
+                  <value ref="env.peer2peer_gw"/>
+              </arg>
+            </epilogue>
+
+            <run>
+                <script name="close_no_ack" track_conf="nohistory">
+                    <req id="SOCK_STREAM"/>
+                    <req id="RPC_RESTART"/>
+                    <req id="CALL_DURATION"/>
+                    <!-- SF 53000 - WONTFIX for old brunches -->
+                    <req id="OOL1509"/>
+                    <req id="PROC_SYS_NET"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer_gw"/>
+                    <value ref="env.peer2peer_gw_ipv6"/>
+                </arg>
+                <arg name="linger">
+                    <value>-1</value> <!-- Don't use linger -->
+                    <value reqs="SO_LINGER">0</value>
+                    <value reqs="SO_LINGER">1</value>
+                    <value reqs="SO_LINGER">7</value>
+                </arg>
+                <arg name="way" type="closing_way" list="">
+                    <value>close</value>
+                    <!-- ZF stack dies when application exits, there is nothing
+                        to check after exit or kill -->
+                    <value reqs="ZF_INCOMPATIBLE">exit</value>
+                    <value reqs="ZF_INCOMPATIBLE">kill</value>
+                    <value reqs="DUP">dup2</value>
+                    <value>shutdown</value>
+                    <value>shutdown</value>
+                </arg>
+                <arg name="shutdown_close" type="boolean" list="">
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="syn_sent_fin_ack" track_conf="nohistory">
+                    <!-- ZF incompatible: WONTFIX bug 63730-->
+                    <req id="ZF_INCOMPATIBLE"/>
+                    <req id="SOCK_STREAM"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer_gw"/>
+                    <value ref="env.peer2peer_gw_ipv6"/>
+                </arg>
+            </run>
+
+            <run>
+              <script name="peer_large_window" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+                <req id="SO_SNDBUF"/>
+                <req id="RPC_RESTART"/>
+                <req id="TCP_ACTIVE"/>
+              </script>
+              <arg name="env">
+                <value ref="env.peer2peer_gw"/>
+                <value ref="env.peer2peer_gw_ipv6"/>
+              </arg>
+                <arg name="sndbuf">
+                  <value>5000</value>
+                  <value>150000</value>
+                </arg>
+                <arg name="rcvbuf">
+                  <value>500000</value>
+                </arg>
+                <arg name="sndbuf_mode">
+                  <value>-1</value> <!-- Unset to use default (equal to 1) -->
+                  <value>0</value>
+                  <value>1</value>
+                  <value>2</value>
+                </arg>
+                <arg name="ack" type="boolean">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="cache_socket" type="cache_socket_type"/>
+            </run>
+
+            <run>
+              <script name="peer_large_window" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+                <req id="SO_SNDBUF"/>
+                <req id="RPC_RESTART"/>
+                <req id="TCP_ACTIVE"/>
+              </script>
+              <arg name="env">
+                <value ref="env.peer2peer_tst_gw"/>
+                <value ref="env.peer2peer_tst_gw_ipv6"/>
+              </arg>
+              <arg name="sndbuf">
+                <value>5000</value>
+                <value>150000</value>
+              </arg>
+              <arg name="rcvbuf">
+                <value>500000</value>
+              </arg>
+              <arg name="sndbuf_mode">
+                <value>-1</value> <!-- Unset to use default (equal to 1) -->
+              </arg>
+              <arg name="ack" type="boolean">
+                <value>FALSE</value>
+              </arg>
+              <arg name="cache_socket" type="cache_socket_type">
+                <value>FALSE</value>
+              </arg>
+            </run>
+
+            <!-- Zetaferno specific iterations -->
+            <run>
+              <script name="peer_large_window" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+                <req id="ZF_SPECIFIC"/>
+                <req id="RPC_RESTART"/>
+                <req id="TCP_ACTIVE"/>
+              </script>
+              <arg name="env">
+                <value ref="env.peer2peer_gw"/>
+                <value ref="env.peer2peer_gw_ipv6"/>
+                </arg>
+                <arg name="sndbuf">
+                  <!-- Do not set SO_SNDBUF on IUT -->
+                  <value>-1</value>
+                </arg>
+                <arg name="rcvbuf">
+                  <value>500000</value>
+                </arg>
+                <arg name="sndbuf_mode">
+                    <value>-1</value> <!-- Unset to use default (equal to 1) -->
+                </arg>
+                <arg name="ack" type="boolean"/>
+                <arg name="cache_socket" type="cache_socket_type"/>
+            </run>
+
+            <run>
+              <script name="fin_out_of_window" track_conf="nohistory">
+                <req id="SOCK_STREAM"/>
+                <req id="TAPI_TCP_STATES"/>
+              </script>
+              <arg name="env">
+                <value ref="env.peer2peer_gw"/>
+                <value ref="env.peer2peer_gw_ipv6"/>
+              </arg>
+            </run>
+
+            <run>
+              <script name="ack_out_of_window" track_conf="nohistory">
+                <req id="SOCK_STREAM"/>
+              </script>
+              <arg name="env">
+                <value ref="env.peer2peer_gw"/>
+                <value ref="env.peer2peer_gw_ipv6"/>
+              </arg>
+            </run>
+
+            <run>
+              <script name="initial_rto" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+              </script>
+              <arg name="env">
+                <value ref="env.peer2peer_gw"/>
+                <value ref="env.peer2peer_tst_gw"/>
+                <value ref="env.peer2peer_gw_ipv6"/>
+                <value ref="env.peer2peer_tst_gw_ipv6"/>
+              </arg>
+            </run>
+
+            <run>
+              <script name="syn_recv_peer_shutdown" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+              </script>
+              <arg name="env">
+                <value ref="env.peer2peer_gw"/>
+                <value ref="env.peer2peer_gw_ipv6"/>
+              </arg>
+              <arg name="shutdown" type="boolean"/>
+              <arg name="epoll" type="boolean"/>
+            </run>
+
+            <run>
+              <session track_conf="silent">
+                <arg name="env">
+                  <value ref="env.peer2peer_gw"/>
+                  <value ref="env.peer2peer_gw_ipv6"/>
+                </arg>
+                <arg name="sock_type" type="socket_tcp_active_passive"/>
+                <arg name="out" type="boolean"/>
+                <arg name="tst_packet">
+                  <value>both</value>
+                  <value>fin_ack</value>
+                  <value>ack_fin</value>
+                </arg>
+
+                <run>
+                  <script name="recv_unblock_fin">
+                    <req id="SOCK_STREAM"/>
+                  </script>
+                  <arg name="block_read" type="boolean">
+                    <value>TRUE</value>
+                  </arg>
+                  <arg name="iomux_type" type="iomux">
+                    <value>select</value>
+                  </arg>
+                </run>
+
+                <run>
+                  <script name="recv_unblock_fin">
+                    <req id="SOCK_STREAM"/>
+                  </script>
+                  <arg name="block_read" type="boolean">
+                    <value>FALSE</value>
+                  </arg>
+                  <arg name="iomux_type" type="iomux"/>
+                </run>
+              </session>
+            </run>
+
+            <run>
+              <script name="last_ack_connect" track_conf="nohistory">
+                <req id="SOCK_STREAM"/>
+              </script>
+              <arg name="env">
+                <value ref="env.peer2peer_gw"/>
+                <value ref="env.peer2peer_gw_ipv6"/>
+              </arg>
+              <arg name="active" type="boolean"/>
+            </run>
+
+            <run>
+              <script name="connection_timeout_data" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+                <req id="RPC_RESTART"/>
+                <req id="PROC_SYS_NET"/>
+                <req id="TCP_ACTIVE"/>
+              </script>
+              <arg name="env">
+                <value ref="env.peer2peer_gw"/>
+                <value ref="env.peer2peer_gw_ipv6"/>
+              </arg>
+              <arg name="cache_socket" type="cache_socket_type"/>
+            </run>
+
+            <run>
+                <script name="connect_impossible" track_conf="silent">
+                    <req id="SOCK_STREAM"/>
+                    <!-- ZF incompatible:
+                         - test uses ARP hacks on IUT side
+                         - covered by zetaferno-ts/muxer/tcp_connect up to a point -->
+                    <req id="ZF_INCOMPATIBLE"/>
+
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer_gw"/>
+                    <value ref="env.peer2peer_gw_ipv6"/>
+                </arg>
+                <arg name="check">
+                     <value reqs="RPC_RESTART,PROC_SYS_NET">ETIMEDOUT</value>
+                     <value>EHOSTUNREACH</value>
+                     <value>ECONNREFUSED</value>
+                 </arg>
+            </run>
+
+            <run>
+              <session track_conf="silent">
+
+                <req id="TCP_TS_DISABLED" sticky="true"/>
+
+                <prologue>
+                  <script name="timestamps_prologue"/>
+                  <arg name="env">
+                      <value ref="env.peer2peer"/>
+                  </arg>
+                  <arg name="enable_timestamps">
+                      <value>FALSE</value>
+                  </arg>
+                </prologue>
+
+                <epilogue>
+                  <script name="timestamps_epilogue"/>
+                  <arg name="env">
+                      <value ref="env.peer2peer"/>
+                  </arg>
+                </epilogue>
+
+                <run>
+                    <script name="last_ack_recv_pkt" track_conf="nohistory">
+                        <req id="SOCK_STREAM"/>
+                    </script>
+                    <arg name="env">
+                        <value ref="env.peer2peer_gw"/>
+                        <value ref="env.peer2peer_gw_ipv6"/>
+                    </arg>
+                    <arg name="sock_type" type="socket_tcp_active_passive"/>
+                    <arg name="send_syn" type="boolean"/>
+                    <arg name="seqn_mod">
+                        <value>less</value>
+                        <value>expected</value>
+                    </arg>
+                    <arg name="enable_timestamps">
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="ts_value_mod">
+                        <value>expected</value>
+                    </arg>
+                    <arg name="ts_echo_mod">
+                        <value>expected</value>
+                    </arg>
+                </run>
+
+                <run>
+                  <session track_conf="silent">
+                    <arg name="env"/>
+
+                    <prologue>
+                      <script name="tsa_gw_prologue"/>
+                    </prologue>
+
+                    <run>
+                      <session>
+                        <arg name="env"/>
+                        <arg name="timestamp">
+                          <value>disabled</value>
+                        </arg>
+
+                        <req id="SOCK_STREAM" sticky="true"/>
+                        <req id="RPC_RESTART" sticky="true"/>
+                        <req id="TAPI_TCP_STATES" sticky="true"/>
+
+                        <run>
+                          <script name="invalid_ack"/>
+                          <arg name="bad_seqn" type="boolean"/>
+                          <arg name="value">
+                            <value>prev</value>
+                            <value>exp-1</value>
+                            <value>exp-2^31+1</value>
+                            <value>exp-random</value>
+                          </arg>
+                          <arg name="tcp_state">
+                            <value>TCP_ESTABLISHED</value>
+                            <value reqs="SO_KEEPALIVE">TCP_FIN_WAIT1</value>
+                            <value>TCP_TIME_WAIT</value>
+                            <value>TCP_CLOSING</value>
+                            <value>TCP_LAST_ACK</value>
+                          </arg>
+                          <arg name="opening">
+                            <value reqs="TCP_ACTIVE">active</value>
+                            <value>passive_close</value>
+                          </arg>
+                          <arg name="cache_socket" type="cache_socket_type"/>
+                        </run>
+
+                        <run>
+                          <script name="invalid_ack"/>
+                          <arg name="bad_seqn" type="boolean">
+                            <value>TRUE</value>
+                          </arg>
+                          <arg name="value">
+                            <value>prev</value>
+                            <value>exp-1</value>
+                            <value>exp-2^31+1</value>
+                            <value>exp-random</value>
+                          </arg>
+                          <arg name="tcp_state">
+                            <value>TCP_SYN_RECV</value>
+                          </arg>
+                          <arg name="opening">
+                            <value>passive_close</value>
+                          </arg>
+                          <arg name="cache_socket" type="cache_socket_type">
+                            <value>FALSE</value>
+                          </arg>
+                        </run>
+
+                        <run>
+                          <script name="invalid_ack"/>
+                          <arg name="bad_seqn" type="boolean">
+                            <value>FALSE</value>
+                          </arg>
+                          <arg name="value">
+                            <value>exp-1</value>
+                            <value>exp-2^31+1</value>
+                            <value>exp-random</value>
+                          </arg>
+
+                          <arg name="tcp_state" list="">
+                            <value>TCP_SYN_SENT</value>
+                            <value>TCP_SYN_RECV</value>
+                          </arg>
+                          <arg name="opening" list="">
+                            <value reqs="TCP_ACTIVE">active</value>
+                            <value>passive_close</value>
+                          </arg>
+                          <arg name="cache_socket" type="cache_socket_type"/>
+                        </run>
+                      </session>
+                    </run>
+                  </session>
+
+                  <arg name="env">
+                    <value ref="env.peer2peer_gw"/>
+                    <value ref="env.peer2peer_gw_ipv6"/>
+                  </arg>
+                </run>
+              </session>
+            </run>
+
+            <run>
+              <session track_conf="silent">
+
+                <req id="TCP_TS_ENABLED" sticky="true"/>
+
+                <prologue>
+                  <script name="timestamps_prologue"/>
+                  <arg name="env">
+                      <value ref="env.peer2peer"/>
+                  </arg>
+                  <arg name="enable_timestamps">
+                      <value>TRUE</value>
+                  </arg>
+                </prologue>
+
+                <epilogue>
+                  <script name="timestamps_epilogue"/>
+                  <arg name="env">
+                      <value ref="env.peer2peer"/>
+                  </arg>
+                </epilogue>
+
+                <run>
+                  <session track_conf="silent">
+                    <arg name="env"/>
+                    <prologue>
+                      <script name="tsa_gw_prologue"/>
+                    </prologue>
+
+                    <run>
+                      <session>
+                        <arg name="env"/>
+                        <arg name="start_ts" list="">
+                            <value>0xffffd8ef</value>
+                            <value>0xffffd8ef</value>
+                            <value>0xffffd8ef</value>
+                            <value>0</value>
+                            <value>1</value>
+                            <value>-1</value>
+                        </arg>
+                        <arg name="test_ts" list="">
+                            <value>0xffffffff</value>
+                            <value>0</value>
+                            <value>1</value>
+                            <value>0xfffffff0</value>
+                            <value>0xfffffff0</value>
+                            <value>-1</value>
+                        </arg>
+
+                        <run>
+                            <script name="ts_recv_values" track_conf="nohistory">
+                                <req id="SOCK_STREAM"/>
+                                <req id="TIME_CONSUMING"/>
+                                <req id="TCP_TS_ENABLED"/>
+                            </script>
+                            <arg name="tcp_state">
+                                <value>TCP_ESTABLISHED</value>
+                                <value>TCP_FIN_WAIT1</value>
+                                <value>TCP_FIN_WAIT2</value>
+                            </arg>
+                            <arg name="test_data">
+                                <value>TRUE</value>
+                            </arg>
+                            <arg name="test_flags">
+                                <value>none</value>
+                                <value>ACKCur</value>
+                                <value>FIN</value>
+                                <value>FIN.ACKPrev</value>
+                                <value>FIN.ACKCur</value>
+                            </arg>
+                        </run>
+
+                        <run>
+                            <script name="ts_recv_values" track_conf="nohistory">
+                                <req id="SOCK_STREAM"/>
+                                <req id="TIME_CONSUMING"/>
+                                <req id="TCP_TS_ENABLED"/>
+                            </script>
+                            <arg name="tcp_state">
+                                <value>TCP_ESTABLISHED</value>
+                                <value>TCP_FIN_WAIT1</value>
+                            </arg>
+                            <arg name="test_data">
+                                <value>FALSE</value>
+                            </arg>
+                            <arg name="test_flags">
+                                <value>ACKCur</value>
+                                <value>FIN</value>
+                                <value>FIN.ACKPrev</value>
+                                <value>FIN.ACKCur</value>
+                                <value>RST</value>
+                                <value>RST.ACKCur</value>
+                            </arg>
+                        </run>
+
+                        <run>
+                            <script name="ts_recv_values" track_conf="nohistory">
+                                <req id="SOCK_STREAM"/>
+                                <req id="TIME_CONSUMING"/>
+                                <req id="TCP_TS_ENABLED"/>
+                            </script>
+                            <arg name="tcp_state">
+                                <value>TCP_FIN_WAIT2</value>
+                            </arg>
+                            <arg name="test_data">
+                                <value>FALSE</value>
+                            </arg>
+                            <arg name="test_flags">
+                                <value>FIN</value>
+                                <value>FIN.ACKPrev</value>
+                                <value>FIN.ACKCur</value>
+                                <value>RST</value>
+                                <value>RST.ACKCur</value>
+                            </arg>
+                        </run>
+
+                        <run>
+                            <script name="ts_recv_values" track_conf="nohistory">
+                                <req id="SOCK_STREAM"/>
+                                <req id="TIME_CONSUMING"/>
+                                <req id="TCP_TS_ENABLED"/>
+                            </script>
+                            <arg name="tcp_state">
+                                <value>TCP_CLOSING</value>
+                                <value>TCP_CLOSE_WAIT</value>
+                                <value>TCP_LAST_ACK</value>
+                                <value>TCP_SYN_RECV</value>
+                            </arg>
+                            <arg name="test_data">
+                                <value>FALSE</value>
+                            </arg>
+                            <arg name="test_flags">
+                                <value>ACKCur</value>
+                                <value>RST</value>
+                                <value>RST.ACKCur</value>
+                            </arg>
+                        </run>
+                      </session>
+                    </run>
+
+                    <run>
+                      <session track_conf="silent">
+                        <arg name="env"/>
+
+                        <run>
+                          <script name="syn_ack_ts_corrupted"/>
+                        </run>
+
+                        <run>
+                          <session>
+
+                            <arg name="env"/>
+                            <arg name="timestamp">
+                              <value>normal</value>
+                              <value>too_big</value>
+                            </arg>
+
+                            <req id="SOCK_STREAM" sticky="true"/>
+                            <req id="RPC_RESTART" sticky="true"/>
+                            <req id="TAPI_TCP_STATES" sticky="true"/>
+
+                            <run>
+                              <script name="invalid_ack"/>
+                              <arg name="bad_seqn" type="boolean"/>
+                              <arg name="value">
+                                <value>prev</value>
+                                <value>exp-1</value>
+                                <value>exp-2^31+1</value>
+                                <value>exp-random</value>
+                              </arg>
+                              <arg name="tcp_state">
+                                <value>TCP_ESTABLISHED</value>
+                                <value>TCP_CLOSE_WAIT</value>
+                                <value reqs="SO_KEEPALIVE">TCP_FIN_WAIT1</value>
+                                <value>TCP_TIME_WAIT</value>
+                                <value>TCP_CLOSING</value>
+                                <value>TCP_LAST_ACK</value>
+                              </arg>
+                              <arg name="opening">
+                                <value reqs="TCP_ACTIVE">active</value>
+                                <value>passive_close</value>
+                              </arg>
+                              <arg name="cache_socket" type="cache_socket_type"/>
+                            </run>
+
+                            <run>
+                              <script name="invalid_ack"/>
+                              <arg name="bad_seqn" type="boolean">
+                                <value>TRUE</value>
+                              </arg>
+                              <arg name="value">
+                                <value>prev</value>
+                                <value>exp-1</value>
+                                <value>exp-2^31+1</value>
+                                <value>exp-random</value>
+                              </arg>
+                              <arg name="tcp_state">
+                                <value>TCP_SYN_RECV</value>
+                              </arg>
+                              <arg name="opening">
+                                <value>passive_close</value>
+                              </arg>
+                              <arg name="cache_socket" type="cache_socket_type">
+                                <value>FALSE</value>
+                              </arg>
+                            </run>
+
+                            <run>
+                              <script name="invalid_ack"/>
+                              <arg name="bad_seqn" type="boolean">
+                                <value>FALSE</value>
+                              </arg>
+                              <arg name="value">
+                                <value>exp-1</value>
+                                <value>exp-2^31+1</value>
+                                <value>exp-random</value>
+                              </arg>
+
+                              <arg name="tcp_state" list="">
+                                <value>TCP_SYN_SENT</value>
+                                <value>TCP_SYN_RECV</value>
+                              </arg>
+                              <arg name="opening" list="">
+                                <value reqs="TCP_ACTIVE">active</value>
+                                <value>passive_close</value>
+                              </arg>
+                              <arg name="cache_socket" type="cache_socket_type"/>
+                            </run>
+                          </session>
+                        </run>
+                      </session>
+                    </run>
+
+                  </session>
+
+                  <arg name="env">
+                      <value ref="env.peer2peer_gw"/>
+                      <value ref="env.peer2peer_gw_ipv6"/>
+                  </arg>
+                </run>
+
+                <run>
+                    <script name="last_ack_recv_pkt" track_conf="nohistory">
+                        <req id="SOCK_STREAM"/>
+                    </script>
+                    <arg name="env">
+                        <value ref="env.peer2peer_gw"/>
+                        <value ref="env.peer2peer_gw_ipv6"/>
+                    </arg>
+                    <arg name="sock_type" type="socket_tcp_active_passive"/>
+                    <arg name="send_syn" type="boolean" list="">
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="seqn_mod">
+                        <value>less</value>
+                        <value>more</value>
+                    </arg>
+                    <arg name="enable_timestamps">
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="ts_value_mod">
+                        <value>less</value>
+                        <value>more</value>
+                    </arg>
+                    <arg name="ts_echo_mod" list="">
+                        <value>expected</value>
+                        <value>expected</value>
+                        <value>more</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="ts_send">
+                        <req id="SOCK_STREAM"/>
+                        <req id="TCP_TS_ENABLED"/>
+                    </script>
+                    <arg name="env">
+                        <value ref="env.peer2peer"/>
+                        <value ref="env.peer2peer_ipv6"/>
+                    </arg>
+                    <arg name="sock_type" type="socket_tcp_active_passive">
+                        <value>tcp_active</value>
+                        <value>tcp_passive_close</value>
+                    </arg>
+                    <arg name="passive_close" type="boolean"/>
+                </run>
+
+              </session>
+            </run>
+
+            <run>
+                <script name="shutdown_data" track_conf="silent">
+                    <req id="SOCK_STREAM"/>
+                    <req id="RPC_RESTART"/>
+                    <!-- SF 53000 - WONTFIX for old brunches -->
+                    <req id="OOL1509"/>
+                    <req id="TAPI_TCP_STATES"/>
+                    <req id="PROC_SYS_NET"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer_gw"/>
+                    <value ref="env.peer2peer_gw_ipv6"/>
+                </arg>
+                <arg name="shut">
+                    <value reqs="ZF_INCOMPATIBLE">shut_rdwr</value>
+                    <value>shut_wr</value>
+                    <value reqs="ZF_INCOMPATIBLE">shut_rd</value>
+                </arg>
+                <arg name="no_ack" type="boolean"/>
+                <arg name="active" type="socket_tcp_boolean"/>
+                <arg name="cache_socket" type="cache_socket_type"/>
+            </run>
+
+            <run>
+                 <script name="fin_data" track_conf="silent">
+                    <req id="SOCK_STREAM"/>
+                    <req id="TCP_ACTIVE"/>
+                 </script>
+                <arg name="env">
+                    <value ref="env.peer2peer_gw"/>
+                    <value ref="env.peer2peer_gw_ipv6"/>
+                </arg>
+                <arg name="linger" type="linger_bool" list="">
+                    <value reqs="SO_LINGER">TRUE</value>
+                    <value>FALSE</value>
+                </arg>
+
+                <arg name="shutdown" type="boolean"/>
+                <arg name="cache_socket" type="cache_socket_type" list="">
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                </arg>
+            </run>
+
+            <!-- tcp_close_timeout is very timing-sensitive,
+            previous tests can break it, see ST-1504 -->
+            <run>
+                <script name="tcp_close_timeout" track_conf="silent">
+                    <req id="SOCK_STREAM"/>
+                    <req id="RPC_RESTART"/>
+                    <req id="OOL1502"/>
+                    <req id="TAPI_TCP_STATES"/>
+                    <req id="TIME_CONSUMING"/>
+                    <req id="PROC_SYS_NET"/>
+                    <!-- This functionality is not supported in zf_shim -->
+                    <req id="ZF_INCOMPATIBLE"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer_gw"/>
+                    <value ref="env.peer2peer_gw_ipv6"/>
+                </arg>
+                <arg name="cache_socket" type="cache_socket_type">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="tcp_state">
+                    <value>TCP_FIN_WAIT1</value>
+                    <value reqs="SO_KEEPALIVE">TCP_FIN_WAIT2</value>
+                    <value>TCP_CLOSING</value>
+                    <value>TCP_LAST_ACK</value>
+                </arg>
+                <arg name="opening">
+                    <value reqs="TCP_ACTIVE">active</value>
+                    <value>passive_open</value>
+                    <value>passive_close</value>
+                </arg>
+                <arg name="kill" type="boolean"/>
+                <arg name="retries" list="">
+                    <value>3</value>
+                    <value>5</value>
+                    <value>3</value>
+                    <value>3</value>
+                    <value>4</value>
+                    <value>4</value>
+                    <value>6</value>
+                    <value>6</value>
+                </arg>
+                <arg name="tcp_fin_timeout" list="">
+                    <value>15</value>
+                    <value>3</value>
+                    <value>6</value>
+                    <value>15</value>
+                    <value>2</value>
+                    <value>15</value>
+                    <value>2</value>
+                    <value>3</value>
+                </arg>
+                <arg name="linger" list="">
+                    <value>-1</value>
+                    <value>-1</value>
+                    <value reqs="SO_LINGER">15</value>
+                    <value reqs="SO_LINGER">8</value>
+                    <value reqs="SO_LINGER">15</value>
+                    <value reqs="SO_LINGER">1</value>
+                    <value reqs="SO_LINGER">4</value>
+                    <value reqs="SO_LINGER">1</value>
+                </arg>
+            </run>
+
+            <run>
+                <!-- Stopping IUT process and setting linger prevent caching,
+                     so these iterations were excluded. -->
+                <script name="tcp_close_timeout" track_conf="silent">
+                    <req id="SOCK_STREAM"/>
+                    <req id="RPC_RESTART"/>
+                    <req id="OOL1502"/>
+                    <req id="TAPI_TCP_STATES"/>
+                    <req id="TIME_CONSUMING"/>
+                    <req id="PROC_SYS_NET"/>
+                    <req id="ZF_INCOMPATIBLE"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer_gw"/>
+                    <value ref="env.peer2peer_gw_ipv6"/>
+                </arg>
+                <arg name="cache_socket" type="cache_socket_type">
+                    <value>TRUE</value>
+                </arg>
+                <arg name="tcp_state">
+                    <value>TCP_FIN_WAIT1</value>
+                    <value reqs="SO_KEEPALIVE">TCP_FIN_WAIT2</value>
+                    <value>TCP_CLOSING</value>
+                    <value>TCP_LAST_ACK</value>
+                </arg>
+                <arg name="opening">
+                    <value reqs="TCP_ACTIVE">active</value>
+                    <value>passive_open</value>
+                    <value>passive_close</value>
+                </arg>
+                <arg name="kill" type="boolean">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="retries" list="">
+                    <value>3</value>
+                    <value>5</value>
+                </arg>
+                <arg name="tcp_fin_timeout" list="">
+                    <value>15</value>
+                    <value>3</value>
+                </arg>
+                <arg name="linger" list="">
+                    <value>-1</value>
+                    <value>-1</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="tcp_timeout" track_conf="silent">
+                    <req id="SOCK_STREAM"/>
+                    <req id="TCP_INFO"/>
+                    <req id="SO_ERROR"/>
+                    <req id="RPC_RESTART"/>
+                    <!-- SF 53000 - WONTFIX for old brunches -->
+                    <req id="OOL1509"/>
+                    <req id="TAPI_TCP_STATES"/>
+                    <req id="PROC_SYS_NET"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer_gw"/>
+                    <value ref="env.peer2peer_gw_ipv6"/>
+                </arg>
+                <arg name="mode">
+                    <value>peer_unreachable</value>
+                    <value>peer_rebooted</value>
+                </arg>
+                <arg name="tcp_state" list="">
+                    <value>TCP_SYN_SENT</value>
+                    <value>TCP_SYN_RECV</value>
+                    <value>TCP_SYN_RECV</value>
+                </arg>
+                <arg name="opening" list="">
+                    <value reqs="TCP_ACTIVE">active</value>
+                    <value>passive_open</value>
+                    <value>passive_end</value>
+                </arg>
+                <arg name="cache_socket" type="cache_socket_type"/>
+                <arg name="data_packet">
+                    <value>FALSE</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="tcp_timeout" track_conf="silent">
+                    <req id="SOCK_STREAM"/>
+                    <req id="TCP_INFO"/>
+                    <req id="SO_ERROR"/>
+                    <req id="RPC_RESTART"/>
+                    <req id="OOL1502"/>
+                    <req id="TAPI_TCP_STATES"/>
+                    <req id="PROC_SYS_NET"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer_gw"/>
+                    <value ref="env.peer2peer_gw_ipv6"/>
+                </arg>
+                <arg name="mode">
+                    <value>peer_unreachable</value>
+                    <value>peer_rebooted</value>
+                </arg>
+                <arg name="tcp_state" list="">
+                    <value reqs="SO_KEEPALIVE">TCP_ESTABLISHED</value>
+                    <value reqs="SO_KEEPALIVE">TCP_ESTABLISHED</value>
+                    <value>TCP_FIN_WAIT1</value>
+                    <value>TCP_CLOSING</value>
+                    <value reqs="SO_KEEPALIVE">TCP_CLOSE_WAIT</value>
+                    <value reqs="SO_KEEPALIVE">TCP_FIN_WAIT2</value>
+                    <value>TCP_LAST_ACK</value>
+                </arg>
+                <arg name="data_packet" list="">
+                    <value>TRUE</value>
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                </arg>
+                <arg name="opening">
+                    <value reqs="TCP_ACTIVE">active</value>
+                    <value>passive_end</value>
+                    <value>passive_open</value>
+                </arg>
+                <arg name="cache_socket" type="cache_socket_type"/>
+            </run>
+
+            <run>
+                 <script name="syn_sent_func" track_conf="silent">
+                    <req id="SOCK_STREAM"/>
+                    <req id="TCP_ACTIVE"/>
+                 </script>
+                <arg name="env">
+                    <value ref="env.peer2peer_gw"/>
+                    <value ref="env.peer2peer_gw_ipv6"/>
+                </arg>
+                <arg name="test_func">
+                    <value>getsockname</value>
+                    <!-- ON-13405 -->
+                    <value reqs="ZF_INCOMPATIBLE">getpeername</value>
+                    <value>recv</value>
+                    <value>send</value>
+                    <value reqs="SENDFILE">sendfile</value>
+                    <value>shutdown</value>
+                    <value>close</value>
+                </arg>
+                <arg name="nonblock" type="boolean"/>
+                <arg name="cache_socket" type="cache_socket_type"/>
+            </run>
+
+            <run>
+                 <script name="close_send_buf_no_ack" track_conf="silent">
+                    <req id="SOCK_STREAM"/>
+                 </script>
+                <arg name="env">
+                    <value ref="env.peer2peer_gw"/>
+                    <value ref="env.peer2peer_gw_ipv6"/>
+                </arg>
+                <arg name="sock_type" type="socket_tcp_active_passive" list="">
+                    <value>tcp_active</value>
+                    <value>tcp_active</value>
+                    <value>tcp_passive_close</value>
+                </arg>
+                <arg name="close" type="boolean"/>
+                <arg name="shut_tst" type="boolean"/>
+                <arg name="cache_socket" type="cache_socket_type" list="">
+                    <value>TRUE</value>
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                </arg>
+            </run>
+
+            <run>
+                 <script name="connect_shutdown_connect" track_conf="silent">
+                    <req id="SOCK_STREAM"/>
+                    <!-- Scenario is not applicable for ZF shim: the test does the second connect()
+                         on the same socket after failed attempt. -->
+                    <req id="ZF_INCOMPATIBLE"/>
+                    <req id="TCP_ACTIVE"/>
+                 </script>
+                <arg name="env" list="">
+                    <value ref="env.peer2peer_gw"/>
+                    <value ref="env.peer2peer_gw"/>
+                    <value ref="env.peer2peer_gw_ipv6"/>
+                    <value ref="env.peer2peer_gw_ipv6"/>
+                    <value ref="env.peer2peer_tst_gw"/>
+                    <value ref="env.peer2peer_tst_gw_ipv6"/>
+                </arg>
+                <arg name="first_nonblock" type="boolean"/>
+                <arg name="second_nonblock" type="boolean"/>
+                <arg name="rst" type="boolean"/>
+                <arg name="cache_socket" type="cache_socket_type" list="">
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                </arg>
+            </run>
+
+            <!-- tcp_handle_rst session -->
+            <run>
+                <session track_conf="silent">
+
+                    <arg name="env" list="">
+                        <!--
+                        This environment can be used for full check of TSA_SOCKET
+                        mode (i.e. with using gateway and routing breaks/repairs to
+                        achieve all possible TCP states using linux socket on the
+                        other side).
+                        <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},'GW'{{'pco_gw':tester},addr:'gw_iut_addr':inet:unicast}},{{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'},'GW'{addr:'gw_tst_addr':inet:unicast,addr:'alien_link_addr':ether:alien}}</value>-->
+                        <value ref="env.peer2peer_gw"/>
+                        <value ref="env.peer2peer_tst_gw"/>
+                        <value ref="env.peer2peer_gw_ipv6"/>
+                        <value ref="env.peer2peer_tst_gw_ipv6"/>
+                    </arg>
+                    <arg name="close_iut" type="boolean"/>
+                    <arg name="tst_type" list="">
+                        <!--<value>TSA_TST_SOCKET</value>-->
+                        <value>TSA_TST_GW_CSAP</value>
+                        <value>TSA_TST_GW_CSAP</value>
+                        <value>TSA_TST_GW_CSAP</value>
+                        <value>TSA_TST_GW_CSAP</value>
+                    </arg>
+                    <arg name="loopback">
+                        <value>FALSE</value>
+                    </arg>
+                    <!-- RST is normally sent without data, so we
+                         limit testing of RST with data to the case
+                         of correct SEQN in such a packet. -->
+                    <arg name="send_data" list="send_data">
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="seqn_val" list="send_data">
+                        <value>next</value>
+                        <value>next</value>
+                        <value>next_plus_1</value>
+                        <value>next-1</value>
+                        <value>next-2</value>
+                        <value>next_plus_maxoffs</value>
+                    </arg>
+
+                    <req id="SOCK_STREAM" sticky="true"/>
+                    <req id="SO_ERROR" sticky="true"/>
+                    <req id="TAPI_TCP_STATES" sticky="true"/>
+                    <req id="TCP_BLIND_WINDOW" sticky="true"/>
+
+                    <run>
+                        <script name="tcp_handle_rst"/>
+                        <arg name="tcp_state">
+                            <value>TCP_SYN_SENT</value>
+                        </arg>
+                    </run>
+                    <run>
+                        <script name="tcp_handle_rst"/>
+                        <arg name="tcp_state">
+                            <value>TCP_CLOSE_WAIT</value>
+                            <value>TCP_ESTABLISHED</value>
+                            <value>TCP_FIN_WAIT1</value>
+                            <value>TCP_FIN_WAIT2</value>
+                            <value>TCP_CLOSING</value>
+                            <value>TCP_LAST_ACK</value>
+                            <value>TCP_TIME_WAIT</value>
+                        </arg>
+                    </run>
+                </session>
+            </run>
+
+            <run>
+                <script name="shutdown_states" track_conf="silent">
+                    <req id="SOCK_STREAM"/>
+                    <req id="TAPI_TCP_STATES"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer_gw"/>
+                    <value ref="env.peer2peer_tst_gw"/>
+                    <value ref="env.peer2peer_gw_ipv6"/>
+                    <value ref="env.peer2peer_tst_gw_ipv6"/>
+                </arg>
+                <arg name="shutdown_how">
+                  <!--  Zetaferno supports SHUT_RD, but it is purely in the
+                        shim.  There is no point to test it. -->
+                    <value reqs="ZF_INCOMPATIBLE">SHUT_RD</value>
+                    <value>SHUT_WR</value>
+                </arg>
+                <arg name="iut_send_before">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="tst_send_before">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="tst_send_after">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="tcp_state">
+                    <value>TCP_SYN_SENT</value>
+                    <value reqs="SIMULTANEOUS_OPEN">TCP_SYN_RECV</value>
+                    <value>TCP_LISTEN</value>
+                </arg>
+                <arg name="tst_type">
+                    <value>TSA_TST_GW_CSAP</value>
+                </arg>
+                <arg name="loopback">
+                    <value>FALSE</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="shutdown_states" track_conf="silent">
+                    <req id="SOCK_STREAM"/>
+                    <req id="TAPI_TCP_STATES"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer_gw"/>
+                    <value ref="env.peer2peer_tst_gw"/>
+                    <value ref="env.peer2peer_gw_ipv6"/>
+                    <value ref="env.peer2peer_tst_gw_ipv6"/>
+                </arg>
+                <arg name="shutdown_how">
+                    <value>SHUT_WR</value>
+                </arg>
+                <arg name="iut_send_before">
+                    <value>TRUE</value>
+                </arg>
+                <arg name="tst_send_before">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="tst_send_after">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="tcp_state">
+                    <value>TCP_CLOSE_WAIT</value>
+                    <value>TCP_ESTABLISHED</value>
+                </arg>
+                <arg name="tst_type">
+                    <value>TSA_TST_GW_CSAP</value>
+                </arg>
+                <arg name="loopback">
+                    <value>FALSE</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="shutdown_states" track_conf="silent">
+                    <req id="SOCK_STREAM"/>
+                    <req id="TAPI_TCP_STATES"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer_gw"/>
+                    <value ref="env.peer2peer_tst_gw"/>
+                    <value ref="env.peer2peer_gw_ipv6"/>
+                    <value ref="env.peer2peer_tst_gw_ipv6"/>
+                </arg>
+                <arg name="shutdown_how" list="">
+                    <value reqs="ZF_INCOMPATIBLE">SHUT_RD</value>
+                    <value reqs="ZF_INCOMPATIBLE">SHUT_RD</value>
+                    <value>SHUT_WR</value>
+                </arg>
+                <arg name="iut_send_before" list="">
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                </arg>
+                <arg name="tst_send_before" list="">
+                    <value>TRUE</value>
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                </arg>
+                <arg name="tst_send_after" list="">
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                    <value>FALSE</value>
+                </arg>
+                <arg name="tcp_state">
+                    <value>TCP_CLOSE_WAIT</value>
+                    <value>TCP_ESTABLISHED</value>
+                    <value>TCP_FIN_WAIT1</value>
+                    <value>TCP_FIN_WAIT2</value>
+                    <value>TCP_CLOSING</value>
+                    <value>TCP_LAST_ACK</value>
+                    <value>TCP_TIME_WAIT</value>
+                </arg>
+                <arg name="tst_type">
+                    <value>TSA_TST_GW_CSAP</value>
+                </arg>
+                <arg name="loopback">
+                    <value>FALSE</value>
+                </arg>
+            </run>
+
+            <run>
+              <session track_conf="silent">
+                <arg name="env">
+                    <value ref="env.peer2peer_gw"/>
+                    <value ref="env.peer2peer_tst_gw"/>
+                    <value ref="env.peer2peer_gw_ipv6"/>
+                    <value ref="env.peer2peer_tst_gw_ipv6"/>
+                </arg>
+
+                <arg name="seqn">
+                    <value>last_seqn</value>
+                    <value>last_seqn-1</value>
+                    <value>last_seqn-2^31+1</value>
+                    <value>last_seqn-random</value>
+                </arg>
+
+                <req id="SOCK_STREAM" sticky="true"/>
+                <req id="RPC_RESTART" sticky="true"/>
+
+                <run>
+                    <script name="tcp_state_hang">
+                        <req id="TAPI_TCP_STATES"/>
+                        <req id="PROC_SYS_NET"/>
+                    </script>
+                    <arg name="tcp_state">
+                        <value reqs="SO_KEEPALIVE">TCP_FIN_WAIT1</value>
+                        <value>TCP_CLOSING</value>
+                        <value>TCP_LAST_ACK</value>
+                    </arg>
+                    <arg name="opening">
+                        <value reqs="TCP_ACTIVE">active</value>
+                        <value>passive_open</value>
+                        <value>passive_close</value>
+                    </arg>
+                    <arg name="cache_socket" type="cache_socket_type">
+                        <value>FALSE</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="tcp_state_hang">
+                        <req id="TAPI_TCP_STATES"/>
+                        <req id="PROC_SYS_NET"/>
+                    </script>
+                    <arg name="env">
+                        <value ref="env.peer2peer_gw"/>
+                        <value ref="env.peer2peer_gw_ipv6"/>
+                    </arg>
+                    <arg name="tcp_state">
+                        <value reqs="SO_KEEPALIVE">TCP_FIN_WAIT1</value>
+                        <value>TCP_CLOSING</value>
+                        <value>TCP_LAST_ACK</value>
+                    </arg>
+                    <arg name="opening">
+                        <value reqs="TCP_ACTIVE">active</value>
+                        <value>passive_open</value>
+                        <value>passive_close</value>
+                    </arg>
+                    <arg name="cache_socket" type="cache_socket_type">
+                        <value>TRUE</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="tcp_state_hang">
+                        <req id="TAPI_TCP_STATES"/>
+                        <req id="PROC_SYS_NET"/>
+                    </script>
+                    <arg name="env">
+                        <value ref="env.peer2peer_gw"/>
+                        <value ref="env.peer2peer_gw_ipv6"/>
+                    </arg>
+                    <arg name="tcp_state">
+                        <value>TCP_SYN_RECV</value>
+                    </arg>
+                    <arg name="opening">
+                        <value>passive_close</value>
+                    </arg>
+                    <arg name="cache_socket" type="cache_socket_type">
+                        <value>FALSE</value>
+                    </arg>
+                </run>
+
+              </session>
+            </run>
+
+            <run>
+                 <script name="rtt_calc" track_conf="silent">
+                    <req id="SOCK_STREAM"/>
+                    <req id="PROC_SYS_NET"/>
+                 </script>
+                <arg name="env">
+                    <value ref="env.peer2peer_gw"/>
+                    <value ref="env.peer2peer_gw_ipv6"/>
+                </arg>
+                <arg name="passive_open" type="boolean"/>
+                <arg name="send_aux_data" type="boolean"/>
+                <arg name="iut_timestamps_enable" type="boolean"/>
+                <arg name="tst_timestamps_enable" type="boolean"/>
+            </run>
+
+            <run>
+              <script name="connect_nb_impossible" track_conf="silent">
+                <!-- Various functions behaviour after unsatisfied
+                     connect() - not applicable for ZF.
+                     Covered by zetaferno-ts/muxer/tcp_connect -->
+                <req id="ZF_INCOMPATIBLE"/>
+                <req id="SOCK_STREAM"/>
+              </script>
+              <arg name="env">
+                <value ref="env.peer2peer_gw"/>
+                <value ref="env.peer2peer_gw_ipv6"/>
+              </arg>
+              <arg name="error">
+                <value reqs="RPC_RESTART,PROC_SYS_NET">ETIMEDOUT</value>
+                <value>EHOSTUNREACH</value>
+                <value>ECONNREFUSED</value>
+              </arg>
+              <arg name="func">
+                <value>connect</value>
+                <value>send</value>
+                <value>recv</value>
+                <value>select</value>
+                <value reqs="SO_ERROR">getsockopt</value>
+                <value reqs="POLL">poll</value>
+                <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND">onload_zc_send</value>
+                <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND,ONLOAD_ZC_SEND_USER_BUF">onload_zc_send_user_buf</value>
+                <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_IOV,SF_TEMPLATE_SEND">template_send</value>
+                <value reqs="ONLOAD_ONLY,SEND_FLAG,SF_ODS,SF_ODS_COMPL">od_send</value>
+                <value reqs="ONLOAD_ONLY,SEND_FLAG,SF_ODS,SF_ODS_RAW">od_send_raw</value>
+              </arg>
+            </run>
+            <run>
+              <script name="packet_ack_drop" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+              </script>
+              <arg name="env">
+                <value ref="env.peer2peer_gw"/>
+                <value ref="env.peer2peer_gw_ipv6"/>
+              </arg>
+              <arg name="test_retr_queue" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value reqs="SO_SNDBUF">TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+              </arg>
+              <arg name="pack_type" list="">
+                <value>syn</value>
+                <value>synack</value>
+                <value>packet</value>
+                <value>packet</value>
+                <value>fin</value>
+                <value>fin_close_wait</value>
+              </arg>
+            </run>
+
+            <run>
+                <script name="syn_resend">
+                    <req id="SOCK_STREAM"/>
+                </script>
+                <arg name="env">
+                    <value ref="env.peer2peer_gw"/>
+                    <value ref="env.peer2peer_gw_ipv6"/>
+                </arg>
+            </run>
+
+          </session>
+        </run>
+
+        <run>
+            <script name="check_recv_truncate">
+                <req id="SOCK_STREAM"/>
+                <req id="MSG_TRUNC"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="func" type="recv_func_with_flags">
+                <value>recv</value>
+                <value>recvfrom</value>
+                <value>recvmsg</value>
+                <value>recvmmsg</value>
+            </arg>
+            <arg name="null_buffer" type="boolean">
+                <value>FALSE</value>
+                <value reqs="NO_CHK_FUNCS">TRUE</value>
+            </arg>
+        </run>
+
+        <!-- This session is for iterating tests using TSA library
+             with IPv4 and IPv6 gateway environments -->
+        <run>
+          <session track_conf="silent">
+            <!-- Look for values after the end of session, Tester does not
+                 allow to specify them before its beginning. Values should be
+                 specified outside of session so that it is iterated as a
+                 whole for each value (including prologue/epilogue). -->
+            <arg name="env"/>
+
+            <prologue>
+              <script name="tsa_gw_prologue"/>
+            </prologue>
+
+            <epilogue>
+              <script name="../gateways_epilogue"/>
+            </epilogue>
+
+            <run>
+                <session>
+                    <arg name="env"/>
+                    <arg name="zero_linger" type="boolean" list="">
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="ack_after_close" list="">
+                        <value>instant</value>
+                        <value>instant</value>
+                        <value>delayed</value>
+                        <value>none</value>
+                    </arg>
+                    <run>
+                        <script name="close_linger" track_conf="silent">
+                            <req id="SOCK_STREAM"/>
+                            <req id="SO_LINGER"/>
+                            <req id="OOL1502"/>
+                            <req id="TAPI_TCP_STATES"/>
+                        </script>
+                        <arg name="tcp_state">
+                            <value>TCP_ESTABLISHED</value>
+                            <value>TCP_CLOSE_WAIT</value>
+                            <value reqs="SO_KEEPALIVE,TCP_KEEPCNT,TCP_KEEPIDLE,TCP_KEEPINTVL">TCP_FIN_WAIT1</value>
+                            <value>TCP_CLOSING</value>
+                            <value>TCP_LAST_ACK</value>
+                        </arg>
+                        <arg name="unacked_data" type="boolean"/>
+                        <arg name="opening">
+                            <value>active</value>
+                            <value>passive_end</value>
+                            <value>passive_open</value>
+                        </arg>
+                        <arg name="way" type="closing_way">
+                            <value>close</value>
+                            <value>exit</value>
+                            <value>kill</value>
+                            <value>dup2</value>
+                        </arg>
+                        <arg name="single_sock">
+                            <value>TRUE</value>
+                        </arg>
+                        <arg name="set_before">
+                            <value>FALSE</value>
+                        </arg>
+                        <arg name="use_fork">
+                            <value>FALSE</value>
+                        </arg>
+                    </run>
+
+                    <run>
+                        <script name="close_linger" track_conf="silent">
+                            <req id="SOCK_STREAM"/>
+                            <req id="SO_LINGER"/>
+                            <req id="OOL1502"/>
+                            <req id="TAPI_TCP_STATES"/>
+                        </script>
+                        <arg name="tcp_state">
+                            <value>TCP_ESTABLISHED</value>
+                            <value>TCP_CLOSE_WAIT</value>
+                            <value reqs="SO_KEEPALIVE,TCP_KEEPCNT,TCP_KEEPIDLE,TCP_KEEPINTVL">TCP_FIN_WAIT1</value>
+                            <value>TCP_CLOSING</value>
+                            <value>TCP_LAST_ACK</value>
+                        </arg>
+                        <arg name="unacked_data" type="boolean"/>
+                        <arg name="opening">
+                            <value>active</value>
+                            <value>passive_end</value>
+                            <value>passive_open</value>
+                        </arg>
+                        <arg name="way" type="closing_way">
+                            <value>close</value>
+                        </arg>
+                        <arg name="single_sock">
+                            <value>FALSE</value>
+                        </arg>
+                        <arg name="set_before" type="boolean"/>
+                        <arg name="use_fork">
+                            <value reqs="DUP">FALSE</value>
+                            <value reqs="FORK">TRUE</value>
+                        </arg>
+                    </run>
+                </session>
+            </run>
+
+            <run>
+                <session>
+                    <arg name="env"/>
+                    <arg name="zero_linger" type="boolean"/>
+                    <arg name="ack_after_close">
+                        <value>instant</value>
+                    </arg>
+                    <run>
+                        <script name="close_linger" track_conf="silent">
+                            <req id="SOCK_STREAM"/>
+                            <req id="SO_LINGER"/>
+                            <req id="OOL1502"/>
+                            <req id="TAPI_TCP_STATES"/>
+                        </script>
+                        <arg name="tcp_state" list="state_list">
+                            <value>TCP_SYN_SENT</value>
+                            <value>TCP_SYN_RECV</value>
+                        </arg>
+                        <arg name="opening" list="state_list">
+                            <value>active</value>
+                            <value>passive_end</value>
+                        </arg>
+                        <arg name="way" type="closing_way">
+                            <value>close</value>
+                            <value>exit</value>
+                            <value>kill</value>
+                            <value>dup2</value>
+                        </arg>
+                        <arg name="single_sock">
+                            <value>TRUE</value>
+                        </arg>
+                        <arg name="set_before">
+                            <value>FALSE</value>
+                        </arg>
+                        <arg name="use_fork">
+                            <value>FALSE</value>
+                        </arg>
+                        <arg name="unacked_data">
+                            <value>FALSE</value>
+                        </arg>
+                    </run>
+                    <run>
+                        <script name="close_linger" track_conf="silent">
+                            <req id="SOCK_STREAM"/>
+                            <req id="SO_LINGER"/>
+                            <req id="OOL1502"/>
+                            <req id="TAPI_TCP_STATES"/>
+                        </script>
+                        <arg name="tcp_state" list="state_list">
+                            <value>TCP_SYN_SENT</value>
+                            <value>TCP_SYN_RECV</value>
+                        </arg>
+                        <arg name="opening" list="state_list">
+                            <value>active</value>
+                            <value>passive_end</value>
+                        </arg>
+                        <arg name="way" type="closing_way">
+                            <value>close</value>
+                        </arg>
+                        <arg name="single_sock">
+                            <value>FALSE</value>
+                        </arg>
+                        <arg name="set_before" type="boolean"/>
+                        <arg name="use_fork">
+                            <value reqs="DUP">FALSE</value>
+                            <value reqs="FORK">TRUE</value>
+                        </arg>
+                        <arg name="unacked_data">
+                            <value>FALSE</value>
+                        </arg>
+                    </run>
+
+                    <run>
+                        <script name="close_linger" track_conf="silent">
+                            <req id="SOCK_STREAM"/>
+                            <req id="SO_LINGER"/>
+                            <req id="OOL1502"/>
+                            <req id="TAPI_TCP_STATES"/>
+                        </script>
+                        <arg name="tcp_state">
+                            <value>TCP_FIN_WAIT2</value>
+                            <value>TCP_TIME_WAIT</value>
+                        </arg>
+                        <arg name="unacked_data">
+                            <value>FALSE</value>
+                        </arg>
+                        <arg name="opening">
+                            <value>active</value>
+                            <value>passive_end</value>
+                            <value>passive_open</value>
+                        </arg>
+                        <arg name="way" type="closing_way">
+                            <value>close</value>
+                            <value>exit</value>
+                            <value>kill</value>
+                            <value>dup2</value>
+                        </arg>
+                        <arg name="single_sock">
+                            <value>TRUE</value>
+                        </arg>
+                        <arg name="set_before">
+                            <value>FALSE</value>
+                        </arg>
+                        <arg name="use_fork">
+                            <value>FALSE</value>
+                        </arg>
+                    </run>
+                    <run>
+                        <script name="close_linger" track_conf="silent">
+                            <req id="SOCK_STREAM"/>
+                            <req id="SO_LINGER"/>
+                            <req id="OOL1502"/>
+                            <req id="TAPI_TCP_STATES"/>
+                        </script>
+                        <arg name="tcp_state">
+                            <value>TCP_FIN_WAIT2</value>
+                            <value>TCP_TIME_WAIT</value>
+                        </arg>
+                        <arg name="unacked_data">
+                            <value>FALSE</value>
+                        </arg>
+                        <arg name="opening">
+                            <value>active</value>
+                            <value>passive_end</value>
+                            <value>passive_open</value>
+                        </arg>
+                        <arg name="way" type="closing_way">
+                            <value>close</value>
+                        </arg>
+                        <arg name="single_sock">
+                            <value>FALSE</value>
+                        </arg>
+                        <arg name="set_before" type="boolean"/>
+                        <arg name="use_fork">
+                            <value reqs="DUP">FALSE</value>
+                            <value reqs="FORK">TRUE</value>
+                        </arg>
+                    </run>
+                </session>
+            </run>
+
+            <run>
+                 <script name="tcp_small_segment" track_conf="silent">
+                    <req id="SOCK_STREAM"/>
+                    <req id="TAPI_TCP_STATES"/>
+                 </script>
+                 <arg name="active" type="socket_tcp_boolean"/>
+                 <arg name="recv_loops">
+                   <value>0</value>
+                 </arg>
+                 <arg name="with_holes" type="boolean">
+                   <value>TRUE</value>
+                 </arg>
+                 <arg name="cache_socket" type="cache_socket_type"/>
+            </run>
+
+            <run>
+                <script name="tcp_handle_syn">
+                    <req id="SOCK_STREAM"/>
+                    <req id="TAPI_TCP_STATES"/>
+                    <req id="TCP_BLIND_WINDOW"/>
+                </script>
+                <arg name="tcp_state">
+                    <value>TCP_ESTABLISHED</value>
+                    <value>TCP_CLOSE_WAIT</value>
+                </arg>
+                <arg name="active" type="socket_tcp_boolean"/>
+                <arg name="seq_val">
+                    <value>next</value>
+                    <value>next-1</value>
+                    <value>next_plus_1</value>
+                    <value>max_offs</value>
+                </arg>
+                <arg name="close_iut" value="FALSE"/>
+                <arg name="pass_data" type="boolean"/>
+            </run>
+            <run>
+                <script name="tcp_handle_syn">
+                    <req id="SOCK_STREAM"/>
+                    <req id="TAPI_TCP_STATES"/>
+                    <req id="TCP_BLIND_WINDOW"/>
+                </script>
+                <arg name="tcp_state">
+                    <value>TCP_FIN_WAIT1</value>
+                    <value>TCP_FIN_WAIT2</value>
+                    <value>TCP_CLOSING</value>
+                    <value>TCP_LAST_ACK</value>
+                    <value>TCP_TIME_WAIT</value>
+                </arg>
+                <arg name="active" type="socket_tcp_boolean"/>
+                <arg name="seq_val">
+                    <value>next</value>
+                    <value>next-1</value>
+                    <value>next_plus_1</value>
+                    <value>max_offs</value>
+                </arg>
+                <arg name="close_iut" type="boolean"/>
+                <arg name="pass_data" type="boolean"/>
+            </run>
+
+            <run>
+                <script name="tcp_handle_fin">
+                    <req id="SOCK_STREAM"/>
+                    <req id="TAPI_TCP_STATES"/>
+                    <req id="TCP_BLIND_WINDOW"/>
+                </script>
+                <arg name="tcp_state">
+                    <value>TCP_ESTABLISHED</value>
+                    <value>TCP_CLOSE_WAIT</value>
+                </arg>
+                <arg name="active" type="socket_tcp_boolean"/>
+                <arg name="ack_val">
+                    <value>next_plus_1</value>
+                    <value>max_offs</value>
+                </arg>
+                <arg name="seq_val">
+                    <value>next-1</value>
+                    <value>next_plus_1</value>
+                    <value>next_plus_datalen</value>
+                    <value>max_offs</value>
+                </arg>
+                <arg name="close_iut" value="FALSE"/>
+                <arg name="pass_data" type="boolean"/>
+            </run>
+            <run>
+                <script name="tcp_handle_fin">
+                    <req id="SOCK_STREAM"/>
+                    <req id="TAPI_TCP_STATES"/>
+                    <req id="TCP_BLIND_WINDOW"/>
+                </script>
+                <arg name="tcp_state">
+                    <value>TCP_FIN_WAIT1</value>
+                    <value>TCP_FIN_WAIT2</value>
+                    <value>TCP_CLOSING</value>
+                    <value>TCP_LAST_ACK</value>
+                    <value>TCP_TIME_WAIT</value>
+                </arg>
+                <arg name="active" type="socket_tcp_boolean"/>
+                <arg name="ack_val">
+                    <value>next_plus_1</value>
+                    <value>max_offs</value>
+                </arg>
+                <arg name="seq_val">
+                    <value>next-1</value>
+                    <value>next_plus_1</value>
+                    <value>next_plus_datalen</value>
+                    <value>max_offs</value>
+                </arg>
+                <arg name="close_iut" type="boolean"/>
+                <arg name="pass_data" type="boolean"/>
+            </run>
+            <run>
+                <script name="zero_window_after_shrink" track_conf="silent">
+                    <req id="SOCK_STREAM"/>
+                    <req id="TAPI_TCP_STATES"/>
+                </script>
+                <arg name="active" type="socket_tcp_boolean"/>
+                <arg name="cache_socket" type="cache_socket_type"/>
+                <arg name="close_iut_s" type="boolean"/>
+                <arg name="set_zero" type="boolean"/>
+                <arg name="packets_before">
+                    <value>10</value>
+                </arg>
+            </run>
+            <run>
+                <script name="fit_window_after_shrink" track_conf="silent">
+                    <req id="SOCK_STREAM"/>
+                    <req id="TAPI_TCP_STATES"/>
+                </script>
+                <arg name="active" type="socket_tcp_boolean"/>
+                <arg name="cache_socket" type="cache_socket_type"/>
+                <arg name="packets_num">
+                    <value>10</value>
+                </arg>
+                <arg name="packets_wo_ack">
+                    <value>5</value>
+                </arg>
+            </run>
+
+          </session>
+
+          <arg name="env">
+            <value ref="env.peer2peer_gw"/>
+            <value ref="env.peer2peer_gw_ipv6"/>
+          </arg>
+        </run>
+
+        <run>
+          <session>
+            <arg name="env">
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="socket_tcp">
+              <value>tcp_active</value>
+              <value>tcp_passive</value>
+            </arg>
+
+            <run>
+              <session>
+                <arg name="env"/>
+                <arg name="sock_type"/>
+                <arg name="tcp_state">
+                    <value>TCP_ESTABLISHED</value>
+                    <value>TCP_CLOSE_WAIT</value>
+                    <value>TCP_FIN_WAIT2</value>
+                    <value>TCP_TIME_WAIT</value>
+                </arg>
+                <arg name="zero_linger" type="boolean"/>
+                <arg name="sq_state">
+                    <value>empty</value>
+                </arg>
+
+                <run>
+                    <script name="close_linger_lo" track_conf="silent">
+                        <req id="SOCK_STREAM"/>
+                    </script>
+                    <arg name="way" type="closing_way">
+                        <value>close</value>
+                        <value>exit</value>
+                        <value>kill</value>
+                        <value>dup2</value>
+                    </arg>
+                    <arg name="single_sock">
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="set_before">
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="use_fork">
+                        <value>FALSE</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="close_linger_lo" track_conf="silent">
+                        <req id="SOCK_STREAM"/>
+                    </script>
+                    <arg name="way" type="closing_way">
+                        <value>close</value>
+                    </arg>
+                    <arg name="single_sock">
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="set_before" type="boolean"/>
+                    <arg name="use_fork">
+                        <value reqs="DUP">FALSE</value>
+                        <value reqs="FORK">TRUE</value>
+                    </arg>
+                </run>
+              </session>
+            </run>
+
+            <run>
+              <session>
+                <arg name="env"/>
+                <arg name="sock_type"/>
+                <arg name="tcp_state">
+                    <value>TCP_ESTABLISHED</value>
+                    <value>TCP_CLOSE_WAIT</value>
+                    <value>TCP_FIN_WAIT1</value>
+                    <value>TCP_CLOSING</value>
+                    <value>TCP_LAST_ACK</value>
+                </arg>
+                <arg name="zero_linger" list="">
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                </arg>
+                <arg name="sq_state" list="">
+                    <value>during</value>
+                    <value>timeout</value>
+                    <value>timeout</value>
+                </arg>
+
+                <run>
+                    <script name="close_linger_lo" track_conf="silent">
+                        <req id="SOCK_STREAM"/>
+                    </script>
+                    <arg name="way" type="closing_way">
+                        <value>close</value>
+                        <value>exit</value>
+                        <value>kill</value>
+                        <value>dup2</value>
+                    </arg>
+                    <arg name="single_sock">
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="set_before">
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="use_fork">
+                        <value>FALSE</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="close_linger_lo" track_conf="silent">
+                        <req id="SOCK_STREAM"/>
+                    </script>
+                    <arg name="way" type="closing_way">
+                        <value>close</value>
+                    </arg>
+                    <arg name="single_sock">
+                        <value>FALSE</value>
+                    </arg>
+                    <arg name="set_before" type="boolean"/>
+                    <arg name="use_fork">
+                        <value reqs="DUP">FALSE</value>
+                        <value reqs="FORK">TRUE</value>
+                    </arg>
+                </run>
+              </session>
+            </run>
+          </session>
+        </run>
+
+        <run>
+          <script name="same_tuple_new_isn">
+            <req id="SOCK_STREAM"/>
+            <req id="TCP_ISN_REUSE"/>
+          </script>
+          <arg name="env">
+            <value ref="env.peer2peer"/>
+            <value ref="env.peer2peer_ipv6"/>
+          </arg>
+          <arg name="first_active" type="socket_tcp_boolean">
+            <value reqs="RPC_RESTART">FALSE</value>
+            <value>TRUE</value>
+          </arg>
+          <arg name="send_data" type="boolean"/>
+        </run>
+
+        <run>
+          <script name="diff_tuple_diff_isn" track_conf="nohistory">
+            <req id="SOCK_STREAM"/>
+            <req id="TCP_ISN_REUSE"/>
+          </script>
+          <arg name="env">
+            <value ref="env.peer2peer"/>
+            <value ref="env.peer2peer_ipv6"/>
+          </arg>
+          <arg name="client_diff">
+            <value>none</value>
+            <value>addr</value>
+            <value>port</value>
+            <value>no_bind</value>
+          </arg>
+          <arg name="server_diff">
+            <value>addr</value>
+            <value>port</value>
+          </arg>
+          <arg name="active" type="socket_tcp_boolean">
+            <value reqs="RPC_RESTART">FALSE</value>
+            <value>TRUE</value>
+          </arg>
+        </run>
+
+        <run>
+          <script name="diff_tuple_diff_isn" track_conf="nohistory">
+            <req id="SOCK_STREAM"/>
+            <req id="TCP_ISN_REUSE"/>
+          </script>
+          <arg name="env">
+            <value ref="env.peer2peer"/>
+            <value ref="env.peer2peer_ipv6"/>
+          </arg>
+          <arg name="client_diff">
+            <value>addr</value>
+            <value>port</value>
+            <value>no_bind</value>
+          </arg>
+          <arg name="server_diff">
+            <value>none</value>
+          </arg>
+          <arg name="active" type="socket_tcp_boolean">
+            <value reqs="RPC_RESTART">FALSE</value>
+            <value>TRUE</value>
+          </arg>
+        </run>
+
+        <run>
+          <script name="overfill_shutdown_reduce_pmtu">
+            <req id="SOCK_STREAM"/>
+            <req id="IP_MTU"/>
+            <req id="IF_DOWN_UP"/>
+          </script>
+          <arg name="env">
+            <value ref="env.peer2peer"/>
+            <value ref="env.peer2peer_ipv6"/>
+          </arg>
+        </run>
+
+        <run>
+          <script name="rst_send_partial"/>
+          <arg name="env">
+            <value ref="env.peer2peer"/>
+            <value ref="env.peer2peer_ipv6"/>
+          </arg>
+          <arg name="partial" type="boolean"/>
+        </run>
+
+    </session>
+</package>

@@ -1,0 +1,2120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<test name="aio" type="package">
+  <objective>Asynchronous Input/Output</objective>
+  <notes/>
+  <iter result="PASSED">
+    <notes/>
+    <test name="aio_cancel_alldone" type="script">
+      <objective>Check that aio_cancel() returns AIO_ALLDONE is called for completed request.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="aio_cancel_inprogress" type="script">
+      <objective>Check that aio_cancel() returns AIO_NOTCANCELED if request cannot be canceled.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="aio_cancel_many" type="script">
+      <objective>Check that aio_cancel() called with NULL control block cancels all requests associated with the socket.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="aio_cancel_read" type="script">
+      <objective>Check that read AIO request may be canceled.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="aio_cancel_write" type="script">
+      <objective>Check that write AIO request may be canceled.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="aio_cancel_thread" type="script">
+      <objective>Check that AIO request may be canceled from the other thread or process.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">read</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">write</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="aio_fork" type="script">
+      <objective>Check that AIO requests are not inhereted after fork.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">read</arg>
+        <notes/>
+        <results tags="linux" notes="Bug 170257 in RH bugzilla">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">write</arg>
+        <notes/>
+        <results tags="linux" notes="Bug 170257 in RH bugzilla">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="aio_ret_failed" type="script">
+      <objective>Check that aio_error() and aio_return() returns proper values if the request fails.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="aio_ret_no_aio_error" type="script">
+      <objective>Check that aio_return() called without aio_error() works properly.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="aio_read_blk_read" type="script">
+      <objective>Check that asynchronous and synchronous read operations many be used simultaneously.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="len1">1024</arg>
+        <arg name="len2">512</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="len1">1024</arg>
+        <arg name="len2">512</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="aio_read_many_reqs" type="script">
+      <objective>Check that several AIO read requests may be posted simultaneously on the one socket.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="req_num">10</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="req_num">10</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="aio_read_many_socks" type="script">
+      <objective>Check that several AIO read requests may be posted on several sockets simultaneously.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_num">10</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="aio_read" type="script">
+      <objective>Check that aio_read(), aio_error() and aio_return() work properly for simple use case.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="blk">TRUE</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="sig">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="blk">TRUE</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="sig">FALSE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="blk">TRUE</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="sig">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="blk">TRUE</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="sig">FALSE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="blk">FALSE</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="sig">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="blk">FALSE</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="sig">FALSE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="blk">FALSE</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="sig">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="blk">FALSE</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="sig">FALSE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="aio_error" type="script">
+      <objective>Check that aio_error() works properly for simple use case.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="aio_write" type="script">
+      <objective>Check that aio_write() and aio_return() work properly for simple use case</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="blk">TRUE</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="sig">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="blk">TRUE</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="sig">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="blk">TRUE</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="sig">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="blk">TRUE</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="sig">FALSE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="blk">FALSE</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="sig">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="blk">FALSE</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="sig">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="blk">FALSE</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="sig">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="blk">FALSE</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="sig">FALSE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="aio_write_blk_write" type="script">
+      <objective>Check that asynchronous and synchronous write operations many be used simultaneously.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="aio_write_ignore_opcode" type="script">
+      <objective>Check that field aio_lio_opcode is ignored if request is not posted by lio_listio().</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="aio_write_many_reqs" type="script">
+      <objective>Check that several AIO write requests may be posted simultaneously on the one socket.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="req_num">10</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="req_num">10</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="aio_write_many_socks" type="script">
+      <objective>Check that several AIO write requests may be posted on several sockets simultaneously.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_num">10</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="aio_suspend" type="script">
+      <objective>Check that aio_read(), aio_error() and aio_return() work properly for simple use case.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">read</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">write</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="aio_suspend_cblist_dummy" type="script">
+      <objective>Check that aio_suspend() works properly if only NULL pointers are specified in cblist.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="aio_suspend_cblist_with_holes" type="script">
+      <objective>Check that aio_suspend() handles properly list with NULL elements.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="post_twice" type="script">
+      <objective>Check that two requests with the same control block may be posted twice.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="aio_suspend_completed" type="script">
+      <objective>Check that aio_suspend() handles properly completed request.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="op">write</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="op">read</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="op">write</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="op">read</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="aio_suspend_forever" type="script">
+      <objective>Check that aio_suspend() blocks forever if NULL timeout is specified.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">write</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">read</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="aio_suspend_not_posted" type="script">
+      <objective>Check that aio_suspend() does not block if called with not posted request in the list.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="aio_suspend_thread" type="script">
+      <objective>Check that aio_suspend() may be used from the other thread/process.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">write</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">read</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="aio_suspend_timeout" type="script">
+      <objective>Check that aio_suspend() does not block if called with zero or negative timeout.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">read</arg>
+        <arg name="sec">-1</arg>
+        <arg name="nsec">-1</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">read</arg>
+        <arg name="sec">-1</arg>
+        <arg name="nsec">0</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">read</arg>
+        <arg name="sec">-1</arg>
+        <arg name="nsec">1</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">read</arg>
+        <arg name="sec">0</arg>
+        <arg name="nsec">-1</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">read</arg>
+        <arg name="sec">1</arg>
+        <arg name="nsec">-1</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">write</arg>
+        <arg name="sec">-1</arg>
+        <arg name="nsec">-1</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">write</arg>
+        <arg name="sec">-1</arg>
+        <arg name="nsec">0</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">write</arg>
+        <arg name="sec">-1</arg>
+        <arg name="nsec">1</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">write</arg>
+        <arg name="sec">0</arg>
+        <arg name="nsec">-1</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">write</arg>
+        <arg name="sec">1</arg>
+        <arg name="nsec">-1</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="close_sock" type="script">
+      <objective>Check that socket is really closed only after AIO request completion.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">read</arg>
+        <arg name="notify">signal</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">read</arg>
+        <arg name="notify">callback</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">read</arg>
+        <arg name="notify">none</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">write</arg>
+        <arg name="notify">signal</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">write</arg>
+        <arg name="notify">callback</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">write</arg>
+        <arg name="notify">none</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="garbage_cb" type="script">
+      <objective>Check calling of AIO functions with incorrect control block does not lead to system crash.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="func">write</arg>
+        <arg name="field">aio_buf</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="func">write</arg>
+        <arg name="field">aio_nbytes</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="func">write</arg>
+        <arg name="field">aio_sigevent</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="func">read</arg>
+        <arg name="field">aio_buf</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="func">read</arg>
+        <arg name="field">aio_nbytes</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="func">read</arg>
+        <arg name="field">aio_sigevent</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="func">lio_listio</arg>
+        <arg name="field">aio_buf</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="func">lio_listio</arg>
+        <arg name="field">aio_nbytes</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="func">lio_listio</arg>
+        <arg name="field">aio_sigevent</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="func">write</arg>
+        <arg name="field">aio_buf</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="func">write</arg>
+        <arg name="field">aio_nbytes</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="func">write</arg>
+        <arg name="field">aio_sigevent</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="func">read</arg>
+        <arg name="field">aio_buf</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="func">read</arg>
+        <arg name="field">aio_nbytes</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="func">read</arg>
+        <arg name="field">aio_sigevent</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="func">lio_listio</arg>
+        <arg name="field">aio_buf</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="func">lio_listio</arg>
+        <arg name="field">aio_nbytes</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="func">lio_listio</arg>
+        <arg name="field">aio_sigevent</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="aio_suspend_file" type="script">
+      <objective>Check that aio_suspend() works properly when it is called on AIO requests which operate with socket and file.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">write</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">read</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="aio_suspend_signal" type="script">
+      <objective>Check that aio_suspend() may be interrupted using signal.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">read</arg>
+        <arg name="own">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">write</arg>
+        <arg name="own">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">read</arg>
+        <arg name="own">FALSE</arg>
+        <notes/>
+        <results tags="linux" notes="Bug 171968 in RH bugzilla">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="op">write</arg>
+        <arg name="own">FALSE</arg>
+        <notes/>
+        <results tags="linux" notes="Bug 171968 in RH bugzilla">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="invalid_fd" type="script">
+      <objective>Check that AIO functions return error EBADF if called with incorrect file descriptor.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="func">cancel</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="func">write</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="func">read</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="func">lio_listio</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="too_many_req" type="script">
+      <objective>Check that posting of lot of requests does not lead to application/system crash.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="mode">rd</arg>
+        <arg name="num">16</arg>
+        <notes/>
+        <results tags="linux" notes="Bug 169572 in RH bugzilla">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="mode">rd</arg>
+        <arg name="num">1024</arg>
+        <notes/>
+        <results tags="linux" notes="Bug 169572 in RH bugzilla">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="mode">wr</arg>
+        <arg name="num">16</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="mode">wr</arg>
+        <arg name="num">1024</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="mode">rdwr</arg>
+        <arg name="num">16</arg>
+        <notes/>
+        <results tags="linux" notes="Bug 169572 in RH bugzilla">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="mode">rdwr</arg>
+        <arg name="num">1024</arg>
+        <notes/>
+        <results tags="linux" notes="Bug 169572 in RH bugzilla">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="mode">rd</arg>
+        <arg name="num">16</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="mode">rd</arg>
+        <arg name="num">1024</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="mode">wr</arg>
+        <arg name="num">16</arg>
+        <notes/>
+        <results tags="linux" notes="Bug 169572 in RH bugzilla">
+          <result value="FAILED"/>
+        </results>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="mode">wr</arg>
+        <arg name="num">1024</arg>
+        <notes/>
+        <results tags="linux" notes="Bug 169572 in RH bugzilla">
+          <result value="FAILED"/>
+        </results>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="mode">rdwr</arg>
+        <arg name="num">16</arg>
+        <notes/>
+        <results tags="linux" notes="Bug 169572 in RH bugzilla">
+          <result value="FAILED"/>
+        </results>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="mode">rdwr</arg>
+        <arg name="num">1024</arg>
+        <notes/>
+        <results tags="linux" notes="Bug 169572 in RH bugzilla">
+          <result value="FAILED"/>
+        </results>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="one_buf" type="script">
+      <objective>Check that IUT does not crash if one buffer is used for AIO requests.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="aio_read_ignore_opcode" type="script">
+      <objective>Check that field aio_lio_opcode is ignored if request is not posted by lio_listio().</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="aio_fsync_bad_op" type="script">
+      <objective>Check that aio_fsync() returns proper error if incorrect operation is specified.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="aio_fsync_socket" type="script">
+      <objective>Check aio_fsync() applicability for socket</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="op">O_SYNC</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="op">O_DSYNC</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="op">O_SYNC</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="op">O_DSYNC</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="notify_signal" type="script">
+      <objective>Check that AIO request completion notification using signal is performed properly.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="rd">TRUE</arg>
+        <arg name="notify_cb">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="rd">TRUE</arg>
+        <arg name="notify_cb">FALSE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="rd">FALSE</arg>
+        <arg name="notify_cb">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="rd">FALSE</arg>
+        <arg name="notify_cb">FALSE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="rd">TRUE</arg>
+        <arg name="notify_cb">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="rd">TRUE</arg>
+        <arg name="notify_cb">FALSE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="rd">FALSE</arg>
+        <arg name="notify_cb">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="rd">FALSE</arg>
+        <arg name="notify_cb">FALSE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="stress" type="script">
+      <objective>Stress testing of asynchronous data sending/receiving.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_num">10</arg>
+        <arg name="threads_num">4</arg>
+        <arg name="req_num">100</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="notify_callback" type="script">
+      <objective>Check that AIO request completion notification using callback is performed properly.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="rd">TRUE</arg>
+        <arg name="notify_cb">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="rd">TRUE</arg>
+        <arg name="notify_cb">FALSE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="rd">FALSE</arg>
+        <arg name="notify_cb">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="rd">FALSE</arg>
+        <arg name="notify_cb">FALSE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="rd">TRUE</arg>
+        <arg name="notify_cb">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="rd">TRUE</arg>
+        <arg name="notify_cb">FALSE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="rd">FALSE</arg>
+        <arg name="notify_cb">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="rd">FALSE</arg>
+        <arg name="notify_cb">FALSE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="notify_diff_signals" type="script">
+      <objective>Check that correct signal is sent when AIO request is completed.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="notify_diff_callbacks" type="script">
+      <objective>Check that correct callback is called when AIO request is completed.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="notify_diff_types" type="script">
+      <objective>Check that it's possible to specify different notification types for different requests.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="rd">TRUE</arg>
+        <arg name="notify_cb">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="rd">TRUE</arg>
+        <arg name="notify_cb">FALSE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="rd">FALSE</arg>
+        <arg name="notify_cb">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="rd">FALSE</arg>
+        <arg name="notify_cb">FALSE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="rd">TRUE</arg>
+        <arg name="notify_cb">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="rd">TRUE</arg>
+        <arg name="notify_cb">FALSE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="rd">FALSE</arg>
+        <arg name="notify_cb">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="rd">FALSE</arg>
+        <arg name="notify_cb">FALSE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="not_posted_cb" type="script">
+      <objective>Check that aio_return() and aio_error() handle properly not posted request.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_ucast</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="nested_requests" type="script">
+      <objective>Check that it's possible to post AIO request from completion callback of other AIO request.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="req_num">4</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="req_num">4</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="kill_process" type="script">
+      <objective>Check that system does not crash if process is killed before AIO request completion.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="lio_listio_wait" type="script">
+      <objective>Check that several requests may be posted using lio_listio() in blocking mode.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,addr:'iut2_addr':inet:unicast},{{'pco_tst':tester},addr:'tst1_addr':inet:unicast,addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,addr:'iut2_addr':inet:unicast},{{'pco_tst':tester},addr:'tst1_addr':inet:unicast,addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="lio_listio_wait_canceled" type="script">
+      <objective>Check that lio_listio(LIO_WAIT) succeeds if one of requests in the list is canceled.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="lio_listio_cblist_dummy" type="script">
+      <objective>Check that lio_listio() processes properly list containing only NULL and LIO_NOP requests.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="req1">NULL</arg>
+        <arg name="req2">NULL</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="req1">NULL</arg>
+        <arg name="req2">LIO_NOP</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="req1">LIO_NOP</arg>
+        <arg name="req2">NULL</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="req1">LIO_NOP</arg>
+        <arg name="req2">LIO_NOP</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="req1">NULL</arg>
+        <arg name="req2">NULL</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="req1">NULL</arg>
+        <arg name="req2">LIO_NOP</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="req1">LIO_NOP</arg>
+        <arg name="req2">NULL</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="req1">LIO_NOP</arg>
+        <arg name="req2">LIO_NOP</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="lio_listio_bad_mode" type="script">
+      <objective>Check that lio_listio() called with incorrect mode returns -1 and sets errno to EINVAL.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="lio_listio_too_many" type="script">
+      <objective>Check that lio_listio() returns EINVAL if too long list is passed.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="lio_listio_file" type="script">
+      <objective>Check that lio_listio() works properly when it posts AIO requests which operate with socket and file.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="rd">FALSE</arg>
+        <arg name="wait">FALSE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="rd">FALSE</arg>
+        <arg name="wait">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="rd">TRUE</arg>
+        <arg name="wait">FALSE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="rd">TRUE</arg>
+        <arg name="wait">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="lio_listio_nowait" type="script">
+      <objective>Check that several requests may be posted using lio_listio() in non-blocking mode.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,addr:'iut2_addr':inet:unicast},{{'pco_tst':tester},addr:'tst1_addr':inet:unicast,addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="notify">signal</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,addr:'iut2_addr':inet:unicast},{{'pco_tst':tester},addr:'tst1_addr':inet:unicast,addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="notify">callback</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,addr:'iut2_addr':inet:unicast},{{'pco_tst':tester},addr:'tst1_addr':inet:unicast,addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="notify">none</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,addr:'iut2_addr':inet:unicast},{{'pco_tst':tester},addr:'tst1_addr':inet:unicast,addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="notify">null</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,addr:'iut2_addr':inet:unicast},{{'pco_tst':tester},addr:'tst1_addr':inet:unicast,addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="notify">signal</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,addr:'iut2_addr':inet:unicast},{{'pco_tst':tester},addr:'tst1_addr':inet:unicast,addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="notify">callback</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,addr:'iut2_addr':inet:unicast},{{'pco_tst':tester},addr:'tst1_addr':inet:unicast,addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="notify">none</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,addr:'iut2_addr':inet:unicast},{{'pco_tst':tester},addr:'tst1_addr':inet:unicast,addr:'tst2_addr':inet:unicast}}</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="notify">null</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="lio_listio_cblist_with_holes" type="script">
+      <objective>Check that list with holes is handled properly by lio_listio().</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="hole">NULL</arg>
+        <arg name="wait">FALSE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="hole">NULL</arg>
+        <arg name="wait">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="hole">LIO_NOP</arg>
+        <arg name="wait">FALSE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="hole">LIO_NOP</arg>
+        <arg name="wait">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="hole">NULL</arg>
+        <arg name="wait">FALSE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="hole">NULL</arg>
+        <arg name="wait">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="hole">LIO_NOP</arg>
+        <arg name="wait">FALSE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="hole">LIO_NOP</arg>
+        <arg name="wait">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="lio_listio_wait_signal" type="script">
+      <objective>Check that lio_listio(LIO_WAIT) returns -1 with errno EINTR if interrupted by the signal.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <notes/>
+        <results tags="linux" notes="Bug 171968 in RH bugzilla">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="lio_listio_wait_failed" type="script">
+      <objective>Check that lio_listio(LIO_WAIT) returns -1 with errno EIO if one of requests in the list is failed.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <notes/>
+        <results tags="linux" notes="Bug 172098 in RH bugzilla">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="bnb_cblist_nent" type="script">
+      <objective>Check that aio_suspend() and lio_listio() handle properly NULL list and/or zero/negative number of list elements.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="list">TRUE</arg>
+        <arg name="nent">-1</arg>
+        <arg name="func">wait</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="list">TRUE</arg>
+        <arg name="nent">-1</arg>
+        <arg name="func">no_wait</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="list">TRUE</arg>
+        <arg name="nent">-1</arg>
+        <arg name="func">suspend</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="list">TRUE</arg>
+        <arg name="nent">0</arg>
+        <arg name="func">wait</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="list">TRUE</arg>
+        <arg name="nent">0</arg>
+        <arg name="func">no_wait</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="list">TRUE</arg>
+        <arg name="nent">0</arg>
+        <arg name="func">suspend</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="list">FALSE</arg>
+        <arg name="nent">0</arg>
+        <arg name="func">wait</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="list">FALSE</arg>
+        <arg name="nent">0</arg>
+        <arg name="func">no_wait</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="list">FALSE</arg>
+        <arg name="nent">0</arg>
+        <arg name="func">suspend</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="notify_thread" type="script">
+      <objective>Check that signal is delivered to the thread posted the request.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO STREAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" key="AIO DGRAM">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+  </iter>
+</test>

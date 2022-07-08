@@ -1,0 +1,107 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/*
+ * Socket API Test Suite
+ * TCP tests
+ */
+
+/**
+ * @page tcp-check_recv_truncate Discarding received data with MSG_TRUNC
+ *
+ * @objective Check that on a TCP socket part of received data may be discarded
+ *            by calling receive function with MSG_TRUNC flag.
+ *
+ * @param func        Function to be used in the test to receive data:
+ *      - recv
+ *      - recvfrom
+ *      - recvmsg
+ *      - recvmmsg
+ * @param null_buffer Use @c NULL or non-NULL buffer in @b recv() function:
+ *      - FALSE
+ *      - TRUE
+ *
+ * @par Scenario:
+ *
+ * @author Anton Protasov <Anton.Protasov@oktetlabs.ru>
+ */
+
+#define TE_TEST_NAME "tcp/check_recv_truncate"
+
+#include "sockapi-test.h"
+
+int
+main(int argc, char *argv[])
+{
+    rcf_rpc_server             *pco_iut = NULL;
+    rcf_rpc_server             *pco_tst = NULL;
+    int                         iut_s = -1;
+    int                         tst_s = -1;
+    const struct sockaddr      *iut_addr;
+    const struct sockaddr      *tst_addr;
+
+    rpc_recv_f                  func;
+    char                       *tx_buf;
+    char                       *rx_buf;
+    char                        rx_buf_orig[SOCKTS_MSG_STREAM_MAX];
+    size_t                      tx_buf_len = SOCKTS_MSG_STREAM_MAX;
+    size_t                      buf_trunc_size;
+    te_bool                     is_readable = FALSE;
+    te_bool                     null_buffer;
+
+    TEST_START;
+    TEST_GET_PCO(pco_iut);
+    TEST_GET_PCO(pco_tst);
+    TEST_GET_ADDR(pco_iut, iut_addr);
+    TEST_GET_ADDR(pco_tst, tst_addr);
+    TEST_GET_RECV_FUNC(func);
+    TEST_GET_BOOL_PARAM(null_buffer);
+
+    tx_buf = sockts_make_buf_stream(&tx_buf_len);
+    buf_trunc_size = rand_range(tx_buf_len / 3, 2 * tx_buf_len / 3);
+    rx_buf = te_make_buf_by_len(SOCKTS_MSG_STREAM_MAX);
+    memcpy(rx_buf_orig, rx_buf, SOCKTS_MSG_STREAM_MAX);
+
+    TEST_STEP("Create two TCP sockets and connect them");
+    GEN_CONNECTION(pco_iut, pco_tst, RPC_SOCK_STREAM, RPC_PROTO_DEF,
+                   iut_addr, tst_addr, &iut_s, &tst_s);
+    sockts_test_connection(pco_iut, iut_s, pco_tst, tst_s);
+
+    TEST_STEP("Send some data from IUT to TST");
+    rpc_send(pco_iut, iut_s, tx_buf, tx_buf_len, 0);
+
+    TEST_STEP("Call @p func with @c MSG_TRUNC flag to discard some data received "
+              "from peer");
+    rc = func(pco_tst, tst_s, (null_buffer ? NULL : rx_buf),
+              buf_trunc_size, RPC_MSG_TRUNC);
+
+    if (rc != (long int)buf_trunc_size)
+            TEST_VERDICT("Size mismatch with MSG_TRUNC");
+
+    if (!null_buffer)
+    {
+        if (memcmp(rx_buf, rx_buf_orig, buf_trunc_size) != 0)
+            TEST_VERDICT("Received buffer with MSG_TRUNC was modified");
+    }
+
+    TEST_STEP("Call @p func without MSG_TRUNC, check that it returns remained data");
+    rc = func(pco_tst, tst_s, rx_buf, tx_buf_len, 0);
+    SOCKTS_CHECK_RECV(pco_tst, tx_buf + buf_trunc_size, rx_buf,
+                      tx_buf_len - buf_trunc_size, rc);
+    RPC_GET_READABILITY(is_readable, pco_tst, tst_s, 0);
+    if (is_readable)
+        TEST_VERDICT("Socket is readable after reading all the data");
+
+    TEST_STEP("Send and receive packet without @c MSG_TRUNC flag");
+    sockts_test_connection(pco_iut, iut_s, pco_tst, tst_s);
+
+    TEST_SUCCESS;
+
+cleanup:
+    CLEANUP_RPC_CLOSE(pco_iut, iut_s);
+    CLEANUP_RPC_CLOSE(pco_tst, tst_s);
+
+    free(tx_buf);
+    free(rx_buf);
+
+    TEST_END;
+}

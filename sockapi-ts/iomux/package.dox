@@ -1,0 +1,58 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup iomux I/O Multiplexing
+@ingroup sockapi
+@{
+
+The test package contains complex tests on I/O Multiplexing Socket API
+functions: @b select(), @b pselect() and @b poll().  Behaviour on
+sockets in different states, under stress conditions, in multi thread
+environment using the same and different sockets, robustness against
+@b fork() call are tested.
+
+
+@author Andrew Rybchenko <Andrew.Rybchenko@oktetlabs.ru>
+
+
+@par Remote routines:
+
+- @ref iomux-flooder
+- @ref iomux-echoer
+
+
+@par Tests:
+
+-# @ref iomux-timeout_update
+-# @ref iomux-write_timeout
+-# @ref iomux-read_write_nbio
+-# @ref iomux-ret_count_rd_wr
+-# @ref iomux-ret_count_peer_close
+-# @ref iomux-peer_shut_rd
+-# @ref iomux-peer_shut_wr
+-# @ref iomux-peer_shut_rdwr
+-# @ref iomux-sock_shut_rd
+-# @ref iomux-sock_shut_wr
+-# @ref iomux-sock_shut_rdwr
+-# @ref iomux-peer_close_before_accept
+-# @ref iomux-oob
+-# @ref iomux-iomux_sigmask
+-# @ref iomux-mix_fds
+-# @ref iomux-fork_robust
+-# @ref iomux-pair_bidir_perf
+-# @ref iomux-trio_bidir_perf
+-# @ref iomux-pending_error
+-# @ref iomux-iomux_timeout
+-# @ref iomux-thread_shut_sock
+-# @ref iomux-two_sockets
+-# @ref iomux-notconn
+-# @ref iomux-iomux_one_pipe
+-# @ref iomux-rdhup
+-# @ref iomux-udp_send_flooding
+-# @ref iomux-nb_accept_read
+-# @ref iomux-ack_with_data
+-# @ref iomux-iomux_wrong_event
+
+@}
+*/

@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+    
+    <description>User-Level Vulnerabilities</description>
+    
+    <author mailto="Elena.Vengerova@oktetlabs.ru"/>
+
+    <req id="ULV" sticky="true"/>
+    <req id="ONLOAD_ONLY" sticky="true"/>
+
+    <session>
+
+        <run>
+            <script name="netload"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="process_num">
+                <value>3</value>
+            </arg>
+            <arg name="tcp_num">
+                <value>4</value>
+            </arg>
+            <arg name="udp_num">
+                <value>2</value>
+            </arg>
+            <arg name="min_length">
+                <value>1</value>
+            </arg>
+            <arg name="max_length">
+                <value>1000</value>
+            </arg>
+            <arg name="rate">
+                <value>100</value>
+            </arg>
+            <arg name="time2run">
+                <value>5</value>
+            </arg>
+            <arg name="c_script">
+                <value>env</value>
+            </arg>
+            <arg name="c_pid" type="boolean"/>
+            <arg name="c_socks" type="boolean"/>
+        </run>
+        
+<!--
+        <run>
+            <script name="mmap"/>
+        </run>
+             
+        <run>
+            <script name="nopage"/>
+        </run>
+             
+        <run>
+            <script name="bad_pktid"/>
+        </run>
+             
+        <run>
+            <script name="bad_ipid"/>
+        </run>
+             
+        <run>
+            <script name="bad_mtu"/>
+        </run>
+             
+        <run>
+            <script name="bad_timer_state"/>
+        </run>
+             
+        <run>
+            <script name="timer_callback"/>
+        </run>
+             
+        <run>
+            <script name="tcp_close"/>
+        </run>
+             
+        <run>
+            <script name="tcp_accept"/>
+        </run>
+             
+        <run>
+            <script name="open_sock"/>
+        </run>
+             
+        <run>
+            <script name="aio"/>
+        </run>
+             
+        <run>
+            <script name="blocking"/>
+        </run>
+             
+        <run>
+            <script name="defrag"/>
+        </run>
+             
+        <run>
+            <script name="dma"/>
+        </run>
+             
+        <run>
+            <script name="filters"/>
+        </run>
+             
+        <run>
+            <script name="pkt_segments"/>
+        </run>
+             
+        <run>
+            <script name="tcp_processing"/>
+        </run>
+             
+        <run>
+            <script name="udp_rx"/>
+        </run>
+             
+        <run>
+            <script name="random"/>
+        </run>
+             
+        <run>
+            <script name="more_pktbufs"/>
+        </run>
+-->             
+    </session>
+</package>

@@ -1,0 +1,51 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup level5-ext_stackname Onload private API where global EF_NAME is not applicable
+@ingroup level5
+@{
+
+@author Andrey Dmitrov <Andrey.Dmitrov@oktetlabs.ru>
+
+@par Tests:
+
+-# @ref ext_stackname-dont_acc_and_set_stackname
+-# @ref ext_stackname-set_stackname_null
+-# @ref ext_stackname-set_stackname_scope_who
+-# @ref ext_stackname-set_stackname_scope_user
+-# @ref ext_stackname-set_stackname_scope_user_thread
+-# @ref ext_stackname-set_stackname_scope_nochange
+-# @ref ext_stackname-set_stackname_scope_process
+-# @ref ext_stackname-set_stackname_scope_thread
+-# @ref ext_stackname-set_stackname_scope_global
+-# @ref ext_stackname-set_stackname_caller_dead
+-# @ref ext_stackname-set_stackname_move_fd
+-# @ref ext_stackname-set_stackname_nochange_restore
+-# @ref ext_stackname-set_stackname_null_restore
+-# @ref ext_stackname-set_stackname_restore_non_saved
+-# @ref ext_stackname-set_stackname_save_restore
+-# @ref ext_stackname-set_stackname_scope_process_ignore
+-# @ref ext_stackname-bind_move_fd
+-# @ref ext_stackname-fcntl_move_fd
+-# @ref ext_stackname-ioctl_move_fd
+-# @ref ext_stackname-iomux_move_fd
+-# @ref ext_stackname-move_epoll_fd
+-# @ref ext_stackname-move_fd_other_user
+-# @ref ext_stackname-move_unsupp_fd
+-# @ref ext_stackname-pipe_move_fd
+-# @ref ext_stackname-problematic_rxq_move_fd
+-# @ref ext_stackname-save_move_restore
+-# @ref ext_stackname-setsockopt_move_fd
+-# @ref ext_stackname-sighandler_move_fd
+-# @ref ext_stackname-sock_ping_pong
+-# @ref ext_stackname-stack_nochange_move_fd
+-# @ref ext_stackname-tcp_conn_move_fd
+-# @ref ext_stackname-tcp_overfill_queue_move_fd
+-# @ref ext_stackname-unbound_udp_move_fd
+-# @ref ext_stackname-close_init_stack_after_fork
+-# @ref ext_stackname-unsupp_socket_move_fd
+-# @ref ext_stackname-linger_move_fd
+
+@}
+*/

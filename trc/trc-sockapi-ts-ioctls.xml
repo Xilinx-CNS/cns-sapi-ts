@@ -1,0 +1,2777 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<test name="ioctls" type="package">
+  <objective>IOCTL Requests</objective>
+  <notes/>
+  <iter result="PASSED">
+    <notes/>
+    <test name="siocgstamp" type="script">
+      <objective>Check that SIOCGSTAMP, SIOCGSTAMPNS requests and SO_TIMESTAMP and SO_TIMESTAMPNS socket options return a timeval/timespec structure containing the time at which the datagram was received.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="get_ioctl_after_sockopt"/>
+        <arg name="recv_before_sockopt">TRUE</arg>
+        <arg name="use_ns">FALSE</arg>
+        <arg name="use_so_timestamp"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="get_ioctl_after_sockopt">FALSE</arg>
+        <arg name="recv_before_sockopt"/>
+        <arg name="use_ns"/>
+        <arg name="use_so_timestamp">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="get_ioctl_after_sockopt">TRUE</arg>
+        <arg name="recv_before_sockopt">FALSE</arg>
+        <arg name="use_ns"/>
+        <arg name="use_so_timestamp"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="get_ioctl_after_sockopt"/>
+        <arg name="recv_before_sockopt">TRUE</arg>
+        <arg name="use_ns">TRUE</arg>
+        <arg name="use_so_timestamp"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="get_ioctl_after_sockopt"/>
+        <arg name="recv_before_sockopt"/>
+        <arg name="use_ns"/>
+        <arg name="use_so_timestamp">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="func">recvmsg</arg>
+        <arg name="get_ioctl_after_sockopt"/>
+        <arg name="recv_before_sockopt"/>
+        <arg name="use_ns"/>
+        <arg name="use_so_timestamp"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="func">recvmmsg</arg>
+        <arg name="get_ioctl_after_sockopt"/>
+        <arg name="recv_before_sockopt"/>
+        <arg name="use_ns"/>
+        <arg name="use_so_timestamp"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="func"/>
+        <arg name="get_ioctl_after_sockopt"/>
+        <arg name="recv_before_sockopt"/>
+        <arg name="use_ns"/>
+        <arg name="use_so_timestamp"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="func"/>
+        <arg name="get_ioctl_after_sockopt"/>
+        <arg name="recv_before_sockopt"/>
+        <arg name="use_ns"/>
+        <arg name="use_so_timestamp"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="siocgstamp_null" type="script">
+      <objective>Check the behavior of SIOCGSTAMP ioctl() requests with NULL argument.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="is_null">FALSE</arg>
+        <arg name="req">SIOCGSTAMP</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="is_null"/>
+        <arg name="req">SIOCGSTAMPNS</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="is_null">TRUE</arg>
+        <arg name="req">SIOCGSTAMP</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="siocgstamp_two_senders" type="script">
+      <objective>Check the behavior of SIOCGSTAMP SIOCGSTAMPNS ioctl() requests and SO_TIMESTAMP and SO_TIMESTAMPNS with two senders</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:wildcard,addr:'iut1_addr':inet:unicast},{{'pco_tst':tester},addr:'tst1_addr':inet:unicast}},IUT{'iut_host'{addr:'iut2_addr':inet:unicast},{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}},'pco_tst1'='pco_tst'</arg>
+        <arg name="use_ns"/>
+        <arg name="use_so_timestamp"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},'pco_tst2'='pco_tst','pco_tst1'='pco_tst','iut1_addr'='iut_addr','iut2_addr'='iut_addr'</arg>
+        <arg name="use_ns"/>
+        <arg name="use_so_timestamp"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:wildcard,addr:'iut1_addr':inet:unicast},{{'pco_tst':tester},addr:'tst1_addr':inet:unicast}},tester{'iut_host'{addr:'iut2_addr':inet:unicast},{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}},'pco_tst1'='pco_tst'</arg>
+        <arg name="use_ns">TRUE</arg>
+        <arg name="use_so_timestamp"/>
+        <notes/>
+        <results tags="linux&amp;v5">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>SIOCGSTAMP precision is too low</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:wildcard,addr:'iut1_addr':inet:unicast},{{'pco_tst':tester},addr:'tst1_addr':inet:unicast}},tester{'iut_host'{addr:'iut2_addr':inet:unicast},{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}},'pco_tst1'='pco_tst'</arg>
+        <arg name="use_ns">FALSE</arg>
+        <arg name="use_so_timestamp"/>
+        <notes/>
+        <results tags="linux&amp;v5">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>SIOCGSTAMP precision is too low</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,{'pco_tst':tester}}},'pco_tst2'='pco_tst','pco_tst1'='pco_tst','iut1_addr'='iut_addr','iut2_addr'='iut_addr'</arg>
+        <arg name="use_ns">TRUE</arg>
+        <arg name="use_so_timestamp"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,{'pco_tst':IUT}}},'pco_tst2'='pco_tst','pco_tst1'='pco_tst','iut1_addr'='iut_addr','iut2_addr'='iut_addr'</arg>
+        <arg name="use_ns">TRUE</arg>
+        <arg name="use_so_timestamp"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,{'pco_tst1':tester}},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},'pco_tst2'='pco_tst','iut1_addr'='iut_addr','iut2_addr'='iut_addr'</arg>
+        <arg name="use_ns">TRUE</arg>
+        <arg name="use_so_timestamp"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,{'pco_tst1':IUT}},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},'pco_tst2'='pco_tst','iut1_addr'='iut_addr','iut2_addr'='iut_addr'</arg>
+        <arg name="use_ns">TRUE</arg>
+        <arg name="use_so_timestamp"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,{'pco_tst':tester}}},'pco_tst2'='pco_tst','pco_tst1'='pco_tst','iut1_addr'='iut_addr','iut2_addr'='iut_addr'</arg>
+        <arg name="use_ns">FALSE</arg>
+        <arg name="use_so_timestamp"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,{'pco_tst':IUT}}},'pco_tst2'='pco_tst','pco_tst1'='pco_tst','iut1_addr'='iut_addr','iut2_addr'='iut_addr'</arg>
+        <arg name="use_ns">FALSE</arg>
+        <arg name="use_so_timestamp"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,{'pco_tst1':tester}},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},'pco_tst2'='pco_tst','iut1_addr'='iut_addr','iut2_addr'='iut_addr'</arg>
+        <arg name="use_ns">FALSE</arg>
+        <arg name="use_so_timestamp"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,{'pco_tst1':IUT}},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},'pco_tst2'='pco_tst','iut1_addr'='iut_addr','iut2_addr'='iut_addr'</arg>
+        <arg name="use_ns">FALSE</arg>
+        <arg name="use_so_timestamp"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,{'pco_tst2':tester}},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},'pco_tst1'='pco_tst','iut1_addr'='iut_addr','iut2_addr'='iut_addr'</arg>
+        <arg name="use_ns">TRUE</arg>
+        <arg name="use_so_timestamp"/>
+        <notes/>
+        <results tags="linux&amp;v5">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>SIOCGSTAMP precision is too low</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,{'pco_tst2':IUT}},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},'pco_tst1'='pco_tst','iut1_addr'='iut_addr','iut2_addr'='iut_addr'</arg>
+        <arg name="use_ns">TRUE</arg>
+        <arg name="use_so_timestamp"/>
+        <notes/>
+        <results tags="linux&amp;v5">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>SIOCGSTAMP precision is too low</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,{'pco_tst2':tester}},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},'pco_tst1'='pco_tst','iut1_addr'='iut_addr','iut2_addr'='iut_addr'</arg>
+        <arg name="use_ns">FALSE</arg>
+        <arg name="use_so_timestamp"/>
+        <notes/>
+        <results tags="linux&amp;v5">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>SIOCGSTAMP precision is too low</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,{'pco_tst2':IUT}},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},'pco_tst1'='pco_tst','iut1_addr'='iut_addr','iut2_addr'='iut_addr'</arg>
+        <arg name="use_ns">FALSE</arg>
+        <arg name="use_so_timestamp"/>
+        <notes/>
+        <results tags="linux&amp;v5">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>SIOCGSTAMP precision is too low</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="siocpgrp" type="script">
+      <objective>Check that SIOCSPGRP request sets the owner of the socket and SIOCGPGRP request to get the current owner of the socket.</objective>
+      <notes>The test fails on Linux 2.4.27 and passes on Linux 2.6.</notes>
+      <iter result="PASSED">
+        <arg name="close_inherited_sock"/>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="sock_type"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_inherited_sock"/>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="sock_type"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_inherited_sock"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_inherited_sock"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="fioasync" type="script">
+      <objective>Check that FIOASYNC request enables signal-driven I/O.</objective>
+      <notes>The test fails on Linux 2.4 and passes on Linux 2.6.</notes>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="setown_before_handover"/>
+        <arg name="sig_to_set"/>
+        <arg name="sock_type"/>
+        <arg name="use_epollet"/>
+        <arg name="use_iomux_mask"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connect_send"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux"/>
+        <arg name="setown_before_handover"/>
+        <arg name="sig_to_set"/>
+        <arg name="sock_type"/>
+        <arg name="use_epollet"/>
+        <arg name="use_iomux_mask"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connect_send">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux"/>
+        <arg name="setown_before_handover"/>
+        <arg name="sig_to_set">-1</arg>
+        <arg name="sock_type"/>
+        <arg name="use_epollet"/>
+        <arg name="use_iomux_mask"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connect_send">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux"/>
+        <arg name="setown_before_handover"/>
+        <arg name="sig_to_set">0</arg>
+        <arg name="sock_type"/>
+        <arg name="use_epollet"/>
+        <arg name="use_iomux_mask"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connect_send">FALSE</arg>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux"/>
+        <arg name="setown_before_handover"/>
+        <arg name="sig_to_set"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="use_epollet"/>
+        <arg name="use_iomux_mask"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connect_send"/>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux"/>
+        <arg name="setown_before_handover">FALSE</arg>
+        <arg name="sig_to_set">-1</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="use_epollet"/>
+        <arg name="use_iomux_mask"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connect_send"/>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux"/>
+        <arg name="setown_before_handover">FALSE</arg>
+        <arg name="sig_to_set">0</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="use_epollet"/>
+        <arg name="use_iomux_mask"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connect_send"/>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux"/>
+        <arg name="setown_before_handover"/>
+        <arg name="sig_to_set">-1</arg>
+        <arg name="sock_type"/>
+        <arg name="use_epollet"/>
+        <arg name="use_iomux_mask"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connect_send"/>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux"/>
+        <arg name="setown_before_handover"/>
+        <arg name="sig_to_set">0</arg>
+        <arg name="sock_type"/>
+        <arg name="use_epollet"/>
+        <arg name="use_iomux_mask"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connect_send">FALSE</arg>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux"/>
+        <arg name="setown_before_handover"/>
+        <arg name="sig_to_set">SIGIO</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="use_epollet"/>
+        <arg name="use_iomux_mask"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connect_send">FALSE</arg>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux"/>
+        <arg name="setown_before_handover"/>
+        <arg name="sig_to_set">SIGUSR1</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="use_epollet"/>
+        <arg name="use_iomux_mask"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connect_send">FALSE</arg>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux"/>
+        <arg name="setown_before_handover"/>
+        <arg name="sig_to_set">SIGUSR2</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="use_epollet"/>
+        <arg name="use_iomux_mask"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connect_send"/>
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="setown_before_handover">TRUE</arg>
+        <arg name="sig_to_set"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="use_epollet"/>
+        <arg name="use_iomux_mask"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connect_send">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux"/>
+        <arg name="setown_before_handover"/>
+        <arg name="sig_to_set">SIGIO</arg>
+        <arg name="sock_type"/>
+        <arg name="use_epollet"/>
+        <arg name="use_iomux_mask"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connect_send">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux"/>
+        <arg name="setown_before_handover"/>
+        <arg name="sig_to_set">SIGUSR1</arg>
+        <arg name="sock_type"/>
+        <arg name="use_epollet"/>
+        <arg name="use_iomux_mask"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connect_send">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux"/>
+        <arg name="setown_before_handover"/>
+        <arg name="sig_to_set">SIGUSR2</arg>
+        <arg name="sock_type"/>
+        <arg name="use_epollet"/>
+        <arg name="use_iomux_mask"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connect_send"/>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux"/>
+        <arg name="setown_before_handover">FALSE</arg>
+        <arg name="sig_to_set">SIGIO</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="use_epollet"/>
+        <arg name="use_iomux_mask"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connect_send"/>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux"/>
+        <arg name="setown_before_handover">FALSE</arg>
+        <arg name="sig_to_set">SIGUSR1</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="use_epollet"/>
+        <arg name="use_iomux_mask"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connect_send"/>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux"/>
+        <arg name="setown_before_handover">FALSE</arg>
+        <arg name="sig_to_set">SIGUSR2</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="use_epollet"/>
+        <arg name="use_iomux_mask"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connect_send"/>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux"/>
+        <arg name="setown_before_handover"/>
+        <arg name="sig_to_set">SIGIO</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="use_epollet"/>
+        <arg name="use_iomux_mask"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connect_send"/>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux"/>
+        <arg name="setown_before_handover"/>
+        <arg name="sig_to_set">SIGUSR1</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="use_epollet"/>
+        <arg name="use_iomux_mask"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connect_send"/>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux"/>
+        <arg name="setown_before_handover"/>
+        <arg name="sig_to_set">SIGUSR2</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="use_epollet"/>
+        <arg name="use_iomux_mask"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connect_send">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux"/>
+        <arg name="setown_before_handover"/>
+        <arg name="sig_to_set">SIGIO</arg>
+        <arg name="sock_type"/>
+        <arg name="use_epollet"/>
+        <arg name="use_iomux_mask"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connect_send">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux"/>
+        <arg name="setown_before_handover"/>
+        <arg name="sig_to_set">SIGUSR1</arg>
+        <arg name="sock_type"/>
+        <arg name="use_epollet"/>
+        <arg name="use_iomux_mask"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connect_send">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux"/>
+        <arg name="setown_before_handover"/>
+        <arg name="sig_to_set">SIGUSR2</arg>
+        <arg name="sock_type"/>
+        <arg name="use_epollet"/>
+        <arg name="use_iomux_mask"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="fionbio_thread_unblock_recv" type="script">
+      <objective>Try FIONBIO from thread when recv() operation is blocked in another thread.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5" key="ON-1901">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>Child thread was blocked in recv() call</verdict>
+            <verdict>Child thread was not unblocked even after data transmission from tester</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5" key="ON-1901">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>Child thread was blocked in recv() call</verdict>
+            <verdict>Child thread was not unblocked even after data transmission from tester</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="fionbio_thread_unblock_send" type="script">
+      <objective>Try FIONBIO from thread when send() operation is blocked in another thread.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="fionbio_thread_unblock_connect" type="script">
+      <objective>Try FIONBIO from thread when connect() operation is blocked in another thread.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'alien_hwaddr':ether:alien},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="fionbio_thread_unblock_accept" type="script">
+      <objective>Try FIONBIO from thread when accept() operation is blocked in another thread.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'alien_hwaddr':ether:alien},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="fionbio_accept" type="script">
+      <objective>Check that FIONBIO request affects accept() and accept4() functions called on SOCK_STREAM socket.</objective>
+      <notes/>
+      <iter result="PASSED">
+	<arg name="env"/>
+        <arg name="func"/>
+	<arg name="func_flag"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="fionbio_connect" type="script">
+      <objective>Check that FIONBIO request affects on connect() function called on SOCK_STREAM socket.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="gw_exists">FALSE</arg>
+        <arg name="bind_iut">TRUE</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>connect() called the second time on the socket with FIONBIO ioctl() set returned 0</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="gw_exists">FALSE</arg>
+        <arg name="bind_iut">FALSE</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>connect() called the second time on the socket with FIONBIO ioctl() set returned 0</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="gw_exists">FALSE</arg>
+        <arg name="bind_iut">TRUE</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>connect() called the second time on the socket with FIONBIO ioctl() set returned 0</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="gw_exists">FALSE</arg>
+        <arg name="bind_iut">FALSE</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>connect() called the second time on the socket with FIONBIO ioctl() set returned 0</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="gw_exists">FALSE</arg>
+        <arg name="bind_iut">TRUE</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>connect() called the second time on the socket with FIONBIO ioctl() set returned 0</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="gw_exists">FALSE</arg>
+        <arg name="bind_iut">FALSE</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>connect() called the second time on the socket with FIONBIO ioctl() set returned 0</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},'gw'{{'pco_gw':tester},addr:'gw_iut_addr':inet:unicast}},{'gw'{addr:'gw_tst_addr':inet:unicast,addr:'alien_link_addr':ether:alien},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+        <arg name="gw_exists">TRUE</arg>
+        <arg name="bind_iut">FALSE</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>connect() called the second time on the socket with FIONBIO ioctl() set returned 0</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},'gw'{{'pco_gw':tester},addr:'gw_iut_addr':inet:unicast}},{'gw'{addr:'gw_tst_addr':inet:unicast,addr:'alien_link_addr':ether:alien},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+        <arg name="gw_exists">TRUE</arg>
+        <arg name="bind_iut">TRUE</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>connect() called the second time on the socket with FIONBIO ioctl() set returned 0</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="fionbio" type="script">
+      <objective>Check that FIONBIO request affects the behaviour of receive functions.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="func">onload_zc_hlrx_recv_copy</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(ool_loop=0|ool_loop=1&amp;!reuse_stack)" notes="onload_zc_hlrx_recv_copy() is supported only for accelerated sockets">
+          <result value="FAILED">
+            <verdict>Checking before FIONBIO is enabled: tested function unexpectedly failed with error RPC-ESOCKTNOSUPPORT</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="func">onload_zc_hlrx_recv_copy</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(ool_loop=0|ool_loop=1&amp;!reuse_stack)" notes="onload_zc_hlrx_recv_copy() is supported only for accelerated sockets">
+          <result value="FAILED">
+            <verdict>Checking before FIONBIO is enabled: tested function unexpectedly failed with error RPC-ESOCKTNOSUPPORT</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="func">onload_zc_hlrx_recv_zc</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(ool_loop=0|ool_loop=1&amp;!reuse_stack)" notes="onload_zc_hlrx_recv_zc() is not supported for not accelerated socket">
+          <result value="FAILED">
+            <verdict>Checking before FIONBIO is enabled: tested function unexpectedly failed with error RPC-ESOCKTNOSUPPORT</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="func">onload_zc_hlrx_recv_zc</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(ool_loop=0|ool_loop=1&amp;!reuse_stack)" notes="onload_zc_hlrx_recv_zc() is not supported for not accelerated socket">
+          <result value="FAILED">
+            <verdict>Checking before FIONBIO is enabled: tested function unexpectedly failed with error RPC-ESOCKTNOSUPPORT</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(ool_loop=0|ool_loop=1&amp;!reuse_stack)" notes="onload_zc_recv() is not supported for not accelerated socket">
+          <result value="FAILED">
+            <verdict>Checking before FIONBIO is enabled: tested function unexpectedly failed with error RPC-ESOCKTNOSUPPORT</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(ool_loop=0|ool_loop=1&amp;!reuse_stack)" notes="onload_zc_recv() is not supported for not accelerated socket">
+          <result value="FAILED">
+            <verdict>Checking before FIONBIO is enabled: tested function unexpectedly failed with error RPC-ESOCKTNOSUPPORT</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="func">recvmmsg</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(ool_loop=1&amp;reuse_stack|ool_loop&gt;1)" notes="recvmmsg() is not supported for TCP socket on onload">
+          <result value="FAILED">
+            <verdict>Checking before FIONBIO is enabled: tested function unexpectedly failed with error RPC-ENOSYS</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="func">recvmmsg</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(ool_loop=1&amp;reuse_stack|ool_loop&gt;1)" notes="recvmmsg() is not supported for TCP socket on onload">
+          <result value="FAILED">
+            <verdict>Checking before FIONBIO is enabled: tested function unexpectedly failed with error RPC-ENOSYS</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="func">onload_zc_hlrx_recv_copy</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5" notes="onload_zc_hlrx_recv_copy() is supported only for accelerated sockets">
+          <result value="FAILED">
+            <verdict>Checking before FIONBIO is enabled: tested function unexpectedly failed with error RPC-ESOCKTNOSUPPORT</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="func">onload_zc_hlrx_recv_copy</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5" notes="onload_zc_hlrx_recv_copy() is supported only for accelerated sockets">
+          <result value="FAILED">
+            <verdict>Checking before FIONBIO is enabled: tested function unexpectedly failed with error RPC-ESOCKTNOSUPPORT</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="func">onload_zc_hlrx_recv_zc</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5" notes="onload_zc_hlrx_recv_zc() function is supported only for accelerated sockets">
+          <result value="FAILED">
+            <verdict>Checking before FIONBIO is enabled: tested function unexpectedly failed with error RPC-ESOCKTNOSUPPORT</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="func">onload_zc_hlrx_recv_zc</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5" notes="onload_zc_hlrx_recv_zc() function is supported only for accelerated sockets">
+          <result value="FAILED">
+            <verdict>Checking before FIONBIO is enabled: tested function unexpectedly failed with error RPC-ESOCKTNOSUPPORT</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5" notes="onload_zc_recv() function is supported only for accelerated sockets">
+          <result value="FAILED">
+            <verdict>Checking before FIONBIO is enabled: tested function unexpectedly failed with error RPC-ESOCKTNOSUPPORT</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5" notes="onload_zc_recv() function is supported only for accelerated sockets">
+          <result value="FAILED">
+            <verdict>Checking before FIONBIO is enabled: tested function unexpectedly failed with error RPC-ESOCKTNOSUPPORT</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="func">recvmmsg</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" notes="recvmmsg() is not supported for TCP socket on onload">
+          <result value="FAILED">
+            <verdict>Checking before FIONBIO is enabled: tested function unexpectedly failed with error RPC-ENOSYS</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="func">recvmmsg</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux&amp;v5" notes="recvmmsg() is not supported for TCP socket on onload">
+          <result value="FAILED">
+            <verdict>Checking before FIONBIO is enabled: tested function unexpectedly failed with error RPC-ENOSYS</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="func">recvmmsg</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="func">onload_zc_hlrx_recv_zc</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="func">onload_zc_hlrx_recv_copy</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="func">recvmmsg</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="func">onload_zc_hlrx_recv_zc</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="func">onload_zc_hlrx_recv_copy</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="func">recvmmsg</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="func">onload_zc_hlrx_recv_zc</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="func">onload_zc_hlrx_recv_copy</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="func">recvmmsg</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="func">onload_zc_hlrx_recv_zc</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="func">onload_zc_hlrx_recv_copy</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="func">onload_zc_hlrx_recv_zc</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="func">onload_zc_hlrx_recv_copy</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="func">recvmmsg</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="func">onload_zc_hlrx_recv_zc</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="func">onload_zc_hlrx_recv_copy</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="func">recvmmsg</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">read</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">readv</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">recv</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">recvfrom</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">recvmsg</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="fionread_udp" type="script">
+      <objective>Check that FIONREAD and SIOCINQ requests return the current number of bytes on the socket's receive queue. For UDP sockets this includes all queued datagrams.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="n_bufs">31</arg>
+        <arg name="req">SIOCINQ</arg>
+        <notes/>
+        <results tags="ppc64" key="OL 8283" notes="Pages allocating for recv queue is suboptimal with net driver: ixgbe, 3.9.15-k">
+          <result value="FAILED">
+            <verdict>Not all datagrams successfully received</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="n_bufs">31</arg>
+        <arg name="req">FIONREAD</arg>
+        <notes/>
+        <results tags="ppc64" key="OL 8283" notes="Pages allocating for recv queue is suboptimal with net driver: ixgbe, 3.9.15-k">
+          <result value="FAILED">
+            <verdict>Not all datagrams successfully received</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="n_bufs">4</arg>
+        <arg name="req">SIOCINQ</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="n_bufs"/>
+        <arg name="req">SIOCINQ</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="n_bufs"/>
+        <arg name="req">SIOCINQ</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="n_bufs">4</arg>
+        <arg name="req">FIONREAD</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="n_bufs"/>
+        <arg name="req">FIONREAD</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="n_bufs"/>
+        <arg name="req">FIONREAD</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="fionread_tcp" type="script">
+      <objective>Check that FIONREAD request returns the current number of receive queue bytes on the socket of the SOCK_STREAM type.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="req">SIOCINQ</arg>
+        <notes/>
+        <results tags="ppc64">
+          <result value="PASSED"/>
+          <result value="FAILED" key="OL 8162" notes="Pages allocating for recv queue is suboptimal with net driver: ixgbe, 3.9.15-k">
+            <verdict>Number of data in receive buffer is not equal to expected</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="req">SIOCINQ</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="req">SIOCINQ</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="req">FIONREAD</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="req">FIONREAD</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="req">FIONREAD</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_fake</arg>
+        <arg name="req"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="fionread_listening" type="script">
+      <objective>Check that FIONREAD ioctl() call cannot be applied to listening socket.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">FIONREAD</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCINQ</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="fionread_syn_sent" type="script">
+      <objective>Check the behavior of FIONREAD/SIOCINQ request on TCP socket in SYN-SENT state.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="req">FIONREAD</arg>
+        <arg name="env">{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},'gw'{{'pco_gw':tester},addr:'gw_iut_addr':inet:unicast}},{'gw'{addr:'gw_tst_addr':inet:unicast,addr:'alien_link_addr':ether:alien},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="req">SIOCINQ</arg>
+        <arg name="env">{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},'gw'{{'pco_gw':tester},addr:'gw_iut_addr':inet:unicast}},{'gw'{addr:'gw_tst_addr':inet:unicast,addr:'alien_link_addr':ether:alien},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="siocgifconf" type="script">
+      <objective>Check that SIOCGIFCONF request returns the list of interfaces registered in the system.</objective>
+      <notes>History in Linux 4746"</notes>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFCONF) called with ifconf structure filled in as {ifc_len = 0, ifc_req = NULL} returns -1, but: errno is set to ENOTTY instead of EINVAL</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="siocgifbrdaddr" type="script">
+      <objective>Check that SIOCGIFBRDADDR request returns broadcast address of the interface requested.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="siocgifhwaddr" type="script">
+      <objective>Check that SIOCGIFHWADDR request returns link layer address of the interface.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="siocifmtu" type="script">
+      <objective>Check that SIOCGIFMTU request returns MTU of specified interface, and SIOCSIFMTU sets a new MTU value.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="siocgifaddr" type="script">
+      <objective>Check that SIOCGIFADDR request returns primary address of specified interface.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="siocgifnameindex" type="script">
+      <objective>Check that SIOCGIFNAME/SIOCGIFINDEX requests provide co-mapping between interface's name and index.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="ioctl"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="ioctl"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="siocifnetmask" type="script">
+      <objective>Check that SIOCGIFNETMASK request returns network mask of specified interface, and SIOCSIFNETMASK updates network mask of specified interface.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="siocifflags" type="script">
+      <objective>Check that SIOCGIFFLAGS request returns flags associated with specified interface.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="siocsif_inval_sa_family" type="script">
+      <objective>Check that ioctl() varifies the value of sa_family field in sockaddr structure passed in ifreq structure for SIOCSIF... requests deal with network address, such as SIOCSIFNETMASK, SIOCSIFBRDADDR, SIOCSIFDSTADDR, SIOCSIFADDR.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="af"/>
+        <arg name="env"/>
+        <arg name="set_req">SIOCSIFDSTADDR</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFDSTADDR) called with AF_UNKNOWN 'sa_family' field of sockaddr structure returned -1 with errno EINVAL</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="af"/>
+        <arg name="env"/>
+        <arg name="set_req">SIOCSIFBRDADDR</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFBRDADDR) called with AF_UNKNOWN 'sa_family' field of sockaddr structure returned -1 with errno EINVAL</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="af"/>
+        <arg name="env"/>
+        <arg name="set_req">SIOCSIFADDR</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFADDR) called with AF_UNKNOWN 'sa_family' field of sockaddr structure returned -1 with errno EINVAL</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="af"/>
+        <arg name="env"/>
+        <arg name="set_req">SIOCSIFNETMASK</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFNETMASK) called with AF_UNKNOWN 'sa_family' field of sockaddr structure returned -1 with errno EINVAL</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="af"/>
+        <arg name="env"/>
+        <arg name="set_req">SIOCSIFDSTADDR</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFDSTADDR) failed with errno ENOTTY</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;!v5|v5&amp;!scalable_passive&amp;!scalable_active&amp;!socket_cache">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFDSTADDR) called with AF_UNKNOWN 'sa_family' field of sockaddr structure returned -1 with errno EINVAL</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="af"/>
+        <arg name="env"/>
+        <arg name="set_req">SIOCSIFBRDADDR</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFBRDADDR) failed with errno ENOTTY</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;!v5|v5&amp;!scalable_passive&amp;!scalable_active&amp;!socket_cache">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFBRDADDR) called with AF_UNKNOWN 'sa_family' field of sockaddr structure returned -1 with errno EINVAL</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="af"/>
+        <arg name="env"/>
+        <arg name="set_req">SIOCSIFADDR</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFADDR) failed with errno ENOTTY</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;!v5|v5&amp;!scalable_passive&amp;!scalable_active&amp;!socket_cache">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFADDR) called with AF_UNKNOWN 'sa_family' field of sockaddr structure returned -1 with errno EINVAL</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="af"/>
+        <arg name="env"/>
+        <arg name="set_req">SIOCSIFNETMASK</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFNETMASK) failed with errno ENOTTY</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;!v5|v5&amp;!scalable_passive&amp;!scalable_active&amp;!socket_cache">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFNETMASK) called with AF_UNKNOWN 'sa_family' field of sockaddr structure returned -1 with errno EINVAL</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="siocsif_no_perm" type="script">
+      <objective>Check that ioctl() checks permission of the process on processing SIOCSIF... requests.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="set_req">SIOCSIFNETMASK</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux&amp;!socket_cache">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFNETMASK) called with non-priveleged permissions returned -1 with errno EACCES</verdict>
+          </result>
+        </results>
+        <results tags="linux-2.6&gt;=46&amp;!socket_cache">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFNETMASK) called with non-priveleged permissions returned -1 with errno EPERM</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;socket_cache" key="ST-2009">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFNETMASK) failed with errno ENOTTY</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="set_req">SIOCSIFADDR</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux&amp;!socket_cache">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFADDR) called with non-priveleged permissions returned -1 with errno EACCES</verdict>
+          </result>
+        </results>
+        <results tags="linux-2.6&gt;=46&amp;!socket_cache">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFADDR) called with non-priveleged permissions returned -1 with errno EPERM</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;socket_cache" key="ST-2009">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFADDR) failed with errno ENOTTY</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="set_req">SIOCSIFBRDADDR</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux&amp;!socket_cache">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFBRDADDR) called with non-priveleged permissions returned -1 with errno EACCES</verdict>
+          </result>
+        </results>
+        <results tags="linux-2.6&gt;=46&amp;!socket_cache">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFBRDADDR) called with non-priveleged permissions returned -1 with errno EPERM</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;socket_cache" key="ST-2009">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFBRDADDR) failed with errno ENOTTY</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="set_req">SIOCSIFFLAGS</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux&amp;!socket_cache">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFFLAGS) called with non-priveleged permissions returned -1 with errno EACCES</verdict>
+          </result>
+        </results>
+        <results tags="linux-2.6&gt;=46&amp;!socket_cache">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFFLAGS) called with non-priveleged permissions returned -1 with errno EPERM</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;socket_cache" key="ST-2009">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFFLAGS) failed with errno ENOTTY</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="set_req">SIOCSIFMTU</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux&amp;!socket_cache">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFMTU) called with non-priveleged permissions returned -1 with errno EPERM</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;socket_cache" key="ST-2009">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFMTU) failed with errno ENOTTY</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="set_req">SIOCSIFDSTADDR</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux&amp;!socket_cache">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFDSTADDR) called with non-priveleged permissions returned -1 with errno EACCES</verdict>
+          </result>
+        </results>
+        <results tags="linux-2.6&gt;=46&amp;!socket_cache">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFDSTADDR) called with non-priveleged permissions returned -1 with errno EPERM</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;socket_cache" key="ST-2009">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFDSTADDR) failed with errno ENOTTY</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="set_req">SIOCSIFNETMASK</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFNETMASK) called with non-priveleged permissions returned -1 with errno EACCES</verdict>
+          </result>
+        </results>
+        <results tags="linux-2.6&gt;=46">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFNETMASK) called with non-priveleged permissions returned -1 with errno EPERM</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="set_req">SIOCSIFADDR</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFADDR) called with non-priveleged permissions returned -1 with errno EACCES</verdict>
+          </result>
+        </results>
+        <results tags="linux-2.6&gt;=46">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFADDR) called with non-priveleged permissions returned -1 with errno EPERM</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="set_req">SIOCSIFBRDADDR</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFBRDADDR) called with non-priveleged permissions returned -1 with errno EACCES</verdict>
+          </result>
+        </results>
+        <results tags="linux-2.6&gt;=46">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFBRDADDR) called with non-priveleged permissions returned -1 with errno EPERM</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="set_req">SIOCSIFFLAGS</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFFLAGS) called with non-priveleged permissions returned -1 with errno EACCES</verdict>
+          </result>
+        </results>
+        <results tags="linux-2.6&gt;=46">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFFLAGS) called with non-priveleged permissions returned -1 with errno EPERM</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="set_req">SIOCSIFMTU</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFMTU) called with non-priveleged permissions returned -1 with errno EPERM</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="set_req">SIOCSIFDSTADDR</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFDSTADDR) called with non-priveleged permissions returned -1 with errno EACCES</verdict>
+          </result>
+        </results>
+        <results tags="linux-2.6&gt;=46">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFDSTADDR) called with non-priveleged permissions returned -1 with errno EPERM</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="siocif_ifr_name_nonexist" type="script">
+      <objective>Check that ioctl() with SIOCSIF... and SIOCGIF requests reports an error when it is passed with non-existing interface name as the value of ifr_name field of ifreq structure.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCGIFHWADDR</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCGIFHWADDR) called with zero length interface name returns -1 with errno ENODEV</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCSIFDSTADDR</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFDSTADDR) called with zero length interface name returns -1 with errno ENODEV</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCGIFDSTADDR</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCGIFDSTADDR) called with zero length interface name returns -1 with errno ENODEV</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCSIFMTU</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFMTU) called with zero length interface name returns -1 with errno ENODEV</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCGIFMTU</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCGIFMTU) called with zero length interface name returns -1 with errno ENODEV</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCSIFFLAGS</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFFLAGS) called with zero length interface name returns -1 with errno ENODEV</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCGIFFLAGS</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCGIFFLAGS) called with zero length interface name returns -1 with errno ENODEV</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCSIFBRDADDR</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFBRDADDR) called with zero length interface name returns -1 with errno ENODEV</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCGIFBRDADDR</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCGIFBRDADDR) called with zero length interface name returns -1 with errno ENODEV</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCSIFADDR</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFADDR) called with zero length interface name returns -1 with errno ENODEV</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCGIFADDR</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCGIFADDR) called with zero length interface name returns -1 with errno ENODEV</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCSIFNETMASK</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFNETMASK) called with zero length interface name returns -1 with errno ENODEV</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCGIFNETMASK</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCGIFNETMASK) called with zero length interface name returns -1 with errno ENODEV</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCGIFHWADDR</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFHWADDR) called with zero length interface name returns -1 with unexpected errno ENOTTY</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;!v5|v5&amp;!scalable_passive&amp;!scalable_active&amp;!socket_cache">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCGIFHWADDR) called with zero length interface name returns -1 with errno ENODEV</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCSIFDSTADDR</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFDSTADDR) failed with errno ENOTTY</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;!v5|v5&amp;!scalable_passive&amp;!scalable_active&amp;!socket_cache">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFDSTADDR) called with zero length interface name returns -1 with errno ENODEV</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCGIFDSTADDR</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFDSTADDR) called with zero length interface name returns -1 with unexpected errno ENOTTY</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;!v5|v5&amp;!scalable_passive&amp;!scalable_active&amp;!socket_cache">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCGIFDSTADDR) called with zero length interface name returns -1 with errno ENODEV</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCSIFMTU</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFMTU) failed with errno ENOTTY</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;!v5|v5&amp;!scalable_passive&amp;!scalable_active&amp;!socket_cache">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFMTU) called with zero length interface name returns -1 with errno ENODEV</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCGIFMTU</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFMTU) called with zero length interface name returns -1 with unexpected errno ENOTTY</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;!v5|v5&amp;!scalable_passive&amp;!scalable_active&amp;!socket_cache">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCGIFMTU) called with zero length interface name returns -1 with errno ENODEV</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCSIFFLAGS</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFFLAGS) failed with errno ENOTTY</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;!v5|v5&amp;!scalable_passive&amp;!scalable_active&amp;!socket_cache">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFFLAGS) called with zero length interface name returns -1 with errno ENODEV</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCGIFFLAGS</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFFLAGS) called with zero length interface name returns -1 with unexpected errno ENOTTY</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;!v5|v5&amp;!scalable_passive&amp;!scalable_active&amp;!socket_cache">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCGIFFLAGS) called with zero length interface name returns -1 with errno ENODEV</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCSIFBRDADDR</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFBRDADDR) failed with errno ENOTTY</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;!v5|v5&amp;!scalable_passive&amp;!scalable_active&amp;!socket_cache">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFBRDADDR) called with zero length interface name returns -1 with errno ENODEV</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCGIFBRDADDR</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFBRDADDR) called with zero length interface name returns -1 with unexpected errno ENOTTY</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;!v5|v5&amp;!scalable_passive&amp;!scalable_active&amp;!socket_cache">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCGIFBRDADDR) called with zero length interface name returns -1 with errno ENODEV</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCSIFADDR</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFADDR) failed with errno ENOTTY</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;!v5|v5&amp;!scalable_passive&amp;!scalable_active&amp;!socket_cache">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFADDR) called with zero length interface name returns -1 with errno ENODEV</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCGIFADDR</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFADDR) called with zero length interface name returns -1 with unexpected errno ENOTTY</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;!v5|v5&amp;!scalable_passive&amp;!scalable_active&amp;!socket_cache">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCGIFADDR) called with zero length interface name returns -1 with errno ENODEV</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCSIFNETMASK</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFNETMASK) failed with errno ENOTTY</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;!v5|v5&amp;!scalable_passive&amp;!scalable_active&amp;!socket_cache">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCSIFNETMASK) called with zero length interface name returns -1 with errno ENODEV</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCGIFNETMASK</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFNETMASK) called with zero length interface name returns -1 with unexpected errno ENOTTY</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;!v5|v5&amp;!scalable_passive&amp;!scalable_active&amp;!socket_cache">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCGIFNETMASK) called with zero length interface name returns -1 with errno ENODEV</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+
+    <test name="fionread_oob" type="script">
+      <objective>State FIONREAD request behaviour when it returns the number of receive queue bytes on the socket of the SOCK_STREAM type if OOB data exist. Such behaviour should be used to check conformance between main anderlying O/S and alternative TCP/IP stack.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="oob_inline">FALSE</arg>
+        <arg name="req">FIONREAD</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(FIONREAD) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(FIONREAD) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(FIONREAD) returns 9 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 9 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 29 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 29 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 29 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 29 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 5 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;linux" key="OLDSW2V0-9" notes="The number of bytes in receive queue retrived by ioctl/recv is not the same as Linux retrieves">
+          <result value="PASSED">
+            <verdict>ioctl(FIONREAD) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(FIONREAD) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(FIONREAD) returns 10 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 10 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 30 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 30 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 30 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 30 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 5 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 5 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_fake</arg>
+        <arg name="oob_inline">FALSE</arg>
+        <arg name="req">FIONREAD</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(FIONREAD) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(FIONREAD) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(FIONREAD) returns 9 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 9 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 29 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 29 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 29 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 29 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 5 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;linux" key="OLDSW2V0-9" notes="The number of bytes in receive queue retrived by ioctl/recv is not the same as Linux retrieves">
+          <result value="PASSED">
+            <verdict>ioctl(FIONREAD) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(FIONREAD) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(FIONREAD) returns 10 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 10 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 30 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 30 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 30 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 30 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 5 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 5 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="oob_inline">TRUE</arg>
+        <arg name="req">FIONREAD</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(FIONREAD) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(FIONREAD) returns 1 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 1 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 11 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 10 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 31 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 30 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 36 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 30 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 6 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 6 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="oob_inline">FALSE</arg>
+        <arg name="req">SIOCINQ</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCINQ) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(SIOCINQ) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(SIOCINQ) returns 9 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 9 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 29 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 29 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 29 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 29 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 5 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;v5" key="OLDSW2V0-9">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCINQ) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(SIOCINQ) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(SIOCINQ) returns 10 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 10 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 30 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 30 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 30 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 30 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 5 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 5 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_fake</arg>
+        <arg name="oob_inline">FALSE</arg>
+        <arg name="req">SIOCINQ</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCINQ) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(SIOCINQ) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(SIOCINQ) returns 9 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 9 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 29 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 29 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 29 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 29 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 5 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;v5" key="OLDSW2V0-9">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCINQ) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(SIOCINQ) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(SIOCINQ) returns 10 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 10 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 30 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 30 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 30 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 30 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 5 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 5 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="oob_inline">TRUE</arg>
+        <arg name="req">SIOCINQ</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCINQ) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(SIOCINQ) returns 1 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 1 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 11 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 10 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 31 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 30 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 36 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 30 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 6 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 6 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="oob_inline">FALSE</arg>
+        <arg name="req">FIONREAD</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(FIONREAD) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(FIONREAD) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(FIONREAD) returns 9 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 9 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 29 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 29 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 29 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 29 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 5 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="oob_inline">FALSE</arg>
+        <arg name="req">SIOCINQ</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCINQ) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(SIOCINQ) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(SIOCINQ) returns 9 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 9 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 29 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 29 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 29 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 29 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 5 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="oob_inline">FALSE</arg>
+        <arg name="req">FIONREAD</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(FIONREAD) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(FIONREAD) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(FIONREAD) returns 9 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 9 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 29 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 29 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 29 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 29 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 5 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;linux&amp;!(ool_loop=0)" key="OLDSW2V0-9" notes="The number of bytes in receive queue retrived by ioctl/recv is not the same as Linux retrieves">
+          <result value="PASSED">
+            <verdict>ioctl(FIONREAD) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(FIONREAD) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(FIONREAD) returns 10 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 10 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 30 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 30 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 30 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 30 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 5 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 5 bytes</verdict>
+            <verdict>ioctl(FIONREAD) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="oob_inline">FALSE</arg>
+        <arg name="req">SIOCINQ</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCINQ) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(SIOCINQ) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(SIOCINQ) returns 9 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 9 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 29 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 29 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 29 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 29 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 5 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;v5&amp;!(ool_loop=0)" key="OLDSW2V0-9">
+          <result value="PASSED">
+            <verdict>ioctl(SIOCINQ) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(SIOCINQ) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+            <verdict>ioctl(SIOCINQ) returns 10 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 10 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 30 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 30 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 30 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 30 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 5 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns 5 bytes</verdict>
+            <verdict>ioctl(SIOCINQ) returns 0 bytes</verdict>
+            <verdict>recv(MSG_PEEK) returns -1 and errno set to EAGAIN</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="oob_marker_moves" type="script">
+      <objective>Check that OOB data marker moves when new OOB data comes</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="oob_inline">TRUE</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>when iut_s socket has no data ioctl(SIOCATMARK) returns 0</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>recv() returned byte = 1</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>recv() returned byte = 2</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>recv() returned byte = 3</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>recv() returned byte = 4</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>recv() returned byte = 5</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>recv() returned byte = 6</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>recv() returned byte = 7</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="oob_inline">FALSE</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>when iut_s socket has no data ioctl(SIOCATMARK) returns 0</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>recv() returned byte = 1</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>recv() returned byte = 2</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>recv() returned byte = 3</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>recv() returned byte = 4</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>recv() returned byte = 5</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>recv() returned byte = 6</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(2): recv(MSG_OOB) returned value '7'</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="siocatmark" type="script">
+      <objective>Check that SIOCATMARK correctly indicates about out-of-band data byte.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="buf1_len">1</arg>
+        <arg name="buf2_len">1</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>when iut_s socket has no data ioctl(SIOCATMARK) returns 0</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="buf1_len">1</arg>
+        <arg name="buf2_len">2</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>when iut_s socket has no data ioctl(SIOCATMARK) returns 0</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="buf1_len">1</arg>
+        <arg name="buf2_len">3</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>when iut_s socket has no data ioctl(SIOCATMARK) returns 0</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="buf1_len">2</arg>
+        <arg name="buf2_len">1</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>when iut_s socket has no data ioctl(SIOCATMARK) returns 0</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>recv() returned byte = 1</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="buf1_len">2</arg>
+        <arg name="buf2_len">2</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>when iut_s socket has no data ioctl(SIOCATMARK) returns 0</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>recv() returned byte = 1</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="buf1_len">2</arg>
+        <arg name="buf2_len">3</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>when iut_s socket has no data ioctl(SIOCATMARK) returns 0</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>recv() returned byte = 1</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="buf1_len">3</arg>
+        <arg name="buf2_len">1</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>when iut_s socket has no data ioctl(SIOCATMARK) returns 0</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>recv() returned byte = 1</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>recv() returned byte = 2</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="buf1_len">3</arg>
+        <arg name="buf2_len">2</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>when iut_s socket has no data ioctl(SIOCATMARK) returns 0</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>recv() returned byte = 1</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>recv() returned byte = 2</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="buf1_len">3</arg>
+        <arg name="buf2_len">3</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>when iut_s socket has no data ioctl(SIOCATMARK) returns 0</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>recv() returned byte = 1</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>recv() returned byte = 2</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf1) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker cleared</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+            <verdict>(tx_buf2) ioctl(SIOCATMARK) returns OOB marker set</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="siocgifaddr_no_addr" type="script">
+      <objective>Check that SIOCGIFADDR, SIOCGIFBRDADDR and SIOCGIFNETADDR requests return -1 and set errno EADDRNOTAVAIL when there are no addresses on the interface.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCGIFNETMASK</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCGIFBRDADDR</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCGIFADDR</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCGIFNETMASK</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED">
+            <verdict>No addresses are assigned to interface, ioctl() returns -1, but: errno is set to ENOTTY instead of EADDRNOTAVAIL</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCGIFBRDADDR</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED">
+            <verdict>No addresses are assigned to interface, ioctl() returns -1, but: errno is set to ENOTTY instead of EADDRNOTAVAIL</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="req">SIOCGIFADDR</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED">
+            <verdict>No addresses are assigned to interface, ioctl() returns -1, but: errno is set to ENOTTY instead of EADDRNOTAVAIL</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="siocatmark_oobinline" type="script">
+      <objective>Check that SIOCATMARK behaivour when option SO_OOBINLINE is set on the socket.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="fionread_pipe" type="script">
+      <objective>Usage of FIONREAD on pipe fds</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="data_size">512</arg>
+        <arg name="writes_num">2</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="siocethtool_glink" type="script">
+      <objective>Check that SIOCETHTOOL request with ETHTOOL_GLINK command returns a status of a specified interface.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="siocethtool_gpermaddr" type="script">
+      <objective>Check that SIOCETHTOOL request with ETHTOOL_GPERMADDR command returns a permanent hardware address of a specified interface.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|socket_cache)" key="ON-5554">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCETHTOOL) failed with errno RPC-ENOTTY</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="ethtool_reset" type="script">
+      <objective>Check that ETHTOOL_RESET request doesn't break connetion</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="mode"/>
+        <arg name="traffic"/>
+        <arg name="reset_num"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="reset_nic_prologue" type="script">
+      <objective/>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="reset_nic_epilogue" type="script">
+      <objective/>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+  </iter>
+</test>

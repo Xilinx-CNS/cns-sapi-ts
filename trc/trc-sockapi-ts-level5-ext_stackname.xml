@@ -1,0 +1,936 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<test name="ext_stackname" type="package">
+  <objective>Onload extension tests where global EF_NAME is not applicable</objective>
+  <notes/>
+  <iter result="PASSED">
+    <notes/>
+    <test name="dont_acc_and_set_stackname" type="script">
+      <objective>EF_DONT_ACCELERATE environment variable and it's actions should be overwritten by consequtive onload_set_stackname() function call.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="all_threads"/>
+        <arg name="env"/>
+        <arg name="object"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="set_stackname_null" type="script">
+      <objective>Check that onload_is_present() function correctly handles NULL as stackname and disables the acceleration</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="all_threads"/>
+        <arg name="env"/>
+        <arg name="object"/>
+        <arg name="onload_stack_scope"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="set_stackname_scope_user" type="script">
+      <objective>Check that after chaning user stack name with 'user' scope is not valid anymore.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="all_threads"/>
+        <arg name="check_parent"/>
+        <arg name="env"/>
+        <arg name="object"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="set_stackname_scope_user_threads" type="script">
+      <objective>fixme</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="all_threads"/>
+        <arg name="env"/>
+        <arg name="object"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="set_stackname_scope_who" type="script">
+      <objective>Check that stack selected in scope process/user honors 'who' parameter.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="all_threads"/>
+        <arg name="env"/>
+        <arg name="object"/>
+        <arg name="onload_stack_scope"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="set_stackname_scope_nochange" type="script">
+      <objective>Check that scope 'nochange' is handled properly by onload_set_stackname</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="object"/>
+        <arg name="onload_stack_scope"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="set_stackname_scope_process" type="script">
+      <objective>Check fork() call effects stack name selected with scope ONLOAD_SCOPE_PROCESS</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="all_threads"/>
+        <arg name="check_parent"/>
+        <arg name="env"/>
+        <arg name="object"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="set_stackname_scope_thread" type="script">
+      <objective>Check that onload_set_stackname with scope ONLOAD_SCOPE_THREAD correctly configures OOL stack.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="all_threads"/>
+        <arg name="env"/>
+        <arg name="object"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="set_stackname_scope_global" type="script">
+      <objective>Check that stackname specified in scope ONLOAD_SCOPE_GLOBAL holds agains fork()/thread creation/setuid().</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="action"/>
+        <arg name="check_before_action"/>
+        <arg name="env"/>
+        <arg name="object"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="set_stackname_caller_dead" type="script">
+      <objective>Check that although onload_set_stackname called died the scope remains valid</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="object"/>
+        <arg name="onload_stack_scope"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ef_fork_netif" type="script">
+      <objective>Check that changing EF_FORK_NETIF environment variable changes stack creation behaviour in parent and child processes after fork().</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="ef_fork_netif_val"/>
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="set_stackname_scope_process_ignore" type="script">
+      <objective>Check that stack selected for the process honors 'who' parameter and is not affected by setuid system call.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="all_threads"/>
+        <arg name="env"/>
+        <arg name="object"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="set_stackname_save_restore" type="script">
+      <objective>Check that if onload_stackname_save() was calles after onload_set_stackname(), then calling onload_stackname_restore() after that is equivalent to calling onload_set_stackname() with the same parameters as it was done before the onload_stackname_save() call.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="all_threads1"/>
+        <arg name="all_threads2"/>
+        <arg name="env"/>
+        <arg name="object"/>
+        <arg name="scope1"/>
+        <arg name="scope2"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="set_stackname_nochange_restore" type="script">
+      <objective>Check that if onload_stackname_save() was called after onload_set_stackname(ONLOAD_SCOPE_NOCHANGED), then onload_stackname_restore() actually restores the Onload stack name set when onload_stackname_save() was called.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="object"/>
+        <arg name="scope1">THREAD</arg>
+        <arg name="scope2"/>
+        <notes/>
+        <results tags="v5" key="ON-3427">
+          <result value="FAILED">
+            <verdict>onload_stackname_restore() failed to restore stack name</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="object"/>
+        <arg name="scope1">USER</arg>
+        <arg name="scope2"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="object"/>
+        <arg name="scope1">PROCESS</arg>
+        <arg name="scope2"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="object"/>
+        <arg name="scope1">GLOBAL</arg>
+        <arg name="scope2"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="set_stackname_null_restore" type="script">
+      <objective>Check that onload_stackname_restore() can restore stack name = ONLOAD_DONT_ACCELERATE and also can restore previous stack state after onload_set_stackname() with stack name = ONLOAD_DONT_ACCELERATE was called.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="all_threads"/>
+        <arg name="env"/>
+        <arg name="object"/>
+        <arg name="restore_null">TRUE</arg>
+        <arg name="scope"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="all_threads"/>
+        <arg name="env"/>
+        <arg name="object"/>
+        <arg name="restore_null">FALSE</arg>
+        <arg name="scope"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="set_stackname_restore_non_saved" type="script">
+      <objective>Check that onload_stackname_restore() fails when we call it more times than onload_stackname_save()</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="all_threads"/>
+        <arg name="call_set_stackname"/>
+        <arg name="call_stackname_save"/>
+        <arg name="env"/>
+        <arg name="object"/>
+        <arg name="scope"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="shutdown_move_fd" type="script">
+      <objective>Check that after closing TCP connection a socket can be moved to a new Onload stack</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="passive_open"/>
+        <arg name="shutdown_ends">iut</arg>
+        <arg name="shutdown_how"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="passive_open"/>
+        <arg name="shutdown_ends">tst</arg>
+        <arg name="shutdown_how"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="passive_open"/>
+        <arg name="shutdown_ends">both</arg>
+        <arg name="shutdown_how"/>
+        <notes/>
+        <results tags="v5" notes="This is OK when socket is in CLOSED state">
+          <result value="PASSED">
+            <verdict>The second call of onload_move_fd() successeed</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="tcp_conn_move_fd" type="script">
+      <objective>Check that after establishing a TCP connection but without any normal data read or pending, an Onload socket can be moved to a different stack.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="close_listening">TRUE</arg>
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="iut_sends_data"/>
+        <arg name="active"/>
+        <arg name="tst_sends_data"/>
+        <arg name="cache_socket"/>
+        <notes/>
+        <results tags="v5" key="ON-3434">
+          <result value="FAILED">
+            <verdict>The first call of onload_move_fd(): onload_move_fd() failed unexpectedly</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="close_listening">FALSE</arg>
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="iut_sends_data"/>
+        <arg name="active"/>
+        <arg name="tst_sends_data"/>
+        <arg name="cache_socket"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="tcp_conn_move_fd_in_pkt_flow" type="script">
+      <objective>Check that after establishing passive TCP connection with incoming packet flow data is received after moving accepted socket to different stack.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="threads"/>
+        <arg name="time2send"/>
+        <arg name="iterations"/>
+        <arg name="close_accepted"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="tcp_overfill_queue_move_fd" type="script">
+      <objective>Check that after establishing a TCP connection a socket fd can be moved to a different stack when its send or receive queue is overfilled.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="overfill_send_queue">TRUE</arg>
+        <notes/>
+        <results tags="v5" notes="This is an expected behavior">
+          <result value="FAILED">
+            <verdict>Failed to move IUT socket to a new Onload stack</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="overfill_send_queue">FALSE</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="listen_move_fd" type="script">
+      <objective>Check that calling onload_move_fd() on a listening socket fails.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="bind_move_fd" type="script">
+      <objective>Check that calling onload_move_fd() does not change an address the socket is bound to.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="setsockopt_move_fd" type="script">
+      <objective>Check that calling onload_move_fd() does not change a socket option set before the call.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">SO_BINDTODEVICE</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">SO_TIMESTAMPING</arg>
+        <arg name="sock_accepted">TRUE</arg>
+        <notes/>
+        <results tags="v5" key="ON-5045">
+          <result value="FAILED">
+            <verdict>The first call of onload_move_fd(): onload_move_fd() failed unexpectedly</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">IP_OPTIONS</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+        <results tags="v5" key="ON-22">
+          <result value="FAILED">
+            <verdict>Failed to get an initial value of IP_OPTIONS: errno ENOPROTOOPT</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">TCP_USER_TIMEOUT</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+        <results tags="v5" key="ON-2512">
+          <result value="FAILED">
+            <verdict>Failed to get an initial value of TCP_USER_TIMEOUT: errno ENOPROTOOPT</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">TCP_QUICKACK</arg>
+        <arg name="sock_accepted">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-1305">
+          <result value="FAILED">
+            <verdict>Failed to change a value for a socket option TCP_QUICKACK</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">SO_TIMESTAMPING</arg>
+        <arg name="sock_accepted">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-5045">
+          <result value="FAILED">
+            <verdict>The first call of onload_move_fd(): onload_move_fd() failed unexpectedly</verdict>
+            <verdict>The second call of onload_move_fd(): onload_move_fd() failed unexpectedly</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">SO_DONTROUTE</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+        <results tags="v5" key="ON-25">
+          <result value="FAILED">
+            <verdict>Failed to get an initial value of SO_DONTROUTE: errno ENOPROTOOPT</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">TCP_QUICKACK</arg>
+        <arg name="sock_accepted">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">SO_BROADCAST</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">SO_DEBUG</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">SO_KEEPALIVE</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">SO_LINGER</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">SO_OOBINLINE</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">SO_PRIORITY</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">SO_RCVBUF</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">SO_RCVLOWAT</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">SO_RCVTIMEO</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">SO_SNDTIMEO</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">SO_REUSEADDR</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">SO_SNDBUF</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">SO_TIMESTAMP</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">SO_TIMESTAMPNS</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">TCP_CORK</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">TCP_DEFER_ACCEPT</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">TCP_KEEPCNT</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">TCP_KEEPIDLE</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">TCP_KEEPINTVL</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">TCP_NODELAY</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">IP_MTU_DISCOVER</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">IP_RECVERR</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">IP_TOS</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="opt_name">IP_TTL</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="fcntl_move_fd" type="script">
+      <objective>Check that calling onload_move_fd() does not change a flag or option set by fcntl() before the call.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="fcntl_test"/>
+        <arg name="sock_accepted"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ioctl_move_fd" type="script">
+      <objective>Check that calling onload_move_fd() does not change whatever set by ioctl() before the call.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack1"/>
+        <arg name="existing_stack2"/>
+        <arg name="req"/>
+        <arg name="sock_accepted"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="iomux_move_fd" type="script">
+      <objective>Check that calling onload_move_fd() does not influence I/O multiplexing function called on the socket.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack"/>
+        <arg name="iomux">oo_epoll</arg>
+        <notes/>
+        <results tags="v5">
+          <result value="FAILED" notes="This is expected for epoll() after fixing L5 bug 41152">
+            <verdict>onload_move_fd() failed unexpectedly</verdict>
+          </result>
+        </results>
+        <results tags="!(ool_epoll=1)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>onload_move_fd() failed unexpectedly</verdict>
+            <verdict>iomux() call failed with errno EINVAL immediately after calling onload_move_fd()</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack"/>
+        <arg name="iomux">epoll</arg>
+        <notes/>
+        <results tags="v5">
+          <result value="FAILED" notes="This is expected for epoll() after fixing L5 bug 41152">
+            <verdict>onload_move_fd() failed unexpectedly</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <notes/>
+        <results tags="v5">
+          <result value="FAILED" notes="This is expected for epoll() after fixing L5 bug 41152">
+            <verdict>onload_move_fd() failed unexpectedly</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack"/>
+        <arg name="iomux">poll</arg>
+        <notes/>
+        <results tags="v5">
+          <result value="FAILED" notes="Expected behavior">
+            <verdict>iomux() call did not terminate</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_spin" key="ON-3706">
+          <result value="FAILED">
+            <verdict>iomux() call unexpectedly terminated after calling onload_move_fd(); rc = 1, returned events are EVT_EXC | EVT_ERR</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack"/>
+        <arg name="iomux">ppoll</arg>
+        <notes/>
+        <results tags="v5">
+          <result value="FAILED" notes="Expected behavior">
+            <verdict>iomux() call did not terminate</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_spin" key="ON-3706">
+          <result value="FAILED">
+            <verdict>iomux() call unexpectedly terminated after calling onload_move_fd(); rc = 1, returned events are EVT_EXC | EVT_ERR</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack"/>
+        <arg name="iomux">select</arg>
+        <notes/>
+        <results tags="v5">
+          <result value="FAILED" notes="Expected behavior">
+            <verdict>iomux() call did not terminate</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_spin" key="ON-3706">
+          <result value="FAILED">
+            <verdict>iomux() call unexpectedly terminated after calling onload_move_fd(); rc = 1, returned events are EVT_RD</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack"/>
+        <arg name="iomux">pselect</arg>
+        <notes/>
+        <results tags="v5">
+          <result value="FAILED" notes="Expected behavior">
+            <verdict>iomux() call did not terminate</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_spin" key="ON-3706">
+          <result value="FAILED">
+            <verdict>iomux() call unexpectedly terminated after calling onload_move_fd(); rc = 1, returned events are EVT_RD</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="stack_nochange_move_fd" type="script">
+      <objective>Check that if we call onload_move_fd() on a socket that is already in a stack to which this function would move it, it always successes.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="not_def_stack"/>
+        <arg name="sock_accepted"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="pipe_move_fd" type="script">
+      <objective>Check that if we call onload_move_fd() on a pipe fd, it fails and pipe still works OK.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="read_end"/>
+        <arg name="system_fd"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="unsupp_socket_move_fd" type="script">
+      <objective>Check that if we call onload_move_fd() on an UDP socket or system socket fd, it fails and socket still works OK.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="af_unix"/>
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <arg name="system_fd"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="move_epoll_fd" type="script">
+      <objective>Check that if we call onload_move_fd() on an epoll_create() fd, it fails not influencing this fd.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="system_fd">TRUE</arg>
+        <notes/>
+        <results tags="v5">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">oo_epoll</arg>
+        <arg name="system_fd">FALSE</arg>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll</arg>
+        <arg name="system_fd"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="system_fd"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="move_unsupp_fd" type="script">
+      <objective>Check that calling onload_move_fd() fails when called on device fd or file fd</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="fd_type"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="save_move_restore" type="script">
+      <objective>Check the following sequence: onload_stackname_save(); onload_set_stackname(); onload_move_fd(); onload_stackname_restore().</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="sock_ping_pong" type="script">
+      <objective>Check that moving socket to different stack several times works only on SOCK_STREAM socket returned by socket().</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_accepted"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="sighandler_move_fd" type="script">
+      <objective>Check that calling onload_move_fd() from a signal handler works correctly or at least does not cause a kernel crash.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="receive_data">TRUE</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+        <results tags="v5" key="ON-3452 ST-41">
+          <result value="FAILED"/>
+          <result value="PASSED">
+            <verdict>onload_move_fd() succeeded when called from a signal handler</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>onload_move_fd() failed when called from a signal handler</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="receive_data">FALSE</arg>
+        <arg name="sock_accepted"/>
+        <notes/>
+        <results tags="v5" notes="Normal behavior">
+          <result value="PASSED">
+            <verdict>onload_move_fd() succeeded when called from a signal handler</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="problematic_rxq_move_fd" type="script">
+      <objective>Check that onload_move_fd() succeeds after a TCP socket received data with abnormalities such as loss, reordering or retransmitting of packets.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack"/>
+        <arg name="rxq_problem"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="move_fd_other_user" type="script">
+      <objective>Check that calling onload_move_fd() fails when we try to move socket fd to the stack owned by another user so that we have no access persmissions to use this stack</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="set_stackname_move_fd" type="script">
+      <objective>Check that onload_move_fd() succeeds after calling ` calling onload_set_stackname() with any parameters (if access to the stack we are trying to move a socket is permitted)</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="all_threads"/>
+        <arg name="env"/>
+        <arg name="existing_stack"/>
+        <arg name="scope"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="unbound_udp_move_fd" type="script">
+      <objective>Check that if we call onload_move_fd() on an unbound UDP socket, it successes</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="close_init_stack_after_fork" type="script">
+      <objective>Check that initial Onload stack is closed after fork()</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="reuseport"/>
+        <arg name="exec"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="linger_move_fd" type="script">
+      <objective>Check that SO_LINGER works after moving TCP socket to another stack.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="active"/>
+        <arg name="env"/>
+        <arg name="linger_before_connection"/>
+        <arg name="linger_val"/>
+        <notes/>
+      </iter>
+    </test>
+  </iter>
+</test>

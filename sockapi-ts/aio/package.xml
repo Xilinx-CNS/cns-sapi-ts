@@ -1,0 +1,540 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+    
+    <description>Asynchronous Input/Output</description>
+    
+    <author mailto="Elena.Vengerova@oktetlabs.ru"/>
+
+    <req id="AIO" sticky="true"/>
+
+    <session>
+
+        <run>
+            <script name="aio_read"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="blk" type="boolean"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="sig" type="boolean">
+                <value reqs="SIGNALS">TRUE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="aio_error"/>
+            <arg name="env" ref="env.iut_only"/>
+        </run>
+
+        <run>
+            <script name="aio_write"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="blk" type="boolean"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="sig" type="boolean">
+                <value reqs="SIGNALS">TRUE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="aio_suspend">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="op">
+                <value>read</value> 
+                <value>write</value>
+            </arg>
+        </run>
+             
+        <run>
+            <script name="invalid_fd"/>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="func">
+                <value>cancel</value>
+                <value>write</value>
+                <value>read</value>
+                <value>lio_listio</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="garbage_cb"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="func">
+                <value>write</value>
+                <value>read</value>
+                <value>lio_listio</value>
+            </arg>
+            <arg name="field">
+                <value>aio_buf</value>
+                <value>aio_nbytes</value>
+                <value>aio_sigevent</value>
+            </arg>
+        </run>
+             
+        <run>
+            <script name="not_posted_cb"/>
+            <arg name="env" ref="env.iut_ucast"/>
+        </run>
+             
+        <run>
+            <script name="bnb_cblist_nent"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="list" type="boolean" list="">
+                <value>TRUE</value> 
+                <value>TRUE</value> 
+                <value>FALSE</value>
+            </arg>
+            <arg name="nent" list="">
+                <value>-1</value>
+                <value>0</value>
+                <value>0</value>
+            </arg>
+            <arg name="func">
+                <value>wait</value>
+                <value>no_wait</value>
+                <value>suspend</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="close_sock"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="op">
+                <value>read</value>
+                <value>write</value>
+            </arg>
+            <arg name="notify">
+                <value reqs="SIGNALS">signal</value>
+                <value>callback</value>
+                <value>none</value>
+            </arg>
+        </run>
+
+             
+        <run>
+            <script name="one_buf" track_conf="silent"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+             
+        <run>
+            <script name="post_twice"/>
+            <arg name="env" ref="env.peer2peer"/>
+        </run>
+        
+        <run>
+            <script name="too_many_req">
+                <req id="UNSTABLE"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="mode">
+                <value>rd</value>
+                <value>wr</value>
+                <value>rdwr</value>
+            </arg>
+            <arg name="num">
+                <value>16</value>
+                <value reqs="TIME_CONSUMING">1024</value>
+            </arg>
+        </run>
+        <run>
+            <script name="notify_signal">
+                <req id="SIGNALS"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="rd" type="boolean"/>
+            <arg name="notify_cb" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="notify_thread" track_conf="silent">
+                <req id="SIGNALS"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+        
+        <run>
+            <script name="notify_callback"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="rd" type="boolean"/>
+            <arg name="notify_cb" type="boolean"/>
+        </run>
+             
+        <run>
+            <script name="notify_diff_signals">
+                <req id="SIGNALS"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+        
+        <run>
+            <script name="notify_diff_callbacks"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+             
+        <run>
+            <script name="notify_diff_types">
+                <req id="SIGNALS"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="rd" type="boolean"/>
+            <arg name="notify_cb" type="boolean"/>
+        </run>
+             
+        <run>
+            <script name="nested_requests"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="req_num">
+                <value>4</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="aio_read_ignore_opcode"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+        
+        <run>
+            <script name="aio_read_many_reqs"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="req_num">
+                <value>10</value>
+            </arg>
+        </run>   
+        
+        <run>
+            <script name="aio_read_many_socks">
+                <req id="SIGNALS"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_num">
+                <value>10</value> 
+            </arg>
+        </run>
+
+        <run>
+            <script name="aio_read_blk_read" track_conf="silent"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="len1">
+                <value>1024</value> 
+            </arg>
+            <arg name="len2">
+                <value>512</value> 
+            </arg>
+        </run>
+             
+        <run>
+            <script name="aio_write_ignore_opcode"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+     
+        <run>
+            <script name="aio_write_many_reqs"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="req_num">
+                <value>10</value>
+            </arg>
+        </run>
+          
+        <run>
+            <script name="aio_write_many_socks">
+                <req id="SIGNALS"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_num">
+                <value>10</value> 
+            </arg>
+        </run>
+        
+        <run>
+            <script name="aio_write_blk_write"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+        
+        <run>
+            <script name="aio_fsync_socket"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="op">
+                <value>O_SYNC</value>
+                <value>O_DSYNC</value>
+            </arg>    
+        </run>
+             
+        <run>
+            <script name="aio_fsync_bad_op"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+      
+        <run>
+            <script name="aio_ret_failed"/>
+            <arg name="env" ref="env.iut_only"/>
+        </run>
+             
+        <run>
+            <script name="aio_ret_no_aio_error">
+                <req id="SIGNALS"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+        
+        <run>
+            <script name="aio_cancel_read"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+        
+        <run>
+            <script name="aio_cancel_write"/>
+            <arg name="env" ref="env.peer2peer"/>
+        </run>
+
+        <run>
+            <script name="aio_cancel_many"/>
+            <arg name="env" ref="env.peer2peer"/>
+        </run>
+             
+        <run>
+            <script name="aio_cancel_alldone"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+             
+        <run>
+            <script name="aio_cancel_inprogress"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+             
+        <run>
+            <script name="aio_cancel_thread"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="op">
+                <value>read</value>
+                <value>write</value>
+            </arg>
+        </run>
+        
+        <run>
+            <script name="aio_suspend_forever"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="op">
+                <value>read</value>
+                <value>write</value>
+            </arg>
+        </run>
+             
+        <run>
+            <script name="aio_suspend_signal">
+                <req id="SIGNALS"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="op">
+                <value>read</value>
+                <value>write</value>
+            </arg>
+            <arg name="own" type="boolean"/>
+        </run>
+             
+        <run>
+            <script name="aio_suspend_completed"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="op">
+                <value>write</value>
+                <value>read</value>
+            </arg>
+        </run>
+             
+        <run>
+            <script name="aio_suspend_not_posted"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+             
+        <run>
+            <script name="aio_suspend_cblist_with_holes"/>
+            <arg name="env" ref="env.peer2peer"/>
+        </run>
+             
+        <run>
+            <script name="aio_suspend_cblist_dummy"/>
+            <arg name="env" ref="env.iut_only"/>
+        </run>
+             
+        <run>
+            <script name="aio_suspend_timeout"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="op">
+                <value>read</value>
+                <value>write</value>
+            </arg>
+             <arg name="sec" list="">
+                <value>-1</value>
+                <value>-1</value>
+                <value>-1</value>
+                <value>0</value>
+                <value>1</value>
+            </arg>
+            <arg name="nsec" list="">
+                <value>-1</value>
+                <value>0</value>
+                <value>1</value>
+                <value>-1</value>
+                <value>-1</value>
+            </arg>
+        </run>
+        
+        <run>
+            <script name="aio_suspend_thread"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="op">
+                <value>write</value>
+                <value>read</value>
+            </arg>
+        </run>
+        <run>
+            <script name="lio_listio_nowait"/>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,addr:'iut2_addr':inet:unicast},{{'pco_tst':tester},addr:'tst1_addr':inet:unicast,addr:'tst2_addr':inet:unicast}}</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="notify">
+                <value>signal</value>
+                <value>callback</value>
+                <value>none</value>
+                <value>null</value>
+            </arg>
+        </run>
+        <run>
+            <script name="lio_listio_wait"/>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,addr:'iut2_addr':inet:unicast},{{'pco_tst':tester},addr:'tst1_addr':inet:unicast,addr:'tst2_addr':inet:unicast}}</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+        
+        <run>
+            <script name="lio_listio_wait_failed" track_conf="silent"/>
+            <arg name="env" ref="env.peer2peer"/>
+        </run>
+
+        <run>
+            <script name="lio_listio_wait_canceled">
+              <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+        </run>
+             
+        <run>
+            <script name="lio_listio_wait_signal"/>
+            <arg name="env" ref="env.peer2peer"/>
+        </run>
+    
+             
+        <run>
+            <script name="lio_listio_cblist_with_holes"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="hole">
+                <value>NULL</value>
+                <value>LIO_NOP</value>
+            </arg>
+            <arg name="wait" type="boolean"/>
+        </run>
+    
+         
+        <run>
+            <script name="lio_listio_cblist_dummy"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="req1">
+                <value>NULL</value>
+                <value>LIO_NOP</value>
+            </arg>
+            <arg name="req2">
+                <value>NULL</value>
+                <value>LIO_NOP</value>
+            </arg>
+        </run>
+
+             
+        <run>
+            <script name="lio_listio_bad_mode"/>
+            <arg name="env" ref="env.iut_only"/>
+        </run>
+             
+        <run>
+            <script name="lio_listio_too_many"/>
+            <arg name="env" ref="env.iut_only"/>
+        </run>
+            
+        <run>
+            <script name="stress" track_conf="silent">
+                <req id="SIGNALS"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_num">
+                <value>10</value> 
+            </arg>
+            <arg name="threads_num">
+                <value>4</value>
+            </arg>
+            <arg name="req_num">
+                <value>100</value>
+            </arg>
+        </run>
+        
+        <run>
+            <script name="kill_process" track_conf="silent"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+        
+        <run>
+            <script name="aio_fork"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="op">
+                <value>read</value>
+                <value>write</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="aio_suspend_file"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="op">
+                <value>read</value>
+                <value>write</value>
+            </arg>
+        </run>
+        <run>
+            <script name="lio_listio_file"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="rd" type="boolean"/>
+            <arg name="wait" type="boolean"/>
+        </run>
+             
+    </session>
+</package>

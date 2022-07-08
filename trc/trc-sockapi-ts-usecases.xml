@@ -1,0 +1,969 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<test name="usecases" type="package">
+  <objective>Main use cases of Socket API</objective>
+  <notes/>
+  <iter result="PASSED">
+    <notes/>
+    <test name="socket_close" type="script">
+      <objective>Test on possibility of communication endpoint creation</objective>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="domain">PF_INET</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <arg name="proto">IPPROTO_TCP</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="domain">PF_INET</arg>
+        <arg name="type">SOCK_DGRAM</arg>
+        <arg name="proto">IPPROTO_UDP</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="domain">PF_INET</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <arg name="proto">PROTO_DEF</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="domain">PF_INET</arg>
+        <arg name="type">SOCK_DGRAM</arg>
+        <arg name="proto">PROTO_DEF</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="domain">PF_INET6</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <arg name="proto">IPPROTO_TCP</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="domain">PF_INET6</arg>
+        <arg name="type">SOCK_DGRAM</arg>
+        <arg name="proto">IPPROTO_UDP</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="domain">PF_INET6</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <arg name="proto">PROTO_DEF</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="domain">PF_INET6</arg>
+        <arg name="type">SOCK_DGRAM</arg>
+        <arg name="proto">PROTO_DEF</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="read_write" type="script">
+      <objective>Test on reliability of the read()/write() operations on BSD compatible sockets.</objective>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_ip6ip4mapped</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_ip6</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_ip6linklocal</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_tst_ip6linklocal</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="readv_writev" type="script">
+      <objective>Test on reliability of standard readv()/writev() I/O operations on BSD compatible sockets.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_ip6</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_ip6ip4mapped</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="shutdown_rd" type="script">
+      <objective>Test on reliability of the shutdown() operation for full-duplex connection on the BSD compatible sockets.</objective>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_fake</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_ip6ip4mapped</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_ip6</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="shutdown_wr" type="script">
+      <objective>Test on reliability of the shutdown() operation for full-duplex connection on the BSD compatible sockets.</objective>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_fake</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_ip6ip4mapped</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_ip6</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="shutdown_rdwr" type="script">
+      <objective>Test on reliability of the shutdown() operation for full-duplex connection on the BSD compatible sockets.</objective>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_fake</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_ip6ip4mapped</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_ip6</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="shutdown" type="script">
+      <objective>Test on reliability of the shutdown() operation for full-duplex connection on the BSD compatible sockets. Server side activates shutdown() operation.</objective>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_fake</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_ip6ip4mapped</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_ip6</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="send_recv" type="script">
+      <objective>Test on reliability of the send()/recv() operations on BSD compatible sockets.</objective>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <arg name="sock_func"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="sendto_recvfrom" type="script">
+      <objective>Test on reliability of sendto()/recvfrom() operations on BSD compatible sockets.</objective>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_ip6ip4mapped</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_ip6linklocal</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_tst_ip6linklocal</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_ip6</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="sendmsg_recvmsg" type="script">
+      <objective>Test on reliability of sendmsg()/recvmsg() operations on BSD compatible sockets.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_ip6</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_ip6ip4mapped</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="server" type="script">
+      <objective>Test on reliability of the standard operations on BSD compatible sockets as server application.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="getsockname_getpeername" type="script">
+      <objective>Test on reliability of getsockname()/getpeername() operations on BSD compatible sockets.</objective>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_ip6ip4mapped</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_ip6</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_ip6linklocal</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_tst_ip6linklocal</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="select" type="script">
+      <objective>Test on reliability of the select() operation on BSD compatible sockets.</objective>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet:unicast}},'pco_tst1'='pco_tst'</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'host2_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'host2_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst1'='pco_tst'</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="poll" type="script">
+      <objective>Test on reliability of the poll operation on BSD compatible sockets.</objective>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet:unicast}},'pco_tst1'='pco_tst'</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'host2_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'host2_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst1'='pco_tst'</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ioctl" type="script">
+      <objective>Test on reliability of ioctl() operation on BSD compatible sockets.</objective>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_ip6</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_ip6ip4mapped</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="get_setsockopt" type="script">
+      <objective>Test on reliability of getsockopt()/setsockopt() operations on BSD compatible sockets.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_fake</arg>
+        <notes/>
+        <results tags="v5&amp;int_spin" key="ST-2116">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>iomux_call() did not mark the socket as readable</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <notes/>
+        <results tags="linux&amp;v5&amp;ool_spin" key="ON-1670">
+          <result value="FAILED"/>
+          <result value="PASSED"/>
+        </results>
+        <results tags="(ool_loop=2|ool_loop=3|ool_loop=4|reuse_stack&amp;ool_loop=1)&amp;ool_spin" key="ST-2116">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>iomux_call() did not mark the socket as readable</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <notes/>
+        <results tags="linux&amp;v5&amp;ool_spin" key="ON-1670">
+          <result value="FAILED"/>
+          <result value="PASSED"/>
+        </results>
+        <results tags="(ool_loop=2|ool_loop=3|ool_loop=4|reuse_stack&amp;ool_loop=1)&amp;ool_spin" key="ST-2116">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>iomux_call() did not mark the socket as readable</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <notes/>
+        <results tags="v5&amp;int_spin" key="ST-2116">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>iomux_call() did not mark the socket as readable</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_ip6ip4mapped</arg>
+        <notes/>
+        <results tags="v5&amp;int_spin" key="ST-2116">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>iomux_call() did not mark the socket as readable</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_ip6</arg>
+        <notes/>
+        <results tags="v5&amp;int_spin" key="ST-2116">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>iomux_call() did not mark the socket as readable</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="if_nameindex" type="script">
+      <objective>Test on reliability of the following operations: if_nameindex()/if_freenameindex() and if_nametoindex()/if_indextoname().</objective>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="multi_clients_handler" type="script">
+      <objective>Check possibility of handling multiple client connections at the same time using fork().</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="method"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="pipe" type="script">
+      <objective>Test on reliability of the pipe() operations.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="block_read"/>
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="reader_child"/>
+        <arg name="write_before_fork"/>
+        <arg name="writer_child"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_read"/>
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="reader_child"/>
+        <arg name="writer_child"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="sendmmsg" type="script">
+      <objective>Test on reliability of the sendmmsg() operation on BSD compatible sockets.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="active"/>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="sock_type"/>
+        <notes/>
+        <results tags="v5&amp;(libc&lt;=13)|!(ool_loop=0)">
+          <result value="FAILED">
+            <verdict>sendmmsg() failed with errno ENOSYS</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="active"/>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="sock_type"/>
+        <notes/>
+        <results tags="v5&amp;(libc&lt;=13)">
+          <result value="FAILED">
+            <verdict>sendmmsg() failed with errno ENOSYS</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="active"/>
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="sock_type"/>
+        <notes/>
+        <results tags="v5&amp;(libc&lt;=13)|!(ool_loop=0)">
+          <result value="FAILED">
+            <verdict>sendmmsg() failed with errno ENOSYS</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="active"/>
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="sock_type"/>
+        <notes/>
+        <results tags="v5&amp;(libc&lt;=13)">
+          <result value="FAILED">
+            <verdict>sendmmsg() failed with errno ENOSYS</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="active"/>
+        <arg name="env">VAR.env.p2p_ip6</arg>
+        <arg name="sock_type"/>
+        <notes/>
+        <results tags="v5&amp;build_ip6" key="ST-1506">
+          <result value="FAILED">
+            <verdict>sendmmsg() failed with errno ENOSYS</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="active"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="sock_type"/>
+        <notes/>
+        <results tags="v5">
+          <result value="FAILED">
+            <verdict>sendmmsg() failed with errno ENOSYS</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="active"/>
+        <arg name="env">VAR.env.p2p_ip6ip4mapped</arg>
+        <arg name="sock_type"/>
+        <notes/>
+        <results tags="v5">
+          <result value="FAILED">
+            <verdict>sendmmsg() failed with errno ENOSYS</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="active"/>
+        <arg name="env">VAR.env.two_nets.iut_first</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="active"/>
+        <arg name="env">VAR.env.two_nets.iut_second</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="active"/>
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},addr:'tst1_addr':inet:unicast}},'iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="active"/>
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast},{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}},'tst1_addr'='iut_addr1'</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="active"/>
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':IUT},{'pco_tst2':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast}},'tst1_addr'='iut_addr1','tst2_addr'='iut_addr2'</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+            <iter result="PASSED">
+        <arg name="active"/>
+        <arg name="env">VAR.env.two_nets.iut_first_ipv6</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="active"/>
+        <arg name="env">VAR.env.two_nets.iut_second_ipv6</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="active"/>
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},addr:'tst1_addr':inet6:unicast}},'iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="active"/>
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast},{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast}},'tst1_addr'='iut_addr1'</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="active"/>
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':IUT},{'pco_tst2':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast}},'tst1_addr'='iut_addr1','tst2_addr'='iut_addr2'</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="multiple_listen" type="script">
+      <objective>Check that listen() can be called multiple times on the same socket and it allows to change its backlog.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="first_backlog"/>
+        <arg name="second_backlog"/>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED"/>
+        </results>
+        <results tags="v5&amp;((ool_loop=1|ool_loop=4)&amp;reuse_stack|ool_loop=2|ool_loop=3)" key="ON-7809">
+          <result value="FAILED">
+            <verdict>Measuring the first backlog: measured backlog is more than expected</verdict>
+            <verdict>Measuring the second backlog: measured backlog is more than expected</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_loop=4&amp;!reuse_stack" key="ON-7809" notes="Verdict about ECONNRESET is expected after fixing L5 bug 75246">
+          <result value="FAILED">
+            <verdict>Measuring the first backlog: recv() failed with errno RPC-ECONNRESET</verdict>
+            <verdict>Measuring the first backlog: measured backlog is more than expected</verdict>
+            <verdict>Measuring the second backlog: recv() failed with errno RPC-ECONNRESET</verdict>
+            <verdict>Measuring the second backlog: measured backlog is more than expected</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="first_backlog"/>
+        <arg name="second_backlog"/>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED"/>
+        </results>
+        <results tags="v5&amp;((ool_loop=1|ool_loop=4)&amp;reuse_stack|ool_loop=2|ool_loop=3)" key="ON-7809">
+          <result value="FAILED">
+            <verdict>Measuring the first backlog: measured backlog is more than expected</verdict>
+            <verdict>Measuring the second backlog: measured backlog is more than expected</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_loop=4&amp;!reuse_stack" key="ON-7809" notes="Verdict about ECONNRESET is expected after fixing L5 bug 75246">
+          <result value="FAILED">
+            <verdict>Measuring the first backlog: recv() failed with errno RPC-ECONNRESET</verdict>
+            <verdict>Measuring the first backlog: measured backlog is more than expected</verdict>
+            <verdict>Measuring the second backlog: recv() failed with errno RPC-ECONNRESET</verdict>
+            <verdict>Measuring the second backlog: measured backlog is more than expected</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="first_backlog"/>
+        <arg name="second_backlog"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_ip6ip4mapped</arg>
+        <arg name="first_backlog"/>
+        <arg name="second_backlog"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.p2p_ip6</arg>
+        <arg name="first_backlog"/>
+        <arg name="second_backlog"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="first_backlog"/>
+        <arg name="second_backlog"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="first_backlog"/>
+        <arg name="second_backlog"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="test_bug_33714" type="script">
+      <objective>Check that listen() can be called multiple times on the same socket and it allows to change its backlog.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="first_backlog"/>
+        <arg name="second_backlog"/>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>Real backlog is more than that passed to the first listen() call</verdict>
+            <verdict>Too much time is required to accept all the established connections after the first listen() call</verdict>
+            <verdict>Real backlog is more than that passed to the second listen() call</verdict>
+            <verdict>Too much time is required to accept all the established connections after the second listen() call</verdict>
+            <verdict>Backlog set for the first listen() call is more than backlog set for the second listen() call but the number of successful accept() calls after the first listen() call is less than the number of succesful accept() calls after the second listen() call</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+<test name="splice" type="script">
+      <objective>Test on reliability of splice() operation on BSD compatible sockets.</objective>
+      <iter result="PASSED">
+          <arg name="env"/>
+          <arg name="extra_pipes"/>
+          <arg name="check_after_splice"/>
+          <arg name="splice_before_data"/>
+          <arg name="overfill_pipe"/>
+          <arg name="set_move"/>
+          <arg name="set_nonblock"/>
+          <arg name="acc_pipe"/>
+          <arg name="diff_stacks"/>
+          <arg name="pipe_size"/>
+          <arg name="use_fcntl"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="ipv6_del_ll_addrs_transmit" type="script">
+      <objective>Check that connection can be established and/or data can be transmitted after removal of link-local IPv6 addresses and neighbor entries from tested interfaces.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="sock_type">udp_notconn</arg>
+        <notes/>
+        <results tags="v5" key="ON-10899" notes="Onload fails to send neighbour solicitation when link-local address is removed">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>Sending data from IUT: Data was sent but peer socket is not readable</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="sock_type">tcp_passive_close</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="sock_type">udp</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="sock_type">tcp_active</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="sock_type">tcp_passive_close</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="sock_type">tcp_active</arg>
+        <notes/>
+        <results tags="v5" key="ON-10899" notes="Onload fails to send neighbour solicitation when link-local address is removed">
+          <result value="FAILED">
+            <verdict>connect() failed with errno RPC-EHOSTUNREACH</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="sock_type">udp_notconn</arg>
+        <notes/>
+        <results tags="v5" key="ON-10899" notes="Onload fails to send neighbour solicitation when link-local address is removed">
+          <result value="FAILED">
+            <verdict>Sending data from IUT: Data was sent but peer socket is not readable</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>Sending data from IUT: Data was sent but peer socket is not readable</verdict>
+            <verdict>Sending data from Tester: Data was sent but peer socket is not readable</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="sock_type">udp</arg>
+        <notes/>
+        <results tags="v5" key="ON-10899" notes="Onload fails to send neighbour solicitation when link-local address is removed">
+          <result value="FAILED">
+            <verdict>Sending data from IUT: Data was sent but peer socket is not readable</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>Sending data from IUT: Data was sent but peer socket is not readable</verdict>
+            <verdict>Sending data from Tester: Data was sent but peer socket is not readable</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+  </iter>
+</test>

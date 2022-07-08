@@ -1,0 +1,254 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+
+    <description>Common services</description>
+
+    <author mailto="Elena.Vengerova@oktetlabs.ru"/>
+
+    <req id="SERVICES" sticky="true"/>
+    <req id="NO_REUSE_STACK" sticky="true"/>
+    <req id="NATIVE_ABI" sticky="true"/>
+    <!-- Adding new user does not work correctly with namespaces.
+         See bug 73949. -->
+    <req id="NO_NETNS" sticky="true"/>
+    <!-- Bug 76321 -->
+    <req id="BROKEN" sticky="true"/>
+
+    <session track_conf="silent" track_conf_handdown="children">
+        <enum name="ftp_server">
+            <value reqs="VSFTPD">vsftpd</value>
+            <!-- Bug 31790 -->
+            <!--value reqs="VSFTPD,XINETD">xinetd_vsftpd</value-->
+            <!--
+            <value reqs="WUFTPD">wuftpd</value>
+            <value reqs="PROFTPD">proftpd</value>
+            <value reqs="PROFTPD,XINETD">xinetd_proftpd</value>
+            -->
+        </enum>
+
+        <arg name="env">
+            <value reqs="ENV-2PEERS">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_ifname'},'H1'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</value>
+        </arg>
+
+        <prologue>
+            <script name="prologue"/>
+        </prologue>
+        <epilogue>
+            <script name="epilogue"/>
+        </epilogue>
+
+        <!--
+        <run>
+            <script name="dhcp_srv_bootp">
+                <req id="DHCP"/>
+                <req id="SERVER"/>
+            </script>
+            <arg name="env">
+                <value>'net1':IUT{'host_iut'{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,if:'if_iut1'},'host_tst1'{if:'if_tst1',addr:'tst1_la':ether:unicast}},'net2':tester{'host_iut'{addr:'iut2_addr':inet:unicast,if:'if_iut2'},'host_tst2'{if:'if_tst2',addr:'tst2_la':ether:unicast}}</value>
+            </arg>
+            <arg name="bind_if1" type="boolean"/>
+            <arg name="bind_if2" type="boolean"/>
+        </run>
+        <run>
+            <script name="dhcp_srv">
+                <req id="DHCP"/>
+                <req id="SERVER"/>
+            </script>
+            <arg name="env">
+                <value>'net1':IUT{'host_iut'{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,if:'if_iut1'},'host_tst1'{if:'if_tst1',addr:'tst1_la':ether:unicast}},'net2':tester{'host_iut'{addr:'iut2_addr':inet:unicast,if:'if_iut2'},'host_tst2'{if:'if_tst2',addr:'tst2_la':ether:unicast}}</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="dns_server">
+                <req id="DNS"/>
+                <req id="SERVER"/>
+                 test is marked as broken cause it corrupts configurator 
+                <req id="BROKEN"/>
+            </script>
+            <arg name="name">
+                <value>oktetlabs.ru</value>
+            </arg>
+            <arg name="use_tcp" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="rsh_client">
+                <req id="RSH"/>
+                <req id="CLIENT"/>
+            </script>
+        </run>
+        <run>
+            <script name="rsh_server">
+                <req id="RSH"/>
+                <req id="SERVER"/>
+            </script>
+        </run>
+
+        <run>
+            <script name="telnet_client">
+                <req id="TELNET"/>
+                <req id="CLIENT"/>
+            </script>
+        </run>
+        <run>
+            <script name="telnet_server">
+                <req id="TELNET"/>
+                <req id="SERVER"/>
+            </script>
+        </run>
+        -->
+
+        <run>
+            <script name="ssh_server">
+                <req id="SSH"/>
+                <req id="SERVER"/>
+            </script>
+        </run>
+        <run>
+            <script name="ssh_client">
+                <req id="SSH"/>
+                <req id="CLIENT"/>
+            </script>
+        </run>
+
+        <run>
+            <script name="ssh_port_fwd_srv"/>
+        </run>
+        <run>
+            <script name="ssh_port_fwd_clnt"/>
+        </run>
+
+        <run>
+            <script name="ssh_complex"/>
+            <arg name="server" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="ssh_x_fwd_srv"/>
+        </run>
+        <run>
+            <script name="ssh_x_fwd_clnt"/>
+        </run>
+
+        <run>
+            <script name="x_server"/>
+        </run>
+        <run>
+            <script name="x_client"/>
+        </run>
+
+        <!--
+        <run>
+            <script name="vnc_server">
+                <req id="VNC"/>
+                <req id="SERVER"/>
+            </script>
+        </run>
+        <run>
+            <script name="vnc_client">
+                <req id="VNC"/>
+                <req id="CLIENT"/>
+            </script>
+        </run>
+        -->
+
+        <run>
+            <script name="ftp_client">
+                <req id="FTP"/>
+                <req id="CLIENT"/>
+            </script>
+            <arg name="ftp_client">
+                <value reqs="FTP">ftp</value>
+                <value reqs="LFTP">lftp</value>
+                <value reqs="NCFTP">ncftp</value>
+            </arg>
+            <arg name="passive" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="ftp_put_get">
+                <req id="FTP"/>
+                <req id="SERVER"/>
+            </script>
+            <arg name="passive" type="boolean"/>
+            <arg name="get" type="boolean"/>
+            <arg name="server" type="ftp_server"/>
+        </run>
+
+        <run>
+            <script name="ftp_file">
+                <req id="FTP"/>
+                <req id="SERVER"/>
+            </script>
+            <arg name="server" type="ftp_server"/>
+        </run>
+
+        <run>
+            <script name="ftp_many">
+                <req id="FTP"/>
+                <req id="SERVER"/>
+            </script>
+            <arg name="passive" type="boolean"/>
+            <!-- wuftpd and proftpd cannot reuse control connections -->
+            <arg name="server" type="ftp_server">
+                <value>vsftpd</value>
+                <!--value>xinetd_vsftpd</value-->
+            </arg>
+        </run>
+
+        <run>
+            <script name="ifconfig_get"/>
+        </run>
+        <run>
+            <script name="ifconfig_stat">
+                <req id="LINUX_SPECIFIC"/>
+                <req id="L2_TS"/>
+            </script>
+        </run>
+        <run>
+            <script name="ifconfig_a">
+                <req id="L2_TS"/>
+            </script>
+        </run>
+        <run>
+            <script name="ifconfig_set">
+                <req id="L2_TS"/>
+            </script>
+        </run>
+
+        <!--
+        <run>
+            <script name="smtp_srv_clnt">
+                <req id="SMTP"/>
+            </script>
+            <arg name="server">
+                <value reqs="SENDMAIL">sendmail</value>
+                <value reqs="POSTFIX">postfix</value>
+                <value reqs="EXIM">exim</value>
+                <value reqs="QMAIL">qmail</value>
+            </arg>
+        </run>
+        -->
+
+        <run>
+            <script name="netstat"/>
+        </run>
+
+        <!--
+        <run>
+            <script name="slapd_ldapsearch"/>
+            <arg name="server" type="boolean"/>
+        </run>
+        -->
+
+        <!--
+        <run>
+            <script name="proc_net_tcp"/>
+        </run>
+        -->
+
+    </session>
+</package>

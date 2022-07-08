@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+
+    <description>Level5-specific test cases</description>
+
+    <author mailto="Andrew.Rybchenko@oktetlabs.ru"/>
+
+    <req id="ONLOAD_ONLY" sticky="true"/>
+
+    <session>
+        <run>
+            <package name="interop"/>
+        </run>
+        <run>
+            <package name="fd_caching"/>
+        </run>
+        <run>
+            <package name="out_of_resources"/>
+        </run>
+        <run>
+            <package name="ulv"/>
+        </run>
+
+        <run>
+            <package name="extension"/>
+        </run>
+
+        <run>
+            <package name="ext_stackname"/>
+        </run>
+
+        <run>
+            <package name="bpf"/>
+        </run>
+
+    </session>
+
+</package>

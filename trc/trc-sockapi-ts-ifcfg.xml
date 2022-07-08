@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<test name="ifcfg" type="package">
+  <objective>Network interface related tests</objective>
+  <notes/>
+  <iter result="PASSED">
+    <notes/>
+    <test name="if_up_down" type="script">
+      <objective>Check that shutting down and activating interface does not harm active connections.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="incoming">FALSE</arg>
+        <arg name="rm_addr">TRUE</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="incoming">TRUE</arg>
+        <arg name="rm_addr">TRUE</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5" key="ON-2214">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>Send operation failed on tester with errno RPC-ECONNRESET</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="incoming">FALSE</arg>
+        <arg name="rm_addr">TRUE</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="v5" key="ON-2214">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>Send operation failed on IUT with errno RPC-ECONNRESET</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="incoming">TRUE</arg>
+        <arg name="rm_addr">TRUE</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="incoming"/>
+        <arg name="rm_addr">FALSE</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="if_add_addr_after_listen" type="script">
+      <objective>Check that a new network interface address is taken into account on listening wildcard address sockets.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="multicast"/>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="if_loopback_conn" type="script">
+      <objective>Check that the TCP/IP stack correctly identifies outgoing connections to local addresses.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">'net1'{'host1'{{'pco1_iut':IUT},{'pco2_iut':IUT},{'pco_tst':tester},if:'net1_if'}},'net2'{'host1'{if:'net2_if'}},'pco1'='pco1_iut','pco2'='pco2_iut','if1'='net1_if','if2'='net2_if'</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">'net1'{'host1'{{'pco1_iut':IUT},{'pco2_iut':IUT},{'pco_tst':tester},if:'net1_if'}},'net2'{'host1'{if:'net2_if'}},'pco1'='pco1_iut','pco2'='pco_tst','if1'='net1_if','if2'='net2_if'</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">'net1'{'host1'{{'pco1_iut':IUT},{'pco2_iut':IUT},{'pco_tst':tester},if:'net1_if'}},'net2'{'host1'{if:'net2_if'}},'pco1'='pco1_iut','pco2'='pco1_iut','if1'='net1_if','if2'='net2_if'</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">'net1'{'host1'{{'pco1_iut':IUT},{'pco2_iut':IUT},{'pco_tst':tester},if:'net1_if'}},'net2'{'host1'{if:'net2_if'}},'pco1'='pco1_iut','pco2'='pco2_iut','if1'='net1_if','if2'='net1_if'</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">'net1'{'host1'{{'pco1_iut':IUT},{'pco2_iut':IUT},{'pco_tst':tester},if:'net1_if'}},'net2'{'host1'{if:'net2_if'}},'pco1'='pco1_iut','pco2'='pco_tst','if1'='net1_if','if2'='net1_if'</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">'net1'{'host1'{{'pco1_iut':IUT},{'pco2_iut':IUT},{'pco_tst':tester},if:'net1_if'}},'net2'{'host1'{if:'net2_if'}},'pco1'='pco1_iut','pco2'='pco1_iut','if1'='net1_if','if2'='net1_if'</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">'net1'{'host1'{{'pco1_iut':IUT,'pco2_iut':IUT},{'pco_tst':tester},if:'net1_if'}},'net2'{'host1'{if:'net2_if'}},'pco1'='pco1_iut','pco2'='pco2_iut','if1'='net1_if','if2'='net2_if'</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">'net1'{'host1'{{'pco1_iut':IUT,'pco2_iut':IUT},{'pco_tst':tester},if:'net1_if'}},'net2'{'host1'{if:'net2_if'}},'pco1'='pco1_iut','pco2'='pco_tst','if1'='net1_if','if2'='net2_if'</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">'net1'{'host1'{{'pco1_iut':IUT,'pco2_iut':IUT},{'pco_tst':tester},if:'net1_if'}},'net2'{'host1'{if:'net2_if'}},'pco1'='pco1_iut','pco2'='pco1_iut','if1'='net1_if','if2'='net2_if'</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">'net1'{'host1'{{'pco1_iut':IUT,'pco2_iut':IUT},{'pco_tst':tester},if:'net1_if'}},'net2'{'host1'{if:'net2_if'}},'pco1'='pco1_iut','pco2'='pco2_iut','if1'='net1_if','if2'='net1_if'</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">'net1'{'host1'{{'pco1_iut':IUT,'pco2_iut':IUT},{'pco_tst':tester},if:'net1_if'}},'net2'{'host1'{if:'net2_if'}},'pco1'='pco1_iut','pco2'='pco_tst','if1'='net1_if','if2'='net1_if'</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">'net1'{'host1'{{'pco1_iut':IUT,'pco2_iut':IUT},{'pco_tst':tester},if:'net1_if'}},'net2'{'host1'{if:'net2_if'}},'pco1'='pco1_iut','pco2'='pco1_iut','if1'='net1_if','if2'='net1_if'</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="if_remove_addr_after_bind_dgram" type="script">
+      <objective>Check that socket API abides removing interface network address even though there is a socket bound to it.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="if_remove_addr_after_bind_stream" type="script">
+      <objective>Check that connect() on a bound TCP socket fails if local address is removed. But the socket can be connected when the address is back.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+        <results tags="v5&amp;ool_tcp_shared_ports" key="ON-7786">
+          <result value="PASSED">
+            <verdict>Connect() from removed IP address failed with unexpected errno RPC-EADDRNOTAVAIL instead of RPC-EINVAL or RPC-ENETUNREACH</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="if_remove_addr_after_connect" type="script">
+      <objective>Check that send() call fails for a connected UDP socket and is successful for TCP socket (data is buffered) if local address is removed. But data is successfully sent when the address is back.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <notes/>
+        <results tags="v5&amp;(scalable_active|scalable_passive|af_xdp|x3)" key="OL 11852,ON-8270,ON-12615,ON-13769">
+          <result value="FAILED">
+            <verdict>Socket 'iut_s' is not expected to be readable, but it is</verdict>
+          </result>
+          <result value="PASSED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="if_remove_addr_after_listen" type="script">
+      <objective>Check that socket API abides removing interface network address even though there is a listening socket waiting on that address.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="if_remove_addr_after_many_conns" type="script">
+      <objective>Check that socket API abides removing interface network address even though there is a listening socket waiting on that address together with opened connections derived from that server.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="conn"/>
+        <arg name="env"/>
+        <notes/>
+        <results tags="v5&amp;(scalable_passive|scalable_active|af_xdp|x3)" key="OL 11852,ON-5557,ON-12615,ON-13769">
+          <result value="FAILED">
+            <verdict>Socket 'acc_s[i]' is not expected to be readable, but it is</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="if_source_addr_dgram" type="script">
+      <objective>Check that IP stack choose source IP address of outgoing packets in the right way.</objective>
+      <notes>L5 1769</notes>
+      <iter result="PASSED">
+        <arg name="bind_to"/>
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="if_source_addr_stream" type="script">
+      <objective>Check that IP stack choose source IP address of outgoing packets in the right way.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="bind_to"/>
+        <arg name="env"/>
+        <arg name="passive"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="if_down_nodelay" type="script">
+      <objective>Check stack behaviour when interface goes to the down state after establishing TCP connection (dependence of TCP_NODELAY functionality).</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="no_delay"/>
+        <arg name="non_blocked">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="no_delay"/>
+        <arg name="non_blocked">FALSE</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="if_bind_on_down_if" type="script">
+      <objective>Bind a socket to an address of a down interface, check the socket API trying to send some data or establish TCP connection. Then check that socket works correctly when the interface is up.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="connect"/>
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="v5&amp;(bond1|bond4|macvlan|vlan|team1|team4)" key="ON-8233">
+          <result value="FAILED">
+            <verdict>iomux_call() returned an event</verdict>
+          </result>
+          <result value="PASSED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connect"/>
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="if_up_down_influence" type="script">
+      <objective>Check that reconfiguring (set to down and after to up) one of IUT interfaces does not affect another IUT interface.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="change_if"/>
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="two_if_on_subnet" type="script">
+      <objective>Check stack behaviour if two IUT interfaces have IP addresses from the same subnet and check which is the route choosen to interact through.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iut1_if_first">FALSE</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>The first configured link is active</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iut1_if_first">TRUE</arg>
+        <arg name="sock_type"/>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>The first configured link is active</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iut1_if_first">FALSE</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>The first configured link is active</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="if_addr_assign_order" type="script">
+      <objective>Check that assigning address/network on the interface with cleared address/network information before and after bringing that interface up works correctly.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="assign_first">FALSE</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="assign_first">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="if_bind_down_use_other_if" type="script">
+      <objective>Check what happens when socket is bound to a "downed" interface but packets are going via another interface.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <arg name="bind_before"/>
+        <arg name="conn_before"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="recv_wrong_mac" type="script">
+      <objective>Check that a packet with wrong MAC but correct IP address is ignored.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">tcp_passive</arg>
+        <notes/>
+        <results tags="v5&amp;ef10&amp;(!scalable_passive|rss_scalable_active_passive)" key="ON-3214">
+          <result value="FAILED">
+            <verdict>IUT socket is readable after receiving packet with a wrong Ethernet address</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">tcp_passive_close</arg>
+        <notes/>
+        <results tags="v5&amp;ef10&amp;(!scalable_passive|rss_scalable_active_passive)" key="ON-3214">
+          <result value="FAILED">
+            <verdict>IUT socket is readable after receiving packet with a wrong Ethernet address</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">udp</arg>
+        <notes/>
+        <results tags="v5&amp;ef10" key="ON-3214">
+          <result value="FAILED">
+            <verdict>IUT socket is readable after receiving packet with a wrong Ethernet address</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">tcp_active</arg>
+        <notes/>
+        <results tags="v5&amp;ef10" key="ON-3214">
+          <result value="FAILED">
+            <verdict>IUT socket is readable after receiving packet with a wrong Ethernet address</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="if_addr_add_remove_recv" type="script">
+      <objective>Check what happens when connection request or data is sent to an address which was added or removed and there is a socket bound to INADDR_ANY before the address was added the first time.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="same_net"/>
+        <arg name="traffic"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="same_net"/>
+        <arg name="traffic">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="same_net"/>
+        <arg name="traffic">TRUE</arg>
+        <notes/>
+        <results tags="v5&amp;x3" key="ON-13769">
+          <result value="PASSED">
+            <verdict>Sending after adding the address again: Unexpected datagram was received</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+  </iter>
+</test>

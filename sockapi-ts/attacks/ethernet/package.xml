@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+    
+    <description>Ethernet and ARP attacks</description>
+    
+    <author mailto="Elena.Vengerova@oktetlabs.ru"/>
+
+    <req id="L2_TS" sticky="true"/>
+
+    <session>
+
+        <run>
+            <script name="padding" track_conf="silent">
+                <req id="NO_VLAN"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="sock_type" type="sock_stream_dgram">
+              <value>SOCK_STREAM</value>
+                <!-- The test expects that IUT sends ARP, but ZF does not
+                     do it. -->
+              <value reqs="ZF_INCOMPATIBLE">SOCK_DGRAM</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="oversized" track_conf="silent">
+                <req id="NO_VLAN"/>
+                <req id="ETHERNET_OVERSIZED"/>
+            </script>
+            <arg name="env"> 
+                <value>'net1'{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'iut_fake_addr':inet:fake,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="own_arp" track_conf="silent"/>
+            <arg name="env" ref="env.peer2peer"/>
+            <arg name="reply" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="zero_src_mac" track_conf="silent">
+                <req id="BOMBUR_BLACKLIST"/>
+                <req id="NO_OOL1509_NDEBUG"/>
+            </script>
+            <arg name="env" ref="env.peer2peer"/>
+        </run>
+             
+    </session>
+</package>

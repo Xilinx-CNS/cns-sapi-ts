@@ -1,0 +1,1561 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<test name="extension" type="package">
+  <objective>Onload extensions</objective>
+  <notes/>
+  <iter result="PASSED">
+    <notes/>
+    <test name="dont_accelerate" type="script">
+      <objective>Acceleration of certain object types and it's dependency upon EF_DONT_ACCELERATE environment variable.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="object"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="is_present" type="script">
+      <objective>Check that onload_is_present() function correctly reports onload library presence.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="udp_rx_filter" type="script">
+      <objective>Check that UDP-RX filter with callback that checks first n bytes works correctly for different amount of data.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="block_call">TRUE</arg>
+        <arg name="env"/>
+        <arg name="iomux_f">oo_epoll</arg>
+        <arg name="pattern_len"/>
+        <arg name="tx_msg">zero</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5&amp;!ool_spin" key="ON-1597">
+          <result value="FAILED">
+            <verdict>Sent message is 'zero' but iomux_call() returned 1</verdict>
+          </result>
+        </results>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>Sent message is 'zero' but iomux_call() returned -1 with errno EINVAL</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call">TRUE</arg>
+        <arg name="env"/>
+        <arg name="iomux_f">oo_epoll</arg>
+        <arg name="pattern_len">5</arg>
+        <arg name="tx_msg">short</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5&amp;!ool_spin" key="ON-1597">
+          <result value="FAILED">
+            <verdict>Sent message is 'short' but iomux_call() returned 1</verdict>
+          </result>
+        </results>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>Sent message is 'short' but iomux_call() returned -1 with errno EINVAL</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call">TRUE</arg>
+        <arg name="env"/>
+        <arg name="iomux_f">oo_epoll</arg>
+        <arg name="pattern_len">5</arg>
+        <arg name="tx_msg">nonmatch</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5&amp;!ool_spin" key="ON-1597">
+          <result value="FAILED">
+            <verdict>Sent message is 'nonmatch' but iomux_call() returned 1</verdict>
+          </result>
+        </results>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>Sent message is 'nonmatch' but iomux_call() returned -1 with errno EINVAL</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call">FALSE</arg>
+        <arg name="env"/>
+        <arg name="iomux_f">oo_epoll</arg>
+        <arg name="pattern_len"/>
+        <arg name="tx_msg">zero</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1597">
+          <result value="FAILED">
+            <verdict>Sent message is 'zero' but iomux_call() returned 1</verdict>
+          </result>
+        </results>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>Sent message is 'zero' but iomux_call() returned -1 with errno EINVAL</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call">TRUE</arg>
+        <arg name="env"/>
+        <arg name="iomux_f">oo_epoll</arg>
+        <arg name="pattern_len">10240</arg>
+        <arg name="tx_msg">short</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1597">
+          <result value="FAILED">
+            <verdict>Sent message is 'short' but iomux_call() returned 1</verdict>
+          </result>
+        </results>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>Sent message is 'short' but iomux_call() returned -1 with errno EINVAL</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call">FALSE</arg>
+        <arg name="env"/>
+        <arg name="iomux_f">oo_epoll</arg>
+        <arg name="pattern_len"/>
+        <arg name="tx_msg">short</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1597">
+          <result value="FAILED">
+            <verdict>Sent message is 'short' but iomux_call() returned 1</verdict>
+          </result>
+        </results>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>Sent message is 'short' but iomux_call() returned -1 with errno EINVAL</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call">TRUE</arg>
+        <arg name="env"/>
+        <arg name="iomux_f">oo_epoll</arg>
+        <arg name="pattern_len">10240</arg>
+        <arg name="tx_msg">nonmatch</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1597">
+          <result value="FAILED">
+            <verdict>Sent message is 'nonmatch' but iomux_call() returned 1</verdict>
+          </result>
+        </results>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>Sent message is 'nonmatch' but iomux_call() returned -1 with errno EINVAL</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call">FALSE</arg>
+        <arg name="env"/>
+        <arg name="iomux_f">oo_epoll</arg>
+        <arg name="pattern_len"/>
+        <arg name="tx_msg">nonmatch</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1597">
+          <result value="FAILED">
+            <verdict>Sent message is 'nonmatch' but iomux_call() returned 1</verdict>
+          </result>
+        </results>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>Sent message is 'nonmatch' but iomux_call() returned -1 with errno EINVAL</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="iomux_f">oo_epoll</arg>
+        <arg name="pattern_len"/>
+        <arg name="tx_msg">match</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>Sent message is 'match' but iomux_call() returned -1 with errno EINVAL</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="iomux_f">select</arg>
+        <arg name="pattern_len"/>
+        <arg name="tx_msg">zero</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1597">
+          <result value="FAILED">
+            <verdict>Sent message is 'zero' but iomux_call() returned 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="iomux_f">pselect</arg>
+        <arg name="pattern_len"/>
+        <arg name="tx_msg">zero</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1597">
+          <result value="FAILED">
+            <verdict>Sent message is 'zero' but iomux_call() returned 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="iomux_f">poll</arg>
+        <arg name="pattern_len"/>
+        <arg name="tx_msg">zero</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1597">
+          <result value="FAILED">
+            <verdict>Sent message is 'zero' but iomux_call() returned 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="iomux_f">ppoll</arg>
+        <arg name="pattern_len"/>
+        <arg name="tx_msg">zero</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1597">
+          <result value="FAILED">
+            <verdict>Sent message is 'zero' but iomux_call() returned 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="iomux_f">epoll</arg>
+        <arg name="pattern_len"/>
+        <arg name="tx_msg">zero</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1597">
+          <result value="FAILED">
+            <verdict>Sent message is 'zero' but iomux_call() returned 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="iomux_f">epoll_pwait</arg>
+        <arg name="pattern_len"/>
+        <arg name="tx_msg">zero</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1597">
+          <result value="FAILED">
+            <verdict>Sent message is 'zero' but iomux_call() returned 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="iomux_f">select</arg>
+        <arg name="pattern_len"/>
+        <arg name="tx_msg">short</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1597">
+          <result value="FAILED">
+            <verdict>Sent message is 'short' but iomux_call() returned 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="iomux_f">pselect</arg>
+        <arg name="pattern_len"/>
+        <arg name="tx_msg">short</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1597">
+          <result value="FAILED">
+            <verdict>Sent message is 'short' but iomux_call() returned 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="iomux_f">poll</arg>
+        <arg name="pattern_len"/>
+        <arg name="tx_msg">short</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1597">
+          <result value="FAILED">
+            <verdict>Sent message is 'short' but iomux_call() returned 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="iomux_f">ppoll</arg>
+        <arg name="pattern_len"/>
+        <arg name="tx_msg">short</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1597">
+          <result value="FAILED">
+            <verdict>Sent message is 'short' but iomux_call() returned 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="iomux_f">epoll</arg>
+        <arg name="pattern_len"/>
+        <arg name="tx_msg">short</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1597">
+          <result value="FAILED">
+            <verdict>Sent message is 'short' but iomux_call() returned 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="iomux_f">epoll_pwait</arg>
+        <arg name="pattern_len"/>
+        <arg name="tx_msg">short</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1597">
+          <result value="FAILED">
+            <verdict>Sent message is 'short' but iomux_call() returned 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="iomux_f">select</arg>
+        <arg name="pattern_len"/>
+        <arg name="tx_msg">nonmatch</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1597">
+          <result value="FAILED">
+            <verdict>Sent message is 'nonmatch' but iomux_call() returned 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="iomux_f">pselect</arg>
+        <arg name="pattern_len"/>
+        <arg name="tx_msg">nonmatch</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1597">
+          <result value="FAILED">
+            <verdict>Sent message is 'nonmatch' but iomux_call() returned 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="iomux_f">poll</arg>
+        <arg name="pattern_len"/>
+        <arg name="tx_msg">nonmatch</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1597">
+          <result value="FAILED">
+            <verdict>Sent message is 'nonmatch' but iomux_call() returned 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="iomux_f">ppoll</arg>
+        <arg name="pattern_len"/>
+        <arg name="tx_msg">nonmatch</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1597">
+          <result value="FAILED">
+            <verdict>Sent message is 'nonmatch' but iomux_call() returned 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="iomux_f">epoll</arg>
+        <arg name="pattern_len"/>
+        <arg name="tx_msg">nonmatch</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1597">
+          <result value="FAILED">
+            <verdict>Sent message is 'nonmatch' but iomux_call() returned 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="iomux_f">epoll_pwait</arg>
+        <arg name="pattern_len"/>
+        <arg name="tx_msg">nonmatch</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1597">
+          <result value="FAILED">
+            <verdict>Sent message is 'nonmatch' but iomux_call() returned 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call">TRUE</arg>
+        <arg name="env"/>
+        <arg name="pattern_len">10240</arg>
+        <arg name="recv_f">recv</arg>
+        <arg name="tx_msg">short</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1596">
+          <result value="FAILED"/>
+          <result value="PASSED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call">FALSE</arg>
+        <arg name="env"/>
+        <arg name="pattern_len">10240</arg>
+        <arg name="recv_f">recv</arg>
+        <arg name="tx_msg">short</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1596">
+          <result value="PASSED"/>
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="pattern_len">10240</arg>
+        <arg name="recv_f">read</arg>
+        <arg name="tx_msg">nonmatch</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1596">
+          <result value="PASSED"/>
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="pattern_len">10240</arg>
+        <arg name="recv_f">read</arg>
+        <arg name="tx_msg">short</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1596">
+          <result value="PASSED"/>
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="pattern_len">10240</arg>
+        <arg name="recv_f">readv</arg>
+        <arg name="tx_msg">nonmatch</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1596">
+          <result value="PASSED"/>
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="pattern_len">10240</arg>
+        <arg name="recv_f">readv</arg>
+        <arg name="tx_msg">short</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1596">
+          <result value="PASSED"/>
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="pattern_len">10240</arg>
+        <arg name="recv_f">recv</arg>
+        <arg name="tx_msg">nonmatch</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+        <results tags="linux&amp;v5" key="ON-1596">
+          <result value="PASSED"/>
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="pattern_len">10240</arg>
+        <arg name="recv_f">read</arg>
+        <arg name="tx_msg">match</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="pattern_len">10240</arg>
+        <arg name="recv_f">read</arg>
+        <arg name="tx_msg">zero</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="pattern_len">10240</arg>
+        <arg name="recv_f">readv</arg>
+        <arg name="tx_msg">match</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="pattern_len">10240</arg>
+        <arg name="recv_f">readv</arg>
+        <arg name="tx_msg">zero</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="pattern_len">10240</arg>
+        <arg name="recv_f">recv</arg>
+        <arg name="tx_msg">match</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="pattern_len">10240</arg>
+        <arg name="recv_f">recv</arg>
+        <arg name="tx_msg">zero</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="pattern_len">10240</arg>
+        <arg name="recv_f">recvfrom</arg>
+        <arg name="tx_msg"/>
+        <arg name="use_iomux"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="pattern_len">10240</arg>
+        <arg name="recv_f">recvmsg</arg>
+        <arg name="tx_msg"/>
+        <arg name="use_iomux"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="pattern_len">10240</arg>
+        <arg name="recv_f">recvmmsg</arg>
+        <arg name="tx_msg"/>
+        <arg name="use_iomux"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="pattern_len">5</arg>
+        <arg name="recv_f"/>
+        <arg name="tx_msg"/>
+        <arg name="use_iomux"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="iomux_f">select</arg>
+        <arg name="pattern_len"/>
+        <arg name="tx_msg">match</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="iomux_f">pselect</arg>
+        <arg name="pattern_len"/>
+        <arg name="tx_msg">match</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="iomux_f">poll</arg>
+        <arg name="pattern_len"/>
+        <arg name="tx_msg">match</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="iomux_f">ppoll</arg>
+        <arg name="pattern_len"/>
+        <arg name="tx_msg">match</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="iomux_f">epoll</arg>
+        <arg name="pattern_len"/>
+        <arg name="tx_msg">match</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_call"/>
+        <arg name="env"/>
+        <arg name="iomux_f">epoll_pwait</arg>
+        <arg name="pattern_len"/>
+        <arg name="tx_msg">match</arg>
+        <arg name="use_iomux"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="udp_rx_filter_simple" type="script">
+      <objective>Check that UDP-RX filter callback can be used to capture all datagrams which UDP socket receives.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="pkt_num"/>
+        <arg name="recv_f"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="onload_zc_recv_large" type="script">
+      <objective>Check onload_zc_recv() correctly receive packets that have length more then MTU.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="length"/>
+        <arg name="packet_num"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="zc_send_big_buf_complete" type="script">
+      <objective>Check that if bigger than MTU user buffer is sent with onload_zc_send(), exactly one completion is got for it.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <arg name="buf_size"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="oo_epoll" type="script">
+      <objective>Check that onload_ordered_epoll_wait() allows to retrieve data from multiple sockets in the order in which it was received from network.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="buf_size_max">10000</arg>
+        <arg name="buf_size_min"/>
+        <arg name="env"/>
+        <arg name="sock_type">udp</arg>
+        <arg name="stream_packets_num"/>
+        <arg name="streams_num"/>
+        <notes/>
+        <results tags="v5" key="ON-3669" notes="Incoming fragmented datagrams are processed by kernel">
+          <result value="FAILED">
+            <verdict>An event with bytes=0 was reported</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="buf_size_max">10000</arg>
+        <arg name="buf_size_min"/>
+        <arg name="env"/>
+        <arg name="sock_type">both</arg>
+        <arg name="stream_packets_num"/>
+        <arg name="streams_num"/>
+        <notes/>
+        <results tags="v5" key="ON-3669" notes="Incoming fragmented datagrams are processed by kernel">
+          <result value="FAILED">
+            <verdict>An event with bytes=0 was reported</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="buf_size_max">10000</arg>
+        <arg name="buf_size_min"/>
+        <arg name="env"/>
+        <arg name="sock_type">tcp</arg>
+        <arg name="stream_packets_num"/>
+        <arg name="streams_num"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="buf_size_max">300</arg>
+        <arg name="buf_size_min"/>
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <arg name="stream_packets_num"/>
+        <arg name="streams_num"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="oo_epoll_dont_read" type="script">
+      <objective>Call function onload_ordered_epoll_wait() a number times in a row without any data reading during this time, check that the calls handle events as expected.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="buf_size_max">10000</arg>
+        <arg name="buf_size_min"/>
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="test_case">2</arg>
+        <notes/>
+        <results tags="v5" key="ON-3669">
+          <result value="FAILED">
+            <verdict>Timestamp value of the first stream is greater or equal to the second stream value</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="buf_size_max">10000</arg>
+        <arg name="buf_size_min"/>
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="test_case">3</arg>
+        <notes/>
+        <results tags="v5" key="ON-3669">
+          <result value="FAILED">
+            <verdict>Timestamp value of the first stream is greater or equal to the second stream value</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="buf_size_max">10000</arg>
+        <arg name="buf_size_min"/>
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="test_case">1</arg>
+        <notes/>
+        <results tags="v5" key="ON-3669">
+          <result value="FAILED">
+            <verdict>Bytes field has wrong value</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="buf_size_max">10000</arg>
+        <arg name="buf_size_min"/>
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="test_case"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="buf_size_max">1400</arg>
+        <arg name="buf_size_min"/>
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <arg name="test_case"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="oo_epoll_read" type="script">
+      <objective>Check that onload_ordered_epoll_wait() function returns events and actual bytes number after reading data on a socket. Send data via two flows, read amount of data from one of the flows, which is more, less or equal to bytes number of a one potential oo_event.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="buf_size_max">20000</arg>
+        <arg name="buf_size_min"/>
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="test_case">equal</arg>
+        <notes/>
+        <results tags="v5" key="ON-3669">
+          <result value="PASSED">
+            <verdict>Bytes field of the second stream has wrong value</verdict>
+            <verdict>Bytes field of the first stream has wrong value</verdict>
+            <verdict>Bytes field of the second stream has wrong value</verdict>
+            <verdict>The first stream timestamp should be greater than the second</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="buf_size_max">20000</arg>
+        <arg name="buf_size_min"/>
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="test_case">less</arg>
+        <notes/>
+        <results tags="v5" key="ON-3669">
+          <result value="PASSED">
+            <verdict>Bytes field of the second stream has wrong value</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="buf_size_max">20000</arg>
+        <arg name="buf_size_min"/>
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="test_case">more</arg>
+        <notes/>
+        <results tags="v5" key="ON-3669">
+          <result value="PASSED">
+            <verdict>Bytes field of the second stream has wrong value</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="buf_size_max">1400</arg>
+        <arg name="buf_size_min"/>
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <arg name="test_case">equal</arg>
+        <notes/>
+        <results tags="!(ool_epoll=1)&amp;!(ool_epoll=3)" key="ON-3671">
+          <result value="FAILED">
+            <verdict>WODA is not supported</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="buf_size_max">1400</arg>
+        <arg name="buf_size_min"/>
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <arg name="test_case">less</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="buf_size_max">1400</arg>
+        <arg name="buf_size_min"/>
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <arg name="test_case">more</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="buf_size_max">20000</arg>
+        <arg name="buf_size_min"/>
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="test_case"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="oo_epoll_seg_reordering" type="script">
+      <objective>Check that WODA handles reordered TCP data segments properly.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="test_case"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="template_update" type="script">
+      <objective>Check that onload_msg_template_update changes allocated templates as expected.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iovcnt"/>
+        <arg name="mode"/>
+        <arg name="total">1600</arg>
+        <arg name="updates_num"/>
+        <notes/>
+        <results tags="v5" key="ON-4047">
+          <result value="FAILED">
+            <verdict>Amount of received data is not equal to sent data</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iovcnt"/>
+        <arg name="mode"/>
+        <arg name="total">2000</arg>
+        <arg name="updates_num"/>
+        <notes/>
+        <results tags="v5" key="ON-3369">
+          <result value="FAILED">
+            <verdict>Template allocation failed with errno E2BIG</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iovcnt"/>
+        <arg name="mode"/>
+        <arg name="total">10</arg>
+        <arg name="updates_num"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iovcnt">10</arg>
+        <arg name="mode"/>
+        <arg name="total"/>
+        <arg name="updates_num"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="template_send" type="script">
+      <objective>Transmit some data with usual send() before sending a template.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="data_amount"/>
+        <arg name="env"/>
+        <arg name="iovcnt"/>
+        <arg name="total">3000</arg>
+        <notes/>
+        <results tags="v5" key="ON-3369">
+          <result value="FAILED">
+            <verdict>Template allocation failed with errno E2BIG</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_amount"/>
+        <arg name="env"/>
+        <arg name="iovcnt"/>
+        <arg name="total">1024</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="template_mult" type="script">
+      <objective>Allocate and pass a few templates via a few sockets</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iovcnt"/>
+        <arg name="order"/>
+        <arg name="send_num"/>
+        <arg name="sockets_num"/>
+        <arg name="templates_num"/>
+        <arg name="thread_process"/>
+        <arg name="total">64</arg>
+        <arg name="updates_num"/>
+        <arg name="flags_pio_retry"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iovcnt"/>
+        <arg name="order"/>
+        <arg name="send_num"/>
+        <arg name="sockets_num"/>
+        <arg name="templates_num"/>
+        <arg name="thread_process">process</arg>
+        <arg name="total">512</arg>
+        <arg name="updates_num"/>
+        <arg name="flags_pio_retry"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iovcnt"/>
+        <arg name="order"/>
+        <arg name="send_num"/>
+        <arg name="sockets_num"/>
+        <arg name="templates_num"/>
+        <arg name="thread_process">none</arg>
+        <arg name="total">512</arg>
+        <arg name="updates_num"/>
+        <arg name="flags_pio_retry">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iovcnt"/>
+        <arg name="order"/>
+        <arg name="send_num"/>
+        <arg name="sockets_num"/>
+        <arg name="templates_num"/>
+        <arg name="thread_process">none</arg>
+        <arg name="total">512</arg>
+        <arg name="updates_num"/>
+        <arg name="flags_pio_retry">FALSE</arg>
+        <notes/>
+        <results tags="linux" key="ON-4049" notes="We cannot allocate template over 2k bytes per stack.">
+          <result value="FAILED">
+            <verdict>Template allocation failed with errno ENOMEM</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="template_hide_ack" type="script">
+      <objective/>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iovcnt"/>
+        <arg name="total"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="template_overfill" type="script">
+      <objective>Test Onload templates when buffers are overfilled</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iovcnt"/>
+        <arg name="total"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="template_abort" type="script">
+      <objective>Call abort while an Onload template is sending in another thread.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iovcnt"/>
+        <arg name="total"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="template_close" type="script">
+      <objective>Check that buffers are released after socket closing</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iovcnt"/>
+        <arg name="total"/>
+        <arg name="way"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="template_signal" type="script">
+      <objective>Call Onload template functions from signal handler</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iovcnt"/>
+        <arg name="total"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="template_alloc_bnb" type="script">
+      <objective>Test Onload templates behavior allocation with bnbvalues</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iovcnt"/>
+        <arg name="testcase"/>
+        <arg name="total"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="template_update_bnb" type="script">
+      <objective>Test Onload templates behavior update with bnbvalues</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iovcnt"/>
+        <arg name="testcase"/>
+        <arg name="total"/>
+        <arg name="second_update"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="template_abort_bnb" type="script">
+      <objective>Test Onload templates abort function behavior with bnbvalues</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iovcnt"/>
+        <arg name="testcase"/>
+        <arg name="total"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="onload_zc_send" type="script">
+      <objective>Test on reliability of the onload_zc_send() operation on BSD compatible sockets.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="alloc_another_sock"/>
+        <arg name="diff_stacks"/>
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast},{{'pco_tst2':tester},addr:'tst_addr2':inet:unicast}},'tst_addr1'='iut_addr1'</arg>
+        <arg name="first_active"/>
+        <arg name="second_active"/>
+        <arg name="use_exec"/>
+        <arg name="user_buf"/>
+        <notes/>
+        <results tags="v5&amp;ool_loop=0" notes="onload_zc_send() function is supported only for accelerated sockets">
+          <result value="FAILED">
+            <verdict>onload_zc_send() failed with errno RPC-ESOCKTNOSUPPORT (error message 'onload_zc_alloc_buffers() failed')</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="alloc_another_sock"/>
+        <arg name="diff_stacks"/>
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':IUT},{'pco_tst2':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast}},'tst_addr1'='iut_addr1','tst_addr2'='iut_addr2'</arg>
+        <arg name="first_active"/>
+        <arg name="second_active"/>
+        <arg name="use_exec"/>
+        <arg name="user_buf"/>
+        <notes/>
+        <results tags="v5&amp;ool_loop=0" notes="onload_zc_send() function is supported only for accelerated sockets">
+          <result value="FAILED">
+            <verdict>onload_zc_send() failed with errno RPC-ESOCKTNOSUPPORT (error message 'onload_zc_alloc_buffers() failed')</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="alloc_another_sock">FALSE</arg>
+        <arg name="diff_stacks"/>
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},addr:'tst_addr1':inet:unicast}},'iut_addr2'='iut_addr1','tst_addr2'='tst_addr1'</arg>
+        <arg name="first_active"/>
+        <arg name="second_active"/>
+        <arg name="use_exec"/>
+        <arg name="user_buf"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="alloc_another_sock">FALSE</arg>
+        <arg name="diff_stacks"/>
+        <arg name="env">'net1':IUT{'iut_host'{{'pco_iut':IUT}}},'net2':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},addr:'tst_addr1':inet:unicast}},'iut_addr2'='iut_addr1','tst_addr2'='tst_addr1'</arg>
+        <arg name="first_active"/>
+        <arg name="second_active"/>
+        <arg name="use_exec"/>
+        <arg name="user_buf"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="alloc_another_sock">FALSE</arg>
+        <arg name="diff_stacks"/>
+        <arg name="env">'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast},'tst_host'{{'pco_tst1':tester},addr:'tst_addr1':inet:unicast}},'net2':IUT{'iut_host'{addr:'iut_addr2':inet:unicast},'tst_host'{{'pco_tst2':tester},addr:'tst_addr2':inet:unicast}}</arg>
+        <arg name="first_active"/>
+        <arg name="second_active"/>
+        <arg name="use_exec"/>
+        <arg name="user_buf"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="alloc_another_sock">TRUE</arg>
+        <arg name="diff_stacks"/>
+        <arg name="env"/>
+        <arg name="first_active"/>
+        <arg name="second_active"/>
+        <arg name="use_exec"/>
+        <arg name="user_buf"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="delegated_api" type="script">
+      <objective>Usage sample of onload_delegated_* API.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="use_iov"/>
+        <arg name="length"/>
+        <arg name="raw_send"/>
+        <arg name="single_rpc"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="simple_ds" type="script">
+      <objective>Check that simple case of sending using delegated send API works correctly</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="length"/>
+        <arg name="raw_send"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="od_overfill_sndbuf" type="script">
+      <objective>Check send buffer overfilling is correctly handled.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="raw_send"/>
+        <arg name="small_portion"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="od_no_ack" type="script">
+      <objective>Check that OD send retransmits data if no ACK is received.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="nonblock"/>
+        <arg name="raw_send"/>
+        <arg name="small_portion"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="msg_warm" type="script">
+      <objective>Check that no data is sent when send flag ONLOAD_MSG_WARM is used.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <arg name="func"/>
+        <arg name="buf_len"/>
+        <arg name="flags"/>
+        <arg name="send_data_before"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="msg_warm_send_flow" type="script">
+      <objective>Check that using ONLOAD_MSG_WARM flag is harmless when it is done during data flow transmission.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">onload_zc_send</arg>
+        <arg name="sock_type"/>
+        <notes/>
+        <results tags="v5" key="ON-7218">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>onload_zc_send(flags=MSG_WARM) return value differs from length of data to send</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">sendmsg</arg>
+        <arg name="sock_type"/>
+        <notes/>
+        <results tags="v5" key="ON-7218">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>sendmsg(flags=MSG_WARM) return value differs from length of data to send</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">sendto</arg>
+        <arg name="sock_type"/>
+        <notes/>
+        <results tags="v5" key="ON-7218">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>sendto(flags=MSG_WARM) return value differs from length of data to send</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">send</arg>
+        <arg name="sock_type"/>
+        <notes/>
+        <results tags="v5" key="ON-7218">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>send(flags=MSG_WARM) return value differs from length of data to send</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="msg_warm_fill_send_buf" type="script">
+      <objective>Check that using of ONLOAD_MSG_WARM flag is harmless when send buffer is not empty.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <arg name="func"/>
+        <arg name="full"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="msg_warm_conn_problem" type="script">
+      <objective>Check that using ONLOAD_MSG_WARM flag is harmless when there is a connection problem.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func"/>
+        <arg name="sock_type"/>
+        <arg name="status"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="msg_warm_large_buf" type="script">
+      <objective>Check that @c ONLOAD_MSG_WARM flag cannot be used when more than MSS bytes is passed to send function.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <arg name="func"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="msg_warm_zc_send" type="script">
+      <objective>Check that @c ONLOAD_MSG_WARM flag cannot be used with onload_zc_send() when more than MSS bytes or more than one IOV is passed to this function.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <arg name="big_packet"/>
+        <arg name="single_iov"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="msg_warm_concurrent" type="script">
+      <objective>Check that using ONLOAD_MSG_WARM flag is harmless when data is sent from two sockets concurrently.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <arg name="func"/>
+        <arg name="nonblock"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="od_send_peer_close" type="script">
+      <objective>Check behavior of ODS functions when peer closes its socket</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="aux_func"/>
+        <arg name="env"/>
+        <arg name="first_call"/>
+        <arg name="get_err_first"/>
+        <arg name="overfill"/>
+        <arg name="second_call"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="zc_send_ack_complete" type="script">
+      <objective>Check that if onload_zc_send() with user buffer is used, then completion message arrives only after ACK is received for a sent buffer.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="zc_register_bufs" type="script">
+      <objective>Check that a buffer can be registered with onload_zc_register_buffers() and unregistered with onload_zc_unregister_buffers() if its address is page-aligned and its length is a multiple of memory page size.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="buf_aligned">TRUE</arg>
+        <arg name="buf_len">1</arg>
+        <arg name="env"/>
+        <arg name="huge_pages">no</arg>
+        <arg name="sock_type"/>
+        <notes/>
+        <results tags="v5&amp;ef100&amp;!ool_phys_mode" key="ON-13309, ST-2438">
+          <result value="FAILED">
+            <verdict>onload_zc_register_buffers() unexpectedly failed with errno RPC-EMSGSIZE</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="buf_aligned">TRUE</arg>
+        <arg name="buf_len">1000</arg>
+        <arg name="env"/>
+        <arg name="huge_pages"/>
+        <arg name="sock_type"/>
+        <notes/>
+        <results tags="v5&amp;ef100&amp;!ool_phys_mode" key="ON-13309, ST-2438">
+          <result value="FAILED">
+            <verdict>onload_zc_register_buffers() unexpectedly failed with errno RPC-EMSGSIZE</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="buf_aligned">TRUE</arg>
+        <arg name="buf_len"/>
+        <arg name="env"/>
+        <arg name="huge_pages">explicit</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="buf_aligned">TRUE</arg>
+        <arg name="buf_len"/>
+        <arg name="env"/>
+        <arg name="huge_pages">transparent</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="buf_aligned">TRUE</arg>
+        <arg name="buf_len">2.5</arg>
+        <arg name="env"/>
+        <arg name="huge_pages"/>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="buf_aligned">FALSE</arg>
+        <arg name="buf_len"/>
+        <arg name="env"/>
+        <arg name="huge_pages"/>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="zc_hlrx_pkts" type="script">
+      <objective>Check various usecases with onload_zc_hlrx_recv_zc() and onload_zc_hlrx_recv_copy(), such as reading the single packet with multiple calls, reading a packet and part of the next one with a single call, using both functions together.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="pkt_len"/>
+        <arg name="pkts_num"/>
+        <arg name="read_len"/>
+        <arg name="func"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="zc_send_mixed_bufs" type="script">
+      <objective>Check that onload_zc_send() can handle a message in which part of buffers is allocated with onload_zc_alloc_buffers() while others are configured with onload_zc_register_buffers().</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <arg name="allocation"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="onload_zc_recv_keep" type="script">
+      <objective>Check that Onload buffers can be kept and released or reused later if callback returns ONLOAD_ZC_KEEP flag.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <arg name="pkts_num"/>
+        <arg name="keep"/>
+        <arg name="action"/>
+        <arg name="big_pkt"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="zc_recv_oob" type="script">
+      <objective>Check what happens when OOB data arrives and onload_zc_recv() is used to receive data.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="oob_inline"/>
+        <arg name="os_inline"/>
+        <arg name="unblock_zc"/>
+        <notes/>
+        <results tags="v5&amp;(ool_loop=0|ool_loop=1&amp;!reuse_stack)" notes="onload_zc_recv() is supported only for accelerated sockets">
+          <result value="FAILED">
+            <verdict>onload_zc_recv() called without MSG_OOB flag failed with error RPC-ESOCKTNOSUPPORT</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="oob_inline"/>
+        <arg name="os_inline"/>
+        <arg name="unblock_zc"/>
+        <notes/>
+        <results tags="v5&amp;(ool_loop=0|ool_loop=1&amp;!reuse_stack)" notes="onload_zc_recv() is supported only for accelerated sockets">
+          <result value="FAILED">
+            <verdict>onload_zc_recv() called without MSG_OOB flag failed with error RPC-ESOCKTNOSUPPORT</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="oob_inline"/>
+        <arg name="os_inline"/>
+        <arg name="unblock_zc"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="oob_inline"/>
+        <arg name="os_inline"/>
+        <arg name="unblock_zc"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="zc_send_msg_more" type="script">
+      <objective>Check that TCP payload is split into packets correctly when onload_zc_send() (alone or together with usual send()) is used with MSG_MORE flag.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="split_pos"/>
+        <arg name="first_zc"/>
+        <arg name="second_zc"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="zc_send_user_buf_overfill" type="script">
+      <objective>Check that if send buffer is overfilled with onload_zc_send() using registered ZC buffers, after reading all data from peer socket all the queued ZC buffers eventually become completed and all the data in them is received by peer.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <arg name="msg_dontwait"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="msg_onepkt" type="script">
+      <objective>Check that with ONLOAD_MSG_ONEPKT flag only part of data up to the next packet boundary is retrieved by a receiving function call.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <arg name="pkts_num"/>
+        <arg name="recv_f"/>
+        <arg name="random_recv_size"/>
+        <arg name="random_recv_flag"/>
+        <notes/>
+      </iter>
+    </test>
+  </iter>
+</test>

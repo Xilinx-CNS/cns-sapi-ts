@@ -1,0 +1,552 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+    
+    <description>UDP connections and round-trip</description>
+    
+    <author mailto="Renata.Sayakhova@oktetlabs.ru"/>
+
+    <req id="UDP" sticky="true"/>
+    <req id="SOCK_DGRAM" sticky="true"/>
+
+    <session>
+        <run>
+            <session>
+                <arg name="disable_tunnelling"/>
+                <arg name="env">
+                    <value reqs="ENV-2PEERS-IUT">'net1':IUT
+                           {
+                               'iut'
+                               {
+                                   {'pco_iut':IUT},
+                                   addr:'wldc':inet:wildcard,
+                                   addr:'net1_local':inet:unicast,
+                                   if:'net1_iut_if'
+                               },
+                               {
+                                   {'pco_iut1':IUT},
+                                    addr:'net1_remote':inet:unicast,
+                                   if:'net1_tst_if'
+                               }
+                           },
+                           'net2':IUT
+                           {
+                               'iut'
+                               {
+                                   addr:'net2_local':inet:unicast,
+                                   if:'net2_iut_if'
+                               },
+                               {
+                                   {'pco_iut2':IUT},
+                                   addr:'net2_remote':inet:unicast,
+                                   if:'net2_tst_if'
+                               }
+                           }</value>
+                </arg>
+                <run>
+                    <script name="round_trip_1" track_conf="silent">
+                        <req id="NO_REUSE_STACK"/>
+                    </script>
+                    <arg name="size">
+                        <value>5000</value>
+                    </arg>    
+                    <arg name="num">
+                        <value>5</value>
+                    </arg>     
+                    <arg name="timeout">
+                        <value>300</value>
+                    </arg>
+                    <arg name="time2wait">
+                        <value>2</value>
+                    </arg>    
+                </run>
+<!--                
+                <run>
+                    <script name="round_trip_2" track_conf="silent"/>
+                    <arg name="size">
+                        <value>100</value>
+                        <value>5000</value>
+                    </arg>    
+                    <arg name="num">
+                        <value>5</value>
+                    </arg>     
+                    <arg name="timeout">
+                        <value>300</value>
+                    </arg>
+                    <arg name="time2wait">
+                        <value>2</value>
+                    </arg>    
+               </run>
+-->               
+            </session>
+            
+            <arg name="disable_tunnelling" type="boolean">
+                <value>TRUE</value>
+                <value reqs="ONLOAD_ONLY">FALSE</value>
+            </arg>    
+        </run>
+        <run>
+            <script name="udp_checksum">
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+            </arg>
+            <arg name="fragmented" type="boolean"/>
+            <arg name="last_frag_small" type="boolean"/>
+            <arg name="connect_iut" type="boolean"/>
+            <arg name="mtu_size">
+                <value>-1</value>
+            </arg>
+        </run>
+        <run>
+            <script name="udp_checksum" track_conf="nohistory">
+                <!-- According to bug 56031 -->
+                <req id="SF_BLACKLIST"/>
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="fragmented" type="boolean"/>
+            <arg name="last_frag_small" type="boolean"/>
+            <arg name="connect_iut" type="boolean"/>
+            <!-- AF_XDP doesn't support big MTU value. ST-2188 -->
+            <arg name="mtu_size">
+                <value reqs="JUMBO_FRAME,NO_VLAN">7000</value>
+            </arg>
+        </run>
+        <run>
+            <script name="bad_udp_csum" track_conf="nohistory">
+              <req id="RX_CHECKSUM"/>
+              <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+            </arg>
+            <arg name="checksum">
+              <value>correct</value>
+              <value>zero</value>
+              <value reqs="NO_OOL1509_NDEBUG">bad</value>
+            </arg>
+            <!-- AF_XDP doesn't support big MTU value. ST-2188 -->
+            <arg name="mtu_size">
+              <value>-1</value>
+              <value reqs="NO_VLAN,JUMBO_FRAME">7000</value>
+            </arg>
+            <arg name="fragmented">
+              <value>FALSE</value>
+            </arg>
+        </run>
+        <run>
+            <script name="bad_udp_csum" track_conf="nohistory">
+              <req id="BAD_CSUM_JUMBO"/>
+              <req id="RX_CHECKSUM"/>
+              <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+            </arg>
+            <arg name="checksum">
+              <value>correct</value>
+              <value>zero</value>
+              <value>bad</value>
+            </arg>
+            <!-- AF_XDP doesn't support big MTU value. ST-2188 -->
+            <arg name="mtu_size">
+              <value>-1</value>
+              <value reqs="NO_VLAN,JUMBO_FRAME">2500</value>
+              <value reqs="NO_VLAN,JUMBO_FRAME">4500</value>
+            </arg>
+            <arg name="fragmented">
+              <value reqs="RECV_IP_FRAG">TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="recv_connect">
+              <req id="V5_SANITY"/>
+            </script>
+            <arg name="env">
+              <value ref="env.two_nets.iut_first"/>
+              <value ref="env.two_nets.iut_first_ipv6"/>
+            </arg>
+            <arg name="packetsize_min" list="">
+              <value>1</value>
+              <value reqs="RECV_IP_FRAG">3000</value>
+            </arg>
+            <arg name="packetsize_max" list="">
+              <value>1000</value>
+              <value>10000</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="udp_fork_distrib">
+              <req id="FORK"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="block" type="boolean"/>
+            <arg name="num">
+                <value>300000</value>
+            </arg>
+            <arg name="length">
+                <value>1000</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="udp_send_flow" track_conf="nohistory">
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="change_route" type="boolean">
+              <value>FALSE</value>
+            </arg>
+            <arg name="func" type="send_func_with_sys">
+                <value>write</value>
+                <!-- Bug 55166 -->
+                <value reqs="OOL1509">sys_write</value>
+                <value>writev</value>
+                <!-- Bug 55166 -->
+                <value reqs="OOL1509">sys_writev</value>
+                <value>send</value>
+                <value>sendto</value>
+                <value>sendmsg</value>
+                <value>sendmmsg</value>
+            </arg>
+            <arg name="length_min" list="">
+              <value>1</value>
+              <value>1</value>
+              <value>1500</value>
+              <value>1500</value>
+              <value>65507</value>
+              <value>65507</value>
+              <value>65535</value>
+            </arg>
+            <arg name="length_max" list="">
+              <value>1000</value>
+              <value>1000</value>
+              <value>8900</value>
+              <value>8900</value>
+              <value>65507</value>
+              <value>65507</value>
+              <value>65535</value>
+            </arg>
+            <!-- See bug 45979 for OOL1502 -->
+            <!-- AF_XDP doesn't support big MTU value. ST-2188 -->
+            <arg name="mtu" list="">
+              <value>1500</value>
+              <value reqs="OOL1502,JUMBO_FRAME">9200</value>
+              <value>1500</value>
+              <value reqs="OOL1502,JUMBO_FRAME">9200</value>
+              <value reqs="OOL1502,JUMBO_FRAME">9200</value>
+              <value>1500</value>
+              <value>1500</value>
+            </arg>
+            <arg name="epsilon">
+              <value>0</value>
+            </arg>
+            <arg name="total" list="">
+              <value>100000</value>
+              <value>100000</value>
+              <value>1000000</value>
+              <value>1000000</value>
+              <value>1000000</value>
+              <value>1000000</value>
+              <value>1000000</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="udp_send_flow" track_conf="nohistory">
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env">
+              <value ref="env.two_nets.iut_first"/>
+              <value ref="env.two_nets.iut_first_ipv6"/>
+            </arg>
+            <arg name="change_route" type="boolean">
+              <value>TRUE</value>
+            </arg>
+            <arg name="func" type="send_func_with_sys">
+                <value>write</value>
+                <!-- Bug 55166 -->
+                <value reqs="OOL1509">sys_write</value>
+                <value>writev</value>
+                <!-- Bug 55166 -->
+                <value reqs="OOL1509">sys_writev</value>
+                <value>send</value>
+                <value>sendto</value>
+                <value>sendmsg</value>
+                <value>sendmmsg</value>
+            </arg>
+            <arg name="length_min" list="">
+              <value>1</value>
+              <value>1500</value>
+            </arg>
+            <arg name="length_max" list="">
+              <value>1000</value>
+              <value>8900</value>
+            </arg>
+            <arg name="mtu">
+              <value>0</value>
+            </arg>
+            <arg name="epsilon">
+              <value>0</value>
+            </arg>
+            <arg name="total" list="">
+              <value>100000</value>
+              <value>1000000</value>
+            </arg>
+        </run>
+
+        <!-- Iterate with differen epsilon values. -->
+        <run>
+            <script name="udp_send_flow" track_conf="nohistory">
+                <req id="IF_DOWN_UP"/>
+            </script>
+            <arg name="env" list="">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="change_route" type="boolean">
+              <value>FALSE</value>
+            </arg>
+            <arg name="func" type="send_func_with_sys">
+                <value>write</value>
+            </arg>
+            <arg name="length_min">
+              <value>0</value>
+            </arg>
+            <arg name="length_max">
+              <value>65507</value>
+            </arg>
+            <!-- See bug 45979 for OOL1502 -->
+            <!-- AF_XDP doesn't support big MTU value. ST-2188 -->
+            <arg name="mtu" list="">
+              <value reqs="MTU_500_OR_LESS">500</value>
+              <value>590</value>
+              <value>1500</value>
+              <value reqs="OOL1502,JUMBO_FRAME">9200</value>
+              <!-- IPv6 don't work with mtu < 1280 -->
+              <value>1500</value>
+              <value reqs="OOL1502,JUMBO_FRAME">9200</value>
+            </arg>
+            <arg name="epsilon">
+              <value>0</value>
+              <value>1</value>
+              <value>2</value>
+              <value>3</value>
+              <value>4</value>
+              <value>5</value>
+              <value>6</value>
+              <value>7</value>
+            </arg>
+            <arg name="total">
+              <value>1000000</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="reuseaddr_connect" track_conf="silent">
+                <req id="SO_REUSEADDR"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_two_iut"/>
+                <value ref="env.peer2peer_two_iut_ipv6"/>
+            </arg>
+            <arg name="wcard_second" type="boolean"/>
+            <arg name="wcard_first" type="boolean"/>
+            <arg name="connect_second" type="boolean"/>
+            <arg name="connect_first" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="varied_send">
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+        </run>
+
+        <run>
+            <script name="share_remove_addr">
+                <req id="SO_REUSEADDR"/>
+                <!-- Using socket which is bound to a removed IP address. -->
+                <req id="ZF_INCOMPATIBLE"/>
+                <req id="NEW_CPLANE"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="connect_after_remove" type="boolean">
+                <value reqs="OOL1606">FALSE</value>
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+          <script name="close_tx_active" track_conf="nohistory"/>
+          <arg name="env">
+              <value ref="env.two_nets.iut_first"/>
+              <value ref="env.two_nets.iut_first_ipv6"/>
+          </arg>
+          <arg name="msg_num">
+              <value>15</value>
+          </arg>
+          <arg name="disconnect_way">
+              <value>close</value>
+              <value>exit</value>
+              <value>disconnect</value>
+          </arg>
+        </run>
+
+        <run>
+          <script name="check_double_bind">
+            <!-- Covered by zetaferno-ts/udp_rx/bind_twice !-->
+            <req id="ZF_INCOMPATIBLE"/>
+          </script>
+          <arg name="env">
+            <value ref="env.peer2peer"/>
+            <value ref="env.peer2peer_ipv6"/>
+          </arg>
+          <arg name="transmit_between_bind" type="boolean"/>
+        </run>
+
+        <run>
+          <!--
+            addr_domain = PF_INET in first <run>
+            addr_domain = PF_INET6 in second <run>
+          !-->
+          <script name="receive_before_and_after_connect" track_conf="silent"/>
+          <arg name="env">
+              <value ref="env.p2p_ip4_ip6"/>
+          </arg>
+          <arg name="socket_domain" type="socket_domain"/>
+          <arg name="addr_domain">
+            <value>PF_INET</value>
+          </arg>
+          <arg name="wildcard" type="boolean"/>
+          <arg name="connect_addr_domain">
+            <value>PF_INET</value>
+          </arg>
+          <arg name="set_v6only" type="boolean">
+            <value>FALSE</value>
+          </arg>
+        </run>
+
+        <run>
+          <script name="receive_before_and_after_connect" track_conf="silent"/>
+          <arg name="env">
+              <value ref="env.p2p_ip4_ip6"/>
+          </arg>
+          <arg name="socket_domain" type="socket_domain">
+            <value>PF_INET6</value>
+          </arg>
+          <arg name="addr_domain" type="socket_domain">
+            <value >PF_INET6</value>
+          </arg>
+          <arg name="wildcard" type="boolean" list="">
+            <value>FALSE</value>
+            <value>TRUE</value>
+            <value>TRUE</value>
+          </arg>
+          <arg name="connect_addr_domain" type="socket_domain" list="">
+            <value>PF_INET6</value>
+            <value>PF_INET</value>
+            <value>PF_INET6</value>
+          </arg>
+          <arg name="set_v6only" type="boolean" list="">
+            <value>TRUE</value>
+            <value>FALSE</value>
+            <value>TRUE</value>
+          </arg>
+        </run>
+
+        <run>
+          <script name="send_via_os" track_conf="silent"/>
+          <arg name="env">
+            <value ref="env.two_nets.iut_first"/>
+            <value ref="env.two_nets.iut_first_ipv6"/>
+          </arg>
+          <arg name="bind_socket" type="boolean"/>
+          <arg name="min_data_buf_len">
+            <value>1</value>
+          </arg>
+          <arg name="max_data_buf_len">
+            <value>65507</value>
+          </arg>
+        </run>
+
+        <run>
+            <script name="recv_from_multiple_sources" track_conf="nohistory"/>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="peers_num" list="">
+                <value>10</value>
+                <value>5</value>
+            </arg>
+            <arg name="max_data_len" list="">
+                <value>1400</value>
+                <value reqs="RECV_IP_FRAG">20000</value>
+            </arg>
+            <arg name="diff_addrs" type="boolean"/>
+            <arg name="recv_func" type="recv_func"/>
+        </run>
+
+        <run>
+            <script name="recv_from_multiple_sources_two_ifs" track_conf="nohistory"/>
+            <arg name="env">
+              <value type="env.two_nets_all"/>
+              <value ref="env.peer2peer.two_links"/>
+              <value ref="env.peer2peer.two_links_ipv6"/>
+            </arg>
+            <arg name="peers_num" list="">
+                <value>10</value>
+                <value>5</value>
+            </arg>
+            <arg name="max_data_len" list="">
+                <value>1400</value>
+                <value reqs="RECV_IP_FRAG">20000</value>
+            </arg>
+            <arg name="recv_func" type="recv_func">
+                <!-- Check only some of the functions to reduce time
+                     this test takes to run -->
+                <value>recv</value>
+                <value>recvmsg</value>
+                <value>onload_zc_recv</value>
+            </arg>
+        </run>
+
+    </session>
+</package>

@@ -1,0 +1,369 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0" req="LINUX_SPECIFIC">
+
+  <description>Library _init() function tests</description>
+
+  <author mailto="Nikita.Rastegaev@oktetlabs.ru"/>
+
+  <req id="LIBINIT" sticky="true"/>
+  <!-- We do not clearly understand why it doesn't work but it
+       doesn't work -->
+  <req id="NATIVE_ABI" sticky="true"/>
+  <!-- Libinit tests idea is to test library init what requires RPC server
+       restart every iteration. This is incompatible with reuse_pco. -->
+  <req id="NO_REUSE_PCO" sticky="true"/>
+
+  <session>
+  <arg name="lazy" type="boolean"/>
+
+  <run name="popen">
+    <!--- @page libinit-sequences_and_iterations Description of sequences and their iterations -->
+    <!--- Test library implements the following sequences: -->
+      <script name="non_socket_tests">
+      </script>
+      <arg name="env" ref="env.iut_only"/>
+      <!--- -# popen\n
+          *    Description: _init calls @b popen() with "echo something"
+          *    command. Later we read from obtained file descriptor.\n -->
+      <arg name="sequence">
+        <value>popen</value>
+      </arg>
+      <!---    Iterations: -->
+      <arg name="iteration">
+        <!---     - READ_PRE_INIT\n Reading occurs in pre-init time. -->
+        <value>READ_PRE_INIT</value>
+        <!---     - READ_POST_INIT\n Reading occurs in post-init time. -->
+        <value>READ_POST_INIT</value>
+      </arg>
+    </run>
+
+    <run name="pipe">
+      <script name="non_socket_tests">
+      </script>
+      <arg name="env" ref="env.iut_only"/>
+      <!--- -# pipe\n
+          *    Description: _init calls @b pipe(). Later we check that
+          *    obtained file descriptors work properly.\n -->
+      <arg name="sequence">
+        <value reqs="PIPE">pipe</value>
+      </arg>
+      <!---    Iterations: -->
+      <arg name="iteration">
+        <!---     - CHECK_PRE_INIT\n File descriptors check occurs in
+            *       pre-init time. -->
+        <value>CHECK_PRE_INIT</value>
+        <!---     - CHECK_POST_INIT\n File descriptors check occurs in
+            *       post-init time.-->
+        <value>CHECK_POST_INIT</value>
+      </arg>
+    </run>
+
+    <run name="fork_exec">
+      <script name="non_socket_tests">
+      </script>
+      <arg name="env" ref="env.iut_only"/>
+      <!--- -# fork_exec\n
+          *    Description: _init executes the analog of @b popen() 
+          *    function by making explicit calls of 
+          *    @b pipe() + @b fork() + @b exec().\n -->
+      <arg name="sequence">
+        <value reqs="FORK,EXEC,IBM_AT_DISABLED">fork_exec</value>
+      </arg>
+      <!---    Iterations: -->
+      <arg name="iteration">
+        <!---     - READ_PRE_INIT\n Reading occurs in pre-init time. -->
+        <value>READ_PRE_INIT</value>
+        <!---     - READ_POST_INIT\n Reading occurs in post-init time. -->
+        <value>READ_POST_INIT</value>
+      </arg>
+    </run>
+
+    <run name="signal">
+      <script name="non_socket_tests">
+      </script>
+      <arg name="env" ref="env.iut_only"/>
+      <!--- -# signal\n
+          *    Description: _init installs signal handler. Signal handler
+          *    calls @b read() or @b write().\n -->
+      <arg name="sequence">
+        <value reqs="SIGNALS">signal</value>
+      </arg>
+      <!---    Iterations: -->
+      <arg name="iteration">
+        <!---     - SIGNAL_USR1_PRE_INIT_READ\n
+            *       @c SIGUSR1 signal is sent in pre-init time and
+            *       calls @b read(). -->
+        <value>SIGNAL_USR1_PRE_INIT_READ</value>
+        <!---     - SIGNAL_USR1_POST_INIT_READ\n
+            *       @c SIGUSR1 signal is sent in post-init time and
+            *       calls @b read(). -->
+        <value>SIGNAL_USR1_POST_INIT_READ</value>
+        <!---     - SIGNAL_USR1_PRE_INIT_WRITE\n
+            *       @c SIGUSR1 signal is sent in pre-init time and
+            *       calls @b write(). -->
+        <value>SIGNAL_USR1_PRE_INIT_WRITE</value>
+        <!---     - SIGNAL_USR1_POST_INIT_WRITE\n
+            *       @c SIGUSR1 signal is sent in post-init time and
+            *       calls @b write(). -->
+        <value>SIGNAL_USR1_POST_INIT_WRITE</value>
+        <!---     - SIGNAL_INT_PRE_INIT_READ\n
+            *       @c SIGINT signal is sent in pre-init time and
+            *       calls @b read(). -->
+        <value>SIGNAL_INT_PRE_INIT_READ</value>
+        <!---     - SIGNAL_INT_POST_INIT_READ\n
+            *       @c SIGINT signal is sent in post-init time and
+            *       calls @b read(). -->
+        <value>SIGNAL_INT_POST_INIT_READ</value>
+        <!---     - SIGNAL_INT_PRE_INIT_WRITE\n
+            *       @c SIGINT signal is sent in pre-init time and
+            *       calls @b write(). -->
+        <value>SIGNAL_INT_PRE_INIT_WRITE</value>
+        <!---     - SIGNAL_INT_POST_INIT_WRITE\n
+            *       @c SIGINT signal is sent in post-init time and
+            *       calls @b write(). -->
+        <value>SIGNAL_INT_POST_INIT_WRITE</value>
+      </arg>
+    </run>
+
+    <run name="thread_fork">
+      <script name="non_socket_tests">
+      </script>
+      <arg name="env" ref="env.iut_only"/>
+      <!--- -# thread_fork\n
+          *    Description: _init creates a thread, which forks.
+          *    The child, kicked by @b do(), performs the following:
+          *        -# calls some @b write() functions for
+          *           already-existing fd;
+          *        -# creates socket and uses it.
+          *        . -->
+      <arg name="sequence">
+        <value reqs="SIGNALS,THREADS,FORK">thread_fork</value>
+      </arg>
+      <!---    Iterations: -->
+      <arg name="iteration">
+        <!---     - WRITE_ON_PIPE\n Child calls @b write() on pipe. -->
+        <value>WRITE_ON_PIPE</value>
+      </arg>
+    </run>
+    <run name="thread_fork">
+      <script name="socket_send_tests">
+      </script>
+      <arg name="env" ref="env.peer2peer"/>
+      <arg name="data_size">
+        <value>300</value>
+        <value reqs="RECV_IP_FRAG">3000</value>
+      </arg>
+      <arg name="sequence">
+        <value reqs="THREADS,FORK">thread_fork</value>
+      </arg>
+      <arg name="iteration">
+        <!---     - SOCK_POST_STREAM_SEND
+            *     - SOCK_POST_STREAM_RECV\n
+            *       Child creates and uses socket on sending/receiving
+            *       side, socket type is @c SOCK_STREAM. -->
+        <value>SOCK_POST_STREAM_SEND</value>
+        <!---     - SOCK_POST_DGRAM_SEND
+            *     - SOCK_POST_DGRAM_RECV\n
+            *       Child creates and uses socket on sending/receiving
+            *       side, socket type is @c SOCK_DGRAM. -->
+        <value>SOCK_POST_DGRAM_SEND</value>
+      </arg>
+    </run>
+    <run name="thread_fork">
+      <script name="socket_recv_tests">
+      </script>
+      <arg name="env" ref="env.peer2peer"/>
+      <arg name="data_size">
+        <value>300</value>
+        <value reqs="RECV_IP_FRAG">3000</value>
+      </arg>
+      <arg name="sequence">
+        <value reqs="THREADS,FORK">thread_fork</value>
+      </arg>
+      <arg name="iteration">
+        <value>SOCK_POST_STREAM_RECV</value>
+        <value>SOCK_POST_DGRAM_RECV</value>
+      </arg>
+    </run>
+
+    <run name="signal_socket">
+      <script name="socket_send_tests">
+      </script>
+      <arg name="env" ref="env.peer2peer"/>
+      <arg name="data_size">
+        <value>300</value>
+        <value reqs="RECV_IP_FRAG">3000</value>
+      </arg>
+      <!--- -# signal_socket\n
+          * Description: _init installs signal handler. Signal handler calls
+          * sending/receiving function on a socket.\n -->
+      <arg name="sequence">
+        <value reqs="SIGNALS">signal_socket</value>
+      </arg>
+      <!---    Iterations: -->
+      <arg name="iteration">
+        <!---     - SOCK_PRE_SIG_USR1_PRE_STREAM_SEND
+            *     - SOCK_PRE_SIG_USR1_PRE_STREAM_RECV\n
+            *       Sending/receiving socket is created in pre-init time,
+            *       socket type is @c SOCK_STREAM,
+            *       @c SIGUSR1 signal is sent in pre-init time. -->
+        <value>SOCK_PRE_SIG_USR1_PRE_STREAM_SEND</value>
+        <!---     - SOCK_PRE_SIG_USR1_POST_STREAM_SEND
+            *     - SOCK_PRE_SIG_USR1_POST_STREAM_RECV\n
+            *       Sending/receiving socket is created in pre-init time,
+            *       socket type is @c SOCK_STREAM,
+            *       @c SIGUSR1 signal is sent in post-init time. -->
+        <value>SOCK_PRE_SIG_USR1_POST_STREAM_SEND</value>
+        <!---     - SOCK_POST_SIG_USR1_POST_STREAM_SEND
+            *     - SOCK_POST_SIG_USR1_POST_STREAM_RECV\n
+            *       Sending/receiving socket is created in post-init time,
+            *       socket type is @c SOCK_STREAM,
+            *       @c SIGUSR1 signal is sent in post-init time. -->
+        <value>SOCK_POST_SIG_USR1_POST_STREAM_SEND</value>
+        <!---     - SOCK_PRE_SIG_USR1_PRE_DGRAM_SEND
+            *     - SOCK_PRE_SIG_USR1_PRE_DGRAM_RECV\n
+            *       Sending/receiving socket is created in pre-init time,
+            *       socket type is @c SOCK_STREAM,
+            *       @c SIGUSR1 signal is sent in pre-init time. -->
+        <value>SOCK_PRE_SIG_USR1_PRE_DGRAM_SEND</value>
+        <!---     - SOCK_PRE_SIG_USR1_POST_DGRAM_SEND
+            *     - SOCK_PRE_SIG_USR1_POST_DGRAM_RECV\n
+            *       Sending/receiving socket is created in pre-init time,
+            *       socket type is @c SOCK_STREAM,
+            *       @c SIGUSR1 signal is sent in post-init time. -->
+        <value>SOCK_PRE_SIG_USR1_POST_DGRAM_SEND</value>
+        <!---     - SOCK_POST_SIG_USR1_POST_DGRAM_SEND
+            *     - SOCK_POST_SIG_USR1_POST_DGRAM_RECV\n
+            *       Sending/receiving socket is created in post-init time,
+            *       socket type is @c SOCK_STREAM,
+            *       @c SIGUSR1 signal is sent in post-init time. -->
+        <value>SOCK_POST_SIG_USR1_POST_DGRAM_SEND</value>
+        <!---     - SOCK_PRE_SIG_INT_PRE_STREAM_SEND
+            *     - SOCK_PRE_SIG_INT_PRE_STREAM_RECV\n
+            *       Sending/receiving socket is created in pre-init time,
+            *       socket type is @c SOCK_STREAM,
+            *       @c SIGUSR1 signal is sent in pre-init time. -->
+        <value>SOCK_PRE_SIG_INT_PRE_STREAM_SEND</value>
+        <!---     - SOCK_PRE_SIG_INT_POST_STREAM_SEND
+            *     - SOCK_PRE_SIG_INT_POST_STREAM_RECV\n
+            *       Sending/receiving socket is created in pre-init time,
+            *       socket type is @c SOCK_STREAM,
+            *       @c SIGINT signal is sent in post-init time. -->
+        <value>SOCK_PRE_SIG_INT_POST_STREAM_SEND</value>
+        <!---     - SOCK_POST_SIG_INT_POST_STREAM_SEND
+            *     - SOCK_POST_SIG_INT_POST_STREAM_RECV\n
+            *       Sending/receiving socket is created in post-init time,
+            *       socket type is @c SOCK_STREAM,
+            *       @c SIGINT signal is sent in post-init time. -->
+        <value>SOCK_POST_SIG_INT_POST_STREAM_SEND</value>
+        <!---     - SOCK_PRE_SIG_INT_PRE_DGRAM_SEND
+            *     - SOCK_PRE_SIG_INT_PRE_DGRAM_RECV\n
+            *       Sending/receiving socket is created in pre-init time,
+            *       socket type is @c SOCK_STREAM,
+            *       @c SIGINT signal is sent in pre-init time. -->
+        <value>SOCK_PRE_SIG_INT_PRE_DGRAM_SEND</value>
+        <!---     - SOCK_PRE_SIG_INT_POST_DGRAM_SEND
+            *     - SOCK_PRE_SIG_INT_POST_DGRAM_RECV\n
+            *       Sending/receiving socket is created in pre-init time,
+            *       socket type is @c SOCK_STREAM,
+            *       @c SIGINT signal is sent in post-init time. -->
+        <value>SOCK_PRE_SIG_INT_POST_DGRAM_SEND</value>
+        <!---     - SOCK_POST_SIG_INT_POST_DGRAM_SEND
+            *     - SOCK_POST_SIG_INT_POST_DGRAM_RECV\n
+            *       Sending/receiving socket is created in post-init time,
+            *       socket type is @c SOCK_STREAM,
+            *       @c SIGINT signal is sent in post-init time. -->
+        <value>SOCK_POST_SIG_INT_POST_DGRAM_SEND</value>
+      </arg>
+    </run>
+    <run name="signal_socket">
+      <script name="socket_recv_tests">
+      </script>
+      <arg name="env" ref="env.peer2peer"/>
+      <arg name="data_size">
+        <value>300</value>
+        <value reqs="RECV_IP_FRAG">3000</value>
+      </arg>
+      <arg name="sequence">
+        <value reqs="SIGNALS">signal_socket</value>
+      </arg>
+      <arg name="iteration">
+        <value>SOCK_PRE_SIG_USR1_PRE_STREAM_RECV</value>
+        <value>SOCK_PRE_SIG_USR1_POST_STREAM_RECV</value>
+        <value>SOCK_POST_SIG_USR1_POST_STREAM_RECV</value>
+        <value>SOCK_PRE_SIG_USR1_PRE_DGRAM_RECV</value>
+        <value>SOCK_PRE_SIG_USR1_POST_DGRAM_RECV</value>
+        <value>SOCK_POST_SIG_USR1_POST_DGRAM_RECV</value>
+        <value>SOCK_PRE_SIG_INT_PRE_STREAM_RECV</value>
+        <value>SOCK_PRE_SIG_INT_POST_STREAM_RECV</value>
+        <value>SOCK_POST_SIG_INT_POST_STREAM_RECV</value>
+        <value>SOCK_PRE_SIG_INT_PRE_DGRAM_RECV</value>
+        <value>SOCK_PRE_SIG_INT_POST_DGRAM_RECV</value>
+        <value>SOCK_POST_SIG_INT_POST_DGRAM_RECV</value>
+      </arg>
+    </run>
+
+    <run name="atfork">
+      <script name="socket_send_tests">
+      </script>
+      <arg name="env" ref="env.peer2peer"/>
+      <arg name="data_size">
+        <value>300</value>
+        <value reqs="RECV_IP_FRAG">3000</value>
+      </arg>
+      <!--- -# atfork\n
+          * Description: _init installs @b fork() hooks with
+          * @b pthread_atfork(). Hooks call send/recv functions
+          * on sockets, created in pre- or post-init time.\n -->
+      <arg name="sequence">
+        <!-- Disabled on PPC64 CentOS, see OL 7294 for details -->
+        <value reqs="FORK,LIBINIT_ATFORK">atfork</value>
+      </arg>
+      <!---    Iterations: -->
+      <arg name="iteration">
+        <!---     - SOCK_PRE_STREAM_SEND
+            *     - SOCK_PRE_STREAM_RECV\n
+            *       Sending/receiving socket is created in
+            *       pre-init time, socket type is @c SOCK_STREAM. -->
+        <value>SOCK_PRE_STREAM_SEND</value>
+        <!---     - SOCK_POST_STREAM_SEND
+            *     - SOCK_POST_STREAM_RECV\n
+            *       Sending/receiving socket is created in
+            *       post-init time, socket type is @c SOCK_STREAM. -->
+        <value>SOCK_POST_STREAM_SEND</value>
+        <!---     - SOCK_PRE_DGRAM_SEND
+            *     - SOCK_PRE_DGRAM_RECV\n
+            *       Sending/receiving socket is created in
+            *       pre-init time, socket type is @c SOCK_DGRAM. -->
+        <value>SOCK_PRE_DGRAM_SEND</value>
+        <!---     - SOCK_POST_DGRAM_SEND
+            *     - SOCK_POST_DGRAM_RECV\n
+            *       Sending/receiving socket is created in
+            *       post-init time, socket type is @c SOCK_DGRAM. -->
+        <value>SOCK_POST_DGRAM_SEND</value>
+      </arg>
+    </run>
+    <run name="atfork">
+      <script name="socket_recv_tests">
+      </script>
+      <arg name="env" ref="env.peer2peer"/>
+      <arg name="data_size">
+        <value>300</value>
+        <value reqs="RECV_IP_FRAG">3000</value>
+      </arg>
+      <arg name="sequence">
+        <!-- Disabled on PPC64 CentOS, see OL 7294 for details -->
+        <value reqs="FORK,LIBINIT_ATFORK">atfork</value>
+      </arg>
+      <arg name="iteration">
+        <value>SOCK_PRE_STREAM_RECV</value>
+        <value>SOCK_POST_STREAM_RECV</value>
+        <value>SOCK_PRE_DGRAM_RECV</value>
+        <value>SOCK_POST_DGRAM_RECV</value>
+      </arg>
+    </run>
+
+  </session>
+</package>

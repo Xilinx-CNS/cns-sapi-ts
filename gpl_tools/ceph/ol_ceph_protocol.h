@@ -1,0 +1,171 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/*
+ * @author Sergey Nikitin <Sergey.Nikitin@oktetlabs.ru>
+ */
+
+/*
+ * Links/docs providing information about ceph network protocol.
+ *
+ * https://docs.ceph.com/en/latest/dev/network-protocol
+ * https://gitlab.com/wireshark/wireshark/-/blob/master/epan/dissectors/packet-ceph.c
+ */
+
+#ifndef __OL_CEPH_PROTOCOL_H__
+#define __OL_CEPH_PROTOCOL_H__
+
+#include <stdint.h>
+#include "ol_ceph_connection.h"
+
+#define OL_CEPH_NUM_OPS 16
+#define OL_CEPH_MAX_AUTHORIZER_LEN 128
+#define OL_CEPH_MAX_FRONT_LEN 1024
+#define OL_CEPH_MAX_MIDDLE_LEN 1024
+#define OL_CEPH_MAX_DATA_LEN 1024
+
+/**
+ * Ceph connection state handle.
+ */
+typedef enum ol_ceph_conn_state {
+    OL_CEPH_STATE_CLOSED,
+    OL_CEPH_STATE_OPENED,
+    OL_CEPH_STATE_WAIT_MSG,
+    OL_CEPH_STATE_SEND_MSG,
+} ol_ceph_conn_state;
+
+/**
+ * Ceph protocol state processing status code.
+ */
+typedef enum {
+    OL_CEPH_OK,             /**< Success. */
+    OL_CEPH_RECV_ERROR,     /**< Receiving error. */
+    OL_CEPH_SEND_ERROR,     /**< Sending error.*/
+    OL_CEPH_RECV_ZERO,      /**< Peer closed connection. */
+    OL_CEPH_HANDLE_ERROR,   /**< Protocol handling errror. */
+} ol_ceph_proto_rc;
+
+typedef struct ol_ceph_opread_data_user_cb {
+    void *callback;
+    void *user_data;
+} ol_ceph_opread_data_user_cb;
+
+typedef struct ol_ceph_proto_handle {
+    ol_ceph_conn_state state;
+    ol_ceph_connection conn;
+    ol_ceph_opread_data_user_cb user_data_cb;
+} ol_ceph_proto_handle;
+
+/**
+ * User callback type for generating `opread` message data.
+ *
+ * @param buf       Buffer to fill the data in.
+ * @param len       How much bytes to generate.
+ * @param user_data User specific data.
+ */
+typedef void (*ol_ceph_opread_wr_callback)(void *buf, size_t len,
+                                           void *user_data);
+
+/**
+ * User callback type for reading `opread` message data.
+ *
+ * @param buf       Buffer containing the data.
+ * @param len       Size of the buffer
+ * @param user_data User specific data.
+ */
+typedef void (*ol_ceph_opread_rd_callback)(const void *buf, size_t len,
+                                           void *user_data);
+
+/**
+ * Convert @ref ol_ceph_proto_rc value to OL_POLL_RC_ value.
+ *
+ * @param ceph_proto_rc     Ceph protocol return value.
+ *
+ * @return poll library return code.
+ */
+extern int proto_rc2poll_rc(ol_ceph_proto_rc ceph_proto_rc);
+
+/**
+ * Initialize ceph client protocol handle.
+ *
+ * @param h         The handle.
+ * @param s         The socket.
+ * @param iface     Name of interface.
+ * @param buf       Buffer for receiving data.
+ * @param len       Size of the buffer.
+ * @param callback  User callback function which is called on receiving
+ *                  new data.
+ * @param user_data Pointer to user data to pass to the callback.
+ *
+ * @return zero on success, -1 if case of error, and errno is set appropriately.
+ *         Error means some Onload feature was not initialized properly.
+ */
+extern int ol_ceph_proto_client_init(ol_ceph_proto_handle *h, int s,
+                                     const char *iface, void *buf, size_t len,
+                                     ol_ceph_opread_rd_callback callback,
+                                     void *user_data);
+
+/**
+ * Initialize ceph generator protocol handle.
+ *
+ * @param h         The handle.
+ * @param s         The socket.
+ * @param buf       Buffer to fill the generated data.
+ * @param len       Size of the buffer.
+ * @param callback  User callback function which is called on generating
+ *                  new ceph payload, or @c NULL to generate random data.
+ * @param user_data Pointer to user data to pass to the callback.
+ *
+ * @return zero
+ */
+extern int ol_ceph_proto_generator_init(ol_ceph_proto_handle *h, int s,
+                                        void *buf, size_t len,
+                                        ol_ceph_opread_wr_callback callback,
+                                        void *user_data);
+
+/**
+ * Process Ceph client (receiver) state. States are following:
+ * read banner message
+ *   |
+ *   V
+ * read connect-reply message
+ *   |
+ *   V
+ * read OSD_OPREPLY messages and pass received payload to user callback, passed
+ * to @ref ol_ceph_proto_client_init.
+ *
+ * On every call the function performs current state steps and moves to the
+ * next one. The last state is looped, so on the 3d call and further the
+ * function does the same - reads new messages.
+ *
+ * @param h     Ceph protocol handle.
+ *
+ * @return Status code.
+ */
+extern ol_ceph_proto_rc ol_ceph_recv_state_proc(ol_ceph_proto_handle *h);
+
+/**
+ * Process Ceph generator state. States are following:
+ * send banner message
+ *   |
+ *   V
+ * send connect-reply message
+ *   |
+ *   V
+ * send OSD_OPREPLY message containing one OSD_OP_READ request with user
+ * data as a payload. Payload is generated by a user callback passed to
+ * @ref ol_ceph_proto_generator_init.
+ *
+ * On every call the function performs current state steps and moves to the
+ * next one. The last state is looped, so on the 3d call and further the
+ * function does the same - sends new message.
+ *
+ * The messages and their contents are specified in TCP/Ceph plugin
+ * documentation.
+ *
+ * @param h     Ceph protocol handle.
+ *
+ * @return Status code.
+ */
+extern ol_ceph_proto_rc ol_ceph_generator_state_proc(ol_ceph_proto_handle *h);
+
+#endif /* __OL_CEPH_PROTOCOL_H__ */

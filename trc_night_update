@@ -1,0 +1,23 @@
+#!/bin/bash
+# SPDX-License-Identifier: Apache-2.0
+# (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved.
+[ -e "./scripts/guess.sh" ] && source "./scripts/guess.sh"
+
+. $TE_BASE/scripts/guess.sh
+
+# Default name of cache should be exported here via
+# TRC_UPDATE_DEFAULT_CACHE environment variable
+
+export TRC_UPDATE_DUMMY_TAGS="
+ool_spin,small_spin,ool_loop,ool_epoll,
+ool_phys_mode,ool_iomux_no_fast,ool_name,
+ool_sriov,ool_epoll_ctl_fast,linux-2.6,
+linux-3,ul-64,ul-32,kernel-64,kernel-32,
+?el6,?el5,ool_release,disable_timestamps,v5,
+vlan,l5-nic"
+
+# Link to testing logs should be exported here via
+# TRC_UPDATE_NIGHT_HISTORY_HREF environment variable
+
+te_trc_night_update --def-conf-tester=tester.conf \
+    --def-db=trc/trc-sockapi-ts.xml "$@"

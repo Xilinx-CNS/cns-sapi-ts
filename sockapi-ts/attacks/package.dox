@@ -1,0 +1,40 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup attacks Attacks and vulnerabilities
+@ingroup sockapi
+@{
+
+The package consists of tests, which emulates DoS attacks and checks for
+IUT vulnerabilities.
+
+<!-- This package.dox contains the description for all attacks, i.e. 
+     package.dox in subpackages are rather dummy -->
+
+Following kinds attacks are tested:
+- sending incorrect Ethernet frames (too long, bad-padded, with zero 
+  source MAC address);
+- sending IP datagram with incorrect fragmentation (lost, duplicated, reordered
+  or overlapped fragments);
+- sending fragments producing too long datagrams during re-assembling
+  (Bonk attack);
+- sending packets with equal source/destination IP addresses and 
+  source/destination UDP/TCP ports (Land attack);
+- breaking/degrading TCP connection using ICMP errors;
+- different kinds of floods (ICMP echo/errors, UDP, TCP SYN, TCP PUSH);
+- sending packets with reordered/overlapped TCP segments.
+
+<!-- Provide name and email of the node, if it's necessary -->
+@author Elena Vengerova <Elena.Vengerova@oktetlabs.ru>
+
+@par Packages:
+
+-# @ref attacks-ethernet
+-# @ref attacks-ip
+-# @ref attacks-icmp
+-# @ref attacks-udp
+-# @ref attacks-tcp
+
+@}
+*/

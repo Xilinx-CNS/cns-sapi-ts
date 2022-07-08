@@ -1,0 +1,22 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup checksum IP/TCP/UDP checksum tests
+
+@ingroup sockapi
+
+@{
+
+Test suite to verify IUT behavior when it receives a TCP packet with an
+incorrect checksum.
+
+@author Yurij.Plotnikov@arknetworks.am
+
+@par Tests:
+
+-# @ref checksum-tcp_bad_csum_open
+
+@}
+
+*/

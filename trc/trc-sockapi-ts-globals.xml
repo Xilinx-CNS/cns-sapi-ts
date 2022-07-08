@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<globals>
+  <global name="env.iut_only">
+    <value>{{{'pco_iut':IUT}}}</value>
+  </global>
+  <global name="env.iut_ucast">
+    <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast}}</value>
+  </global>
+  <global name="env.iut_wild">
+    <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:wildcard}}</value>
+  </global>
+  <global name="env.peer2peer">
+    <value>'net':iut{{{'pco_iut':iut},addr:'iut_addr':inet:unicast,addr:'wild_addr':inet:wildcard,addr:'alien_addr':inet:alien,if:'iut_if',addr:'iut_lladdr':ether:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if',addr:'tst_lladdr':ether:unicast,addr:'alien_link_addr':ether:alien,addr:'tst_alien_addr':inet:alien,addr:'tst_fake_addr':inet:fake}}</value>
+  </global>
+  <global name="env.peer2peer_tst">
+    <value>'net':tester{{{'pco_iut':iut},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'iut_lladdr':ether:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if',addr:'tst_lladdr':ether:unicast}}</value>
+  </global>
+  <global name="env.peer2peer_lo">
+    <value>IUT{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast,if:'iut_if',addr:'iut_lladdr':ether:unicast},{{'pco_tst1':tester}}},'tst_if'='iut_if','tst_lladdr'='iut_lladdr'</value>
+  </global>
+  <global name="env.peer2peer_2addr">
+    <value>'net':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast,addr:'wild_addr':inet:wildcard,addr:'alien_addr':inet:alien,if:'iut_if',addr:'iut_lladdr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst_addr1':inet:unicast,addr:'tst_addr2':inet:unicast,if:'tst_if',addr:'tst_lladdr':ether:unicast,addr:'alien_link_addr':ether:alien,addr:'tst_alien_addr':inet:alien,addr:'tst_fake_addr':inet:fake}}</value>
+  </global>
+  <global name="env.peer2peer_2addr_tst">
+    <value reqs="ENV-TST-LINK">'net':tester{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast,addr:'wild_addr':inet:wildcard,if:'iut_if',addr:'iut_lladdr':ether:unicast},{{'pco_tst':tester},addr:'tst_addr1':inet:unicast,addr:'tst_addr2':inet:unicast,if:'tst_if',addr:'tst_lladdr':ether:unicast,addr:'alien_link_addr':ether:alien,addr:'tst_alien_addr':inet:alien,addr:'tst_fake_addr':inet:fake}}</value>
+  </global>
+  <global name="env.peer2peer_2addr_lo">
+    <value reqs="ENV-LOOPBACK">'net':IUT{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast,if:'iut_if',addr:'iut_lladdr':ether:unicast}},'tst_addr1'='iut_addr1','tst_addr2'='iut_addr2','tst_if'='iut_if','tst_lladdr'='iut_lladdr'</value>
+  </global>
+  <global name="env.two_nets.iut_both">
+    <value>'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'alien_addr':inet:alien,addr:'alien_gw':inet:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tester_1'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},IUT{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tester_2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</value>
+  </global>
+  <global name="env.two_nets.iut_first">
+    <value>'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'alien_addr':inet:alien,addr:'alien_gw':inet:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tester_1'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},tester{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tester_2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</value>
+  </global>
+  <global name="env.two_nets.iut_second">
+    <value>'net1':tester{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'alien_addr':inet:alien,addr:'alien_gw':inet:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tester_1'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},IUT{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tester_2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</value>
+  </global>
+  <global name="env.peer2peer.two_links">
+    <value>'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'alien_addr':inet:alien,addr:'alien_gw':inet:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net1a':IUT{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</value>
+  </global>
+  <global name="env.peer2peer_two_iut">
+    <value>'net':IUT{{{'pco_iut':IUT},{'pco_iut2':IUT},addr:'iut_addr':inet:unicast,addr:'wild_addr':inet:wildcard,if:'iut_if',addr:'iut_lladdr':ether:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if',addr:'alien_link_addr':ether:alien,addr:'tst_lladdr':ether:unicast}}</value>
+  </global>
+  <global name="env.two_nets.two_iut">
+    <value>'net1':IUT{'iut_host'{{'pco_iut':IUT},{'pco_iut2':IUT},addr:'iut_addr1':inet:unicast,addr:'alien_addr':inet:alien,addr:'alien_gw':inet:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tester_1'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net2':tester{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tester_2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</value>
+  </global>
+  <global name="env.peer2peer_mcast">
+    <value>IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+  </global>
+  <global name="env.peer2peer_mcast_lo">
+    <value>'net':IUT{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if'}},'tst_addr'='iut_addr','tst_if'='iut_if'</value>
+  </global>
+  <global name="env.peer2peer_mcast_tst">
+    <value>tester{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'mcast_addr':inet:multicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
+  </global>
+  <global name="env.peer2peer_fake">
+    <value>'net':IUT{{{'pco_iut':IUT},addr:'gw_addr':inet:unicast,addr:'wild_addr':inet:wildcard,if:'iut_if',addr:'iut_lladdr':ether:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if',addr:'tst_lladdr':ether:unicast}},{{addr:'iut_addr':inet:fake}}</value>
+  </global>
+  <global name="env.peer2peer_gw">
+    <value>'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},'GW'{{'pco_gw':tester},addr:'gw_iut_addr':inet:unicast,if:'gw_iut_if'}},'net2':tester{'GW'{addr:'gw_tst_addr':inet:unicast,if:'gw_tst_if',addr:'alien_link_addr':ether:alien},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if',addr:'tst_alien_addr':inet:alien}}</value>
+  </global>
+  <global name="env.peer2peer_tst_gw">
+    <value>'net1':tester{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},'GW'{{'pco_gw':tester},addr:'gw_iut_addr':inet:unicast,if:'gw_iut_if'}},'net2':tester{'GW'{addr:'gw_tst_addr':inet:unicast,if:'gw_tst_if',addr:'alien_link_addr':ether:alien},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if',addr:'tst_alien_addr':inet:alien}}</value>
+  </global>
+  <global name="env.triangle_iut_tst">
+    <value>'net1':tester{'iut_host'{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,addr:'alien_iut_addr':inet:alien,addr:'iut1_hwaddr':ether:unicast,if:'iut1_if'},'gw_host'{{'pco_gw':tester},addr:'gwa_addr':inet:unicast,addr:'alien_tst_addr':inet:alien,addr:'gw_hwaddr':ether:unicast,if:'gwa_if'}},'net2':IUT{'iut_host'{addr:'iut2_addr':inet:unicast,addr:'iut2_hwaddr':ether:unicast,if:'iut2_if'},'tst_host'{addr:'tst2_addr':inet:unicast,addr:'tst_hwaddr':ether:unicast,if:'tst2_if'}},'net3'{'gw_host'{addr:'gwb_addr':inet:unicast,if:'gwb_if'},'tst_host'{{'pco_tst':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if',addr:'alien_link_addr':ether:alien}},'tst_remote_addr'='tst1_addr','tst_remote_if'='tst1_if','tst_remote_net'='net3','pco_gwa'='pco_gw','pco_gwb'='pco_gw'</value>
+  </global>
+  <global name="env.triangle_tst_iut">
+    <value>'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,addr:'gwb_addr':inet:unicast,addr:'alien_iut_addr':inet:alien,if:'iut1_if',addr:'iut1_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst1_addr':inet:unicast,addr:'alien_tst_addr':inet:alien,addr:'gwa_addr':inet:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net2':IUT{'iut_host'{addr:'iut2_addr':inet:unicast,if:'iut2_if',addr:'iut2_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}},'net3'{'aux_host'{if:'aux_if'},'tst_host'{addr:'tst3_addr':inet:unicast,if:'tst3_if',addr:'alien_link_addr':ether:alien}},'pco_gw'='pco_tst','pco_gwa'='pco_tst','pco_gwb'='pco_iut','gw_hwaddr'='tst1_hwaddr','tst_hwaddr'='tst2_hwaddr','tst_remote_addr'='tst3_addr','tst_remote_if'='tst3_if','tst_remote_net'='net3','gwa_if'='tst1_if','gwb_if'='iut1_if'</value>
+  </global>
+  <global name="env.triangle_iut_iut">
+    <value>'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,addr:'gwb_addr':inet:unicast,addr:'alien_iut_addr':inet:alien,if:'iut1_if',addr:'iut1_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst1_addr':inet:unicast,addr:'alien_tst_addr':inet:alien,addr:'gwa_addr':inet:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net2':IUT{'iut_host'{addr:'iut2_addr':inet:unicast,if:'iut2_if',addr:'iut2_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}},'net3'{'aux_host'{if:'aux_if'},'tst_host'{addr:'tst3_addr':inet:unicast,if:'tst3_if',addr:'alien_link_addr':ether:alien}},'pco_gw'='pco_tst','pco_gwa'='pco_tst','pco_gwb'='pco_iut','gw_hwaddr'='tst1_hwaddr','tst_hwaddr'='tst2_hwaddr','tst_remote_addr'='tst3_addr','tst_remote_if'='tst3_if','tst_remote_net'='net3','gwa_if'='tst1_if','gwb_if'='iut1_if'</value>
+  </global>
+  <global name="env.triangle_iut_tst_ipv6">
+    <value>'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut1_addr':inet6:unicast,addr:'alien_iut_addr':inet6:alien,addr:'iut1_hwaddr':ether:unicast,if:'iut1_if'},'gw_host'{{'pco_gw':tester},addr:'gwa_addr':inet6:unicast,addr:'alien_tst_addr':inet6:alien,addr:'gw_hwaddr':ether:unicast,if:'gwa_if'}},'net2':tester{'iut_host'{addr:'iut2_addr':inet6:unicast,addr:'iut2_hwaddr':ether:unicast,if:'iut2_if'},'tst_host'{addr:'tst2_addr':inet6:unicast,addr:'tst_hwaddr':ether:unicast,if:'tst2_if'}},'net3'{'gw_host'{addr:'gwb_addr':inet6:unicast,if:'gwb_if'},'tst_host'{{'pco_tst':tester},addr:'tst1_addr':inet6:unicast,if:'tst1_if',addr:'alien_link_addr':ether:alien}},'tst_remote_addr'='tst1_addr','tst_remote_if'='tst1_if','tst_remote_net'='net3','pco_gwa'='pco_gw','pco_gwb'='pco_gw'</value>
+  </global>
+  <global name="env.triangle_tst_iut_ipv6">
+    <value>'net1':tester{'iut_host'{{'pco_iut':IUT},addr:'iut1_addr':inet6:unicast,addr:'alien_iut_addr':inet6:alien,addr:'iut1_hwaddr':ether:unicast,if:'iut1_if'},'gw_host'{{'pco_gw':tester},addr:'gwa_addr':inet6:unicast,addr:'alien_tst_addr':inet6:alien,addr:'gw_hwaddr':ether:unicast,if:'gwa_if'}},'net2':IUT{'iut_host'{addr:'iut2_addr':inet6:unicast,addr:'iut2_hwaddr':ether:unicast,if:'iut2_if'},'tst_host'{addr:'tst2_addr':inet6:unicast,addr:'tst_hwaddr':ether:unicast,if:'tst2_if'}},'net3'{'gw_host'{addr:'gwb_addr':inet6:unicast,if:'gwb_if'},'tst_host'{{'pco_tst':tester},addr:'tst1_addr':inet6:unicast,if:'tst1_if',addr:'alien_link_addr':ether:alien}},'tst_remote_addr'='tst1_addr','tst_remote_if'='tst1_if','tst_remote_net'='net3','pco_gwa'='pco_gw','pco_gwb'='pco_gw'</value>
+  </global>
+  <global name="env.triangle_iut_iut_ipv6">
+    <value>'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut1_addr':inet6:unicast,addr:'gwb_addr':inet6:unicast,addr:'alien_iut_addr':inet6:alien,if:'iut1_if',addr:'iut1_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst1_addr':inet6:unicast,addr:'alien_tst_addr':inet6:alien,addr:'gwa_addr':inet6:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net2':IUT{'iut_host'{addr:'iut2_addr':inet6:unicast,if:'iut2_if',addr:'iut2_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst2_addr':inet6:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}},'net3'{'aux_host'{if:'aux_if'},'tst_host'{addr:'tst3_addr':inet6:unicast,if:'tst3_if',addr:'alien_link_addr':ether:alien}},'pco_gw'='pco_tst','pco_gwa'='pco_tst','pco_gwb'='pco_iut','gw_hwaddr'='tst1_hwaddr','tst_hwaddr'='tst2_hwaddr','tst_remote_addr'='tst3_addr','tst_remote_if'='tst3_if','tst_remote_net'='net3','gwa_if'='tst1_if','gwb_if'='iut2_if'</value>
+  </global>
+
+  <global name="env.route_two_iut_ifs">
+    <value>'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'alien_addr':inet:alien,addr:'alien_gw':inet:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tst_host'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net1a':IUT{'iut_host'{addr:'iut_addr2':inet:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tst_host'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</value>
+  </global>
+  <global name="env.route_two_iut_ifs_ipv6">
+    <value>'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'alien_addr':inet6:alien,addr:'alien_gw':inet6:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tst_host'{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net1a':IUT{'iut_host'{addr:'iut_addr2':inet6:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tst_host'{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</value>
+  </global>
+
+  <global name="env.iut_only_ipv6">
+    <value>{{{'pco_iut':IUT}}}</value>
+  </global>
+  <global name="env.iut_ucast_ipv6">
+    <value>{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast}}</value>
+  </global>
+  <global name="env.iut_wild_ipv6">
+    <value>{{{'pco_iut':IUT},addr:'iut_addr':inet6:wildcard}}</value>
+  </global>
+  <global name="env.peer2peer_ipv6">
+    <value>'net':iut{{{'pco_iut':iut},addr:'iut_addr':inet6:unicast,addr:'wild_addr':inet6:wildcard,addr:'alien_addr':inet6:alien,if:'iut_if',addr:'iut_lladdr':ether:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast,if:'tst_if',addr:'tst_lladdr':ether:unicast,addr:'alien_link_addr':ether:alien,addr:'tst_alien_addr':inet6:alien,addr:'tst_fake_addr':inet6:fake}}</value>
+  </global>
+  <global name="env.peer2peer_2addr_ipv6">
+    <value reqs="IP6,IP6_ONLOAD">'net':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast,addr:'wild_addr':inet6:wildcard,addr:'alien_addr':inet6:alien,if:'iut_if',addr:'iut_lladdr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst_addr1':inet6:unicast,addr:'tst_addr2':inet6:unicast,if:'tst_if',addr:'tst_lladdr':ether:unicast,addr:'alien_link_addr':ether:alien,addr:'tst_alien_addr':inet6:alien,addr:'tst_fake_addr':inet6:fake}}</value>
+  </global>
+  <global name="env.p2p_ip4_ip6">
+    <value>'net':IUT{{{'pco_iut':IUT},addr:'iut_addr6':inet6:unicast,addr:'iut_addr':inet:unicast,addr:'iut_lladdr':ether:unicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr6':inet6:unicast,addr:'tst_addr':inet:unicast,addr:'tst_lladdr':ether:unicast,if:'tst_if'}}</value>
+  </global>
+  <global name="env.peer2peer_tst_ipv6">
+    <value>'net':tester{{{'pco_iut':iut},addr:'iut_addr':inet6:unicast,if:'iut_if',addr:'iut_lladdr':ether:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast,if:'tst_if',addr:'tst_lladdr':ether:unicast}}</value>
+  </global>
+  <global name="env.peer2peer_lo_ipv6">
+    <value>IUT{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:unicast,addr:'tst_addr':inet6:unicast,if:'iut_if',addr:'iut_lladdr':ether:unicast},{{'pco_tst1':tester}}},'tst_if'='iut_if','tst_lladdr'='iut_lladdr'</value>
+  </global>
+  <global name="env.peer2peer_2addr_tst_ipv6">
+    <value reqs="ENV-TST-LINK,IP6,IP6_ONLOAD">'net':tester{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast,addr:'wild_addr':inet6:wildcard,if:'iut_if',addr:'iut_lladdr':ether:unicast},{{'pco_tst':tester},addr:'tst_addr1':inet6:unicast,addr:'tst_addr2':inet6:unicast,if:'tst_if',addr:'tst_lladdr':ether:unicast,addr:'alien_link_addr':ether:alien,addr:'tst_alien_addr':inet6:alien,addr:'tst_fake_addr':inet6:fake}}</value>
+  </global>
+  <global name="env.peer2peer_2addr_lo_ipv6">
+    <value reqs="ENV-LOOPBACK">'net':IUT{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast,if:'iut_if',addr:'iut_lladdr':ether:unicast}},'tst_addr1'='iut_addr1','tst_addr2'='iut_addr2','tst_if'='iut_if','tst_lladdr'='iut_lladdr'</value>
+  </global>
+  <global name="env.two_nets.iut_both_ipv6">
+    <value>'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'alien_addr':inet6:alien,addr:'alien_gw':inet6:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tester_1'{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},IUT{'iut_host'{addr:'iut_addr2':inet6:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tester_2'{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</value>
+  </global>
+  <global name="env.two_nets.iut_first_ipv6">
+    <value>'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'alien_addr':inet6:alien,addr:'alien_gw':inet6:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tester_1'{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},tester{'iut_host'{addr:'iut_addr2':inet6:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tester_2'{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</value>
+  </global>
+  <global name="env.two_nets.iut_second_ipv6">
+    <value>'net1':tester{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'alien_addr':inet6:alien,addr:'alien_gw':inet6:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tester_1'{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},IUT{'iut_host'{addr:'iut_addr2':inet6:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tester_2'{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</value>
+  </global>
+  <global name="env.peer2peer.two_links_ipv6">
+    <value>'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'alien_addr':inet6:alien,addr:'alien_gw':inet6:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst1_addr':inet6:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net1a':IUT{'iut_host'{addr:'iut_addr2':inet6:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst2_addr':inet6:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</value>
+  </global>
+  <global name="env.peer2peer_two_iut_ipv6">
+    <value>'net':IUT{{{'pco_iut':IUT},{'pco_iut2':IUT},addr:'iut_addr':inet6:unicast,addr:'wild_addr':inet6:wildcard,if:'iut_if',addr:'iut_lladdr':ether:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast,if:'tst_if',addr:'alien_link_addr':ether:alien,addr:'tst_lladdr':ether:unicast}}</value>
+  </global>
+  <global name="env.two_nets.two_iut_ipv6">
+    <value>'net1':IUT{'iut_host'{{'pco_iut':IUT},{'pco_iut2':IUT},addr:'iut_addr1':inet6:unicast,addr:'alien_addr':inet6:alien,addr:'alien_gw':inet6:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tester_1'{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net2':tester{'iut_host'{addr:'iut_addr2':inet6:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tester_2'{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</value>
+  </global>
+  <global name="env.peer2peer_mcast_ipv6">
+    <value>IUT{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast,addr:'mcast_addr':inet6:multicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast,if:'tst_if'}}</value>
+  </global>
+  <global name="env.peer2peer_mcast_lo_ipv6">
+    <value>'net':IUT{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr':inet6:unicast,addr:'mcast_addr':inet6:multicast,if:'iut_if'}},'tst_addr'='iut_addr','tst_if'='iut_if'</value>
+  </global>
+  <global name="env.peer2peer_fake_ipv6">
+    <value>'net':IUT{{{'pco_iut':IUT},addr:'gw_addr':inet6:unicast,addr:'wild_addr':inet6:wildcard,if:'iut_if',addr:'iut_lladdr':ether:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast,if:'tst_if',addr:'tst_lladdr':ether:unicast}},{{addr:'iut_addr':inet6:fake}}</value>
+  </global>
+  <global name="env.peer2peer_gw_ipv6">
+    <value>'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast,if:'iut_if'},'GW'{{'pco_gw':tester},addr:'gw_iut_addr':inet6:unicast,if:'gw_iut_if'}},'net2':tester{'GW'{addr:'gw_tst_addr':inet6:unicast,if:'gw_tst_if',addr:'alien_link_addr':ether:alien},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet6:unicast,if:'tst_if',addr:'tst_alien_addr':inet6:alien}}</value>
+  </global>
+  <global name="env.peer2peer_tst_gw_ipv6">
+    <value>'net1':tester{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast,if:'iut_if'},'GW'{{'pco_gw':tester},addr:'gw_iut_addr':inet6:unicast,if:'gw_iut_if'}},'net2':tester{'GW'{addr:'gw_tst_addr':inet6:unicast,if:'gw_tst_if',addr:'alien_link_addr':ether:alien},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet6:unicast,if:'tst_if',addr:'tst_alien_addr':inet6:alien}}</value>
+  </global>
+  <global name="env.triangle_iut_tst_ipv6">
+    <value>'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut1_addr':inet6:unicast,addr:'iut1_hwaddr':ether:unicast,if:'iut1_if'},'gw_host'{{'pco_gw':tester},addr:'gwa_addr':inet6:unicast,addr:'gw_hwaddr':ether:unicast,if:'gwa_if'}},'net2':tester{'iut_host'{addr:'iut2_addr':inet6:unicast,addr:'iut2_hwaddr':ether:unicast,if:'iut2_if'},'tst_host'{addr:'tst2_addr':inet6:unicast,addr:'tst_hwaddr':ether:unicast}},'net3'{'gw_host'{addr:'gwb_addr':inet6:unicast,if:'gwb_if'},'tst_host'{{'pco_tst':tester},addr:'tst1_addr':inet6:unicast,if:'tst1_if'}}</value>
+  </global>
+  <global name="env.triangle_tst_iut_ipv6">
+    <value>'net1':tester{'iut_host'{{'pco_iut':IUT},addr:'iut1_addr':inet6:unicast,addr:'iut1_hwaddr':ether:unicast,if:'iut1_if'},'gw_host'{{'pco_gw':tester},addr:'gwa_addr':inet6:unicast,addr:'gw_hwaddr':ether:unicast,if:'gwa_if'}},'net2':IUT{'iut_host'{addr:'iut2_addr':inet6:unicast,addr:'iut2_hwaddr':ether:unicast,if:'iut2_if'},'tst_host'{addr:'tst2_addr':inet6:unicast,addr:'tst_hwaddr':ether:unicast}},'net3'{'gw_host'{addr:'gwb_addr':inet6:unicast,if:'gwb_if'},'tst_host'{{'pco_tst':tester},addr:'tst1_addr':inet6:unicast,if:'tst1_if'}}</value>
+  </global>
+  <global name="env.triangle_iut_iut_ipv6">
+    <value>'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut1_addr':inet6:unicast,if:'iut1_if',addr:'iut1_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst1_addr':inet6:unicast,addr:'gwa_addr':inet6:unicast,addr:'gwb_addr':inet6:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net2':IUT{'iut_host'{addr:'iut2_addr':inet6:unicast,if:'iut2_if',addr:'iut2_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst2_addr':inet6:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}},'pco_gw'='pco_tst','gw_hwaddr'='tst1_hwaddr','tst_hwaddr'='tst2_hwaddr'</value>
+  </global>
+  <global name="env.route_two_iut_ifs_ipv6">
+    <value>'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'alien_addr':inet6:alien,addr:'alien_gw':inet6:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tst_host'{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net1a':IUT{'iut_host'{addr:'iut_addr2':inet6:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tst_host'{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</value>
+  </global>
+  <global name="env.p2p_ip6ip4mapped">
+    <value>'net':IUT{{{'pco_iut':IUT},addr:'iut_addr':inet6:ip4mapped_uc,addr:'iut_lladdr':ether:unicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet6:ip4mapped_uc,addr:'tst_lladdr':ether:unicast,if:'tst_if'}}</value>
+  </global>
+  <global name="env.p2p_ip6linklocal">
+    <value reqs="IP6,IP6_LINKLOCAL">'net':IUT{{{'pco_iut':IUT},addr:'iut_addr':inet6:linklocal,addr:'iut_lladdr':ether:unicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet6:linklocal,addr:'tst_lladdr':ether:unicast,if:'tst_if'}}</value>
+  </global>
+  <global name="env.p2p_tst_ip6linklocal">
+    <value reqs="ENV-TST-LINK,IP6,IP6_LINKLOCAL">'net':tester{{{'pco_iut':IUT},addr:'iut_addr':inet6:linklocal,addr:'iut_lladdr':ether:unicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet6:linklocal,addr:'tst_lladdr':ether:unicast,if:'tst_if'}}</value>
+  </global>
+  <global name="env.p2p_ip6">
+    <value>'net':IUT{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast,addr:'iut_lladdr':ether:unicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast,addr:'tst_lladdr':ether:unicast,if:'tst_if'}}</value>
+  </global>
+  <global name="env.route_single_if_first_iut">
+      <value>'net':IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'alien_addr':inet:alien,if:'iut_if',addr:'iut_lladdr':ether:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,addr:'tst_alien_addr':inet:alien,if:'tst_if',addr:'tst_lladdr':ether:unicast}}</value>
+  </global>
+  <global name="env.route_single_if_second_iut">
+      <value reqs="ENV-2LINKS-IUT-ROUTE">'net_aux':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net':IUT{'iut_host'{addr:'iut_addr':inet:unicast,addr:'alien_addr':inet:alien,if:'iut_if',addr:'iut_if_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,addr:'tst_alien_addr':inet:alien,if:'tst_if',addr:'tst_hwaddr':ether:unicast}}</value>
+  </global>
+  <global name="env.route_single_if_tst">
+      <value>'net':tester{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'alien_addr':inet:alien,if:'iut_if',addr:'iut_lladdr':ether:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,addr:'tst_alien_addr':inet:alien,if:'tst_if',addr:'tst_lladdr':ether:unicast}}</value>
+  </global>
+  <global name="env.route_single_if_first_iut_ipv6">
+      <value>'net':IUT{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast,addr:'alien_addr':inet6:alien,if:'iut_if',addr:'iut_lladdr':ether:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast,addr:'tst_alien_addr':inet6:alien,if:'tst_if',addr:'tst_lladdr':ether:unicast}}</value>
+  </global>
+  <global name="env.route_single_if_second_iut_ipv6">
+      <value>'net_aux':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst1_addr':inet6:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net':IUT{'iut_host'{addr:'iut_addr':inet6:unicast,addr:'alien_addr':inet6:alien,if:'iut_if',addr:'iut_if_hwaddr':ether:unicast},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet6:unicast,addr:'tst_alien_addr':inet6:alien,if:'tst_if',addr:'tst_hwaddr':ether:unicast}}</value>
+  </global>
+  <global name="env.route_single_if_tst_ipv6">
+      <value>'net':tester{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast,addr:'alien_addr':inet6:alien,if:'iut_if',addr:'iut_lladdr':ether:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast,addr:'tst_alien_addr':inet6:alien,if:'tst_if',addr:'tst_lladdr':ether:unicast}}</value>
+  </global>
+  <global name="env.iut_native">
+    <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,{'pco_native':tester}},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+  </global>
+  <global name="env.iut_native_ipv6">
+    <value>{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast,{'pco_native':tester}},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast}}</value>
+  </global>
+  <global name="env.p2p_lo_tst">
+    <value>'net1':IUT{'iut_host'{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr1':inet:unicast,if:'lo'}},tester{'iut_host'{addr:'iut_addr2':inet:unicast}},'iut_if'='lo'</value>
+  </global>
+  <global name="env.p2p_lo_tst_ipv6">
+    <value>'net1':IUT{'iut_host'{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr1':inet6:unicast,if:'lo'}},tester{'iut_host'{addr:'iut_addr2':inet6:unicast}},'iut_if'='lo'</value>
+  </global>
+  <global name="env.p2p_lo_tst_ipv4v6">
+    <value>'net1':IUT{'iut_host'{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr_wild':inet6:wildcard,if:'lo'}},tester{'iut_host'{addr:'iut_addr2':inet:unicast}},'iut_if'='lo'</value>
+  </global>
+  <global name="env.p2p_lo">
+    <value>'net1':IUT{'iut_host'{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr1':inet:unicast,if:'lo'}},'iut_if'='lo'</value>
+  </global>
+  <global name="env.p2p_lo_ipv6">
+    <value>'net1':IUT{'iut_host'{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr1':inet6:unicast,if:'lo'}},'iut_if'='lo'</value>
+  </global>
+</globals>

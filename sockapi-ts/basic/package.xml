@@ -1,0 +1,3064 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<package version="1.0">
+
+    <description>Advanced usage of basic Socket API</description>
+
+    <author mailto="Konstantin.Abramenko@oktetlabs.ru"/>
+
+    <session>
+        <run>
+            <script name="chroot_socket">
+              <req id="CHROOT"/>
+            </script>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="sock_flag">
+                <value>none</value>
+                <value reqs="SOCK_NONBLOCK">nonblock</value>
+                <!-- ON-12639, ON-2272: Onload does not support chroot+exec,
+                     and there is no point in filling the expected results
+                     into TRC database.
+                <value reqs="SOCK_CLOEXEC,EXEC">cloexec</value-->
+            </arg>
+            <arg name="action">
+                <value>none</value>
+                <value reqs="FORK,FORK_EPOLL">fork</value>
+                <!-- bug 32411: Onload does not support chroot+execve,
+                     and there is no point in filling the expected results
+                     into TRC database.
+                <value reqs="EXEC,FORK_EPOLL">exec</value>
+                <value reqs="FORK,EXEC,FORK_EPOLL">forkexec</value>
+                -->
+            </arg>
+            <arg name="sock_before" type="boolean"/>
+            <arg name="test_epoll" list="">
+                <value>none</value>
+                <value>before</value>
+                <value>before</value>
+                <value>after</value>
+                <value>after</value>
+            </arg>
+            <arg name="epoll_func" list="">
+                <value>none</value>
+                <value reqs="EPOLL">epoll</value>
+                <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+                <value reqs="EPOLL">epoll</value>
+                <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="get_sock_peer_name_dgm">
+                <req id="SOCK_DGRAM"/>
+                <!-- getsockname() and getpeername() functions sanity - useless for ZF. -->
+                <req id="ZF_INCOMPATIBLE"/>
+            </script>
+            <arg name="env">
+              <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+        </run>
+        <run>
+            <script name="get_sock_peer_name_str">
+                <req id="SOCK_STREAM"/>
+                <!-- getsockname() and getpeername() functions sanity - useless for ZF. -->
+                <req id="ZF_INCOMPATIBLE"/>
+            </script>
+            <arg name="env">
+                <!-- IPv4 env -->
+                <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},'pco_srvr'='pco_iut','srvr_addr'='iut_addr','pco_clnt'='pco_tst','clnt_addr'='tst_addr'</value>
+                <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},'pco_srvr'='pco_tst','srvr_addr'='tst_addr','pco_clnt'='pco_iut','clnt_addr'='iut_addr'</value>
+                <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr':inet:unicast}},'tst_addr'='iut_addr','pco_srvr'='pco_iut','srvr_addr'='iut_addr','pco_clnt'='pco_tst','clnt_addr'='iut_addr'</value>
+                <!-- IPv6 env -->
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast}},'pco_srvr'='pco_iut','srvr_addr'='iut_addr','pco_clnt'='pco_tst','clnt_addr'='tst_addr'</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast}},'pco_srvr'='pco_tst','srvr_addr'='tst_addr','pco_clnt'='pco_iut','clnt_addr'='iut_addr'</value>
+                <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr':inet6:unicast}},'tst_addr'='iut_addr','pco_srvr'='pco_iut','srvr_addr'='iut_addr','pco_clnt'='pco_tst','clnt_addr'='iut_addr'</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="state_trans_client">
+                <req id="SOCK_STREAM"/>
+                <req id="TEST_HARNESS_SANITY"/>
+                <!-- Check TCP socket state in various poses using
+                     getsockname() and sockts_get_socket_state(), which is
+                     not necessary correct for ZF shim. The test is useless
+                     for ZF API. -->
+                <req id="ZF_INCOMPATIBLE"/>
+            </script>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},addr:'wild_addr':inet:wildcard},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'wild_addr':inet6:wildcard},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast}}</value>
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+        </run>
+        <run>
+            <script name="state_trans_server">
+                <req id="SOCK_STREAM"/>
+                <req id="TEST_HARNESS_SANITY"/>
+                <!-- Check TCP socket state in various poses using
+                     getsockname() and sockts_get_socket_state(), which is
+                     not necessary correct for ZF shim. The test is useless
+                     for ZF API. -->
+                <req id="ZF_INCOMPATIBLE"/>
+            </script>
+            <arg name="env">
+              <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+        </run>
+        <run>
+            <script name="state_trans_udp">
+                <req id="SOCK_DGRAM"/>
+                <req id="TEST_HARNESS_SANITY"/>
+                <req id="ZF_INCOMPATIBLE"/>
+            </script>
+            <arg name="env">
+                <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+        </run>
+
+        <run>
+            <script name="threads_client">
+                <req id="SOCK_STREAM"/>
+                <req id="THREADS"/>
+            </script>
+            <arg name="env">
+                <value type="env.twothr2peer"/>
+                <value type="env.twothr2peer_ipv6"/>
+            </arg>
+        </run>
+        <run>
+            <script name="threads_server">
+                <req id="SOCK_STREAM"/>
+                <req id="THREADS"/>
+            </script>
+            <arg name="env">
+                <value type="env.twothr2peer"/>
+                <value type="env.twothr2peer_ipv6"/>
+            </arg>
+        </run>
+        <run>
+            <script name="threads_dgm">
+                <req id="SOCK_DGRAM"/>
+                <req id="THREADS"/>
+            </script>
+            <arg name="env">
+                <value type="env.twothr2peer"/>
+                <value type="env.twothr2peer_ipv6"/>
+            </arg>
+        </run>
+        <run>
+            <script name="threads_shutdown_unblock">
+                <req id="SOCK_STREAM"/>
+                <req id="SHUTDOWN"/>
+                <req id="THREADS"/>
+            </script>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT,'pco_iut2':IUT,'pco_iut3':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},'pco_iut1'='pco_iut'</value>
+                <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT,'pco_iut2':IUT,'pco_iut3':IUT,'pco_tst':IUT},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}},'pco_iut1'='pco_iut'</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_iut2':IUT,'pco_iut3':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast}},'pco_iut1'='pco_iut'</value>
+                <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_iut2':IUT,'pco_iut3':IUT,'pco_tst':IUT},addr:'iut_addr':inet6:unicast,addr:'tst_addr':inet6:unicast}},'pco_iut1'='pco_iut'</value>
+            </arg>
+            <arg name="func_thread2">
+                <value>recv</value>
+                <value>send</value>
+                <value reqs="AIO">aio_read_suspend</value>
+                <value reqs="AIO">aio_write_suspend</value> 
+            </arg>
+            <arg name="func_thread3">
+                <value>recv</value>
+                <value>send</value>
+                <value reqs="AIO">aio_read_suspend</value>
+                <value reqs="AIO">aio_write_suspend</value> 
+            </arg>
+            <arg name="howto">
+                <value>SHUT_RD</value>
+                <value>SHUT_WR</value>
+                <value>SHUT_RDWR</value>
+            </arg>
+        </run>
+        <run>
+            <session>
+                <arg name="use_threads">
+                    <value reqs="THREADS">TRUE</value>
+                    <value reqs="FORK">FALSE</value>
+                </arg>
+                <arg name="env">
+                    <value>{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast,addr:'iut_addr3':inet:unicast,addr:'alien_link_addr':ether:alien,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr1':inet:unicast,addr:'tst_addr2':inet:unicast,addr:'tst_addr3':inet:unicast,if:'tst_if'}}</value>
+                    <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast,addr:'iut_addr3':inet6:unicast,addr:'alien_link_addr':ether:alien,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr1':inet6:unicast,addr:'tst_addr2':inet6:unicast,addr:'tst_addr3':inet6:unicast,if:'tst_if'}}</value>
+                </arg>
+                <arg name="shutdown_how">
+                    <value>SHUT_RD</value>
+                    <value>SHUT_WR</value>
+                    <value>SHUT_RDWR</value>
+                </arg>
+                <run>
+                    <script name="threads_shutdown_diff_sock">
+                        <req id="SHUTDOWN"/>
+                    </script>
+                    <arg name="sock_type">
+                        <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+                    </arg>
+                    <arg name="sendrecv_func">
+                        <value>recv</value>
+                        <value>send</value>
+                    </arg>
+                </run>
+                 <run>
+                    <script name="threads_shutdown_diff_sock">
+                        <req id="SHUTDOWN"/>
+                    </script>
+                    <arg name="sock_type">
+                        <value reqs="SOCK_DGRAM">SOCK_DGRAM</value>
+                    </arg>
+                    <arg name="sendrecv_func">
+                        <value>recv</value>
+                    </arg>
+                </run>
+                <run>
+                    <script name="threads_shutdown_diff_sock">
+                        <req id="SHUTDOWN"/>
+                    </script>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="iomux_func" type="iomux"/>
+                </run>
+                <run>
+                    <script name="threads_shutdown_diff_sock">
+                        <req id="SHUTDOWN"/>
+                    </script>
+                    <arg name="sock_type">
+                        <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+                    </arg>
+                    <arg name="other_func">
+                        <value>connect</value>
+                        <value>accept</value>
+                    </arg>
+                </run>
+          </session>
+        </run>
+        <run>
+            <script name="threads_shutdown_listening">
+                <req id="SOCK_STREAM"/>
+                <req id="SHUTDOWN"/>
+                <req id="THREADS"/>
+            </script>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT,'pco_iut2':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester}}},'pco_iut1'='pco_iut'</value>
+                <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT,'pco_iut2':IUT},{'pco_tst':IUT},addr:'iut_addr':inet:unicast}},'pco_iut1'='pco_iut'</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_iut2':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester}}},'pco_iut1'='pco_iut'</value>
+                <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_iut2':IUT},{'pco_tst':IUT},addr:'iut_addr':inet6:unicast}},'pco_iut1'='pco_iut'</value>
+            </arg>
+            <arg name="func">
+                <value>accept</value>
+                <value reqs="SELECT">select</value>
+                <value reqs="SELECT,PSELECT">pselect</value>
+                <value reqs="POLL">poll</value> 
+                <value reqs="POLL,PPOLL">ppoll</value> 
+                <value reqs="EPOLL">epoll</value> 
+                <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value> 
+            </arg>
+            <arg name="accept_before" type="boolean"/>
+            <!--- @page basic-threads_shutdown_listening
+            \n
+            @warning do_close=TRUE support is not implemented, see bug 77094
+                     for details.
+            -->
+            <arg name="do_close">
+              <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="close_created">
+                <!-- Useless for ZF testing, fails because of ZF shim
+                     issues, which won't be fixed without necessity. -->
+                <req id="ZF_INCOMPATIBLE"/>
+            </script>
+            <arg name="domain">
+                <value>PF_INET</value>
+                <value reqs="IP6,IP6_ONLOAD">PF_INET6</value>
+            </arg>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+
+        <run>
+            <script name="close_bound">
+                <!-- Useless for ZF testing, fails because of ZF shim
+                     issues, which won't be fixed without necessity. -->
+                <req id="ZF_INCOMPATIBLE"/>
+            </script>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_wild"/>
+                <value ref="env.iut_ucast_ipv6"/>
+                <value ref="env.iut_wild_ipv6"/>
+            </arg>
+            <arg name="port_wildcard" type="boolean"/>
+        </run>
+        <run>
+            <script name="close_listening">
+                <req id="SOCK_STREAM"/>
+                <!-- Useless for ZF testing, fails because of ZF shim
+                     issues, which won't be fixed without necessity. -->
+                <req id="ZF_INCOMPATIBLE"/>
+            </script>
+            <arg name="env">
+                <value ref="env.iut_wild"/>
+                <value ref="env.iut_wild_ipv6"/>
+            </arg>
+        </run>
+
+        <run>
+            <script name="connect_failed_func">
+                <req id="SOCK_STREAM"/>
+                <!-- Useless for ZF: check that listen(), bind(),
+                     getsockname() and getpeername() work correctly when it
+                     is called after failed connect. -->
+                <req id="ZF_INCOMPATIBLE"/>
+            </script>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,addr:'fake_addr':inet:fake,addr:'alien_link_addr':ether:alien}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast,addr:'fake_addr':inet6:fake,addr:'alien_link_addr':ether:alien}}</value>
+            </arg>
+            <arg name="howto">
+                <value>port</value>
+                <value reqs="TIME_CONSUMING_ON_SOLARIS">host</value>
+                <value reqs="TIME_CONSUMING">timeout</value>
+            </arg>
+            <arg name="bind">
+                <value>no</value>
+                <value>unspecified</value>
+                <value>specified</value>
+            </arg>
+            <arg name="func">
+                <value>bind</value>
+                <value>listen</value>
+                <value>getsockname</value>
+                <value>getpeername</value>
+                <value>connect</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="listen_backlog_values" track_conf="silent">
+                <req id="NO_REUSE_STACK"/>
+                <req id="SOCK_STREAM"/>
+                <req id="LISTEN_BACKLOG"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+            </arg>
+            <arg name="backlog">
+                <value>-1</value>
+                <value>0</value>
+                <value>1</value>
+                <value>10</value>
+                <value>150</value>
+            </arg>
+        </run>
+        <run>
+            <script name="listen_backlog_values" track_conf="silent">
+                <req id="NO_REUSE_STACK"/>
+                <req id="SOCK_STREAM"/>
+                <req id="LISTEN_BACKLOG"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="backlog">
+                <!-- See ON-12162. -->
+                <value reqs="NO_LOOP4">-1</value>
+                <value>0</value>
+                <value>1</value>
+                <value>10</value>
+                <value>150</value>
+            </arg>
+        </run>
+
+         <run>
+            <script name="listen_shutdown_connect">
+                <req id="SOCK_STREAM"/>
+                <req id="LISTEN_SHUTDOWN"/>
+            </script>
+            <arg name="env">
+              <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="bind" list="">
+                <value>no</value>
+                <value>unspecified</value>
+                <value>unspecified</value>
+                <value>specified</value>
+                <value>specified</value>
+            </arg>
+            <arg name="use_wildcard" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="listen_shutdown_wr">
+                <req id="SOCK_STREAM"/>
+                <req id="LISTEN_SHUTDOWN"/>
+            </script>
+            <arg name="env">
+              <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+        </run>
+
+        <run>
+            <script name="listen_accept_close">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env" list="">
+                <!-- IPv4 env -->
+                <value reqs="ENV-LOOPBACK">IUT{{{'pco_iut':IUT},{'pco_tst2':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value reqs="ENV-LOOPBACK">IUT{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr':inet:unicast},{{'pco_tst2':tester},addr:'tst_addr':inet:unicast}}</value>
+                <value ref="env.peer2peer"/>
+                <!-- IPv6 env -->
+                <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">IUT{{{'pco_iut':IUT},{'pco_tst2':tester},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast}}</value>
+                <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">IUT{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:unicast},{{'pco_tst2':tester},addr:'tst_addr':inet6:unicast}}</value>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="one_tst" type="boolean" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value reqs="ZF_SPECIFIC">TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value reqs="ZF_SPECIFIC">TRUE</value>
+            </arg>
+            <arg name="handover" type="boolean">
+                <value reqs="SO_BINDTODEVICE">TRUE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="close_listen_pending">
+                <req id="SOCK_STREAM"/>
+                <req id="TEST_HARNESS_SANITY"/>
+            </script>
+            <arg name="env">
+                <!-- IPv4 env -->
+                <value>{{{'pco_iut':IUT},addr:'srv_addr':inet:unicast},{{'pco_tst':tester,'pco_clnt2':tester},addr:'clnt1_addr':inet:unicast,addr:'clnt2_addr':inet:unicast}},'pco_srvr'='pco_iut','pco_clnt1'='pco_tst'</value>
+                <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT,'pco_clnt2':IUT},addr:'clnt1_addr':inet:unicast,addr:'clnt2_addr':inet:unicast},{{'pco_tst':tester},addr:'srv_addr':inet:unicast}},'pco_srvr'='pco_tst','pco_clnt1'='pco_iut'</value>
+                <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT,'pco_clnt2':IUT,'pco_tst':tester},addr:'clnt1_addr':inet:unicast,addr:'clnt2_addr':inet:unicast,addr:'srv_addr':inet:unicast}},'pco_srvr'='pco_tst','pco_clnt1'='pco_iut'</value>
+                <!-- IPv6 env -->
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'srv_addr':inet6:unicast},{{'pco_tst':tester,'pco_clnt2':tester},addr:'clnt1_addr':inet6:unicast,addr:'clnt2_addr':inet6:unicast}},'pco_srvr'='pco_iut','pco_clnt1'='pco_tst'</value>
+                <value reqs="IP6,IP6_ONLOAD,ENV-LOOPBACK">{{{'pco_iut':IUT,'pco_clnt2':IUT},addr:'clnt1_addr':inet6:unicast,addr:'clnt2_addr':inet6:unicast},{{'pco_tst':tester},addr:'srv_addr':inet6:unicast}},'pco_srvr'='pco_tst','pco_clnt1'='pco_iut'</value>
+                <value reqs="IP6,IP6_ONLOAD,ENV-LOOPBACK">{{{'pco_iut':IUT,'pco_clnt2':IUT,'pco_tst':tester},addr:'clnt1_addr':inet6:unicast,addr:'clnt2_addr':inet6:unicast,addr:'srv_addr':inet6:unicast}},'pco_srvr'='pco_tst','pco_clnt1'='pco_iut'</value>
+            </arg>
+            <arg name="accept">
+                <value>none</value>
+                <value>clnt1</value>
+                <value>clnt2</value>
+            </arg>
+            <arg name="send_data" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="shutdown_write_read">
+                <req id="SHUTDOWN"/>
+            </script>    
+            <arg name="env">
+              <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="shut_peer">
+                <value>never</value>
+                <value>first</value>
+                <value reqs="TIME_CONSUMING">second</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="shutdown_stream_read_write">
+                <req id="SOCK_STREAM"/>
+                <req id="SHUTDOWN"/>
+            </script>    
+            <arg name="env">
+              <value type="env.peer2peer_all_ipv4_ipv6"/>
+              <value ref="env.peer2peer_fake"/>
+            </arg>
+        </run>
+
+        <run>
+            <script name="shutdown_dgm_rd">
+                <req id="SOCK_DGRAM"/>
+                <req id="SHUTDOWN"/>
+            </script>
+            <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+        </run>
+        <run>
+            <script name="shutdown_dgm_wr">
+                <req id="SOCK_DGRAM"/>
+                <req id="SHUTDOWN"/>
+            </script>
+            <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+        </run>
+        <run>
+            <script name="shutdown_dgm_all">
+                <req id="SOCK_DGRAM"/>
+                <req id="SHUTDOWN"/>
+            </script>
+            <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+        </run>
+
+        <run>
+            <script name="shutdown_peer">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+              <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+        </run>
+
+        <!-- bind_sockaddr_send -->
+        <run>
+            <session>
+                <arg name="iut_user" type="boolean">
+                    <value>FALSE</value>
+                    <value reqs="NON_PRIV_USER,NO_REUSE_STACK,SETUID">TRUE</value>
+                </arg>
+                <arg name="port_type">
+                    <value>user</value>
+                    <value>undef</value>
+                    <value>system</value>
+                </arg>
+                <run>
+                    <script name="bind_sockaddr_send" track_conf="silent"/>
+                    <arg name="env">
+                        <!-- IPv4 envs -->
+                        <!-- IUT address - wildcard -->
+                        <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr':inet:wildcard,addr:'tst_addr':inet:unicast}}</value>
+                        <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:wildcard,addr:'iut_addr_ucast':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                        <!-- IUT address - unicast without route -->
+                        <value ref="env.peer2peer"/>
+                        <!-- IUT address - unicast with route -->
+                        <!-- IPVLAN can only be used for traffic going to/from
+                             an IP address assigned to this IPVLAN, here iut_addr
+                             is not on IUT interface. See bug 87946 -->
+                        <value reqs="ENV-2PEERS,NO_IPVLAN">IUT{'H1'{addr:'dst_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H1'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast}}</value>
+                        <value reqs="ENV-2PEERS,ENV-2LINKS-IUT">IUT{'H1'{addr:'dst_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},IUT{'H1'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast}}</value>
+                        <!-- IUT address - loopback -->
+                        <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr':inet:loopback,addr:'tst_addr':inet:loopback}}</value>
+
+                        <!-- IPv6 envs -->
+                        <!-- IUT address - wildcard -->
+                        <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:wildcard,addr:'tst_addr':inet6:unicast}}</value>
+                        <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr':inet6:wildcard,addr:'iut_addr_ucast':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast}}</value>
+                        <!-- IUT address - unicast without route -->
+                        <value ref="env.peer2peer_ipv6"/>
+                        <!-- IUT address - unicast with route -->
+                        <!-- IPVLAN can only be used for traffic going to/from
+                             an IP address assigned to this IPVLAN, here iut_addr
+                             is not on IUT interface. See bug 87946 -->
+                        <value reqs="ENV-2PEERS,IP6,IP6_ONLOAD,NO_IPVLAN">IUT{'H1'{addr:'dst_addr':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast}},tester{'H1'{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast}}</value>
+                        <value reqs="ENV-2PEERS,ENV-2LINKS-IUT,IP6,IP6_ONLOAD">IUT{'H1'{addr:'dst_addr':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast}},IUT{'H1'{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast}}</value>
+                        <!-- IUT address - loopback -->
+                        <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:loopback,addr:'tst_addr':inet6:loopback}}</value>
+                    </arg>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                </run>
+                <!-- IUT address - broadcast -->
+                <run>
+                    <script name="bind_sockaddr_send" track_conf="silent">
+                        <req id="BIND_BROADCAST"/>
+                    </script>
+                    <arg name="env">
+                        <!-- IPv4 envs -->
+                        <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr':inet:broadcast,addr:'tst_addr':inet:unicast}}</value>
+                        <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:broadcast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>
+                        <!-- IPv6  -->
+                        <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:broadcast,addr:'tst_addr':inet6:unicast}}</value>
+                        <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr':inet6:broadcast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast}}</value>
+                    </arg>
+                    <arg name="sock_type" type="sock_stream_dgram">
+                        <value>SOCK_DGRAM</value>
+                    </arg>
+                </run>
+            </session>
+        </run>
+
+        <!-- bind_sockaddr_recv -->
+        <run>
+            <session>
+                <arg name="iut_user" type="boolean">
+                    <value>FALSE</value>
+                    <value reqs="NON_PRIV_USER,NO_REUSE_STACK,SETUID">TRUE</value>
+                </arg>
+                <arg name="port_type">
+                    <value>user</value>
+                    <value>undef</value>
+                    <value>system</value>
+                </arg>
+
+                <run>
+                    <script name="bind_sockaddr_recv" track_conf="silent"/>
+                    <arg name="env">
+                        <!-- IPv4 envs -->
+                        <!-- IUT address - wildcard -->
+                        <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:wildcard,addr:'iut_addr_ucast':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},'dst_addr'='iut_addr_ucast'</value>
+                        <!-- IUT address - unicast without route -->
+                        <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}},'dst_addr'='iut_addr'</value>
+                        <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},'dst_addr'='iut_addr'</value>
+                        <!-- IUT address - unicast with route -->
+                        <!-- IPVLAN can only be used for traffic going to/from
+                             an IP address assigned to this IPVLAN, here iut_addr
+                             is not on IUT interface. See bug 87946 -->
+                        <value reqs="ENV-2PEERS,NO_IPVLAN">IUT{'H1'{addr:'dst_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},tester{'H1'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast}}</value>
+
+                        <!-- IPv6 envs -->
+                        <!-- IUT address - wildcard -->
+                        <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr':inet6:wildcard,addr:'iut_addr_ucast':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast}},'dst_addr'='iut_addr_ucast'</value>
+                        <!-- IUT address - unicast without route -->
+                        <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:unicast,addr:'tst_addr':inet6:unicast}},'dst_addr'='iut_addr'</value>
+                        <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast}},'dst_addr'='iut_addr'</value>
+                        <!-- IUT address - unicast with route -->
+                        <!-- IPVLAN can only be used for traffic going to/from
+                             an IP address assigned to this IPVLAN, here iut_addr
+                             is not on IUT interface. See bug 87946 -->
+                        <value reqs="ENV-2PEERS,IP6,IP6_ONLOAD,NO_IPVLAN">IUT{'H1'{addr:'dst_addr':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast}},tester{'H1'{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast}}</value>
+                    </arg>
+                    <arg name="sock_type" type="sock_stream_dgram">
+                        <value>SOCK_STREAM</value>
+                        <value reqs="SO_BROADCAST">SOCK_DGRAM</value>
+                    </arg>
+                </run>
+                <!-- IUT address - broadcast -->
+                <run>
+                    <script name="bind_sockaddr_recv" track_conf="silent">
+                        <req id="BIND_BROADCAST"/>
+                    </script>
+                    <arg name="env">
+                        <!-- IPv4 envs -->
+                        <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr':inet:broadcast,addr:'tst_addr':inet:broadcast}},'dst_addr'='iut_addr'</value>
+                        <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:broadcast},{{'pco_tst':tester},addr:'tst_addr':inet:broadcast}},'dst_addr'='iut_addr'</value>
+                        <!-- IPv6 envs -->
+                        <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:broadcast,addr:'tst_addr':inet6:broadcast}},'dst_addr'='iut_addr'</value>
+                        <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr':inet6:broadcast},{{'pco_tst':tester},addr:'tst_addr':inet6:broadcast}},'dst_addr'='iut_addr'</value>
+                    </arg>
+                    <arg name="sock_type" type="sock_stream_dgram">
+                        <value reqs="SO_BROADCAST">SOCK_DGRAM</value>
+                    </arg>
+                </run>
+            </session>
+        </run>
+
+        <run>
+            <script name="bind_reuse"/>
+            <arg name="env">
+                <!-- IPv4 env -->
+                <value>{{{'pco_iut':IUT,'pco_aux':IUT},addr:'iut_addr':inet:unicast}}</value>
+                <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr':inet:unicast}},'pco_aux'='pco_tst'</value>
+                <value>{{{'pco_iut':IUT,'pco_aux':IUT},addr:'iut_addr':inet:wildcard}}</value>
+                <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr':inet:wildcard}},'pco_aux'='pco_tst'</value>
+                <!-- IPv6 env -->
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_aux':IUT},addr:'iut_addr':inet6:unicast}}</value>
+                <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:unicast}},'pco_aux'='pco_tst'</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_aux':IUT},addr:'iut_addr':inet6:wildcard}}</value>
+                <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:wildcard}},'pco_aux'='pco_tst'</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+
+        <run>
+            <script name="udp_connect">
+                <req id="SOCK_DGRAM"/>
+                <req id="V5_SANITY"/>
+                <!-- Multiple connect UDP socket. -->
+                <req id="ZF_INCOMPATIBLE"/>
+            </script>
+            <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+        </run>
+
+        <run>
+            <script name="default_bind_connect">
+                <req id="V5_SANITY"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+        <run>
+            <script name="default_bind_listen">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+              <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+        </run>
+
+        <run>
+            <script name="default_bind_sendto">
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env" type="env.peer2peer_all_ipv4_ipv6"/>
+        </run>
+
+        <run>
+            <script name="listen_shutdown_pending">
+                <req id="SOCK_STREAM"/>
+                <req id="SHUTDOWN"/>
+                <req id="V5_SANITY"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+        </run>
+
+        <run>
+             <script name="listen_shutdown_listen">
+                <req id="SO_REUSEADDR"/>
+                <req id="SOCK_STREAM"/>
+                <req id="SHUTDOWN"/>
+             </script>
+            <arg name="env">
+              <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+             <arg name="connection" type="boolean" list="">
+                 <value>FALSE</value>
+                 <value>TRUE</value>
+                 <value>TRUE</value>
+             </arg>
+             <arg name="reuseaddr" type="boolean" list="">
+                 <value>FALSE</value>
+                 <value reqs="SO_REUSEADDR">TRUE</value>
+                 <value>FALSE</value>
+             </arg>
+            <arg name="bind_before_listen" list="first_bind">
+                <value>no</value>
+                <value>unspecified</value>
+                <value>unspecified</value>
+                <value>specified</value>
+                <value>specified</value>
+            </arg>
+            <arg name="use_wildcard_before" list="first_bind">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="bind_after_shutdown" list="second_bind">
+                <value>no</value>
+                <value>unspecified</value>
+                <value>unspecified</value>
+                <value>specified</value>
+                <value>specified</value>
+            </arg>
+            <arg name="use_wildcard_after" list="second_bind">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <session>
+                <arg name="env">
+                    <value ref="env.peer2peer_gw"/>
+                    <value ref="env.peer2peer_gw_ipv6"/>
+                </arg>
+                <arg name="howto">
+                    <value reqs="SIGNALS">signal</value>
+                    <value reqs="FIONBIO">non-blocking</value>
+                    <value reqs="SO_SNDTIMEO">timeout</value>
+                </arg>
+                <arg name="failures"     value="1"/>
+                <arg name="inuse"        value="FALSE"/>
+                <arg name="another_peer" value="FALSE"/>
+                <arg name="iomux"        value="none"/>
+                <arg name="send_check"   value="false"/>
+                <arg name="recv_check"   value="false"/>
+
+                <!-- Few failures check -->
+                <run>
+                    <script name="connect_interrupted" track_conf="silent">
+                        <req id="SOCK_STREAM"/>
+                        <req id="CONNECT_INTERRUPTED"/>
+                        <req id="SO_REUSEADDR"/>
+                    </script>
+                    <arg name="failures" value="3"/>
+                    <arg name="success">
+                        <value reqs="TIME_CONSUMING">never</value>
+                        <value>before</value>
+                        <value>during</value>
+                    </arg>
+                </run>
+                <!-- 'inuse' check -->
+                <run>
+                    <script name="connect_interrupted" track_conf="silent">
+                        <req id="SOCK_STREAM"/>
+                        <req id="CONNECT_INTERRUPTED"/>
+                        <req id="SO_REUSEADDR"/>
+                    </script>
+                    <arg name="inuse"   value="TRUE"/>
+                    <arg name="success" value="during"/>
+                </run>
+                <!-- 'iomux' check -->
+                <run>
+                    <script name="connect_interrupted" track_conf="silent">
+                        <req id="SOCK_STREAM"/>
+                        <req id="CONNECT_INTERRUPTED"/>
+                        <req id="SO_REUSEADDR"/>
+                    </script>
+                    <arg name="iomux" type="iomux"/>
+                    <arg name="success" value="during"/>
+                </run>
+                <!-- Another peer check -->
+                <run>
+                    <script name="connect_interrupted" track_conf="silent">
+                        <req id="SOCK_STREAM"/>
+                        <req id="CONNECT_INTERRUPTED"/>
+                        <req id="SO_REUSEADDR"/>
+                    </script>
+                    <arg name="another_peer" value="TRUE"/>
+                    <arg name="success">
+                        <value reqs="TIME_CONSUMING">never</value>
+                        <value>before</value>
+                        <value>during</value>
+                    </arg>
+                </run>
+                <!-- If connect happens before any operations,
+                     there is no sence to create additional PCOs -->
+                <run>
+                    <script name="connect_interrupted" track_conf="silent">
+                        <req id="SOCK_STREAM"/>
+                        <req id="CONNECT_INTERRUPTED"/>
+                        <req id="SO_REUSEADDR"/>
+                    </script>
+                    <arg name="send_check">
+                        <value>false</value>
+                        <value>inline</value>
+                    </arg>
+                    <arg name="recv_check">
+                        <value>false</value>
+                        <value>inline</value>
+                    </arg>
+                    <arg name="success">
+                        <value>before</value>
+                    </arg>
+                </run>
+                <!-- If connect never happens or happens during blocked
+                     operations, consider possibilities to block in
+                     threads/childs -->
+                <run>
+                    <script name="connect_interrupted" track_conf="silent">
+                        <req id="SOCK_STREAM"/>
+                        <req id="CONNECT_INTERRUPTED"/>
+                        <req id="SO_REUSEADDR"/>
+                    </script>
+                    <arg name="send_check">
+                        <value>false</value>
+                        <value>inline</value>
+                        <value reqs="THREADS">thread</value>
+                        <value reqs="FORK">fork</value>
+                    </arg>
+                    <arg name="recv_check">
+                        <value>false</value>
+                        <value>inline</value>
+                        <value reqs="THREADS">thread</value>
+                        <value reqs="FORK">fork</value>
+                    </arg>
+                    <arg name="success">
+                        <value reqs="TIME_CONSUMING">never</value>
+                        <value>during</value>
+                    </arg>
+                </run>
+            </session>
+        </run>
+
+        <run>
+            <script name="connect_after_fault">
+                <req id="SOCK_STREAM"/>
+                <req id="V5_SANITY"/>
+            </script>
+            <arg name="env">
+                <value>'net'{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,addr:'alien_link_addr':ether:alien}}</value>
+                <value reqs="IP6,IP6_ONLOAD">'net'{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast,addr:'alien_link_addr':ether:alien}}</value>
+            </arg>
+            <arg name="func">
+                <value>connect</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="connect_influence_sendto">
+                <req id="SOCK_DGRAM"/>
+                <req id="ENV-2PEERS"/>
+            </script>
+            <arg name="env">
+                <value>IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst1_addr':inet:unicast}},'tst2_addr'='tst1_addr'</value>
+                <value reqs="IP6,IP6_ONLOAD">IUT{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},addr:'tst1_addr':inet6:unicast}},'tst2_addr'='tst1_addr'</value>
+            </arg>
+            <arg name="to">
+                <value>null</value>
+                <value>same</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="connect_influence_sendto">
+                <req id="SOCK_DGRAM"/>
+                <req id="ENV-2PEERS"/>
+            </script>
+            <arg name="env">
+                <value>IUT{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst1_addr':inet:unicast,addr:'tst2_addr':inet:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">IUT{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},addr:'tst1_addr':inet6:unicast,addr:'tst2_addr':inet6:unicast}}</value>
+            </arg>
+            <arg name="to">
+                <value>same_port</value>
+                <value>same_addr</value>
+                <value>another</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="dgram_bind_connect_addr">
+                <req id="SOCK_DGRAM"/>
+                <!-- ZF specific behavior. Covered by ZF direct tests
+                     zetaferno-ts/udp_{rx,tx}/bind_address_types. -->
+                <req id="ZF_INCOMPATIBLE"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_2addr"/>
+                <value ref="env.peer2peer_2addr_lo"/>
+                <value ref="env.peer2peer_2addr_ipv6"/>
+                <value ref="env.peer2peer_2addr_lo_ipv6"/>
+            </arg>
+             <arg name="local_addr">
+                <value>local</value>
+                <value>loopback</value>
+                <value>any</value>
+             </arg>
+             <arg name="local_port" type="boolean"/>
+             <arg name="dst_addr">
+                <value>remote</value>
+                <value>local</value>
+                <value>loopback</value>
+                <value>any</value>
+             </arg>
+             <arg name="dst_port" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="dgram_crd_unbound">
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+                <value type="env.two_nets_all"/>
+            </arg>
+        </run>
+        <run>
+            <script name="dgram_crd_bound_lb">
+                <req id="ENV-LOOPBACK"/>
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_tst"/>
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+            </arg>
+        </run>
+        <run>
+            <script name="dgram_crd_bound_wc">
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+                <value type="env.two_nets_all"/>
+            </arg>
+        </run>
+        <run>
+            <script name="dgram_bind_connect_names">
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+                <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT},addr:'localhost':inet:loopback},{{'pco_tst':tester}, addr:'remote':inet:unicast}}</value>
+                <value reqs="ENV-LOOPBACK,IP6,IP_ONLOAD">{{{'pco_iut':IUT},addr:'localhost':inet6:loopback},{{'pco_tst':tester}, addr:'remote':inet6:unicast}}</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="data_before_accept">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+              <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="func">
+                <value>recv</value> 
+                <value reqs="AIO">aio_read</value>
+            </arg>
+            <arg name="before_accept">
+              <value>data</value>
+              <value>close</value>
+              <value>both</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="rst_before_accept">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+              <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+        </run>
+
+        <run>
+            <script name="two_accept_blocked">
+                <req id="SOCK_STREAM"/>
+                <req id="THREADS"/>
+            </script>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},addr:'tst1_addr':inet:unicast,addr:'tst2_addr':inet:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},addr:'tst1_addr':inet6:unicast,addr:'tst2_addr':inet6:unicast}}</value>
+            </arg>
+             <arg name="do_fork" type="boolean" list="">
+                 <value>FALSE</value>
+                 <value>TRUE</value>
+             </arg>
+             <arg name="method" list="">
+                <value>unspecified</value>
+                <value>inherit</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="accept_order">
+                <!-- ZF does not care about accept order. -->
+                <req id="ZF_INCOMPATIBLE"/>
+            </script>
+                <arg name="env">
+                <!-- IPv4 env -->
+                <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},'pco_srv'='pco_iut','pco_cli1'='pco_tst','pco_cli2'='pco_tst','srv_addr'='iut_addr'</value>
+                <value>{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet:unicast},{{'pco_tst2':tester},addr:'tst_addr':inet:unicast}},'pco_srv'='pco_iut','pco_cli1'='pco_tst1','pco_cli2'='pco_tst2','srv_addr'='iut_addr'</value>
+                <value reqs="FEW_ACCEL_PROCESSES">{{{'pco_iut':IUT},{'pco_iut2':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},'pco_srv'='pco_iut','pco_cli1'='pco_iut2','pco_cli2'='pco_tst','srv_addr'='iut_addr'</value>
+                <value>{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet:unicast},{{'pco_tst2':tester},addr:'tst_addr':inet:unicast}},'pco_srv'='pco_iut','pco_cli2'='pco_tst1','pco_cli1'='pco_tst2','srv_addr'='iut_addr'</value>
+                <value reqs="FEW_ACCEL_PROCESSES">{{{'pco_iut':IUT},{'pco_iut2':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},'pco_srv'='pco_iut','pco_cli2'='pco_iut2','pco_cli1'='pco_tst','srv_addr'='iut_addr'</value>
+                <value>{{{'pco_iut':IUT},{'pco_tst1':tester},{'pco_tst2':tester},addr:'iut_addr':inet:unicast}},'pco_srv'='pco_iut','pco_cli1'='pco_tst1','pco_cli2'='pco_tst2','srv_addr'='iut_addr'</value>
+                <value reqs="FEW_ACCEL_PROCESSES">{{{'pco_iut':IUT},{'pco_iut2':IUT},{'pco_tst':tester},addr:'iut_addr':inet:unicast}},'pco_srv'='pco_iut','pco_cli1'='pco_iut2','pco_cli2'='pco_tst','srv_addr'='iut_addr'</value>
+                <value reqs="FEW_ACCEL_PROCESSES">{{{'pco_iut':IUT},{'pco_tst':tester},{'pco_iut2':IUT},addr:'iut_addr':inet:unicast}},'pco_srv'='pco_iut','pco_cli1'='pco_tst','pco_cli2'='pco_iut2','srv_addr'='iut_addr'</value>
+                <value reqs="FEW_ACCEL_PROCESSES">{{{'pco_iut':IUT},{'pco_iut2':IUT},{'pco_iut3':IUT},addr:'iut_addr':inet:unicast}},'pco_srv'='pco_iut','pco_cli1'='pco_iut2','pco_cli2'='pco_iut3','srv_addr'='iut_addr'</value>
+
+                <!-- IPv6 env -->
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast}},'pco_srv'='pco_iut','pco_cli1'='pco_tst','pco_cli2'='pco_tst','srv_addr'='iut_addr'</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet6:unicast},{{'pco_tst2':tester},addr:'tst_addr':inet6:unicast}},'pco_srv'='pco_iut','pco_cli1'='pco_tst1','pco_cli2'='pco_tst2','srv_addr'='iut_addr'</value>
+                <value reqs="IP6,IP6_ONLOAD,FEW_ACCEL_PROCESSES">{{{'pco_iut':IUT},{'pco_iut2':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast}},'pco_srv'='pco_iut','pco_cli1'='pco_iut2','pco_cli2'='pco_tst','srv_addr'='iut_addr'</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet6:unicast},{{'pco_tst2':tester},addr:'tst_addr':inet6:unicast}},'pco_srv'='pco_iut','pco_cli2'='pco_tst1','pco_cli1'='pco_tst2','srv_addr'='iut_addr'</value>
+                <value reqs="IP6,IP6_ONLOAD,FEW_ACCEL_PROCESSES">{{{'pco_iut':IUT},{'pco_iut2':IUT},addr:'iut_addr':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast}},'pco_srv'='pco_iut','pco_cli2'='pco_iut2','pco_cli1'='pco_tst','srv_addr'='iut_addr'</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst1':tester},{'pco_tst2':tester},addr:'iut_addr':inet6:unicast}},'pco_srv'='pco_iut','pco_cli1'='pco_tst1','pco_cli2'='pco_tst2','srv_addr'='iut_addr'</value>
+                <value reqs="IP6,IP6_ONLOAD,FEW_ACCEL_PROCESSES">{{{'pco_iut':IUT},{'pco_iut2':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:unicast}},'pco_srv'='pco_iut','pco_cli1'='pco_iut2','pco_cli2'='pco_tst','srv_addr'='iut_addr'</value>
+                <value reqs="IP6,IP6_ONLOAD,FEW_ACCEL_PROCESSES">{{{'pco_iut':IUT},{'pco_tst':tester},{'pco_iut2':IUT},addr:'iut_addr':inet6:unicast}},'pco_srv'='pco_iut','pco_cli1'='pco_tst','pco_cli2'='pco_iut2','srv_addr'='iut_addr'</value>
+                <value reqs="IP6,IP6_ONLOAD,FEW_ACCEL_PROCESSES">{{{'pco_iut':IUT},{'pco_iut2':IUT},{'pco_iut3':IUT},addr:'iut_addr':inet6:unicast}},'pco_srv'='pco_iut','pco_cli1'='pco_iut2','pco_cli2'='pco_iut3','srv_addr'='iut_addr'</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="connections_on_aliases">
+                <req id="L2_TS"/>
+            </script>
+            <arg name="env">
+                <value>{{{'pco_iut':IUT},addr:'alias1':inet:unicast,addr:'alias2':inet:unicast,addr:'alias3':inet:unicast},{{'pco_tst':tester},addr:'tst1_addr':inet:unicast,addr:'tst2_addr':inet:unicast,addr:'tst3_addr':inet:unicast}}</value>
+                <value reqs="ENV-LOOPBACK">{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'alias1':inet:unicast,addr:'alias2':inet:unicast,addr:'alias3':inet:unicast,addr:'tst1_addr':inet:unicast,addr:'tst2_addr':inet:unicast,addr:'tst3_addr':inet:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'alias1':inet:unicast,addr:'alias2':inet:unicast,addr:'alias3':inet:unicast},{{'pco_tst':tester},addr:'tst1_addr':inet:unicast,addr:'tst2_addr':inet:unicast,addr:'tst3_addr':inet:unicast}}</value>
+                <value reqs="ENV-LOOPBACK,IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'alias1':inet:unicast,addr:'alias2':inet:unicast,addr:'alias3':inet:unicast,addr:'tst1_addr':inet:unicast,addr:'tst2_addr':inet:unicast,addr:'tst3_addr':inet:unicast}}</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="diff_port" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="wildcard_server_passive_opening">
+                <req id="SOCK_STREAM"/>
+                <req id="ENV-2PEERS"/>
+            </script>
+            <arg name="env">
+                <!-- IPv4 env -->
+                <!-- with loopback -->
+                <value>{'H0'{{'pco_iut':IUT},{'pco_tst3':tester},addr:'iut1_addr':inet:unicast,addr:'iut3_addr':inet:unicast,addr:'tst3_addr':inet:loopback,addr:'wild_addr':inet:wildcard},'H1'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast}},{'H0'{addr:'iut2_addr':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</value>
+                <value reqs="ENV-LOOPBACK">{'H0'{{'pco_iut':IUT},{'pco_tst3':IUT},addr:'iut1_addr':inet:unicast,addr:'iut3_addr':inet:unicast,addr:'tst3_addr':inet:loopback,addr:'wild_addr':inet:wildcard},'H1'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast}},{'H0'{addr:'iut2_addr':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</value>
+                <!-- with the unicast addr on the same host -->
+                <value>{'H0'{{'pco_iut':IUT},{'pco_tst3':tester},addr:'iut1_addr':inet:unicast,addr:'iut3_addr':inet:unicast,addr:'tst3_addr':inet:unicast,addr:'wild_addr':inet:wildcard},'H1'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast}},{'H0'{addr:'iut2_addr':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</value>
+                <value reqs="ENV-LOOPBACK">{'H0'{{'pco_iut':IUT},{'pco_tst3':IUT},addr:'iut1_addr':inet:unicast,addr:'iut3_addr':inet:unicast,addr:'tst3_addr':inet:unicast,addr:'wild_addr':inet:wildcard},'H1'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast}},{'H0'{addr:'iut2_addr':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}}</value>
+                <!-- with additional subnetwork beetween H0 and H2 -->
+                <value>{'H0'{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast,addr:'wild_addr':inet:wildcard},'H1'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast}},{'H0'{addr:'iut2_addr':inet:unicast,addr:'iut3_addr':inet:unicast},'H2'{{'pco_tst2':tester},{'pco_tst3':tester},addr:'tst2_addr':inet:unicast,addr:'tst3_addr':inet:unicast}}</value>
+
+                <!-- IPv6 env -->
+                <!-- with loopback -->
+                <value reqs="IP6,IP6_ONLOAD">{'H0'{{'pco_iut':IUT},{'pco_tst3':tester},addr:'iut1_addr':inet6:unicast,addr:'iut3_addr':inet6:unicast,addr:'tst3_addr':inet6:loopback,addr:'wild_addr':inet6:wildcard},'H1'{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast}},{'H0'{addr:'iut2_addr':inet6:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD,ENV-LOOPBACK">{'H0'{{'pco_iut':IUT},{'pco_tst3':IUT},addr:'iut1_addr':inet6:unicast,addr:'iut3_addr':inet6:unicast,addr:'tst3_addr':inet6:loopback,addr:'wild_addr':inet6:wildcard},'H1'{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast}},{'H0'{addr:'iut2_addr':inet6:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast}}</value>
+                <!-- with the unicast addr on the same host -->
+                <value reqs="IP6,IP6_ONLOAD">{'H0'{{'pco_iut':IUT},{'pco_tst3':tester},addr:'iut1_addr':inet6:unicast,addr:'iut3_addr':inet6:unicast,addr:'tst3_addr':inet6:unicast,addr:'wild_addr':inet6:wildcard},'H1'{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast}},{'H0'{addr:'iut2_addr':inet6:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD,ENV-LOOPBACK">{'H0'{{'pco_iut':IUT},{'pco_tst3':IUT},addr:'iut1_addr':inet6:unicast,addr:'iut3_addr':inet6:unicast,addr:'tst3_addr':inet6:unicast,addr:'wild_addr':inet6:wildcard},'H1'{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast}},{'H0'{addr:'iut2_addr':inet6:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast}}</value>
+                <!-- with additional subnetwork beetween H0 and H2 -->
+                <value reqs="IP6,IP6_ONLOAD">{'H0'{{'pco_iut':IUT},addr:'iut1_addr':inet6:unicast,addr:'wild_addr':inet6:wildcard},'H1'{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast}},{'H0'{addr:'iut2_addr':inet6:unicast,addr:'iut3_addr':inet6:unicast},'H2'{{'pco_tst2':tester},{'pco_tst3':tester},addr:'tst2_addr':inet6:unicast,addr:'tst3_addr':inet6:unicast}}</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="socket_peer_rst">
+                <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+              <value type="env.peer2peer_all_ipv4_ipv6"/>
+              <value ref="env.peer2peer_fake"/>
+            </arg>
+        </run>
+
+        <run name="gw_session">
+            <session>
+                <epilogue>
+                  <script name="../gateways_epilogue"/>
+                  <arg name="env">
+                    <value ref="env.peer2peer_gw"/>
+                  </arg>
+                </epilogue>
+
+                <run>
+                    <script name="tcp_server_reboot" track_conf="silent">
+                        <req id="SOCK_STREAM"/>
+                        <req id="ENV-2PEERS"/>
+                        <req id="SO_REUSEADDR"/>
+                    </script>
+                    <arg name="env">
+                        <value ref="env.peer2peer_gw"/>
+                        <value ref="env.peer2peer_gw_ipv6"/>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="tcp_server_crashes_timeout" track_conf="silent">
+                        <req id="SOCK_STREAM"/>
+                        <req id="TIME_CONSUMING"/>
+                        <req id="EXTRA_TIME_CONSUMING"/>
+                        <req id="ENV-2PEERS"/>
+                    </script>
+                    <arg name="env">
+                        <value ref="env.peer2peer_gw"/>
+                        <value ref="env.peer2peer_gw_ipv6"/>
+                    </arg>
+                </run>
+            </session>
+        </run>
+
+        <!-- fork() -->
+        <run>
+            <session>
+                <arg name="act_child" type="boolean"/>
+
+                <run>
+                    <script name="fork_created" track_conf="silent">
+                        <req id="FORK"/>
+                    </script>
+                    <arg name="env">
+                        <value ref="env.iut_ucast"/>
+                        <value ref="env.iut_ucast_ipv6"/>
+                    </arg>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="method">
+                        <value>inherit</value>
+                    </arg>
+                </run>
+                <run>
+                    <script name="fork_bound" track_conf="silent">
+                        <req id="FORK"/>
+                    </script>
+                    <arg name="env">
+                        <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,addr:'iut1_addr':inet:unicast}}</value>
+                        <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr':inet6:unicast,addr:'iut1_addr':inet6:unicast}}</value>
+                    </arg>    
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="method">
+                        <value>inherit</value>
+                    </arg>
+                </run>
+                <run>
+                    <script name="fork_conn_dgm" track_conf="silent">
+                        <req id="SOCK_DGRAM"/>
+                        <req id="FORK"/>
+                        <req id="L2_TS"/>
+                    </script>
+                    <arg name="env">
+                      <value type="env.peer2peer_all_ipv4_ipv6"/>
+                    </arg>
+                    <arg name="method">
+                        <value>inherit</value>
+                    </arg>
+                </run>
+                <run>
+                    <script name="fork_conn_str" track_conf="silent">
+                        <req id="SOCK_STREAM"/>
+                        <req id="FORK"/>
+                        <req id="V5_SANITY"/>
+                        <req id="L2_TS"/>
+                    </script>
+                    <arg name="env">
+                      <value ref="env.peer2peer"/>
+                      <value ref="env.peer2peer_tst"/>
+                      <value ref="env.peer2peer_lo"/>
+                      <value ref="env.peer2peer_ipv6"/>
+                      <value ref="env.peer2peer_tst_ipv6"/>
+                      <value ref="env.peer2peer_lo_ipv6"/>
+                    </arg>
+                    <arg name="method">
+                        <value>inherit</value>
+                    </arg>
+                </run>
+                <run>
+                    <script name="fork_listening" track_conf="silent">
+                        <req id="SOCK_STREAM"/>
+                        <req id="FORK"/>
+                        <req id="TEST_HARNESS_SANITY"/>
+                    </script>
+                    <arg name="env">
+                        <value type="env.peer2peer_all_ipv4_ipv6"/>
+                    </arg>
+                    <arg name="method">
+                        <value>inherit</value>
+                    </arg>
+                    <arg name="wildcard" type="boolean"/>
+                </run>
+
+            </session>
+        </run>
+
+        <run>
+            <script name="fork_kill" track_conf="silent">
+                <req id="FORK"/>
+            </script>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="method">
+                <value>inherit</value>
+            </arg>
+            <arg name="kill" type="boolean"/>
+            <arg name="env">
+              <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+        </run>
+
+        <run>
+            <script name="fork_share_sock">
+                <req id="FORK"/>
+            </script>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="env">
+              <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+        </run>
+
+        <!-- exec*() -->
+        <run>
+            <script name="exec_created">
+                <req id="EXEC"/>
+            </script>
+            <arg name="domain">
+                <value>PF_INET</value>
+                <value reqs="IP6,IP6_ONLOAD">PF_INET6</value>
+            </arg>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+        <run>
+            <script name="exec_bound">
+                <req id="EXEC"/>
+            </script>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+        <run>
+            <script name="exec_conn">
+                <req id="EXEC"/>
+                <req id="TEST_HARNESS_SANITY"/>
+                <req id="V5_SANITY"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+        <run>
+            <script name="exec_listening">
+                <req id="SOCK_STREAM"/>
+                <req id="EXEC"/>
+            </script>
+            <arg name="env">
+              <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+        </run>
+
+        <!-- fork() and exec*() -->
+        <run>
+            <script name="exec_fork_multiple" track_conf="silent">
+                <req id="FORK"/>
+                <req id="EXEC"/>
+                <req id="TEST_HARNESS_SANITY"/>
+            </script>
+            <arg name="env">
+              <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+             <arg name="method1">
+                <value>inherit</value>
+            </arg>
+             <arg name="method2">
+                <value>inherit</value>
+            </arg>
+        </run>
+        <run>
+            <script name="exec_fork_multithread">
+                <req id="SOCK_STREAM"/>
+                <req id="FORK"/>
+                <req id="EXEC"/>
+                <req id="SO_RCVBUF"/>
+            </script>
+            <arg name="env">
+                <value type="env.twothr2peer"/>
+                <value type="env.twothr2peer_ipv6"/>
+            </arg>
+            <arg name="func">
+                <value reqs="TEST_HARNESS_SANITY">read</value>
+                <value>recv</value>
+                <value>write</value>
+                <value>send</value>
+            </arg>
+            <arg name="method">
+                <value>inherit</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="exec_fork_traffic" track_conf="silent">
+                <req id="SOCK_STREAM"/>
+                <req id="FORK"/>
+                <req id="EXEC"/>
+            </script>
+            <arg name="env">
+                <value type="env.twothr2peer"/>
+                <value type="env.twothr2peer_ipv6"/>
+            </arg>
+        </run>
+
+        <run>
+            <script name="exec_dup">
+                <req id="SOCK_STREAM"/>
+                <req id="EXEC"/>
+                <req id="DUP"/>
+            </script>
+            <arg name="env">
+              <value type="env.peer2peer_all_ipv4_ipv6"/>
+              <value ref="env.peer2peer_fake"/>
+            </arg>
+        </run>
+
+        <run>
+            <script name="close_on_exec">
+                <req id="F_GETFD"/>
+                <req id="F_SETFD"/>
+                <req id="EXEC"/>
+            </script>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="env">
+              <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="use_dup3" list="">
+                <value reqs="DUP,DUP3">TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="close_on_exec" list="">
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="use_fdup" list="">
+                <value reqs="F_DUPFD_CLOEXEC">TRUE</value>
+                <value reqs="F_DUPFD_CLOEXEC">TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="func">
+                <value>fcntl</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="close_on_exec">
+                <req id="EXEC"/>
+            </script>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="env">
+              <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="close_on_exec">
+                <value>TRUE</value>
+            </arg>
+            <arg name="func">
+                <value reqs="SOCK_CLOEXEC">socket</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="close_on_exec">
+                <req id="EXEC"/>
+                <req id="ACCEPT4"/>
+                <req id="SOCK_CLOEXEC"/>
+            </script>
+            <arg name="sock_type">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="env">
+              <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="close_on_exec" type="boolean"/>
+            <arg name="func">
+                <value>accept4</value>
+            </arg>
+        </run>
+
+        <run>
+            <session>
+                <arg name="command" list="">
+                    <value reqs="EXEC">execve</value> 
+                    <value reqs="FORK">fork</value>
+                    <value reqs="DUP">dup</value> 
+                </arg>       
+                <arg name="double_acts" type="boolean"/>
+                <arg name="method" list="">
+                    <value>unspecified</value> 
+                    <value>inherit</value>
+                    <value>unspecified</value> 
+                </arg>
+
+                <run>
+                    <script name="derived_bind" track_conf="silent">
+                        <req id="SF_HANDOVER"/>
+                        <req id="SO_REUSEADDR"/>
+                    </script>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="env" list="env">
+                        <value ref="env.peer2peer_tst"/>
+                        <value ref="env.peer2peer_tst"/>
+                        <value ref="env.peer2peer_tst_ipv6"/>
+                        <value ref="env.peer2peer_tst_ipv6"/>
+                        <value>{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr':inet:loopback},{addr:'some_addr':inet:unicast}}</value>
+                        <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:loopback},{addr:'some_addr':inet6:unicast}}</value>
+                    </arg>
+                    <arg name="use_wildcard" list="env">
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="derived_connect" track_conf="silent">
+                        <req id="SF_HANDOVER"/>
+                        <req id="SO_REUSEADDR"/>
+                    </script>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                    <arg name="env">
+                        <value ref="env.peer2peer_tst"/>
+                        <value ref="env.peer2peer_tst_ipv6"/>
+                        <value>{{{'pco_iut':IUT},{'pco_tst':tester},addr:'tst_addr':inet:loopback}}</value>
+                        <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'tst_addr':inet6:loopback}}</value>
+                    </arg>
+                </run>
+            </session>
+        </run>
+
+        <run>
+            <script name="derived_bindtodevice">
+                <req id="SF_HANDOVER"/>
+                <req id="SO_BINDTODEVICE"/>
+            </script>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="listen_state" type="boolean"/>
+            <arg name="env" list="1">
+                <!-- IPv4 env -->
+                <value reqs="ENV-TST-LINK">'net_to_connect':tester{{{'pco_iut':IUT},addr:'addr_to_bind':inet:unicast,if:'iut_dev_to_bind'},{{'pco_tst':tester},if:'tester_dev_to_bind'}},'addr_to_connect'='addr_to_bind'</value>
+                <value reqs="ENV-TST-LINK">'net_to_connect':tester{{{'pco_iut':IUT},addr:'addr_to_bind':inet:unicast,if:'iut_dev_to_bind'},{{'pco_tst':tester},if:'tester_dev_to_bind'}},'addr_to_connect'='addr_to_bind'</value>
+                <value reqs="ENV-TST-LINK">'net_to_connect':tester{{{'pco_iut':IUT},addr:'addr_to_bind':inet:wildcard,addr:'addr_to_connect':inet:unicast,if:'iut_dev_to_bind'},{{'pco_tst':tester},if:'tester_dev_to_bind'}}</value>
+                <value reqs="ENV-TST-LINK">'net_to_connect':tester{{{'pco_iut':IUT},addr:'addr_to_bind':inet:wildcard,addr:'addr_to_connect':inet:unicast,if:'iut_dev_to_bind'},{{'pco_tst':tester},if:'tester_dev_to_bind'}}</value>
+                <!-- IPVLAN can only be used for traffic going to/from
+                     an IP address assigned to this IPVLAN, here iut_addr
+                     is not on IUT interface. See bug 87946 -->
+                <value reqs="ENV-2PEERS,NO_IPVLAN">'net1':IUT{'host1'{{'pco_iut':IUT},if:'iut_dev_to_bind',addr:'gateway':inet:unicast},'host2'{{'pco_tst':tester},if:'tester_dev_to_bind'}},'net_to_connect':tester{'host1'{addr:'addr_to_bind':inet:unicast}},'addr_to_connect'='addr_to_bind'</value>
+                <value reqs="ENV-2PEERS,NO_IPVLAN">'net1':IUT{'host1'{{'pco_iut':IUT},if:'iut_dev_to_bind',addr:'gateway':inet:unicast},'host2'{{'pco_tst':tester},if:'tester_dev_to_bind'}},'net_to_connect':tester{'host1'{addr:'addr_to_bind':inet:unicast}},'addr_to_connect'='addr_to_bind'</value>
+                <value reqs="ENV-2PEERS,NO_IPVLAN">'net1':IUT{'host1'{{'pco_iut':IUT},if:'iut_dev_to_bind',addr:'gateway':inet:unicast},'host2'{{'pco_tst':tester},if:'tester_dev_to_bind'}},'net_to_connect':tester{'host1'{addr:'addr_to_bind':inet:wildcard,addr:'addr_to_connect':inet:unicast}}</value>
+                <value reqs="ENV-2PEERS,NO_IPVLAN">'net1':IUT{'host1'{{'pco_iut':IUT},if:'iut_dev_to_bind',addr:'gateway':inet:unicast},'host2'{{'pco_tst':tester},if:'tester_dev_to_bind'}},'net_to_connect':tester{'host1'{addr:'addr_to_bind':inet:wildcard,addr:'addr_to_connect':inet:unicast}}</value>
+
+                <value>'net_to_connect':IUT{'host1'{{'pco_iut':IUT},addr:'addr_to_bind':inet:unicast,if:'iut_dev_to_bind'},'host2'{{'pco_tst':tester},if:'tester_dev_to_bind'}},'addr_to_connect'='addr_to_bind'</value>
+                <value>'net_to_connect':IUT{'host1'{{'pco_iut':IUT},addr:'addr_to_bind':inet:wildcard,addr:'addr_to_connect':inet:unicast,if:'iut_dev_to_bind'},'host2'{{'pco_tst':tester},if:'tester_dev_to_bind'}}</value>
+                <value reqs="ENV-2PEERS">'net_to_connect':IUT{'host1'{{'pco_iut':IUT},addr:'addr_to_bind':inet:unicast}},'net2':tester{'host1'{if:'iut_dev_to_bind',addr:'gateway':inet:unicast},'host2'{{'pco_tst':tester},if:'tester_dev_to_bind'}},'addr_to_connect'='addr_to_bind'</value>
+                <value reqs="ENV-2PEERS">'net_to_connect':IUT{'host1'{{'pco_iut':IUT},addr:'addr_to_bind':inet:wildcard,addr:'addr_to_connect':inet:unicast}},'net2':tester{'host1'{if:'iut_dev_to_bind',addr:'gateway':inet:unicast},'host2'{{'pco_tst':tester},if:'tester_dev_to_bind'}}</value>
+
+                <!-- IPv6 env -->
+                <value reqs="ENV-TST-LINK,IP6,IP6_ONLOAD">'net_to_connect':tester{{{'pco_iut':IUT},addr:'addr_to_bind':inet6:unicast,if:'iut_dev_to_bind'},{{'pco_tst':tester},if:'tester_dev_to_bind'}},'addr_to_connect'='addr_to_bind'</value>
+                <value reqs="ENV-TST-LINK,IP6,IP6_ONLOAD">'net_to_connect':tester{{{'pco_iut':IUT},addr:'addr_to_bind':inet6:unicast,if:'iut_dev_to_bind'},{{'pco_tst':tester},if:'tester_dev_to_bind'}},'addr_to_connect'='addr_to_bind'</value>
+                <value reqs="ENV-TST-LINK,IP6,IP6_ONLOAD">'net_to_connect':tester{{{'pco_iut':IUT},addr:'addr_to_bind':inet6:wildcard,addr:'addr_to_connect':inet6:unicast,if:'iut_dev_to_bind'},{{'pco_tst':tester},if:'tester_dev_to_bind'}}</value>
+                <value reqs="ENV-TST-LINK,IP6,IP6_ONLOAD">'net_to_connect':tester{{{'pco_iut':IUT},addr:'addr_to_bind':inet6:wildcard,addr:'addr_to_connect':inet6:unicast,if:'iut_dev_to_bind'},{{'pco_tst':tester},if:'tester_dev_to_bind'}}</value>
+
+                <!-- IPVLAN can only be used for traffic going to/from
+                     an IP address assigned to this IPVLAN, here iut_addr
+                     is not on IUT interface. See bug 87946 -->
+                <value reqs="ENV-2PEERS,IP6,IP6_ONLOAD,NO_IPVLAN">'net1':IUT{'host1'{{'pco_iut':IUT},if:'iut_dev_to_bind',addr:'gateway':inet6:unicast},'host2'{{'pco_tst':tester},if:'tester_dev_to_bind'}},'net_to_connect':tester{'host1'{addr:'addr_to_bind':inet6:unicast}},'addr_to_connect'='addr_to_bind'</value>
+                <value reqs="ENV-2PEERS,IP6,IP6_ONLOAD,NO_IPVLAN">'net1':IUT{'host1'{{'pco_iut':IUT},if:'iut_dev_to_bind',addr:'gateway':inet6:unicast},'host2'{{'pco_tst':tester},if:'tester_dev_to_bind'}},'net_to_connect':tester{'host1'{addr:'addr_to_bind':inet6:unicast}},'addr_to_connect'='addr_to_bind'</value>
+                <value reqs="ENV-2PEERS,IP6,IP6_ONLOAD,NO_IPVLAN">'net1':IUT{'host1'{{'pco_iut':IUT},if:'iut_dev_to_bind',addr:'gateway':inet6:unicast},'host2'{{'pco_tst':tester},if:'tester_dev_to_bind'}},'net_to_connect':tester{'host1'{addr:'addr_to_bind':inet6:wildcard,addr:'addr_to_connect':inet6:unicast}}</value>
+                <value reqs="ENV-2PEERS,IP6,IP6_ONLOAD,NO_IPVLAN">'net1':IUT{'host1'{{'pco_iut':IUT},if:'iut_dev_to_bind',addr:'gateway':inet6:unicast},'host2'{{'pco_tst':tester},if:'tester_dev_to_bind'}},'net_to_connect':tester{'host1'{addr:'addr_to_bind':inet6:wildcard,addr:'addr_to_connect':inet6:unicast}}</value>
+
+                <value reqs="IP6,IP6_ONLOAD">'net_to_connect':IUT{'host1'{{'pco_iut':IUT},addr:'addr_to_bind':inet6:unicast,if:'iut_dev_to_bind'},'host2'{{'pco_tst':tester},if:'tester_dev_to_bind'}},'addr_to_connect'='addr_to_bind'</value>
+                <value reqs="IP6,IP6_ONLOAD">'net_to_connect':IUT{'host1'{{'pco_iut':IUT},addr:'addr_to_bind':inet6:wildcard,addr:'addr_to_connect':inet6:unicast,if:'iut_dev_to_bind'},'host2'{{'pco_tst':tester},if:'tester_dev_to_bind'}}</value>
+                <value reqs="ENV-2PEERS,IP6,IP6_ONLOAD">'net_to_connect':IUT{'host1'{{'pco_iut':IUT},addr:'addr_to_bind':inet6:unicast}},'net2':tester{'host1'{if:'iut_dev_to_bind',addr:'gateway':inet6:unicast},'host2'{{'pco_tst':tester},if:'tester_dev_to_bind'}},'addr_to_connect'='addr_to_bind'</value>
+                <value reqs="ENV-2PEERS,IP6,IP6_ONLOAD">'net_to_connect':IUT{'host1'{{'pco_iut':IUT},addr:'addr_to_bind':inet6:wildcard,addr:'addr_to_connect':inet6:unicast}},'net2':tester{'host1'{if:'iut_dev_to_bind',addr:'gateway':inet6:unicast},'host2'{{'pco_tst':tester},if:'tester_dev_to_bind'}}</value>
+            </arg>
+            <arg name="use_wildcard" list="1">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="command" list="2">
+                <value reqs="EXEC">execve</value>
+                <value reqs="FORK">fork</value>
+                <value reqs="DUP">dup</value>
+            </arg>       
+            <arg name="double_acts" type="boolean"/>
+            <arg name="method" list="2">
+                <value>unspecified</value>
+                <value>inherit</value>
+                <value>unspecified</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="fork_nb_receive">
+                <req id="FORK"/>
+            </script>
+            <arg name="env">
+              <value type="env.peer2peer_all_ipv4_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="iterations">
+                <value>5</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="bind_two_nets" track_conf="silent">
+                <req id="ENV-2PEERS"/>
+            </script>
+            <arg name="env">
+                <value>'net1'{'host1'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast},'host2'{{'pco_tst':tester},addr:'tst_addr1':inet:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">'net1'{'host1'{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast},'host2'{{'pco_tst':tester},addr:'tst_addr1':inet6:unicast}}</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="func" type="send_func_with_flags">
+                <value reqs="SEND_FLAG,SEND_RECV">send</value>
+                <value reqs="SEND_FLAG,SEND_ADDR,SENDTO_RECVFROM">sendto</value>
+                <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMSG_RECVMSG">sendmsg</value>
+                <value reqs="SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,SENDMMSG">sendmmsg</value>
+                <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND">onload_zc_send</value>
+                <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND,ONLOAD_ZC_SEND_USER_BUF">onload_zc_send_user_buf</value>
+            </arg>
+        </run>
+        <run>
+            <script name="bind_two_nets" track_conf="silent">
+                <req id="ENV-2PEERS"/>
+            </script>
+            <arg name="env">
+                <value>'net1'{'host1'{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast},'host2'{{'pco_tst':tester},addr:'tst_addr1':inet:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">'net1'{'host1'{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast},'host2'{{'pco_tst':tester},addr:'tst_addr1':inet6:unicast}}</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+            </arg>
+            <arg name="func">
+                <value>getpeername</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="pipe_write_and_close">
+                <req id="PIPE"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="data_size">
+                <value>512</value>
+            </arg>
+            <arg name="use_fork" list="">
+                <value reqs="THREADS">FALSE</value>
+                <value reqs="FORK">TRUE</value>
+                <value reqs="FORK">TRUE</value>
+            </arg>
+            <arg name="parent_write" list="">
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+          <session>
+            <arg name="recv_f" list="send_recv_f">
+                <value>read</value>
+                <value reqs="READV_WRITEV">readv</value>
+            </arg>
+            <arg name="send_f" list="send_recv_f">
+                <value>write</value>
+                <value reqs="READV_WRITEV">writev</value>
+            </arg>
+
+            <run>
+                <script name="pipe_close_on_exec">
+                    <req id="PIPE"/>
+                    <req id="F_GETFD"/>
+                    <req id="F_SETFD"/>
+                    <req id="EXEC"/>
+                </script>
+                <arg name="env">
+                    <value>{{{'pco_iut':IUT,'pco_aux':IUT}}}</value>
+                </arg>
+                <arg name="data_size">
+                    <value>512</value>
+                </arg>
+                <arg name="func">
+                    <value reqs="PIPE2">pipe2</value>
+                </arg>
+                <arg name="test_read_end" list="">
+                    <value>TRUE</value>
+                    <value>FALSE</value>
+                </arg>
+                <arg name="test_write_end" list="">
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                </arg>
+                <arg name="use_fork">
+                    <value reqs="FORK">TRUE</value>
+                </arg>
+                <arg name="close_on_exec">
+                    <value reqs="O_CLOEXEC">TRUE</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="pipe_close_on_exec">
+                    <req id="PIPE"/>
+                    <req id="F_GETFD"/>
+                    <req id="F_SETFD"/>
+                    <req id="EXEC"/>
+                </script>
+                <arg name="env">
+                    <value>{{{'pco_iut':IUT,'pco_aux':IUT}}}</value>
+                </arg>
+                <arg name="data_size">
+                    <value>512</value>
+                </arg>
+                <arg name="func">
+                    <value>fcntl</value>
+                </arg>
+                <arg name="test_read_end" list="">
+                    <value>TRUE</value>
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                    <value>FALSE</value>
+                </arg>
+                <arg name="test_write_end" list="">
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                </arg>
+                <arg name="use_fork" list="">
+                    <value>FALSE</value>
+                    <value reqs="FORK">TRUE</value>
+                    <value reqs="FORK">TRUE</value>
+                    <value>FALSE</value>
+                </arg>
+                <arg name="use_dup3" list="dup3">
+                    <value reqs="DUP,DUP3">TRUE</value>
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                </arg>
+                <arg name="use_fdup" list="dup3">
+                    <value>TRUE</value>
+                    <value reqs="F_DUPFD_CLOEXEC">TRUE</value>
+                    <value>FALSE</value>
+                </arg>
+                <arg name="close_on_exec">
+                    <value>TRUE</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="pipe_close_on_exec">
+                    <req id="PIPE"/>
+                    <req id="F_GETFD"/>
+                    <req id="F_SETFD"/>
+                    <req id="EXEC"/>
+                </script>
+                <arg name="env">
+                    <value>{{{'pco_iut':IUT,'pco_aux':IUT}}}</value>
+                </arg>
+                <arg name="data_size">
+                    <value>512</value>
+                </arg>
+                <arg name="func">
+                    <value>fcntl</value>
+                </arg>
+                <arg name="test_read_end">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="test_write_end">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="use_fork">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="use_fdup">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="close_on_exec">
+                    <value>FALSE</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="pipe_read_nonblock">
+                    <req id="PIPE"/>
+                    <req id="O_NONBLOCK"/>
+                </script>
+                <arg name="env" ref="env.iut_only"/>
+                <arg name="data_size">
+                    <value>512</value>
+                </arg>
+                <arg name="func">
+                    <value reqs="V5_SANITY">fcntl</value>
+                    <value reqs="PIPE2">pipe2</value>
+                    <value>ioctl</value>
+                </arg>
+            </run>
+            <run>
+                <script name="pipe_write_nonblock">
+                    <req id="PIPE"/>
+                    <req id="O_NONBLOCK"/>
+                </script>
+                <arg name="env" ref="env.iut_only"/>
+                <arg name="data_size">
+                    <value>512</value>
+                </arg>
+                <arg name="fionbio" type="boolean">
+                    <value reqs="V5_SANITY">FALSE</value>
+                    <value>TRUE</value>
+                </arg>
+                <arg name="func">
+                    <value reqs="V5_SANITY">fcntl</value>
+                    <value reqs="PIPE2">pipe2</value>
+                    <value>ioctl</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="pipe_write_block">
+                    <req id="PIPE"/>
+                </script>
+                <arg name="env">
+                    <value>{{{'pco_iut':IUT,'pco_aux':IUT}}}</value>
+                </arg>
+                <arg name="data_size">
+                    <value>512</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="many_pipes">
+                    <req id="PIPE"/>
+                </script>
+                <arg name="env" ref="env.iut_only"/>
+                <arg name="pipes_num" list="">
+                    <value>7</value>
+                    <value>20</value>
+                </arg>
+                <arg name="pipes_to_close" list="">
+                    <value>3</value>
+                    <value>4</value>
+                </arg>
+                <arg name="close_open_iter">
+                    <value>0</value>
+                    <value>100</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="pipe_merge_buf">
+                    <req id="PIPE"/>
+                </script>
+                <arg name="env" ref="env.iut_only"/>
+                <arg name="write_num">
+                    <value>5</value>
+                </arg>
+                <arg name="add_bytes">
+                    <value>0</value>
+                    <value>512</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="pipe_close_write">
+                    <req id="PIPE"/>
+                </script>
+                <arg name="env" ref="env.iut_only"/>
+                <arg name="data_size">
+                    <value>512</value>
+                </arg>
+                <arg name="create_child" type="boolean" list="">
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                </arg>
+                <arg name="from_child" type="boolean" list="">
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                </arg>
+                <arg name="block_write" type="boolean"/>
+                <arg name="sys_call" type="syscall_bool"/>
+            </run>
+            <!-- separated from pipe_close_write because of-->
+            <!-- limitations in tester reqs management -->
+            <run>
+                <script name="pipe_close_write">
+                    <req id="PIPE"/>
+                </script>
+                <arg name="env" ref="env.iut_only"/>
+                <arg name="data_size">
+                    <value>512</value>
+                </arg>
+                <arg name="create_child" type="boolean" list="">
+                    <value>TRUE</value>
+                </arg>
+                <arg name="from_child" type="boolean" list="">
+                    <value>TRUE</value>
+                </arg>
+                <arg name="block_write" type="boolean"/>
+                <arg name="sys_call" type="boolean">
+                    <value>FALSE</value>
+                    <value reqs="OOL_INTEROP">TRUE</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="pipe_close_read">
+                    <req id="PIPE"/>
+                </script>
+                <arg name="env" ref="env.iut_only"/>
+                <arg name="data_size">
+                    <value>512</value>
+                </arg>
+                <arg name="create_child" type="boolean" list="">
+                    <value>FALSE</value>
+                    <value>TRUE</value>
+                </arg>
+                <arg name="from_child" type="boolean" list="">
+                    <value>FALSE</value>
+                    <value>FALSE</value>
+                </arg>
+                <arg name="block_read" type="boolean"/>
+                <arg name="add_pipe" type="boolean"/>
+                <arg name="sys_call" type="syscall_bool"/>
+                <arg name="kill_parent">
+                    <value>FALSE</value>
+                </arg>
+            </run>
+
+            <!-- separated from pipe_close_write because of-->
+            <!-- limitations in tester reqs management -->
+            <run>
+                <script name="pipe_close_read">
+                    <req id="PIPE"/>
+                </script>
+                <arg name="env" ref="env.iut_only"/>
+                <arg name="data_size">
+                    <value>512</value>
+                </arg>
+                <arg name="create_child" type="boolean" list="">
+                    <value>TRUE</value>
+                </arg>
+                <arg name="from_child" type="boolean" list="">
+                    <value>TRUE</value>
+                </arg>
+                <arg name="block_read" type="boolean"/>
+                <arg name="add_pipe" type="boolean"/>
+                <arg name="sys_call" type="boolean">
+                    <value reqs="V5_SANITY">FALSE</value>
+                    <value reqs="OOL_INTEROP">TRUE</value>
+                </arg>
+                <arg name="kill_parent">
+                    <value>FALSE</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="pipe_close_read">
+                    <req id="PIPE"/>
+                </script>
+                <arg name="env" ref="env.iut_only"/>
+                <arg name="data_size">
+                    <value>512</value>
+                </arg>
+                <arg name="create_child">
+                    <value>TRUE</value>
+                </arg>
+                <arg name="from_child">
+                    <value>TRUE</value>
+                </arg>
+                <arg name="block_read" type="boolean"/>
+                <arg name="add_pipe">
+                    <value>FALSE</value>
+                </arg>
+                <arg name="sys_call" type="syscall_bool"/>
+                <arg name="kill_parent">
+                    <value>TRUE</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="pipe_socket_interact">
+                    <req id="PIPE"/>
+                </script>
+                <arg name="env" ref="env.iut_only"/>
+                <arg name="open_pipe1">
+                    <value>2</value>
+                </arg>
+                <arg name="open_sock1">
+                    <value>10</value>
+                </arg>
+                <arg name="open_pipe2">
+                    <value>3</value>
+                </arg>
+                <arg name="close_sock">
+                    <value>2</value>
+                </arg>
+                <arg name="close_pipe">
+                    <value>1</value>
+                </arg>
+                <arg name="open_sock2">
+                    <value>1</value>
+                </arg>
+                <arg name="open_pipe3">
+                    <value>2</value>
+                </arg>
+            </run>
+
+            <run>
+                <script name="pipe_become_writable">
+                    <req id="PIPE"/>
+                </script>
+                <arg name="env" ref="env.iut_only"/>
+                <arg name="data_size">
+                    <value>512</value>
+                    <value>1024</value>
+                    <value>8192</value>
+                </arg>
+                <arg name="writer_child" type="boolean"/>
+                <arg name="reader_child" type="boolean"/>
+            </run>
+          </session>
+        </run>
+
+        <run>
+            <script name="pipe_big_buffer_read">
+                <req id="PIPE"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="data_size">
+                <value>512</value>
+                <value>1024</value>
+                <value>8192</value>
+            </arg>
+            <arg name="writer_child" type="boolean"/>
+            <arg name="reader_child" type="boolean"/>
+            <arg name="blocking_read" type="boolean"/>
+            <arg name="recv_f" list="">
+                <value>read</value>
+                <value reqs="READV_WRITEV">readv</value>
+                <value reqs="READV_WRITEV">readv</value>
+            </arg>
+            <arg name="send_f" list="">
+                <value>write</value>
+                <value reqs="READV_WRITEV">writev</value>
+                <value reqs="READV_WRITEV">writev</value>
+            </arg>
+            <arg name="iovlen" list="">
+                <value>0</value>
+                <value>2</value>
+                <value>3</value>
+            </arg>
+        </run>
+
+       <run>
+           <script name="pipe_big_buffer_write">
+               <req id="PIPE"/>
+           </script>
+           <arg name="env" ref="env.iut_only"/>
+           <arg name="data_size">
+               <value>512</value>
+               <value>1024</value>
+               <value>8192</value>
+           </arg>
+           <arg name="writer_child" type="boolean"/>
+           <arg name="reader_child" type="boolean"/>
+           <arg name="blocking_write" type="boolean"/>
+           <arg name="recv_f" list="">
+               <value>read</value>
+               <value reqs="READV_WRITEV">readv</value>
+               <value reqs="READV_WRITEV">readv</value>
+           </arg>
+           <arg name="send_f" list="">
+               <value>write</value>
+               <value reqs="READV_WRITEV">writev</value>
+               <value reqs="READV_WRITEV">writev</value>
+           </arg>
+           <arg name="iovlen" list="">
+               <value>0</value>
+               <value>2</value>
+               <value>3</value>
+           </arg>
+       </run>
+
+        <run>
+            <script name="pipe_writev_readv">
+                <req id="PIPE"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="data_size">
+                <value>1</value>
+                <!-- PAGE_SIZE -->
+                <value>*1</value>
+                <!-- PAGE_SIZE + 1 -->
+                <value>+1</value>
+            </arg>
+            <arg name="writer_child" type="boolean"/>
+            <arg name="reader_child" type="boolean"/>
+            <arg name="block_read" type="boolean"/>
+            <arg name="half_empty" type="boolean"/>
+            <arg name="write_before_fork">
+                <value>FALSE</value>
+            </arg>
+            <arg name="kill_after_write">
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="pipe_writev_readv">
+                <req id="PIPE"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="data_size">
+                <!-- 16 * PAGE_SIZE -->
+                <value>*16</value>
+            </arg>
+            <arg name="writer_child" list="">
+                <!--- @page basic-pipe_writev_readv
+                @note @p data_size = 16 * PAGE_SIZE is too big to run the test
+                      on PPC64 with Onload, see bug SF 34303 for details. -->
+                <value reqs="PPC64_SF_DISABLED">FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value reqs="PPC64_SF_DISABLED">TRUE</value>
+            </arg>
+            <arg name="reader_child" list="">
+                <!-- 16 * PAGE_SIZE is too big on PPC64 wit Onload, see SF 34303 -->
+                <value reqs="PPC64_SF_DISABLED">FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value reqs="PPC64_SF_DISABLED">TRUE</value>
+            </arg>
+            <arg name="block_read" type="boolean"/>
+            <arg name="half_empty" type="boolean"/>
+            <arg name="write_before_fork">
+                <value>FALSE</value>
+            </arg>
+            <arg name="kill_after_write">
+                <value>FALSE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="pipe_writev_readv">
+                <req id="PIPE"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="data_size">
+                <value>1</value>
+                <!-- PAGE_SIZE -->
+                <value>*1</value>
+                <!-- PAGE_SIZE + 1 -->
+                <value>+1</value>
+                <!-- 16 * PAGE_SIZE is too big on PPC64 wit Onload, see SF 34303 -->
+                <value reqs="PPC64_SF_DISABLED">*16</value>
+            </arg>
+            <arg name="writer_child">
+                <value>FALSE</value>
+            </arg>
+            <arg name="reader_child">
+                <value>TRUE</value>
+            </arg>
+            <arg name="block_read" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="half_empty" type="boolean"/>
+            <arg name="write_before_fork" list="">
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="kill_after_write" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="stat_mode">
+                <req id="FSTAT"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="object" list="">
+              <value reqs="SOCK_STREAM">TCP</value>
+              <value reqs="SOCK_STREAM">TCP</value>
+              <value reqs="SOCK_DGRAM">UDP</value>
+              <value reqs="SOCK_DGRAM">UDP</value>
+              <value reqs="PIPE">pipe</value>
+              <value reqs="EPOLL">epoll</value>
+            </arg>
+            <arg name="is64" type="boolean"/>
+            <arg name="domain" list="">
+                <value>PF_INET</value>
+                <value reqs="IP6,IP6_ONLOAD">PF_INET6</value>
+                <value>PF_INET</value>
+                <value reqs="IP6,IP6_ONLOAD">PF_INET6</value>
+                <value>PF_UNKNOWN</value>
+                <value>PF_UNKNOWN</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="tcp_udp_two_threads">
+                <req id="THREADS"/>
+            </script>
+            <arg name="env" list="">
+                <value>IUT{{{'pco_iut':IUT,'pco_iut_aux':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,addr:'tst_addr_aux':inet:unicast}}</value>
+                <value>IUT{{{'pco_iut':IUT,'pco_iut_aux':IUT},{'pco_tst':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast,addr:'tst_addr':inet:unicast,addr:'tst_addr_aux':inet:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">IUT{{{'pco_iut':IUT,'pco_iut_aux':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast,addr:'tst_addr_aux':inet6:unicast}}</value>
+                <value reqs="IP6,IP6_ONLOAD">IUT{{{'pco_iut':IUT,'pco_iut_aux':IUT},{'pco_tst':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast,addr:'tst_addr':inet6:unicast,addr:'tst_addr_aux':inet6:unicast}}</value>
+            </arg>
+            <arg name="time2run">
+                <value>10</value>
+            </arg>
+            <arg name="iter_num">
+                <value>10</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="pipe_rw_rnd_len">
+                <req id="PIPE"/>
+            </script>
+            <arg name="env" ref="env.iut_only"/>
+            <arg name="writer_child" type="boolean"/>
+            <arg name="reader_child" type="boolean"/>
+            <arg name="iter_num">
+                <value>20</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="close_sock_oth_thread">
+              <req id="FDS_NON_MT_SAFE"/>
+              <req id="THREADS"/>
+            </script>
+            <arg name="env">
+              <value>{{{'pco_iut':IUT,'pco_iut2':IUT},addr:'iut_addr':inet:unicast,addr:'alien_link_addr':ether:alien,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}},'pco_iut1'='pco_iut'</value>
+              <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT,'pco_iut2':IUT},addr:'iut_addr':inet6:unicast,addr:'alien_link_addr':ether:alien,if:'iut_if'},{{'pco_tst':tester},addr:'tst_addr':inet6:unicast}},'pco_iut1'='pco_iut'</value>
+            </arg>
+            <arg name="close_func">
+              <value>close</value>
+              <value reqs="DUP">dup2</value>
+              <value reqs="DUP,DUP3">dup3</value>
+            </arg>
+            <arg name="func" list="">
+              <value>recv</value>
+              <value>recv</value>
+              <value>send</value>
+              <value reqs="SENDFILE">sendfile</value>
+              <value>connect</value>
+              <value>accept</value>
+              <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND">onload_zc_send</value>
+              <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND,ONLOAD_ZC_SEND_USER_BUF">onload_zc_send_user_buf</value>
+              <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_IOV,SF_TEMPLATE_SEND">template_send</value>
+              <value reqs="ONLOAD_ONLY,SEND_FLAG,SF_ODS,SF_ODS_COMPL">od_send</value>
+              <value reqs="ONLOAD_ONLY,SEND_FLAG,SF_ODS,SF_ODS_RAW">od_send_raw</value>
+            </arg>
+            <arg name="sock_type" list="">
+              <value reqs="SOCK_DGRAM">SOCK_DGRAM</value>
+              <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+              <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+              <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+              <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+              <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+              <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+              <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+              <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+              <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+              <value reqs="SOCK_STREAM">SOCK_STREAM</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="many_listen_connect_lo" track_conf="silent">
+                <req id="MEMORY_HOG"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer_lo"/>
+                <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="time2run">
+                <value>60</value>
+            </arg>
+        </run>
+
+        <run>
+            <session track_conf="silent">
+                <prologue>
+                    <script name="terminate_waitpid_prologue"/>
+                    <arg name="env" ref="env.iut_only"/>
+                </prologue>
+
+                <run>
+                    <script name="terminate_waitpid">
+                        <req id="THREADS"/>
+                        <req id="SOCK_STREAM"/>
+                        <req id="FORK"/>
+                    </script>
+                    <arg name="env">
+                        <value ref="env.peer2peer"/>
+                        <value ref="env.peer2peer_ipv6"/>
+                    </arg>
+                    <arg name="func">
+                        <value>exit</value>
+                        <value>_exit</value>
+                    </arg>
+                    <arg name="quit_other_thread" type="boolean"/>
+                    <arg name="share_stack" type="boolean"/>
+                    <arg name="exit_status">
+                        <value>11</value>
+                    </arg>
+                    <arg name="send_data" type="boolean"/>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                </run>
+
+                <run>
+                    <script name="terminate_waitpid">
+                        <req id="THREADS"/>
+                        <req id="SOCK_STREAM"/>
+                        <req id="FORK"/>
+                    </script>
+                    <arg name="env">
+                      <value ref="env.peer2peer"/>
+                      <value ref="env.peer2peer_ipv6"/>
+                    </arg>
+                    <arg name="func">
+                        <value>tgkill</value>
+                    </arg>
+                    <arg name="sig" list="">
+                        <value reqs="NO_REUSE_STACK">SIGKILL</value>
+                        <value>SIGUSR1</value>
+                        <value>SIGUSR1</value>
+                        <!-- ON-12908: SIGSEGV is not intercepted
+                             because of linux-5.8 support -->
+                        <value reqs="NO_REUSE_STACK">SIGSEGV</value>
+                        <value reqs="NO_REUSE_STACK">SIGSEGV</value>
+                    </arg>
+                    <arg name="sa_resethand" list="">
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value reqs="BUG_34417">TRUE</value>
+                        <value>FALSE</value>
+                        <value reqs="BUG_34417">TRUE</value>
+                    </arg>
+                    <arg name="quit_other_thread" type="boolean"/>
+                    <arg name="share_stack" type="boolean"/>
+                    <arg name="send_data" type="boolean"/>
+                    <arg name="sock_type" type="sock_stream_dgram"/>
+                </run>
+            </session>
+        </run>
+
+        <run>
+            <script name="threads_system">
+                <req id="THREADS"/>
+                <req id="SOCK_STREAM"/>
+                <req id="FORK"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_ipv6"/>
+            </arg>
+        </run>
+
+        <run>
+            <script name="sock_exec_many">
+                <req id="ONLOAD_ONLY"/>
+                <req id="EXEC"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="iter_num">
+                <value>80</value>
+            </arg>
+            <arg name="read_socket">
+                <value>none</value>
+                <value>first</value>
+                <value>last</value>
+            </arg>
+        </run>
+
+        <run name="mtu_usage_session">
+            <session track_conf="nohistory">
+                <arg name="data_len">
+                    <!-- Length in terms of MTUs -->
+                    <value>0.8</value>
+                    <value>1.5</value>
+                </arg>
+                <arg name="iut_send" type="boolean">
+                  <value>TRUE</value>
+                  <!-- The iteration is useless for Onload testing.
+                  <value reqs="SO_RCVBUF">FALSE</value>
+                  -->
+                </arg>
+                <arg name="sock_type" type="sock_stream_dgram"/>
+
+                <run>
+                    <script name="mtu_usage">
+                        <req id="IF_DOWN_UP"/>
+                    </script>
+                    <arg name="env">
+                        <value ref="env.peer2peer"/>
+                    </arg>
+                    <arg name="mtu_size">
+                        <value>576</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="mtu_usage">
+                        <req id="IF_DOWN_UP"/>
+                    </script>
+                    <arg name="env">
+                        <value ref="env.peer2peer"/>
+                        <value ref="env.peer2peer_ipv6"/>
+                    </arg>
+                    <arg name="mtu_size">
+                        <value>1280</value>
+                        <value>1500</value>
+                        <value reqs="JUMBO_FRAME,NO_VLAN">6500</value>
+                        <value reqs="JUMBO_FRAME,NO_VLAN">7000</value>
+                        <value reqs="JUMBO_FRAME,NO_VLAN">9000</value>
+                    </arg>
+                </run>
+            </session>
+        </run>
+
+        <run name="vfork_tests">
+          <session>
+            <arg name="vfork_mode"/>
+
+            <!-- See bug 66449 -->
+            <req id="NO_REUSE_PCO"/>
+
+            <prologue>
+              <script name="vfork_prologue"/>
+              <arg name="env" ref="env.iut_only"/>
+            </prologue>
+            <epilogue>
+              <script name="vfork_epilogue"/>
+              <arg name="env" ref="env.iut_only"/>
+            </epilogue>
+
+            <run>
+                <script name="vfork_open_close_exec">
+                  <req id="VFORK"/>
+                </script>
+                <arg name="env">
+                  <value ref="env.iut_only"/>
+                </arg>
+                <arg name="func">
+                    <value>close</value>
+                    <value>open</value>
+                    <value reqs="DUP">dup</value>
+                    <value reqs="DUP">dup2</value>
+                    <value reqs="DUP,DUP3">dup3</value>
+                </arg>
+                <arg name="domain" type="socket_domain"/>
+            </run>
+            <run>
+                <script name="vfork_sig_exec">
+                  <req id="VFORK"/>
+                </script>
+                <arg name="env">
+                  <value ref="env.iut_only"/>
+                </arg>
+                <arg name="func">
+                    <value>sigaction</value>
+                    <value>signal</value>
+                    <value>siginterrupt</value>
+                    <value>sigprocmask</value>
+                </arg>
+                <arg name="domain" type="socket_domain"/>
+            </run>
+            <run>
+                <script name="vfork_check_hang">
+                  <req id="VFORK"/>
+                </script>
+                <arg name="env">
+                  <value ref="env.iut_only"/>
+                </arg>
+                <arg name="use_exec" type="boolean"/>
+                <arg name="domain" type="socket_domain"/>
+            </run>
+            <run>
+                <script name="vfork_func_exec">
+                  <req id="VFORK"/>
+                </script>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                  <value ref="env.peer2peer_ipv6"/>
+                </arg>
+                <arg name="func">
+                    <value>send</value>
+                    <value>recv</value>
+                    <!-- See bug 38138 -->
+                    <value reqs="NO_REUSE_STACK">pipe</value>
+                    <value>socket</value>
+                    <value>accept</value>
+                </arg>
+            </run>
+          </session>
+          <arg name="vfork_mode">
+            <value>0</value>
+            <value reqs="ONLOAD_ONLY">1</value>
+          </arg>
+        </run>
+        <run name="vfork_tests_mode_2">
+          <session>
+            <arg name="vfork_mode"/>
+
+            <!-- See bug 66449 -->
+            <req id="NO_REUSE_PCO"/>
+
+            <prologue>
+              <script name="vfork_prologue"/>
+              <arg name="env" ref="env.iut_only"/>
+            </prologue>
+            <epilogue>
+              <script name="vfork_epilogue"/>
+              <arg name="env" ref="env.iut_only"/>
+            </epilogue>
+
+            <run>
+                <script name="vfork_open_close_exec">
+                  <req id="VFORK"/>
+                </script>
+                <arg name="env">
+                  <value ref="env.iut_only"/>
+                </arg>
+                <arg name="func">
+                    <value>close</value>
+                    <value>open</value>
+                    <value reqs="DUP">dup</value>
+                    <value reqs="DUP">dup2</value>
+                    <value reqs="DUP,DUP3">dup3</value>
+                </arg>
+                <arg name="domain" type="socket_domain"/>
+            </run>
+            <run>
+                <script name="vfork_sig_exec">
+                  <req id="VFORK"/>
+                </script>
+                <arg name="env">
+                  <value ref="env.iut_only"/>
+                </arg>
+                <arg name="func">
+                    <value>sigaction</value>
+                    <value>signal</value>
+                    <value>siginterrupt</value>
+                    <value>sigprocmask</value>
+                </arg>
+                <arg name="domain" type="socket_domain"/>
+            </run>
+            <run>
+                <script name="vfork_check_hang">
+                  <req id="VFORK"/>
+                </script>
+                <arg name="env">
+                  <value ref="env.iut_only"/>
+                </arg>
+                <arg name="use_exec" type="boolean"/>
+                <arg name="domain" type="socket_domain"/>
+            </run>
+            <run>
+                <script name="vfork_func_exec">
+                  <req id="VFORK"/>
+                </script>
+                <arg name="env">
+                  <value ref="env.peer2peer"/>
+                  <value ref="env.peer2peer_ipv6"/>
+                </arg>
+                <arg name="func">
+                    <value>send</value>
+                    <value>recv</value>
+                    <!-- See bug 38138 -->
+                    <value reqs="NO_REUSE_STACK">pipe</value>
+                    <!-- ON-12647: is not compatible with EF_VFORK_MODE=2 -->
+                    <value reqs="BROKEN">socket</value>
+                    <value>accept</value>
+                </arg>
+            </run>
+          </session>
+          <arg name="vfork_mode">
+            <value reqs="ONLOAD_ONLY,VFORK_MODE_2">2</value>
+          </arg>
+        </run>
+
+        <run>
+            <script name="popen_multithread_flood">
+              <req id="THREADS"/>
+              <req id="POPEN_MULTITHREAD_FLOOD"/>
+            </script>
+            <arg name="env">
+              <value ref="env.iut_only"/>
+            </arg>
+            <arg name="threads">
+                <value>10</value>
+            </arg>
+            <arg name="iterations">
+                <value>10000</value>
+            </arg>
+            <arg name="popen_iter">
+                <value>10</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="accept_multiple">
+              <req id="SO_REUSEADDR"/>
+              <req id="SOCK_STREAM"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="connections">
+                <value>200</value>
+                <value>2000</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="many_sockets" track_conf="silent">
+                <!-- Examine sockets limit, which is defferent for ZF -
+                     covered by ZF direct tests. -->
+                <req id="ZF_INCOMPATIBLE"/>
+                <req id="NO_REUSE_STACK"/>
+                <!-- On 32-bit kernels we can get OOM killer -->
+                <req id="KERNEL_64"/>
+                <!-- The test is kinda "out of resources" for ulhelper.
+                     See ON-12506. -->
+                <req id="NO_BUILD_ULHELPER"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="ef_max_endpoints">
+                <value>65536</value>
+            </arg>
+            <arg name="ef_fdtable_size">
+                <value>25000</value>
+            </arg>
+            <arg name="ef_max_rx_packets">
+                <value>500000</value>
+            </arg>
+            <arg name="accept" type="boolean"/>
+            <arg name="one_stack" type="boolean" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="proc_num" list="">
+                <value>1</value>
+                <value>10</value>
+                <value>10</value>
+            </arg>
+        </run>
+
+
+        <run>
+            <script name="splice_nonblock" track_conf="nohistory">
+                <req id="SOCK_STREAM"/>
+                <req id="SPLICE"/>
+                <req id="TIME_CONSUMING"/>
+            </script>
+            <arg name="env">
+              <value type="env.peer2peer_all_ipv4_ipv6"/>
+              <value ref="env.peer2peer_fake"/>
+            </arg>
+            <arg name="set_nonblock" type="boolean"/>
+            <arg name="pipe_nonblock" type="boolean"/>
+            <arg name="sock_nonblock" type="boolean"/>
+            <arg name="to_socket" type="boolean"/>
+            <arg name="diff_stacks" type="boolean">
+                <value>FALSE</value>
+                <value reqs="ONLOAD_ONLY,NO_REUSE_STACK">TRUE</value>
+            </arg>
+            <arg name="block_on_pipe" type="boolean" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="block_on_sock" type="boolean" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>TRUE</value>
+            </arg>
+            <arg name="unblock_pipe_first" type="boolean" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
+            </arg>
+        </run>
+
+        <run name="threading_sesssion" track_conf="silent">
+            <session>
+                <req id="FDS_NON_MT_SAFE" sticky="true"/>
+                <req id="THREADS" sticky="true"/>
+
+                <run>
+                    <script name="threaded_busy_socket">
+                        <req id="OOL1502"/>
+                        <!-- Bug 66972 -->
+                        <req id="NO_REUSE_PCO"/>
+                    </script>
+                    <arg name="threads_num">
+                        <value>10</value>
+                    </arg>
+                    <arg name="sock_type" type="sock_stream_dgram">
+                        <value>SOCK_STREAM</value>
+                        <!-- Kernel crash Bug 50648 on ool1502 or older -->
+                        <value reqs="OOL1509">SOCK_DGRAM</value>
+                    </arg>
+                    <arg name="env">
+                      <value ref="env.peer2peer"/>
+                      <value ref="env.peer2peer_tst"/>
+                      <!-- See ON-12241 -->
+                      <value reqs="NO_LOOP3,NO_LOOP4" ref="env.peer2peer_lo"/>
+                      <value ref="env.peer2peer_ipv6"/>
+                      <value ref="env.peer2peer_tst_ipv6"/>
+                      <!-- See ON-12241 -->
+                      <value reqs="NO_LOOP3,NO_LOOP4" ref="env.peer2peer_lo_ipv6"/>
+                    </arg>
+                    <arg name="process" type="boolean">
+                        <value>FALSE</value>
+                        <!-- Bug 82871 -->
+                        <value reqs="SF_BLACKLIST">TRUE</value>
+                    </arg>
+                    <arg name="func">
+                        <value reqs="POLL">poll</value>
+                        <value reqs="EPOLL,EPOLL_NON_MT_SAFE">epoll</value>
+                        <value reqs="SELECT">select</value>
+                        <value>recv</value>
+                        <value>send</value>
+                    </arg>
+                    <arg name="connect" type="boolean"/>
+                    <arg name="bind_iut" type="boolean" list="">
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="wildcard" type="boolean" list="">
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                    </arg>
+                </run>
+
+                <run>
+                    <script name="threaded_nblock_conn"/>
+                    <arg name="env">
+                        <value type="env.peer2peer_all_ipv4_ipv6"/>
+                    </arg>
+                    <arg name="threads_num">
+                        <value>10</value>
+                    </arg>
+                    <arg name="func" type="iomux">
+                        <value reqs="POLL">poll</value>
+                        <value reqs="EPOLL,EPOLL_NON_MT_SAFE">epoll</value>
+                        <value reqs="SELECT">select</value>
+                    </arg>
+                    <arg name="sock_type" type="sock_stream_dgram" list="bind">
+                        <value>SOCK_STREAM</value>
+                        <value>SOCK_STREAM</value>
+                        <value>SOCK_STREAM</value>
+                        <value>SOCK_STREAM</value>
+                        <value>SOCK_STREAM</value>
+                        <value>SOCK_STREAM</value>
+                        <value>SOCK_DGRAM</value>
+                        <value>SOCK_DGRAM</value>
+                        <value>SOCK_DGRAM</value>
+                        <value>SOCK_DGRAM</value>
+                        <value>SOCK_DGRAM</value>
+                    </arg>
+                    <arg name="write" type="boolean" list="bind">
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="bind_iut" type="boolean" list="bind">
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="wildcard" type="boolean" list="bind">
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                    </arg>
+                </run>
+
+                <run>
+                     <script name="threaded_listen">
+                        <req id="SOCK_STREAM"/>
+                     </script>
+                    <arg name="func" type="iomux">
+                        <value>poll</value>
+                        <!-- Bug 77910 -->
+                        <value reqs="EPOLL_NON_MT_SAFE">epoll</value>
+                        <value>select</value>
+                    </arg>
+                    <arg name="threads_num">
+                        <value>10</value>
+                    </arg>
+                    <arg name="env">
+                        <value type="env.peer2peer_all_ipv4_ipv6"/>
+                    </arg>
+                    <arg name="bind_iut" type="boolean" list="bind">
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="wildcard" type="boolean" list="bind">
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                    </arg>
+                </run>
+
+                <run>
+                     <script name="threaded_udp">
+                        <req id="SOCK_DGRAM"/>
+                     </script>
+                    <arg name="env">
+                        <value type="env.peer2peer_all_ipv4_ipv6"/>
+                    </arg>
+                    <arg name="func" type="iomux">
+                        <value>poll</value>
+                        <value>epoll</value>
+                        <value>select</value>
+                    </arg>
+                    <arg name="threads_num">
+                        <value>10</value>
+                    </arg>
+                    <arg name="length">
+                        <value>1000</value>
+                    </arg>
+                    <arg name="connect_iut" type="boolean"/>
+                    <arg name="bind_iut" type="boolean" list="bind">
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="wildcard" type="boolean" list="bind">
+                        <value>FALSE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                    </arg>
+                </run>
+            </session>
+        </run>
+
+        <run>
+            <script name="ipv6_recv_ip" track_conf="silent"/>
+            <arg name="env">
+                <value ref="env.p2p_ip4_ip6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+
+        <run>
+            <script name="ipv6_send_ip" track_conf="silent"/>
+            <arg name="env">
+                <value ref="env.p2p_ip4_ip6"/>
+            </arg>
+            <arg name="ipv4_mapped" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="ipv6_ipv4_reuse" track_conf="silent"/>
+            <arg name="env">
+                <value ref="env.p2p_ip4_ip6"/>
+            </arg>
+            <arg name="sock_type" type="socket_udp_tcp"/>
+            <arg name="conns_num">
+                <value>3</value>
+            </arg>
+            <arg name="ipv4_first" type="boolean"/>
+        </run>
+
+
+        <run>
+            <script name="kill_lock_stack">
+                <req id="FORK"/>
+                <req id="SOCK_STREAM"/>
+                <req id="ONLOAD_ONLY"/>
+                <req id="NO_REUSE_STACK"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="term_func">
+                <value>exit</value>
+                <value>_exit</value>
+            </arg>
+            <arg name="exit_status">
+                <value>11</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="kill_lock_stack">
+                <req id="FORK"/>
+                <req id="SOCK_STREAM"/>
+                <req id="ONLOAD_ONLY"/>
+                <req id="NO_REUSE_STACK"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer"/>
+              <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="term_func">
+                <value>kill</value>
+            </arg>
+            <arg name="sig">
+                <value>SIGKILL</value>
+                <value>SIGUSR1</value>
+                <value>SIGSEGV</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="reuseport_bind_zero_port" track_conf="silent">
+            <!-- ON-9170 -->
+                <req id="BROKEN"/>
+                <req id="RPC_RESTART"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="use_wildcard" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="socket_via_af_unix_read">
+                <req id="FORK"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="socket_type">
+                <value>udp</value>
+                <value>tcp_active</value>
+                <value>tcp_passive</value>
+            </arg>
+            <arg name="recv_func" type="recv_func"/>
+        </run>
+
+        <run>
+            <script name="socket_via_af_unix_write">
+                <req id="FORK"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="socket_type">
+                <value>udp</value>
+                <value>tcp_active</value>
+                <value>tcp_passive</value>
+            </arg>
+            <arg name="send_func" type="send_func"/>
+        </run>
+
+        <run>
+            <script name="pipe_via_af_unix">
+                <req id="FORK"/>
+            </script>
+            <arg name="env">
+                <value ref="env.iut_only"/>
+            </arg>
+            <arg name="is_read" type="boolean"/>
+        </run>
+
+        <run>
+            <script name="listen_via_af_unix">
+                <req id="FORK"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>>
+            <arg name="func">
+                <value>accept</value>
+                <value>accept4</value>
+            </arg>
+        </run>
+
+        <run>
+            <script name="pthread_cancellation_point" track_conf="silent">
+                <req id="THREADS"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="state">
+                <value>disable</value>
+                <value>enable</value>
+            </arg>
+            <arg name="type">
+                <value>deferred</value>
+                <value>async</value>
+            </arg>
+            <arg name="func">
+                <value>accept</value>
+                <value>read</value>
+                <value>readv</value>
+                <value>recv</value>
+                <value>recvfrom</value>
+            </arg>
+        </run>
+
+    </session>
+</package>

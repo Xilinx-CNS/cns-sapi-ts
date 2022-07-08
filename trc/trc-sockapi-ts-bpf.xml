@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<test name="bpf" type="package">
+  <objective>BPF/XDP tests</objective>
+  <notes/>
+  <iter result="PASSED">
+    <notes/>
+    <test name="prologue" type="script">
+      <objective/>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="xdp_actions" type="script">
+      <objective>Check that BPF program can pass or drop packets</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="action">drop</arg>
+        <arg name="env"/>
+        <arg name="link_type"/>
+        <arg name="parent_if"/>
+        <arg name="sock_type"/>
+        <notes/>
+        <results tags="linux" notes="Test expected result for action=drop iterations">
+          <result value="PASSED">
+            <verdict>Data was sent but peer socket is not readable</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="action">pass</arg>
+        <arg name="env"/>
+        <arg name="link_type"/>
+        <arg name="parent_if"/>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="tcp_flags" type="script">
+      <objective>Check that XDP program can recognize packets by TCP flags</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="one_rule_filter" type="script">
+      <objective>Check that XDP program filters packets by different tuple combinations</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="conn_type"/>
+        <arg name="dst_addr_diff"/>
+        <arg name="dst_port_diff"/>
+        <arg name="env"/>
+        <arg name="src_addr_diff"/>
+        <arg name="src_port_diff"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="xdp_lpm_rule" type="script">
+      <objective>Check that XDP program applies action by longest prefix match from rules</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>Fake connection after linking XDP program: Data was sent but peer socket is not readable</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="xdp_perf_event" type="script">
+      <objective>Count length of packets and get it with bpf_perf_event</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="xdp_diff_ifs" type="script">
+      <objective>Check that XDP program can be linked to different interfaces</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="link_if">both</arg>
+        <arg name="sock_type"/>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>Sending from first Tester interface: Data was sent but peer socket is not readable</verdict>
+            <verdict>Sending from second Tester interface: Data was sent but peer socket is not readable</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="link_if">second</arg>
+        <arg name="sock_type"/>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>Sending from second Tester interface: Data was sent but peer socket is not readable</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="link_if">first</arg>
+        <arg name="sock_type"/>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>Sending from first Tester interface: Data was sent but peer socket is not readable</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+
+    <test name="xdp_maps" type="script">
+      <objective>Check that XDP program can work with array and hash maps</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="map_type"/>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="xdp_bpf_helpers" type="script">
+      <objective>Simple test cases there to confirm the exception that onload does not implement, but does not crash</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="prog_name">xdp_redirect</arg>
+        <arg name="sock_type"/>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>Sending from Tester: Data was sent but peer socket is not readable</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="prog_name">xdp_fib_lookup</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="prog_name">xdp_sk_lookup</arg>
+        <arg name="sock_type"/>
+        <notes/>
+        <results tags="linux-headers&lt;420" notes="Linux supports bpf_sk_lookup_* starting from kernel 4.20: on earler kernels the bpf_sk_lookup_* are not compile and are not work.">
+          <result value="FAILED">
+            <verdict>The BPF function was never launched</verdict>
+          </result>
+        </results>
+        <results tags="el=8" key="ST-1947" notes="RHEL8 supports bpf_sk_lookup_* helpers on kernels prior to 4.20. Checked on 4.18.0-147.5.1.el8_1.x86_64.">
+          <result value="PASSED"/>
+        </results>
+        <results tags="linux-headers&gt;=420&amp;linux-2.6&lt;80" key="ST-1997" notes="Linux supports bpf_sk_lookup_* starting from kernel 4.20.">
+          <result value="FAILED">
+            <verdict>Failed to load BPF object into the kernel</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+
+    <test name="xdp_change_addr" type="script">
+      <objective>Verify that data is send from one IP address but received from another</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+
+    <test name="xdp_icmp_echo" type="script">
+      <objective>Check that XDP program can work with ICMPv4/ICMPv6 messages</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <notes/>
+      </iter>
+    </test>
+
+    <test name="xdp_prog_load" type="script">
+      <objective>Check support of all BPF maps and XDP codes</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="check_type"/>
+        <arg name="env"/>
+        <arg name="prog_name"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="xdp_maps_functions" type="script">
+      <objective>Check that XDP program correctly updates/deletes elements in maps of different types</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func"/>
+        <arg name="map_name"/>
+        <notes/>
+      </iter>
+    </test>
+  </iter>
+</test>

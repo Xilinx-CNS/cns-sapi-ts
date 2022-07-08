@@ -1,0 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+# (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved.
+# Performance parameters is a dictionary with name of configurations as
+# keys and with list of strings (ool parameters) as values
+map(list(str()), key=str())

@@ -1,0 +1,1521 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<test name="level5" type="package">
+  <objective>Level5-specific test cases</objective>
+  <notes/>
+  <iter result="PASSED">
+    <notes/>
+    <test name="interop" type="package">
+      <objective>L5 stack/system stack interoperabilty test</objective>
+      <notes/>
+      <iter result="PASSED">
+        <notes/>
+        <test name="send_only" type="script">
+          <objective>Check that it is possible to use system provided write() writev() functions on L5 socket.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'alien_mac':ether:alien},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">TRUE</arg>
+            <arg name="iut_serv">TRUE</arg>
+            <arg name="delayed_ack">TRUE</arg>
+            <arg name="send_func">write</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'alien_mac':ether:alien},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">TRUE</arg>
+            <arg name="iut_serv">TRUE</arg>
+            <arg name="delayed_ack">TRUE</arg>
+            <arg name="send_func">writev</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'alien_mac':ether:alien},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">TRUE</arg>
+            <arg name="iut_serv">TRUE</arg>
+            <arg name="delayed_ack">FALSE</arg>
+            <arg name="send_func">write</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'alien_mac':ether:alien},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">TRUE</arg>
+            <arg name="iut_serv">TRUE</arg>
+            <arg name="delayed_ack">FALSE</arg>
+            <arg name="send_func">writev</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'alien_mac':ether:alien},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">TRUE</arg>
+            <arg name="iut_serv">FALSE</arg>
+            <arg name="delayed_ack">TRUE</arg>
+            <arg name="send_func">write</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'alien_mac':ether:alien},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">TRUE</arg>
+            <arg name="iut_serv">FALSE</arg>
+            <arg name="delayed_ack">TRUE</arg>
+            <arg name="send_func">writev</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'alien_mac':ether:alien},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">TRUE</arg>
+            <arg name="iut_serv">FALSE</arg>
+            <arg name="delayed_ack">FALSE</arg>
+            <arg name="send_func">write</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'alien_mac':ether:alien},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">TRUE</arg>
+            <arg name="iut_serv">FALSE</arg>
+            <arg name="delayed_ack">FALSE</arg>
+            <arg name="send_func">writev</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'alien_mac':ether:alien},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">FALSE</arg>
+            <arg name="iut_serv">TRUE</arg>
+            <arg name="delayed_ack">TRUE</arg>
+            <arg name="send_func">write</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'alien_mac':ether:alien},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">FALSE</arg>
+            <arg name="iut_serv">TRUE</arg>
+            <arg name="delayed_ack">TRUE</arg>
+            <arg name="send_func">writev</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'alien_mac':ether:alien},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">FALSE</arg>
+            <arg name="iut_serv">TRUE</arg>
+            <arg name="delayed_ack">FALSE</arg>
+            <arg name="send_func">write</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'alien_mac':ether:alien},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">FALSE</arg>
+            <arg name="iut_serv">TRUE</arg>
+            <arg name="delayed_ack">FALSE</arg>
+            <arg name="send_func">writev</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'alien_mac':ether:alien},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">FALSE</arg>
+            <arg name="iut_serv">FALSE</arg>
+            <arg name="delayed_ack">TRUE</arg>
+            <arg name="send_func">write</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'alien_mac':ether:alien},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">FALSE</arg>
+            <arg name="iut_serv">FALSE</arg>
+            <arg name="delayed_ack">TRUE</arg>
+            <arg name="send_func">writev</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'alien_mac':ether:alien},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">FALSE</arg>
+            <arg name="iut_serv">FALSE</arg>
+            <arg name="delayed_ack">FALSE</arg>
+            <arg name="send_func">write</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'alien_mac':ether:alien},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">FALSE</arg>
+            <arg name="iut_serv">FALSE</arg>
+            <arg name="delayed_ack">FALSE</arg>
+            <arg name="send_func">writev</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="sys_first">TRUE</arg>
+            <arg name="send_func">write</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="sys_first">TRUE</arg>
+            <arg name="send_func">writev</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="sys_first">FALSE</arg>
+            <arg name="send_func">write</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="sys_first">FALSE</arg>
+            <arg name="send_func">writev</arg>
+            <notes/>
+          </iter>
+        </test>
+        <test name="recv_only" type="script">
+          <objective>Check that it is possible to use system provided read() readv() functions with L5 socket.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">TRUE</arg>
+            <arg name="iut_serv">TRUE</arg>
+            <arg name="recv_func">read</arg>
+            <arg name="nonblock">FALSE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">TRUE</arg>
+            <arg name="iut_serv">TRUE</arg>
+            <arg name="recv_func">readv</arg>
+            <arg name="nonblock">FALSE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">TRUE</arg>
+            <arg name="iut_serv">FALSE</arg>
+            <arg name="recv_func">read</arg>
+            <arg name="nonblock">FALSE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">TRUE</arg>
+            <arg name="iut_serv">FALSE</arg>
+            <arg name="recv_func">readv</arg>
+            <arg name="nonblock">FALSE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">FALSE</arg>
+            <arg name="iut_serv">TRUE</arg>
+            <arg name="recv_func">read</arg>
+            <arg name="nonblock">FALSE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">FALSE</arg>
+            <arg name="iut_serv">TRUE</arg>
+            <arg name="recv_func">readv</arg>
+            <arg name="nonblock">FALSE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">FALSE</arg>
+            <arg name="iut_serv">FALSE</arg>
+            <arg name="recv_func">read</arg>
+            <arg name="nonblock">FALSE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">FALSE</arg>
+            <arg name="iut_serv">FALSE</arg>
+            <arg name="recv_func">readv</arg>
+            <arg name="nonblock">FALSE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="sys_first">TRUE</arg>
+            <arg name="iut_serv">TRUE</arg>
+            <arg name="recv_func">read</arg>
+            <arg name="nonblock">FALSE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="sys_first">TRUE</arg>
+            <arg name="iut_serv">TRUE</arg>
+            <arg name="recv_func">readv</arg>
+            <arg name="nonblock">FALSE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="sys_first">TRUE</arg>
+            <arg name="iut_serv">FALSE</arg>
+            <arg name="recv_func">read</arg>
+            <arg name="nonblock">FALSE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="sys_first">TRUE</arg>
+            <arg name="iut_serv">FALSE</arg>
+            <arg name="recv_func">readv</arg>
+            <arg name="nonblock">FALSE</arg>
+            <notes/>
+          </iter>
+
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">TRUE</arg>
+            <arg name="iut_serv">TRUE</arg>
+            <arg name="recv_func">read</arg>
+            <arg name="nonblock">TRUE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">TRUE</arg>
+            <arg name="iut_serv">TRUE</arg>
+            <arg name="recv_func">readv</arg>
+            <arg name="nonblock">TRUE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">TRUE</arg>
+            <arg name="iut_serv">FALSE</arg>
+            <arg name="recv_func">read</arg>
+            <arg name="nonblock">TRUE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">TRUE</arg>
+            <arg name="iut_serv">FALSE</arg>
+            <arg name="recv_func">readv</arg>
+            <arg name="nonblock">TRUE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">FALSE</arg>
+            <arg name="iut_serv">TRUE</arg>
+            <arg name="recv_func">read</arg>
+            <arg name="nonblock">TRUE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">FALSE</arg>
+            <arg name="iut_serv">TRUE</arg>
+            <arg name="recv_func">readv</arg>
+            <arg name="nonblock">TRUE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">FALSE</arg>
+            <arg name="iut_serv">FALSE</arg>
+            <arg name="recv_func">read</arg>
+            <arg name="nonblock">TRUE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sys_first">FALSE</arg>
+            <arg name="iut_serv">FALSE</arg>
+            <arg name="recv_func">readv</arg>
+            <arg name="nonblock">TRUE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="sys_first">TRUE</arg>
+            <arg name="iut_serv">TRUE</arg>
+            <arg name="recv_func">read</arg>
+            <arg name="nonblock">TRUE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="sys_first">TRUE</arg>
+            <arg name="iut_serv">TRUE</arg>
+            <arg name="recv_func">readv</arg>
+            <arg name="nonblock">TRUE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="sys_first">TRUE</arg>
+            <arg name="iut_serv">FALSE</arg>
+            <arg name="recv_func">read</arg>
+            <arg name="nonblock">TRUE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="sys_first">TRUE</arg>
+            <arg name="iut_serv">FALSE</arg>
+            <arg name="recv_func">readv</arg>
+            <arg name="nonblock">TRUE</arg>
+            <notes/>
+          </iter>
+        </test>
+        <test name="close_create_socket" type="script">
+          <objective/>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.iut_ucast</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="bind">TRUE</arg>
+            <arg name="syscall_method">libc</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.iut_ucast</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="bind">FALSE</arg>
+            <arg name="syscall_method">libc</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.iut_ucast</arg>
+            <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="bind">TRUE</arg>
+            <arg name="syscall_method">libc</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.iut_ucast</arg>
+            <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="bind">FALSE</arg>
+            <arg name="syscall_method">libc</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.iut_ucast</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="bind">TRUE</arg>
+            <arg name="syscall_method">interrupt</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.iut_ucast</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="bind">FALSE</arg>
+            <arg name="syscall_method">interrupt</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.iut_ucast</arg>
+            <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="bind">TRUE</arg>
+            <arg name="syscall_method">interrupt</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.iut_ucast</arg>
+            <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="bind">FALSE</arg>
+            <arg name="syscall_method">interrupt</arg>
+            <notes/>
+          </iter>
+        </test>
+        <test name="close_listening_socket" type="script">
+          <objective>Check that it is possible to use system provided close() function with listening L5 socket.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="pending">TRUE</arg>
+            <arg name="syscall_method">libc</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="pending">FALSE</arg>
+            <arg name="syscall_method">libc</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:loopback}}</arg>
+            <arg name="pending">TRUE</arg>
+            <arg name="syscall_method">libc</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:loopback}}</arg>
+            <arg name="pending">FALSE</arg>
+            <arg name="syscall_method">libc</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="pending">TRUE</arg>
+            <arg name="syscall_method">interrupt</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="pending">FALSE</arg>
+            <arg name="syscall_method">interrupt</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:loopback}}</arg>
+            <arg name="pending">TRUE</arg>
+            <arg name="syscall_method">interrupt</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:loopback}}</arg>
+            <arg name="pending">FALSE</arg>
+            <arg name="syscall_method">interrupt</arg>
+            <notes/>
+          </iter>
+        </test>
+        <test name="close_shutdown_socket" type="script">
+          <objective>Check that it is possible to use system provided close() function on fully shutdown L5 socket.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="syscall_method">libc</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="syscall_method">interrupt</arg>
+            <notes/>
+          </iter>
+        </test>
+        <test name="close_connected_socket" type="script">
+          <objective>Check that it is possible to use system provided close() function on connected L5 socket.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="data">TRUE</arg>
+            <arg name="s_buf">TRUE</arg>
+            <arg name="syscall_method">libc</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="data">TRUE</arg>
+            <arg name="s_buf">FALSE</arg>
+            <arg name="syscall_method">libc</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="data">FALSE</arg>
+            <arg name="s_buf">FALSE</arg>
+            <arg name="syscall_method">libc</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="data">TRUE</arg>
+            <arg name="s_buf">TRUE</arg>
+            <arg name="syscall_method">interrupt</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="data">TRUE</arg>
+            <arg name="s_buf">FALSE</arg>
+            <arg name="syscall_method">interrupt</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="data">FALSE</arg>
+            <arg name="s_buf">FALSE</arg>
+            <arg name="syscall_method">interrupt</arg>
+            <notes/>
+          </iter>
+        </test>
+        <test name="close_udp_readable_socket" type="script">
+          <objective>Check that it is possible to use system provided close() function with udp L5 socket if there are some data for read.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="syscall_method">libc</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:loopback}}</arg>
+            <arg name="syscall_method">libc</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="syscall_method">interrupt</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT},{'pco_tst':IUT},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:loopback}}</arg>
+            <arg name="syscall_method">interrupt</arg>
+            <notes/>
+          </iter>
+        </test>
+        <test name="pipe_close_pipe" type="script">
+          <objective>Check that system provided @b close() function works correctly on L5 socket that has just been closed.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.iut_only</arg>
+            <arg name="syscall_method">libc</arg>
+            <arg name="close_end">read</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.iut_only</arg>
+            <arg name="syscall_method">interrupt</arg>
+            <arg name="close_end">read</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.iut_only</arg>
+            <arg name="syscall_method">libc</arg>
+            <arg name="close_end">write</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.iut_only</arg>
+            <arg name="syscall_method">interrupt</arg>
+            <arg name="close_end">write</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.iut_only</arg>
+            <arg name="syscall_method">libc</arg>
+            <arg name="close_end">both</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.iut_only</arg>
+            <arg name="syscall_method">interrupt</arg>
+            <arg name="close_end">both</arg>
+            <notes/>
+          </iter>
+        </test>
+        <test name="close_after_close" type="script">
+          <objective>Check that system provided close() function works correctly on L5 socket that has just been closed.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.iut_ucast</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="syscall_method">libc</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.iut_ucast</arg>
+            <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="syscall_method">libc</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.iut_ucast</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="syscall_method">interrupt</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.iut_ucast</arg>
+            <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="syscall_method">interrupt</arg>
+            <notes/>
+          </iter>
+        </test>
+        <test name="close_accept" type="script">
+          <objective>Check that it is possible to use system provided close() function on L5 socket when accept() started but havn't satisfied yet.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT,'pco_aux':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester}}}</arg>
+            <arg name="syscall_method">libc</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT,'pco_aux':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester}}}</arg>
+            <arg name="syscall_method">interrupt</arg>
+            <notes/>
+          </iter>
+        </test>
+        <test name="close_read" type="script">
+          <objective>Check that it is possible to use system provided close() function on L5 socket when read() started but havn't satisfied yet.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT,'pco_aux':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="syscall_method">libc</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT,'pco_aux':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+            <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="syscall_method">libc</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT,'pco_aux':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="syscall_method">interrupt</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT,'pco_aux':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+            <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="syscall_method">interrupt</arg>
+            <notes/>
+          </iter>
+        </test>
+        <test name="close_linger_close" type="script">
+          <objective>Check that system provided close() function works correctly after close() function on L5 socket with SO_LINGER socket option with non-zero timeout.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT,'pco_aux':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+            <arg name="system_first">TRUE</arg>
+            <arg name="syscall_method">libc</arg>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT,'pco_aux':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+            <arg name="system_first">FALSE</arg>
+            <arg name="syscall_method">libc</arg>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT,'pco_aux':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+            <arg name="system_first">TRUE</arg>
+            <arg name="syscall_method">interrupt</arg>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">{{{'pco_iut':IUT,'pco_aux':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+            <arg name="system_first">FALSE</arg>
+            <arg name="syscall_method">interrupt</arg>
+          </iter>
+        </test>
+        <test name="close_iomux" type="script">
+          <objective>Check that it is possible to use system provided close() function on L5 socket when select() or poll() started but havn't satisfied yet.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="iomux">oo_epoll</arg>
+            <arg name="sock_type"/>
+            <arg name="syscall_method">interrupt</arg>
+            <notes/>
+            <results tags="linux">
+              <result value="PASSED">
+                <verdict>oo_epoll() has not noticed that subject file descriptor was closed from another thread during the call</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="iomux">epoll_pwait</arg>
+            <arg name="sock_type"/>
+            <arg name="syscall_method">interrupt</arg>
+            <notes/>
+            <results tags="linux">
+              <result value="PASSED">
+                <verdict>epoll_pwait() has not noticed that subject file descriptor was closed from another thread during the call</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="iomux">epoll</arg>
+            <arg name="sock_type"/>
+            <arg name="syscall_method">interrupt</arg>
+            <notes/>
+            <results tags="linux">
+              <result value="PASSED">
+                <verdict>epoll() has not noticed that subject file descriptor was closed from another thread during the call</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="iomux">poll</arg>
+            <arg name="sock_type"/>
+            <arg name="syscall_method">interrupt</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="iomux">ppoll</arg>
+            <arg name="sock_type"/>
+            <arg name="syscall_method">interrupt</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="iomux">pselect</arg>
+            <arg name="sock_type"/>
+            <arg name="syscall_method">interrupt</arg>
+            <notes/>
+            <results tags="linux&amp;ul-32">
+              <result value="PASSED">
+                <verdict>pselect() has not noticed that subject file descriptor was closed from another thread during the call</verdict>
+              </result>
+            </results>
+            <results tags="v5&amp;ool_spin" key="ON-1120">
+              <result value="PASSED"/>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="iomux">select</arg>
+            <arg name="sock_type"/>
+            <arg name="syscall_method">interrupt</arg>
+            <notes/>
+            <results tags="linux&amp;ul-32">
+              <result value="PASSED">
+                <verdict>select() has not noticed that subject file descriptor was closed from another thread during the call</verdict>
+              </result>
+            </results>
+            <results tags="v5&amp;ool_spin" key="ON-1120">
+              <result value="PASSED"/>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="iomux">oo_epoll</arg>
+            <arg name="sock_type"/>
+            <arg name="syscall_method">libc</arg>
+            <notes/>
+            <results tags="linux">
+              <result value="PASSED">
+                <verdict>oo_epoll() has not noticed that subject file descriptor was closed from another thread during the call</verdict>
+              </result>
+            </results>
+            <results tags="!(ool_epoll=1)" key="ON-3671">
+              <result value="PASSED">
+                <verdict>oo_epoll() has not noticed that subject file descriptor was closed from another thread during the call</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="iomux">epoll_pwait</arg>
+            <arg name="sock_type"/>
+            <arg name="syscall_method">libc</arg>
+            <notes/>
+            <results tags="linux">
+              <result value="PASSED">
+                <verdict>epoll_pwait() has not noticed that subject file descriptor was closed from another thread during the call</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="iomux">epoll</arg>
+            <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="syscall_method">libc</arg>
+            <notes/>
+            <results tags="linux">
+              <result value="PASSED">
+                <verdict>epoll() has not noticed that subject file descriptor was closed from another thread during the call</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="iomux">epoll</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="syscall_method">libc</arg>
+            <notes/>
+            <results tags="linux">
+              <result value="PASSED">
+                <verdict>epoll() has not noticed that subject file descriptor was closed from another thread during the call</verdict>
+              </result>
+              <result value="PASSED">
+                <verdict>poll() returned unexpected events EVT_RD | EVT_EXC | EVT_HUP</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="iomux">poll</arg>
+            <arg name="sock_type"/>
+            <arg name="syscall_method">libc</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="iomux">ppoll</arg>
+            <arg name="sock_type"/>
+            <arg name="syscall_method">libc</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="iomux">pselect</arg>
+            <arg name="sock_type"/>
+            <arg name="syscall_method">libc</arg>
+            <notes/>
+            <results tags="linux">
+              <result value="PASSED">
+                <verdict>pselect() has not noticed that subject file descriptor was closed from another thread during the call</verdict>
+              </result>
+            </results>
+            <results tags="v5&amp;ool_spin" key="ON-1120">
+              <result value="PASSED"/>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="iomux">select</arg>
+            <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="syscall_method">libc</arg>
+            <notes/>
+            <results tags="linux">
+              <result value="PASSED">
+                <verdict>select() has not noticed that subject file descriptor was closed from another thread during the call</verdict>
+              </result>
+            </results>
+            <results tags="v5&amp;ool_spin" key="ON-1120">
+              <result value="PASSED"/>
+              <result value="PASSED">
+                <verdict>select() returned 1 unexpectedly</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="iomux">select</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="syscall_method">libc</arg>
+            <notes/>
+            <results tags="linux">
+              <result value="PASSED">
+                <verdict>select() has not noticed that subject file descriptor was closed from another thread during the call</verdict>
+              </result>
+            </results>
+            <results tags="v5&amp;ool_spin" key="ON-1120">
+              <result value="PASSED"/>
+            </results>
+          </iter>
+        </test>
+        <test name="fcntl_nonblock" type="script">
+          <objective>Check that O_NONBLOCK flag can be changed from different processes by L5 and libc implementations of fcntl().</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="change_iut"/>
+            <arg name="child_sys_call"/>
+            <arg name="env"/>
+            <arg name="fcntl_sys_call">TRUE</arg>
+            <arg name="func"/>
+            <arg name="is_pipe"/>
+            <arg name="iut_sys_call"/>
+            <arg name="nonblock_func">pipe2</arg>
+            <arg name="start_blocking">TRUE</arg>
+            <notes/>
+            <results tags="v5" key="ON-751">
+              <result value="FAILED">
+                <verdict>Check blocking state on pco_iut: Failed with RCF_PCH-ERPCTIMEOUT errno instead of EAGAIN</verdict>
+              </result>
+            </results>
+            <results tags="linux-2.6&lt;27">
+              <result value="FAILED">
+                <verdict>Failed to find pipe2 on pco_iut</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="change_iut"/>
+            <arg name="child_sys_call"/>
+            <arg name="env"/>
+            <arg name="fcntl_sys_call">TRUE</arg>
+            <arg name="func"/>
+            <arg name="is_pipe"/>
+            <arg name="iut_sys_call"/>
+            <arg name="nonblock_func">pipe2</arg>
+            <arg name="start_blocking">FALSE</arg>
+            <notes/>
+            <results tags="linux-2.6&lt;27">
+              <result value="FAILED">
+                <verdict>Failed to find pipe2 on pco_iut</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="change_iut"/>
+            <arg name="child_sys_call"/>
+            <arg name="env"/>
+            <arg name="fcntl_sys_call">FALSE</arg>
+            <arg name="func"/>
+            <arg name="is_pipe"/>
+            <arg name="iut_sys_call"/>
+            <arg name="nonblock_func">pipe2</arg>
+            <arg name="start_blocking"/>
+            <notes/>
+            <results tags="linux-2.6&lt;27">
+              <result value="FAILED">
+                <verdict>Failed to find pipe2 on pco_iut</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="change_iut"/>
+            <arg name="child_sys_call">FALSE</arg>
+            <arg name="env"/>
+            <arg name="fcntl_sys_call">TRUE</arg>
+            <arg name="func"/>
+            <arg name="is_pipe"/>
+            <arg name="iut_sys_call">FALSE</arg>
+            <arg name="nonblock_func">accept4</arg>
+            <arg name="sock_type"/>
+            <arg name="start_blocking"/>
+            <notes/>
+            <results tags="v5" key="ON-751">
+              <result value="FAILED">
+                <verdict>Check blocking state on pco_iut: Failed unexpectedly with errno RPC-EAGAIN</verdict>
+              </result>
+            </results>
+            <results tags="linux-2.6&lt;27">
+              <result value="FAILED">
+                <verdict>Failed to find accept4 on pco_iut</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="change_iut"/>
+            <arg name="child_sys_call">TRUE</arg>
+            <arg name="env"/>
+            <arg name="fcntl_sys_call">TRUE</arg>
+            <arg name="func"/>
+            <arg name="is_pipe"/>
+            <arg name="iut_sys_call">FALSE</arg>
+            <arg name="nonblock_func">accept4</arg>
+            <arg name="sock_type"/>
+            <arg name="start_blocking"/>
+            <notes/>
+            <results tags="linux&amp;v5" key="ON-751">
+              <result value="FAILED">
+                <verdict>Check blocking state on pco_iut: Failed unexpectedly with errno RPC-EAGAIN</verdict>
+              </result>
+            </results>
+            <results tags="linux-2.6&lt;27">
+              <result value="FAILED">
+                <verdict>Failed to find accept4 on pco_iut</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="change_iut"/>
+            <arg name="child_sys_call"/>
+            <arg name="env"/>
+            <arg name="fcntl_sys_call">TRUE</arg>
+            <arg name="func"/>
+            <arg name="is_pipe"/>
+            <arg name="iut_sys_call">TRUE</arg>
+            <arg name="nonblock_func">accept4</arg>
+            <arg name="sock_type"/>
+            <arg name="start_blocking"/>
+            <notes/>
+            <results tags="linux-2.6&lt;27">
+              <result value="FAILED">
+                <verdict>Failed to find accept4 on pco_iut</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="change_iut"/>
+            <arg name="child_sys_call"/>
+            <arg name="env"/>
+            <arg name="fcntl_sys_call">FALSE</arg>
+            <arg name="func"/>
+            <arg name="is_pipe"/>
+            <arg name="iut_sys_call"/>
+            <arg name="nonblock_func">accept4</arg>
+            <arg name="sock_type"/>
+            <arg name="start_blocking"/>
+            <notes/>
+            <results tags="linux-2.6&lt;27">
+              <result value="FAILED">
+                <verdict>Failed to find accept4 on pco_iut</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="change_iut"/>
+            <arg name="child_sys_call"/>
+            <arg name="env"/>
+            <arg name="fcntl_sys_call">TRUE</arg>
+            <arg name="func"/>
+            <arg name="is_pipe"/>
+            <arg name="iut_sys_call">FALSE</arg>
+            <arg name="nonblock_func">socket</arg>
+            <arg name="sock_type"/>
+            <arg name="start_blocking"/>
+            <notes/>
+            <results tags="v5&amp;linux-2.6&gt;=27" key="ON-751">
+              <result value="FAILED">
+                <verdict>Check blocking state on pco_iut: Failed unexpectedly with errno RPC-EAGAIN</verdict>
+              </result>
+            </results>
+            <results tags="linux-2.6&lt;27">
+              <result value="FAILED">
+                <verdict>Call socket() with SOCK_NONBLOCK flag(s) failed</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="change_iut"/>
+            <arg name="child_sys_call"/>
+            <arg name="env"/>
+            <arg name="fcntl_sys_call">TRUE</arg>
+            <arg name="func"/>
+            <arg name="is_pipe"/>
+            <arg name="iut_sys_call">TRUE</arg>
+            <arg name="nonblock_func">socket</arg>
+            <arg name="sock_type"/>
+            <arg name="start_blocking"/>
+            <notes/>
+            <results tags="linux-2.6&lt;27">
+              <result value="FAILED">
+                <verdict>Call socket() with SOCK_NONBLOCK flag(s) failed</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="change_iut"/>
+            <arg name="child_sys_call"/>
+            <arg name="env"/>
+            <arg name="fcntl_sys_call">FALSE</arg>
+            <arg name="func"/>
+            <arg name="is_pipe"/>
+            <arg name="iut_sys_call"/>
+            <arg name="nonblock_func">socket</arg>
+            <arg name="sock_type"/>
+            <arg name="start_blocking"/>
+            <notes/>
+            <results tags="linux-2.6&lt;27">
+              <result value="FAILED">
+                <verdict>Call socket() with SOCK_NONBLOCK flag(s) failed</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="change_iut"/>
+            <arg name="child_sys_call"/>
+            <arg name="env"/>
+            <arg name="fcntl_sys_call">TRUE</arg>
+            <arg name="func"/>
+            <arg name="is_pipe"/>
+            <arg name="iut_sys_call">FALSE</arg>
+            <arg name="nonblock_func"/>
+            <arg name="sock_type"/>
+            <arg name="start_blocking">TRUE</arg>
+            <notes/>
+            <results tags="v5" key="ON-751">
+              <result value="FAILED">
+                <verdict>Check blocking state on pco_iut: Failed with RCF_PCH-ERPCTIMEOUT errno instead of EAGAIN</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="change_iut"/>
+            <arg name="child_sys_call"/>
+            <arg name="env"/>
+            <arg name="fcntl_sys_call">TRUE</arg>
+            <arg name="func"/>
+            <arg name="is_pipe"/>
+            <arg name="iut_sys_call"/>
+            <arg name="nonblock_func">fcntl</arg>
+            <arg name="start_blocking">TRUE</arg>
+            <notes/>
+            <results tags="v5" key="ON-751">
+              <result value="FAILED">
+                <verdict>Check blocking state on pco_iut: Failed with RCF_PCH-ERPCTIMEOUT errno instead of EAGAIN</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="change_iut"/>
+            <arg name="child_sys_call"/>
+            <arg name="env"/>
+            <arg name="fcntl_sys_call">TRUE</arg>
+            <arg name="func"/>
+            <arg name="is_pipe"/>
+            <arg name="iut_sys_call">TRUE</arg>
+            <arg name="nonblock_func">fcntl</arg>
+            <arg name="sock_type"/>
+            <arg name="start_blocking"/>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="change_iut"/>
+            <arg name="child_sys_call"/>
+            <arg name="env"/>
+            <arg name="fcntl_sys_call">FALSE</arg>
+            <arg name="func"/>
+            <arg name="is_pipe"/>
+            <arg name="iut_sys_call"/>
+            <arg name="nonblock_func">fcntl</arg>
+            <arg name="sock_type"/>
+            <arg name="start_blocking"/>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="change_iut"/>
+            <arg name="child_sys_call"/>
+            <arg name="env"/>
+            <arg name="fcntl_sys_call">FALSE</arg>
+            <arg name="func"/>
+            <arg name="is_pipe"/>
+            <arg name="iut_sys_call"/>
+            <arg name="nonblock_func">fcntl</arg>
+            <arg name="start_blocking"/>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="change_iut"/>
+            <arg name="child_sys_call"/>
+            <arg name="env"/>
+            <arg name="fcntl_sys_call">TRUE</arg>
+            <arg name="func"/>
+            <arg name="is_pipe"/>
+            <arg name="iut_sys_call">FALSE</arg>
+            <arg name="nonblock_func">fcntl</arg>
+            <arg name="sock_type"/>
+            <arg name="start_blocking">FALSE</arg>
+            <notes/>
+            <results tags="v5" key="ON-751">
+              <result value="FAILED">
+                <verdict>Check blocking state on pco_iut: Failed unexpectedly with errno RPC-EAGAIN</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="change_iut"/>
+            <arg name="child_sys_call"/>
+            <arg name="env"/>
+            <arg name="fcntl_sys_call">TRUE</arg>
+            <arg name="func"/>
+            <arg name="is_pipe"/>
+            <arg name="iut_sys_call"/>
+            <arg name="nonblock_func">fcntl</arg>
+            <arg name="start_blocking">FALSE</arg>
+            <notes/>
+            <results tags="v5" key="ON-751">
+              <result value="FAILED">
+                <verdict>Check blocking state on pco_iut: Failed unexpectedly with errno RPC-EAGAIN</verdict>
+              </result>
+            </results>
+          </iter>
+        </test>
+        <test name="nonblock" type="script">
+          <objective>Check that setting O_NONBLOCK (or SOCK_NONBLOCK) flag really makes L5 socket non-blocking.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="l5_fcntl"/>
+            <arg name="nonblock_func">fcntl</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="test_func"/>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="l5_fcntl"/>
+            <arg name="nonblock_func">socket</arg>
+            <arg name="sock_type"/>
+            <arg name="test_func"/>
+            <notes/>
+            <results tags="linux-2.6&lt;27">
+              <result value="FAILED">
+                <verdict>Call socket() with SOCK_NONBLOCK flag(s) failed</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="l5_fcntl"/>
+            <arg name="nonblock_func">accept4</arg>
+            <arg name="sock_type"/>
+            <arg name="test_func"/>
+            <notes/>
+            <results tags="linux-2.6&lt;27">
+              <result value="FAILED">
+                <verdict>Failed to find accept4 on pco_iut</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="l5_fcntl"/>
+            <arg name="nonblock_func">fcntl</arg>
+            <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="test_func"/>
+            <notes/>
+          </iter>
+        </test>
+        <test name="close_fdopen_fclose" type="script">
+          <objective>Check that fdclose() call closes socket that has been created by socket() call.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="is_pipe">FALSE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="is_pipe">FALSE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.iut_only</arg>
+            <arg name="is_pipe">TRUE</arg>
+            <notes/>
+          </iter>
+        </test>
+        <test name="nonblock_handover" type="script">
+          <objective>Check that setting O_NONBLOCK (or SOCK_NONBLOCK) flag on L5 socket will be preserved after connecting L5 socket through non-onload interface</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="nonblock_func">socket</arg>
+            <arg name="nonblock_set">TRUE</arg>
+            <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="test_func"/>
+            <notes/>
+            <results tags="linux-2.6&lt;=26">
+              <result value="FAILED">
+                <verdict>Call socket() with SOCK_NONBLOCK flag(s) failed</verdict>
+              </result>
+            </results>
+            <results tags="v5&amp;udp_connect_no_handover" key="ON-11703">
+              <result value="FAILED">
+                <verdict>Socket handover didn't happen</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="nonblock_func">socket</arg>
+            <arg name="nonblock_set">FALSE</arg>
+            <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="test_func"/>
+            <notes/>
+            <results tags="v5&amp;udp_connect_no_handover" key="ON-11703">
+              <result value="FAILED">
+                <verdict>Socket handover didn't happen</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="nonblock_func">fcntl</arg>
+            <arg name="nonblock_set"/>
+            <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="test_func"/>
+            <notes/>
+            <results tags="v5&amp;udp_connect_no_handover" key="ON-11703">
+              <result value="FAILED">
+                <verdict>Socket handover didn't happen</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="nonblock_func">socket</arg>
+            <arg name="nonblock_set">TRUE</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="test_func"/>
+            <notes/>
+            <results tags="linux-2.6&lt;=26">
+              <result value="FAILED">
+                <verdict>Call socket() with SOCK_NONBLOCK flag(s) failed</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="nonblock_func">socket</arg>
+            <arg name="nonblock_set">FALSE</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="test_func"/>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="nonblock_func">fcntl</arg>
+            <arg name="nonblock_set"/>
+            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="test_func"/>
+            <notes/>
+          </iter>
+        </test>
+        <test name="onload_msg_recv_os_inline" type="script">
+          <objective>Check that setting ONLOAD_MSG_RECV_OS_INLINE flag allows to receive kernel traffic via onload_zc_recv(), and not setting it disables this option.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="kernel_traffic"/>
+            <arg name="os_inline"/>
+            <arg name="release_zc_bufs"/>
+            <notes/>
+          </iter>
+        </test>
+        <test name="sock_with_flags_acc" type="script">
+          <objective>Check that socket created with help of socket() call with SOCK_NONBLOCK, SOCK_CLOEXEC or without flag is accelerated</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="active"/>
+            <arg name="connection"/>
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="sock_flags"/>
+            <arg name="sock_type"/>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="active"/>
+            <arg name="connection"/>
+            <arg name="env">VAR.env.p2p_ip6ip4mapped</arg>
+            <arg name="sock_flags"/>
+            <arg name="sock_type"/>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="active"/>
+            <arg name="connection"/>
+            <arg name="env">VAR.env.peer2peer_lo</arg>
+            <arg name="sock_flags"/>
+            <arg name="sock_type"/>
+            <notes/>
+            <results tags="v5&amp;ool_loop=0">
+              <result value="FAILED">
+                <verdict>Socket was not accelerated</verdict>
+              </result>
+            </results>
+          </iter>
+        </test>
+      </iter>
+    </test>
+    <test name="ulv" type="package">
+      <objective>User-Level Vulnerabilities</objective>
+      <notes/>
+      <iter result="PASSED">
+        <notes/>
+        <test name="netload" type="script">
+          <objective>Check that loading of IP stack do not lead to OS crash if IP stack structures are corrupted.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="process_num">3</arg>
+            <arg name="tcp_num">4</arg>
+            <arg name="udp_num">2</arg>
+            <arg name="min_length">1</arg>
+            <arg name="max_length">1000</arg>
+            <arg name="rate">100</arg>
+            <arg name="time2run">5</arg>
+            <arg name="c_script">env</arg>
+            <arg name="c_pid">FALSE</arg>
+            <arg name="c_socks">FALSE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="process_num">3</arg>
+            <arg name="tcp_num">4</arg>
+            <arg name="udp_num">2</arg>
+            <arg name="min_length">1</arg>
+            <arg name="max_length">1000</arg>
+            <arg name="rate">100</arg>
+            <arg name="time2run">5</arg>
+            <arg name="c_script">env</arg>
+            <arg name="c_pid">FALSE</arg>
+            <arg name="c_socks">TRUE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="process_num">3</arg>
+            <arg name="tcp_num">4</arg>
+            <arg name="udp_num">2</arg>
+            <arg name="min_length">1</arg>
+            <arg name="max_length">1000</arg>
+            <arg name="rate">100</arg>
+            <arg name="time2run">5</arg>
+            <arg name="c_script">env</arg>
+            <arg name="c_pid">TRUE</arg>
+            <arg name="c_socks">FALSE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env">VAR.env.peer2peer</arg>
+            <arg name="process_num">3</arg>
+            <arg name="tcp_num">4</arg>
+            <arg name="udp_num">2</arg>
+            <arg name="min_length">1</arg>
+            <arg name="max_length">1000</arg>
+            <arg name="rate">100</arg>
+            <arg name="time2run">5</arg>
+            <arg name="c_script">env</arg>
+            <arg name="c_pid">TRUE</arg>
+            <arg name="c_socks">TRUE</arg>
+            <notes/>
+          </iter>
+        </test>
+      </iter>
+    </test>
+    <!-- end -->
+    <xi:include href="trc-sockapi-ts-level5-extension.xml" parse="xml"
+                xmlns:xi="http://www.w3.org/2003/XInclude"/>
+    <xi:include href="trc-sockapi-ts-level5-ext_stackname.xml" parse="xml"
+                xmlns:xi="http://www.w3.org/2003/XInclude"/>
+    <xi:include href="trc-sockapi-ts-level5-out_of_resources.xml" parse="xml"
+                xmlns:xi="http://www.w3.org/2003/XInclude"/>
+    <xi:include href="trc-sockapi-ts-level5-fd_caching.xml" parse="xml"
+                xmlns:xi="http://www.w3.org/2003/XInclude"/>
+    <xi:include href="trc-sockapi-ts-level5-bpf.xml" parse="xml"
+                xmlns:xi="http://www.w3.org/2003/XInclude"/>
+  </iter>
+</test>

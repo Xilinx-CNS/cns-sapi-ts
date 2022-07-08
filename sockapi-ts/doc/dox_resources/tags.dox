@@ -1,0 +1,148 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+@defgroup sapi_tags_details TRC Tags List
+
+@{
+
+List of tags set on various testing configurations to distinguish them.
+
+@todo This one is incomplete.
+
+@tags_start
+
+@tags_group     Operating systems
+
+@tag_name       linux
+@tag_descr      Test is run on Linux.
+
+@tag_name       linux-*
+@tag_descr      Test is runned on Linux of specific kernel version. <br/>
+                Example: for kernel 2.6.26-2, tags linux-2, linux-2.6,
+                linux-2.6.26 and linux-2.6.26-2 will be defined. Tag
+                linux-2.6 will have value 26.<br/>
+                Note: for Linux kernel v3, tag linux-2.6 is also defined,
+                linux-2.6=40 for kernel 3.0, linux-2.6=41 for kernel
+                3.1 and so on - so expressions like linux-2.6<32 will
+                still work.
+
+@tag_name       solaris
+@tag_descr      Test is run on Solaris.
+
+@tag_name       freebsd
+@tag_descr      Test is run on FreeBSD.
+
+@tags_group     Bitness
+
+@tag_name       kernel-64
+@tag_descr      Kernel is 64bit.
+
+@tag_name       kernel-32
+@tag_descr      Kernel is 32bit.
+
+@tag_name       ul-64
+@tag_descr      User space is 64bit.
+
+@tag_name       ul-32
+@tag_descr      User space is 32bit.
+
+@tags_group     Onload-specific tags
+
+@tag_name       v5
+@tag_descr      Test is run on Onload.
+
+@tag_name       ool_epoll
+@tag_descr      Version of epoll implementation (0, 1, 2).
+
+@tag_name       ool_epoll_ctl_fast
+@tag_descr      Using fast epoll. This means that accelerated descritors
+                will be handled before non-accelerated. Example:
+                if we have event for non-accelerated socket and for
+                accelerated, epoll_wait() returns 1, not 2.
+
+@tag_name       ool_iomux_no_fast
+@tag_descr      Do not try to handle accelerated descriptors before
+                non-accelerated ones in poll() and select().
+
+@tag_name       ool_sriov
+@tag_descr      Single Root I/O Virtualization (SR-IOV) testing.
+
+@tag_name       ool_name
+@tag_descr      All accelerated descriptors will belong to the same
+                stack.
+
+@tag_name       ool_loop
+@tag_descr      Version of loopback implementation (0, 1, 2).
+
+@tag_name       ool_spin
+@tag_descr      Testing with infinitely spinning. Spinning means
+                spinning in a function (like poll() or send()) calls
+                until the call can terminate of spinning timeout
+                happens. After the spin timeout, it enters the
+                kernel and blocks.
+
+@tag_name       small_spin
+@tag_descr      Testing with spinning for 1 second.
+
+@tag_name       ool_phys_mode
+@tag_descr      Physical address mode testing. It's unsafe mode where
+                there is no address space separation between different
+                stacks or net driver packets. So there is no guarantee
+                that different stacks do not have any access to each
+                other data.
+
+@tag_name       high_throughput
+@tag_descr      Onload runs in high throughput mode.
+
+@tags_group     Network configuration
+
+@tag_name       vlan
+@tag_descr      Main interface under testing is VLAN
+
+@tag_name       no-ip6
+@tag_descr      -
+
+@tag_name       no-ip6-full
+@tag_descr      "Real IPv6 tests"
+
+@tag_name       one-iut-interface
+@tag_descr      Only one interface is of testing interest.
+
+@tag_name       l5nic
+@tag_descr      Test is run on host with vendor NIC.
+
+@tags_group     Host name
+
+@tag_name       elrond, hurin, oin, gloin, bofur, olorin, etc
+@tag_descr      On which host we test something. 
+
+@tags_group     Tags duplicating requirements
+                (used to register SKIPPED results in TRC DB)
+
+@tag_name       no-draft
+@tag_descr      Draft tests
+
+@tag_name       no-unstable
+@tag_descr      Do not run unstable iterations.
+
+@tag_name       no-aio
+@tag_descr      Asynchronous IO functions should not be used.
+
+@tag_name       no-aio-dgram
+@tag_descr      Asynchronous IO functions should not be used
+                with SOCK_DGRAM sockets.
+
+@tag_name       no-time-consuming
+@tag_descr      Do not run time consuming iterations.
+
+@tag_name       no-extra-time-consuming
+@tag_descr      Do not run extra time consuming iterations.
+
+@tag_name       no-l5-specific
+@tag_descr      Do not run iterations specific for Onload.
+
+@tags_end
+
+@}                              <!--tags -->
+
+*/

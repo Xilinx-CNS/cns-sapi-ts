@@ -1,0 +1,26 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup fcntl FCNTL Requests
+@ingroup sockapi
+@{
+
+The package is intended to test a set of file control requests deal
+with sockets.
+
+@author Igor Vasiliev <Igor.Vasiliev@oktetlabs.ru>
+
+
+@par Items:
+
+-# @ref fcntl-fcntl_async
+-# @ref fcntl-setgetown
+-# @ref fcntl-fcntl_flags_dup
+-# @ref fcntl-fcntl_close_on_exec
+-# @ref fcntl-async_data
+-# @ref fcntl-fcntl_flags_dup_pipe
+
+@}
+
+*/

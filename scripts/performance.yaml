@@ -1,0 +1,60 @@
+# SPDX-License-Identifier: Apache-2.0
+# (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved.
+# no_rx_ts - by default; otherwise rx_ts is specified
+# scalable_any - always on for all scalable modes
+# mt_safe = fds_mt_safe + epoll_mt_safe
+#
+# peer must have the same fw kind as IUT
+#
+oin:     [fw_full_featured, scooby, scalable_active_passive, nopio, laddr_all, team4]
+elrond:  [fw_full_featured, scooby, sleep_spin, nopio, vlan, netns_iut, mt_safe]
+fili:    [fw_full_featured, scooby, laddr_prefsrc, bond1]
+loni:    [fw_full_featured, high_throughput, bond4, mt_safe]
+farin:   [fw_full_featured, spin]
+nar:     [fw_full_featured, spin, bond4, vlan, rx_ts]
+mim:     [fw_full_featured, disable_timestamps, netns_all, mt_safe]
+balin:   [fw_full_featured, latency, vlan]
+bifur:   [fw_full_featured, latency_best, ipvlan, netns_iut]
+fror:    [fw_full_featured, tcp_no_delack, rx_ts]
+nali:    [fw_full_featured, int_spin, phys_mode]
+olorin:  [fw_full_featured]
+hurin:   [fw_low_latency, spin, mt_safe]
+frerin:  [fw_low_latency, small_spin, tcp_no_delack]
+telchar: [fw_low_latency, int_spin, laddr_prefsrc, mt_safe]
+floi:    [fw_low_latency, latency, rx_ts, nopio]
+dwalin:  [fw_low_latency, latency, macvlan, netns_iut]
+borin:   [fw_low_latency, latency_best, disable_timestamps]
+gloin:   [fw_low_latency, latency_best, bond1, rx_ts]
+narvi:   [fw_low_latency, scooby, netns_all, mt_safe]
+durin:   [fw_low_latency, high_throughput, nopio, scalable, disable_timestamps]
+bofur:   [fw_low_latency, tcp_no_delack, mt_safe]
+frar:    [fw_low_latency, nopio, phys_mode]
+fundin:  [fw_low_latency]
+nxp02:   [fw_low_latency]
+dellr410g:  [fw_low_latency]
+
+# Folloing parameters were stolen from ool_params_freqs:
+# scooby;high_throughput
+# spin;;small_spin;int_spin
+#   + profile:latency{,_best}
+#   latency_best does not has any sense for pre-med2 NICs
+# disable_timestamps
+# tcp_no_delack
+# epoll_mt_safe + fds_mt_safe
+# nopio
+# fw_low_latency;fw_full_featured
+# phys_mode
+# netns_iut;netns_all
+# vlan;;macvlan;ipvlan;vlan,macvlan;macvlan,vlan;vlan,ipvlan
+#   The performance testing is limited with real-life cases:
+#   (a) vlan
+#   (b) (macvlan or ipvlan) + netns_iut
+# bond1;;bond4;team1;team4
+# no_rx_ts
+#   - see above: on by default, rx_ts is used otherwise
+# scalable;scalable_active;scalable_passive;scalable_active_passive
+#   - scalable or scalable_active_passive only
+# sleep_spin
+#   - it was implemented for nginx, so we test it with scooby only
+# laddr_all;laddr_prefsrc
+

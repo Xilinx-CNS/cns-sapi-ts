@@ -1,0 +1,7 @@
+# SPDX-License-Identifier: Apache-2.0
+# (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved.
+- {null : 1, zf_has_pending_reactor: 1}
+- {null : 1, zf_has_pending_threads: 1}
+- {null : 1, zf_stack_fd_poll: 1}
+- {null : 1, zf_tx_ts: 1, zf_rx_ts: 1, 'zf_tx_ts,zf_rx_ts': 1}
+- [nopio]

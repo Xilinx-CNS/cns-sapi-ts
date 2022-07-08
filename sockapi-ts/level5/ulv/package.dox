@@ -1,0 +1,119 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup level5-ulv User-Level Vulnerabilities
+@ingroup level5
+@{
+
+<!--
+  - Specify full package name of the test package node after 'page'
+  - keyword (from root package to the node with '_' separator between
+  - names).
+  -
+  - The rest of the string in title of the test package.
+  -
+  - State brief description of the node in the next paragraph.
+  -->
+
+The package is intended to test invulnerability of L5 IP stack against
+application misdoings. 
+
+Namely the suite checks that corrupting of memory shared between kernel 
+and the application does not lead to further corruption of the kernel 
+memory and, as a result to system crash or hangup.
+
+In all suite the statement "Set X to Y" means "Set field X of ci_netif_state 
+corresponding to @p pco_iut process to value "Y".
+
+After each test process corresponding to PCO IUT should be restarted and 
+and connectivity between IUT and Tester hosts should be verified.
+
+<!-- Provide name and email of the node, if it's necessary -->
+@author Elena Vengerova <Elena.Vengerova@oktetlabs.ru>
+
+<!-- Specify list of requirements verified by the test package 
+@requirement OKTL-QMS-TMPL
+-->
+
+<!--
+  - Describe session provided by the package.
+  -
+  - If an item is not used, skip corresponding paragraph.
+  -
+  - Detailed description may provide specification of parameters which
+  - are used for each item.
+  -->
+
+<!-- Describe parameters which may be passed to the package 
+@param param1 - description of the first parameter
+@param param2 - description of the second parameter
+-->
+
+<!--
+  - Refer to exception handler which catches package specific
+  - exceptions and tries to resolve problem.
+  -
+  
+@exception_handler exception.c
+
+  -->
+
+<!--
+  - Refer to prologue of the test package which configures
+  - environment as well as verifies package preconditions.
+  
+@prologue prologue.c
+
+  -->
+
+<!--
+  - Refer to keep-alive script which verifies state of the
+  - environment before and after each test.
+
+@keepalive keepalive.c
+
+  -->
+
+<!--
+  - Refer to epilogue of the test package which undo configuration
+  - changes as well as verifies package post conditions.
+
+@epilogue epilogue.c
+
+  -->
+
+
+<!--
+  -
+  - Use bullet list '-', if order of the items is not restricted.
+  - Use numbered list '-#', if items must be run in defined order
+  - only.
+  -->
+@par Items:
+
+
+-# @ref level5-ulv-mmap
+-# @ref level5-ulv-nopage
+-# @ref level5-ulv-bad_pktid
+-# @ref level5-ulv-more_pktbufs
+-# @ref level5-ulv-pkt_segments
+-# @ref level5-ulv-bad_ipid
+-# @ref level5-ulv-defrag
+-# @ref level5-ulv-bad_mtu
+-# @ref level5-ulv-bad_timer_state
+-# @ref level5-ulv-timer_callback
+-# @ref level5-ulv-blocking
+-# @ref level5-ulv-aio
+-# @ref level5-ulv-open_sock
+-# @ref level5-ulv-tcp_accept
+-# @ref level5-ulv-tcp_processing
+-# @ref level5-ulv-tcp_close
+-# @ref level5-ulv-udp_rx
+-# @ref level5-ulv-dma
+-# @ref level5-ulv-filters
+-# @ref level5-ulv-random
+
+@}
+
+*/

@@ -1,0 +1,7 @@
+# SPDX-License-Identifier: Apache-2.0
+# (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved.
+# Frequencies is the list of dictionaries. Keys of each dictionary are some
+# set of ools, separated by coma, and the values are frequency of this set
+# Also there can be list of ools which frequencies should be taken from
+# main file with frequencies
+list(any(map(int(), key=any(str(), null())), list(str())))

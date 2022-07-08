@@ -1,0 +1,39 @@
+# SPDX-License-Identifier: Apache-2.0
+# (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved.
+# Main parameters of night testing
+params:
+    # Hosts with medford or medford2 NICs
+    medford_host: list(str())
+    # Hosts with ef100 NICs (SmartNIC)
+    ef100_host: list(str())
+    # Hosts with X3 NICs
+    x3_host: list(str())
+    # Hosts without ipvlan
+    no_ipvlan: list(str())
+    # Hosts with problems with 32-bit agent
+    no_m32: list(str())
+    # Hosts with problems with network namespaces
+    no_netns: list(str())
+    # Hosts on which syscall testing is restricted
+    no_syscall: list(str())
+    # Hosts on which vlan+macvlan or vlan+ipvlan testing is restricted
+    no_vlan_macvlan: list(str())
+    # Hosts on which AF_XDP testing is restricted
+    no_af_xdp: list(str())
+# Dictionary to remove params if they are broken on some hosts
+bad_ool_host: map(value=list(str()), key=str())
+# List of params, each part consists of one or more slices
+parts: list(list(str()))
+# Dictionary of slices
+slices: map(include("slice"), key=str())
+---
+# Atomic slice of socket testing
+slice:
+    # OOL parameters list connected with slice
+    ools: list(str())
+    # List of packages connected with this slice
+    packages: list(str(), required=False)
+    # List of tester reqs connected with this slice
+    reqs: list(str())
+    # List of packages that should be excluded from testing
+    ex_packages: list(str(), required=False)

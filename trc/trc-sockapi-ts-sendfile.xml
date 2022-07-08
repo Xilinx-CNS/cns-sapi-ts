@@ -1,0 +1,959 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. -->
+<test name="sendfile" type="package">
+  <objective>Socket API Test Suite</objective>
+  <notes/>
+  <iter result="PASSED">
+    <notes/>
+    <test name="illegal_params" type="script">
+      <objective>Check sendfile() behavior in case of passing an illegal input/output file descriptors.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="file_length">3476</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="illegal_socket_states" type="script">
+      <objective>Check sendfile() behavior in the case of passing an socket descriptor in illegal state as sendfile() out_fd parameter.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="state">clear</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>sendfile() to a socket in clear state failed with errno EPIPE</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="state">bound</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>sendfile() to a socket in bound state failed with errno EPIPE</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="state">listening</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>sendfile() to a socket in listening state failed with errno EPIPE</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="state">shutdown</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>sendfile() to a socket in shutdown state failed with errno EPIPE</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="state">closed</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="io_descriptors" type="script">
+      <objective>Check sendfile() behavior in case of passing the in/out descriptors for files opened with inappropriate for sendfile() parameters modes.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="file_length">4376</arg>
+        <arg name="dev_name">/dev/null</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>sendfail() called with 'src' file descriptor opened for writing returns -1 with errno EBADF</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="offset_params" type="script">
+      <objective>Check sendfile() behavior in case of passing an illegal offset parameter.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="file_length">5555</arg>
+        <arg name="offset">-1</arg>
+        <arg name="to_send">5555</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="file_length">5555</arg>
+        <arg name="offset">0</arg>
+        <arg name="to_send">5555</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="file_length">5555</arg>
+        <arg name="offset">0</arg>
+        <arg name="to_send">1559</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="file_length">5555</arg>
+        <arg name="offset">4000</arg>
+        <arg name="to_send">1555</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="file_length">5555</arg>
+        <arg name="offset">4000</arg>
+        <arg name="to_send">1</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="file_length">5555</arg>
+        <arg name="offset">5555</arg>
+        <arg name="to_send">0</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="file_length">5555</arg>
+        <arg name="offset">5555</arg>
+        <arg name="to_send">1</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="file_length">5555</arg>
+        <arg name="offset">5556</arg>
+        <arg name="to_send">0</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="file2file" type="script">
+      <objective>Check a possibility of fast copying of ordinary files (no sockets used) by means of sendfile() system call.</objective>
+      <notes>sendfile() to usual file descriptor is not supported in Linux 2.6.</notes>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="file_length">4096</arg>
+        <arg name="use_sendfile"/>
+        <notes/>
+        <results tags="v5" key="ON-5113">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="file_length">12345678</arg>
+        <arg name="use_sendfile"/>
+        <notes/>
+        <results tags="linux-2.6&lt;32" notes="linux-2.6.33 has good splice() support">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="files2file_socket" type="script">
+      <objective>Check a possibility of copying at the same time by means of sendfile() system call with variants: - file to file; - file to socket.</objective>
+      <notes>sendfile() to usual file descriptor is not supported in Linux 2.6.</notes>
+      <iter result="PASSED">
+        <arg name="time2run">20</arg>
+        <arg name="length1">2819200</arg>
+        <arg name="length2">1345600</arg>
+        <arg name="env"/>
+        <notes/>
+        <results tags="linux-2.6&lt;32"
+                 notes="linux-2.6.33 has good splice() support">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+    </test>
+    <test name="f2f_serial" type="script">
+      <objective>Check sendfile() behavior in case of passing the file descriptor of the opened serial device ("/dev/mouse" or "/dev/null", for example) as out_fd parameters.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="dev_name">/dev/efge0</arg>
+        <arg name="env"/>
+        <arg name="exp_errno"/>
+        <arg name="file_length"/>
+        <arg name="use_sendfile">FALSE</arg>
+        <notes/>
+        <results tags="v5">
+          <result value="FAILED">
+            <verdict>open(/dev/efge0, O_WRONLY, 0) failed with errno ENOENT</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="dev_name">/dev/efge0</arg>
+        <arg name="env"/>
+        <arg name="exp_errno"/>
+        <arg name="file_length"/>
+        <arg name="use_sendfile">TRUE</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>open(/dev/efge0, O_WRONLY, 0) failed with errno ENOENT</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="dev_name">/dev/onload</arg>
+        <arg name="env"/>
+        <arg name="exp_errno"/>
+        <arg name="file_length"/>
+        <arg name="use_sendfile">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-5113">
+          <result value="FAILED">
+            <verdict>sendfile() to /dev/onload returns -1, but: errno is set to EOPNOTSUPP instead of EINVAL</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="dev_name">/dev/onload</arg>
+        <arg name="env"/>
+        <arg name="exp_errno"/>
+        <arg name="file_length"/>
+        <arg name="use_sendfile">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;!v5" notes="Test fails when SF char driver is not loaded">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>open(/dev/onload, O_WRONLY, 0) failed with errno ENOENT</verdict>
+          </result>
+        </results>
+        <results tags="!l5-nic|!linux">
+          <result value="FAILED">
+            <verdict>open(/dev/onload, O_WRONLY, 0) failed with errno ENOENT</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="dev_name">/dev/null</arg>
+        <arg name="env"/>
+        <arg name="exp_errno"/>
+        <arg name="file_length"/>
+        <arg name="use_sendfile">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-5113">
+          <result value="FAILED">
+            <verdict>sendfile() to /dev/null failed with errno EOPNOTSUPP</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="dev_name">/dev/null</arg>
+        <arg name="env"/>
+        <arg name="exp_errno"/>
+        <arg name="file_length"/>
+        <arg name="use_sendfile">TRUE</arg>
+        <notes/>
+        <results tags="linux-2.6&lt;32" notes="linux-2.6.33 has good splice() support">
+          <result value="FAILED">
+            <verdict>sendfile() to /dev/null failed with errno EINVAL</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="file2socket" type="script">
+      <objective>Check a possibility of fast copying of a file to a socket by means of sendfile() system call.</objective>
+      <notes>Linux history in Linux 5539</notes>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="file_length">1000</arg>
+        <arg name="offset"/>
+        <arg name="performance"/>
+        <arg name="send_length"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_sendfile">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-5113">
+          <result value="FAILED">
+            <verdict>sendfile() for SOCK_DGRAM destination socket failed with errno EOPNOTSUPP</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="file_length">1000</arg>
+        <arg name="offset"/>
+        <arg name="performance"/>
+        <arg name="send_length"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_sendfile">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-5113">
+          <result value="FAILED">
+            <verdict>sendfile() for SOCK_DGRAM destination socket failed with errno EOPNOTSUPP</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="file_length">1000</arg>
+        <arg name="offset"/>
+        <arg name="performance"/>
+        <arg name="send_length"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_sendfile">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-5113">
+          <result value="FAILED">
+            <verdict>sendfile() for SOCK_DGRAM destination socket failed with errno EOPNOTSUPP</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="file_length">1000</arg>
+        <arg name="offset"/>
+        <arg name="performance"/>
+        <arg name="send_length"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_sendfile">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-5113">
+          <result value="FAILED">
+            <verdict>sendfile() for SOCK_DGRAM destination socket failed with errno EOPNOTSUPP</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="file_length">1000</arg>
+        <arg name="offset"/>
+        <arg name="performance"/>
+        <arg name="send_length"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_sendfile">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="file_length">1000</arg>
+        <arg name="offset"/>
+        <arg name="performance"/>
+        <arg name="send_length"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_sendfile">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="file_length">1000</arg>
+        <arg name="offset"/>
+        <arg name="performance"/>
+        <arg name="send_length"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_sendfile">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="file_length">1000</arg>
+        <arg name="offset"/>
+        <arg name="performance"/>
+        <arg name="send_length"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_sendfile">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="file_length">1000</arg>
+        <arg name="offset"/>
+        <arg name="performance"/>
+        <arg name="send_length"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_sendfile">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-5113">
+          <result value="FAILED">
+            <verdict>sendfile() for SOCK_DGRAM destination socket failed with errno EOPNOTSUPP</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;v5&amp;(linux-2.6&lt;32)&amp;!el" key="ON-30" notes="sendfile() to datagram socket is not supported in V5; good splice() support in latest linux kernels fix this for user">
+          <result value="FAILED">
+            <verdict>sendfile() for SOCK_DGRAM destination socket failed with errno EINVAL</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="file_length">1000</arg>
+        <arg name="offset"/>
+        <arg name="performance"/>
+        <arg name="send_length"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_sendfile">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-5113">
+          <result value="FAILED">
+            <verdict>sendfile() for SOCK_DGRAM destination socket failed with errno EOPNOTSUPP</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;v5&amp;(linux-2.6&lt;32)&amp;!el" key="ON-30" notes="sendfile() to datagram socket is not supported in V5; good splice() support in latest linux kernels fix this for user">
+          <result value="FAILED">
+            <verdict>sendfile() for SOCK_DGRAM destination socket failed with errno EINVAL</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="file_length">1000</arg>
+        <arg name="offset"/>
+        <arg name="performance"/>
+        <arg name="send_length"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_sendfile">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5&amp;(linux-2.6&lt;32)&amp;!el" key="ON-30" notes="sendfile() to datagram socket is not supported in V5; good splice() support in latest linux kernels fix this for user">
+          <result value="FAILED">
+            <verdict>sendfile() for SOCK_DGRAM destination socket failed with errno EINVAL</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="file_length">1000</arg>
+        <arg name="offset"/>
+        <arg name="performance"/>
+        <arg name="send_length"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_sendfile">TRUE</arg>
+        <notes/>
+        <results tags="linux&amp;v5&amp;(linux-2.6&lt;32)&amp;!el" key="ON-30" notes="sendfile() to datagram socket is not supported in V5; good splice() support in latest linux kernels fix this for user">
+          <result value="FAILED">
+            <verdict>sendfile() for SOCK_DGRAM destination socket failed with errno EINVAL</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="file_length"/>
+        <arg name="offset">8193</arg>
+        <arg name="performance"/>
+        <arg name="send_length"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_sendfile"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="file_length"/>
+        <arg name="offset">0</arg>
+        <arg name="performance"/>
+        <arg name="send_length">32768</arg>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_sendfile"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="file_length"/>
+        <arg name="offset"/>
+        <arg name="performance"/>
+        <arg name="send_length">16386</arg>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_sendfile"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="file_length">4095</arg>
+        <arg name="offset"/>
+        <arg name="performance"/>
+        <arg name="send_length"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_sendfile"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="file_length">4096</arg>
+        <arg name="offset"/>
+        <arg name="performance"/>
+        <arg name="send_length">2</arg>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_sendfile"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="file_length"/>
+        <arg name="offset">4095</arg>
+        <arg name="performance"/>
+        <arg name="send_length"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_sendfile">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-5113">
+          <result value="FAILED">
+            <verdict>sendfile() for SOCK_STREAM destination socket failed with errno EOPNOTSUPP</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="file_length">4096</arg>
+        <arg name="offset">0</arg>
+        <arg name="performance"/>
+        <arg name="send_length"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_sendfile"/>
+        <notes/>
+        <results tags="v5" key="ON-5113">
+          <result value="FAILED">
+            <verdict>sendfile() for SOCK_STREAM destination socket failed with errno EOPNOTSUPP</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="file_length">4096</arg>
+        <arg name="offset">1</arg>
+        <arg name="performance"/>
+        <arg name="send_length"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_sendfile"/>
+        <notes/>
+        <results tags="v5" key="ON-5113">
+          <result value="FAILED">
+            <verdict>sendfile() for SOCK_STREAM destination socket failed with errno EOPNOTSUPP</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="file_length">4096</arg>
+        <arg name="offset">2</arg>
+        <arg name="performance"/>
+        <arg name="send_length"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_sendfile"/>
+        <notes/>
+        <results tags="v5" key="ON-5113">
+          <result value="FAILED">
+            <verdict>sendfile() for SOCK_STREAM destination socket failed with errno EOPNOTSUPP</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="file_length">4096</arg>
+        <arg name="offset">3</arg>
+        <arg name="performance"/>
+        <arg name="send_length"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_sendfile"/>
+        <notes/>
+        <results tags="v5" key="ON-5113">
+          <result value="FAILED">
+            <verdict>sendfile() for SOCK_STREAM destination socket failed with errno EOPNOTSUPP</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="file_length">12345678</arg>
+        <arg name="offset"/>
+        <arg name="performance"/>
+        <arg name="send_length"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_sendfile"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="file_length">4097</arg>
+        <arg name="offset"/>
+        <arg name="performance"/>
+        <arg name="send_length"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_sendfile"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="file_length">1048576</arg>
+        <arg name="offset"/>
+        <arg name="performance"/>
+        <arg name="send_length"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_sendfile"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="file_length">4194304</arg>
+        <arg name="offset"/>
+        <arg name="performance"/>
+        <arg name="send_length"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_sendfile"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="file_length">16777216</arg>
+        <arg name="offset"/>
+        <arg name="performance"/>
+        <arg name="send_length"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_sendfile"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="file_length">67108864</arg>
+        <arg name="offset"/>
+        <arg name="performance"/>
+        <arg name="send_length"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_sendfile"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="file_length">268435456</arg>
+        <arg name="offset"/>
+        <arg name="performance"/>
+        <arg name="send_length"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_sendfile"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="largefile2socket" type="script">
+      <objective>Check a possibility of fast copying of a file from high offsets (offset &gt; 2Gb, 4Gb) to a socket by means of sendfile() system call.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="sparse_offset">2147483648</arg>
+        <arg name="payload_length">16385</arg>
+        <arg name="send_offset">0</arg>
+        <arg name="send_length">-1</arg>
+        <arg name="timeout">5</arg>
+        <arg name="performance">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="sparse_offset">2147483648</arg>
+        <arg name="payload_length">16385</arg>
+        <arg name="send_offset">-1</arg>
+        <arg name="send_length">-1</arg>
+        <arg name="timeout">5</arg>
+        <arg name="performance">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="sparse_offset">2147483648</arg>
+        <arg name="payload_length">16385</arg>
+        <arg name="send_offset">-4097</arg>
+        <arg name="send_length">-1</arg>
+        <arg name="timeout">5</arg>
+        <arg name="performance">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="sparse_offset">2147483648</arg>
+        <arg name="payload_length">16385</arg>
+        <arg name="send_offset">4096</arg>
+        <arg name="send_length">-1</arg>
+        <arg name="timeout">5</arg>
+        <arg name="performance">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="sparse_offset">4294967296</arg>
+        <arg name="payload_length">16385</arg>
+        <arg name="send_offset">0</arg>
+        <arg name="send_length">-1</arg>
+        <arg name="timeout">5</arg>
+        <arg name="performance">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="sparse_offset">4294967296</arg>
+        <arg name="payload_length">16385</arg>
+        <arg name="send_offset">-1</arg>
+        <arg name="send_length">-1</arg>
+        <arg name="timeout">5</arg>
+        <arg name="performance">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="sparse_offset">4294967296</arg>
+        <arg name="payload_length">16385</arg>
+        <arg name="send_offset">-4097</arg>
+        <arg name="send_length">-1</arg>
+        <arg name="timeout">5</arg>
+        <arg name="performance">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="sparse_offset">4294967296</arg>
+        <arg name="payload_length">16385</arg>
+        <arg name="send_offset">4096</arg>
+        <arg name="send_length">-1</arg>
+        <arg name="timeout">5</arg>
+        <arg name="performance">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="sparse_offset">6442450944</arg>
+        <arg name="payload_length">1</arg>
+        <arg name="send_offset">-2147489792</arg>
+        <arg name="send_length">16384</arg>
+        <arg name="timeout">5</arg>
+        <arg name="performance">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="sparse_offset">6442450944</arg>
+        <arg name="payload_length">1</arg>
+        <arg name="send_offset">-4294973440</arg>
+        <arg name="send_length">16384</arg>
+        <arg name="timeout">5</arg>
+        <arg name="performance">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="sparse_offset">6442450944</arg>
+        <arg name="payload_length">1</arg>
+        <arg name="send_offset">-16384</arg>
+        <arg name="send_length">16384</arg>
+        <arg name="timeout">5</arg>
+        <arg name="performance">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="sparse_offset">5000000000</arg>
+        <arg name="payload_length">16385</arg>
+        <arg name="send_offset">-4097</arg>
+        <arg name="send_length">20000</arg>
+        <arg name="timeout">5</arg>
+        <arg name="performance">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="sparse_offset">5000000000</arg>
+        <arg name="payload_length">16385</arg>
+        <arg name="send_offset">-4097</arg>
+        <arg name="send_length">32768</arg>
+        <arg name="timeout">5</arg>
+        <arg name="performance">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="sparse_offset">5000000000</arg>
+        <arg name="payload_length">1</arg>
+        <arg name="send_offset">-500000000</arg>
+        <arg name="send_length">500000001</arg>
+        <arg name="timeout">60</arg>
+        <arg name="performance">TRUE</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="f2s_concurrent" type="script">
+      <objective>Check a possibility of fast copying of files to the sockets by means of sendfile() called concurrently.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="length1">4096</arg>
+        <arg name="length2"/>
+        <arg name="time2run"/>
+        <arg name="use_fork"/>
+        <arg name="use_sendfile"/>
+        <notes/>
+        <results tags="v5" key="ON-5113">
+          <result value="FAILED">
+            <verdict>The second sendfile call failed with errno RPC-EOPNOTSUPP</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="length1">12345678</arg>
+        <arg name="length2"/>
+        <arg name="time2run"/>
+        <arg name="use_fork"/>
+        <arg name="use_sendfile"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="f2s_context" type="script">
+      <objective>Check a possibility of copying of two source files to common destination socket by means of sendfile() called in different processes/threads.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="file_length">4096</arg>
+        <arg name="time2run"/>
+        <arg name="use_fork"/>
+        <arg name="use_sendfile"/>
+        <notes/>
+        <results tags="v5" key="ON-5113">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="file_length">12345678</arg>
+        <arg name="time2run"/>
+        <arg name="use_fork"/>
+        <arg name="use_sendfile"/>
+        <notes/>
+      </iter>
+    </test>
+    <test name="f2s_nonblocking" type="script">
+      <objective>Check a behavior of sendfile() if socket descriptor is used as out_fd parameter and socket set to the non-blocking mode.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="time2run">15</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="f2s_sndtimeo" type="script">
+      <objective>Check that when SO_SNDTIMEO option is set for a TCP socket sendfile() completes processing on.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sndtimeo">1</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="f2s_flooder" type="script">
+      <objective>Check a possibility of reliable copying of the file to socket by means of sendfile() system call while some TCP traffic exists.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="time2run">20</arg>
+        <arg name="file_length">12345678</arg>
+        <arg name="use_fork">FALSE</arg>
+        <arg name="env">{{{'pco_iut':IUT,'iut_aux':IUT},addr:'iut1_addr':inet:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},addr:'tst1_addr':inet:unicast,addr:'tst2_addr':inet:unicast}}</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="time2run">20</arg>
+        <arg name="file_length">12345678</arg>
+        <arg name="use_fork">TRUE</arg>
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut1_addr':inet:unicast},{{'pco_tst1':tester},{'pco_tst2':tester},addr:'tst1_addr':inet:unicast,addr:'tst2_addr':inet:unicast}}</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="f2s_flooder2one" type="script">
+      <objective>Check a possibility of copying of the file to the socket by means of sendfile() system call together with some TCP traffic existing on the same socket.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="time2run">20</arg>
+        <arg name="file_length">12345678</arg>
+        <arg name="use_fork">FALSE</arg>
+        <arg name="env">{{{'pco_iut':IUT,'iut_aux':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="time2run">20</arg>
+        <arg name="file_length">12345678</arg>
+        <arg name="use_fork">TRUE</arg>
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="f2s_sendfile2one" type="script">
+      <objective>Check a possibility of copying of the file to the socket by means of sendfile() system call together with backward TCP traffic returned to the same socket.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="time2run">20</arg>
+        <arg name="file_length">12345678</arg>
+        <arg name="use_fork">FALSE</arg>
+        <arg name="env">{{{'pco_iut':IUT,'iut_aux':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="time2run">20</arg>
+        <arg name="file_length">12345678</arg>
+        <arg name="use_fork">TRUE</arg>
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <notes/>
+      </iter>
+    </test>
+    <test name="mtu_sendfile" type="script">
+      <objective>Check correctness of sendfile() processing in the case of decreasing next hop MTU. This test checks correctness of the retransmit queue processing if retr_queue parameter is TRUE.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="retr_queue"/>
+        <notes/>
+        <results tags="v5&amp;scalable_passive" key="ON-5760,ON-8565">
+          <result value="FAILED"/>
+          <result value="PASSED"/>
+        </results>
+      </iter>
+    </test>
+  </iter>
+</test>

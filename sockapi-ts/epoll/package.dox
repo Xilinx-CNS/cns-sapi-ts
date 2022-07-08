@@ -1,0 +1,54 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/**
+
+@defgroup epoll Reliability of epoll functionality
+@ingroup sockapi
+@{
+
+Test suite on reliability of the @b epoll functions.
+
+
+@author Yurij Plotnikov <Yurij.Plotnikov@oktetlabs.ru>
+
+
+@par Tests:
+
+-# @ref epoll-create_close_wait
+-# @ref epoll-derived_epoll
+-# @ref epoll-derived_epoll_add
+-# @ref epoll-derived_epoll_del
+-# @ref epoll-derived_epoll_mod
+-# @ref epoll-edge_level_triggered_both
+-# @ref epoll-edge_level_triggered_et_only
+-# @ref epoll-edge_level_triggered_mod
+-# @ref epoll-edge_triggered_listen
+-# @ref epoll-edge_triggered_refresh
+-# @ref epoll-epfd_in_itself
+-# @ref epoll-epoll_close_on_exec
+-# @ref epoll-epoll_evnt_queue
+-# @ref epoll-epoll_one_shot
+-# @ref epoll-epoll_one_shot_pipe
+-# @ref epoll-epoll_one_shot_out
+-# @ref epoll-epoll_reused_descriptor
+-# @ref epoll-ioctl_on_epfd
+-# @ref epoll-multi_level_iomux
+-# @ref epoll-strange_op_on_epfd
+-# @ref epoll-wait_epollet_wait
+-# @ref epoll-multiple_same_epfd
+-# @ref epoll-epoll_ctl_early
+-# @ref epoll-few_in_events
+-# @ref epoll-edge_triggered_out
+-# @ref epoll-tcp_ack_no_event
+-# @ref epoll-tcp_shutdown
+-# @ref epoll-epollet_early_shot
+-# @ref epoll-epfd_change_stack
+-# @ref epoll-epoll_ctl_thread
+-# @ref epoll-maxevents_two_stacks
+-# @ref epoll-event_order
+-# @ref epoll-create_many_close_all
+-# @ref epoll-small_maxevents
+
+@}
+
+*/
