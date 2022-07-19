@@ -172,7 +172,7 @@ consume_existing_thpages(rcf_rpc_server *pco_iut,
     for (i = 0; i < MAX_THPAGES; i++)
     {
         pco_iut->silent_pass = TRUE;
-        thp_bufs[i] = rpc_memalign(pco_iut, size, size);
+        rpc_posix_memalign(pco_iut, &thp_bufs[i], size, size);
 
         pco_iut->silent_pass = TRUE;
         rpc_madvise(pco_iut, thp_bufs[i], size, RPC_MADV_HUGEPAGE);
@@ -311,7 +311,7 @@ main(int argc, char *argv[])
     }
     else
     {
-        buf_ptr = rpc_memalign(pco_iut, page_size, real_len);
+        rpc_posix_memalign(pco_iut, &buf_ptr, page_size, real_len);
         if (huge_pages == HUGE_PAGES_TRANSPARENT)
             rpc_madvise(pco_iut, buf_ptr, real_len, RPC_MADV_HUGEPAGE);
     }
@@ -406,7 +406,7 @@ main(int argc, char *argv[])
                 TEST_SUBSTEP("If the sum did not increase, try to allocate "
                              "a new buffer, change its contents and "
                              "recheck.");
-                buf_ptr_aux = rpc_memalign(pco_iut, page_size, real_len);
+                rpc_posix_memalign(pco_iut, &buf_ptr_aux, page_size, real_len);
                 rpc_madvise(pco_iut, buf_ptr_aux, real_len,
                             RPC_MADV_HUGEPAGE);
                 rpc_set_buf(pco_iut, &test_byte, 1, buf_ptr_aux);
