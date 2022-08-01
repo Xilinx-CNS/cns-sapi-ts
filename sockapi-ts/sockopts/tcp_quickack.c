@@ -118,6 +118,8 @@ main(int argc, char *argv[])
                                TAD_TIMEOUT_INF, 0,
                                RCF_TRRECV_PACKETS);
 
+    /* On some hosts 500 msec delay is not enough */
+    VSLEEP(1, "wait for CSAP to start");
 
     rpc_setsockopt(pco_iut, iut_s, RPC_TCP_QUICKACK, &opt_val);
     rpc_getsockopt(pco_iut, iut_s, RPC_TCP_QUICKACK, &opt_get);
