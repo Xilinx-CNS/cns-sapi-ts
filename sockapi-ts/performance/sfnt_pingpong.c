@@ -106,6 +106,11 @@ main(int argc, char *argv[])
     tapi_job_factory_rpc_create(pco_iut, &cl_factory);
     tapi_job_factory_rpc_create(pco_tst, &sv_factory);
 
+    /* Kill zombie stacks now to avoid killing them at stack creation moment.
+     * It takes time, and sfnt-pingpong is sensitive to execution time.
+     * See bug 12215.*/
+    sockts_kill_zombie_stacks(pco_iut);
+
     TEST_STEP("Create client and server of sfnt-pingpong");
     CHECK_RC(tapi_sfnt_pp_create(cl_factory, sv_factory,
                                  &opt,  &client, &server));
