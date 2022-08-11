@@ -37,7 +37,6 @@ te_libs = [
     'logger_ten',
     'logic_expr',
     'ndn',
-    'tce',
     'tapi',
     'tapi_bpf',
     'tapi_env',

@@ -14,7 +14,6 @@
 #define TE_TEST_NAME    "epilogue"
 
 #include "sockapi-test.h"
-#include "tce_api.h"
 #include "tapi_proc.h"
 #include "lib-ts_netns.h"
 #include "onload.h"
@@ -133,7 +132,6 @@ main(int argc, char **argv)
     char            name[SOCKTS_LEAK_FNAME_MAX_LEN];
     char            name_p[SOCKTS_LEAK_FNAME_MAX_LEN];
 
-    char           *do_tce = getenv("SF_V5_DO_TCE");
     char           *check_zombie_stacks =
                         getenv("SF_V5_CHECK_ZOMBIE_STACKS");
     char           *kill_zombie_stacks =
@@ -175,9 +173,6 @@ main(int argc, char **argv)
      * 1. avoid Onload acceleration of pco_iut;
      * 2. make sure RPC server is in adequate state. */
     CHECK_RC(rcf_rpc_server_restart(pco_iut));
-
-    if (do_tce != NULL && strcmp(do_tce, "no") != 0)
-        CHECK_RC(tce_retrieve_data(pco_iut));
 
     stop_nfqueue(pco_tst);
 
