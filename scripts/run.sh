@@ -58,7 +58,7 @@ exit 1
 
 L5_RUN=false
 ZF_SHIM_RUN=false
-RUN_OPTS="${RUN_OPTS} --trc-comparison=normalised --build-meson"
+RUN_OPTS="${RUN_OPTS} --trc-comparison=normalised"
 RUN_OPTS="${RUN_OPTS} --sniff-not-feed-conf"
 RUN_OPTS="${RUN_OPTS} --tester-only-req-logues"
 do_item=true
