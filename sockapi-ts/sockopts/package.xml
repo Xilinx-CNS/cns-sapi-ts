@@ -2066,6 +2066,9 @@
                 <req id="SO_REUSEADDR"/>
                 <req id="SOCK_STREAM"/>
                 <!--<req id="ENV-2PEERS"/>-->
+                <!-- ON-12491, Bug 12170: the test inserts the same hw filter twice,
+                     it is incompatible with AF_XDP (at least for now) -->
+                <req id="NO_AF_XDP"/>
             </script>
             <arg name="env">
                 <!-- pco_iut1 and pco_iut2 are in different processes -->
