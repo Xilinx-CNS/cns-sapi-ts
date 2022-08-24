@@ -168,10 +168,9 @@ execute_pattern(int n, rpc_gather_write_f func)
         size += len;
         if (size != size1 + size2)
         {
-            ERROR("Length of data received on the TST %d does not match to"
-                  " length of data sent from IUT");
-            INFO("%d bytes instead %d", size, size1 + size2);
-            TEST_STOP;
+            RING("%d bytes received instead of %d", size, size1 + size2);
+            TEST_VERDICT("Length of data received on the TST does not match to"
+                         " length of data sent from IUT");
         }
     }
     if (iovec_check(tx1, patterns[n].len1, rx_buf, size) < 0)
