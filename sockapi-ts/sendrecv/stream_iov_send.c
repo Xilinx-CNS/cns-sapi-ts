@@ -157,8 +157,9 @@ execute_pattern(int n, rpc_gather_write_f func)
     if (size < size1 + size2)
     {
         int len;
-        
+
         WARN("Not all data are received");
+        TAPI_WAIT_NETWORK;
         len = rpc_read(pco_tst, tst_s, rx_buf + size, sizeof(rx_buf) - size);
         if (len < 0)
         {
