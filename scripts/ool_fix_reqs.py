@@ -11,10 +11,14 @@ parser = argparse.ArgumentParser(
                 'of necessary tester requirements.')
 parser.add_argument("--ools", required=True, type=str,
                     help="Set of OOL options")
+parser.add_argument("--iut_drv", required=True, type=str,
+                    help="Driver name")
+
 args = parser.parse_args()
 
 ools_str = args.ools
 ools = ools_str.split(" ")
+iut_drv = args.iut_drv
 reqs = ""
 
 def ring(msg: str = "") -> None:
