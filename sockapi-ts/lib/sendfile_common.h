@@ -93,7 +93,7 @@
         strncpy(path_name + strlen(path_name), (file_name_),            \
                 sizeof(path_name) - strlen(path_name));                 \
                                                                         \
-        if (tapi_file_ta_unlink_fmt((ta_), path_name) != 0)             \
+        if (tapi_file_ta_unlink_fmt((ta_), "%s", path_name) != 0)       \
         {                                                               \
             result = EXIT_FAILURE;                                      \
         }                                                               \
