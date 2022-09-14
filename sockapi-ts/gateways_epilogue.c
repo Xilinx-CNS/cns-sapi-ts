@@ -17,6 +17,7 @@ int
 main(int argc, char *argv[])
 {
     tapi_route_gateway gw;
+    int af_xdp_zc = 0;
     TAPI_DECLARE_ROUTE_GATEWAY_PARAMS;
 
     TEST_START;
@@ -35,6 +36,13 @@ main(int argc, char *argv[])
     CHECK_RC(sockts_wait_for_if_up(pco_tst, tst_if->if_name));
     CHECK_RC(sockts_wait_for_if_up(pco_gw, gw_iut_if->if_name));
     CHECK_RC(sockts_wait_for_if_up(pco_gw, gw_tst_if->if_name));
+
+    if (tapi_sh_env_get_int(pco_iut, "EF_AF_XDP_ZEROCOPY", &af_xdp_zc) == 0 &&
+        af_xdp_zc == 1)
+    {
+        sockts_recreate_onload_stack(pco_iut);
+        rcf_rpc_server_restart(pco_iut);
+    }
 
     TEST_SUCCESS;
 
