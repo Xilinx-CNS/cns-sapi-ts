@@ -47,6 +47,7 @@ talib_sockapi_ts/onload
 talib_sockapi_ts/extensions_timestamping.h
 talib_sockapi_ts/extensions.h
 talib_sockapi_ts/extensions_zc.h
+talib_sockapi_ts/extensions_zc_hlrx.h
 talib_sockapi_ts/test_intf.h
 talib_sockapi_ts/etherfabric
 talib_sockapi_ts/copied_headers
