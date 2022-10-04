@@ -70,6 +70,7 @@ main(int argc, char *argv[])
     te_bool                operation_done;
     te_bool                l5_fcntl = FALSE;
     te_bool                accept4_found = FALSE;
+    te_bool                use_libc_old = FALSE;
     uint64_t               sent;
 
     fdflag_set_func_type_t nonblock_func = UNKNOWN_SET_FDFLAG;
@@ -125,6 +126,9 @@ main(int argc, char *argv[])
     tst_buf = te_make_buf_by_len(DATA_BULK);
 
     fdflags = rpc_fcntl(pco_iut, iut_s, RPC_F_GETFL, RPC_O_NONBLOCK);
+
+    use_libc_old = pco_iut->use_libc;
+
     if (nonblock_func == FCNTL_SET_FDFLAG)
     {
         if (!l5_fcntl)
@@ -243,6 +247,7 @@ main(int argc, char *argv[])
     TEST_SUCCESS;
 
 cleanup:
+    pco_iut->use_libc = use_libc_old;
     CLEANUP_RPC_CLOSE(pco_tst, tst_s);
     CLEANUP_RPC_CLOSE(pco_iut, iut_s);
 
