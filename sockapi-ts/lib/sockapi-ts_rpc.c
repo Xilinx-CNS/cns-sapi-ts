@@ -67,7 +67,7 @@ rpc_sapi_get_sizeof(rcf_rpc_server *rpcs, const char *type_name)
 
 int
 rpc_send_traffic(rcf_rpc_server *rpcs, int num,
-                 int *s, const void *buf, size_t len,
+                 int *s, const void *buf, tarpc_size_t len,
                  int flags, struct sockaddr *to)
 {
     tarpc_send_traffic_in  in;
@@ -154,7 +154,7 @@ rpc_send_traffic(rcf_rpc_server *rpcs, int num,
 
 int
 rpc_many_sendto(rcf_rpc_server *rpcs, int num,
-                int s, size_t len, int flags,
+                int s, tarpc_size_t len, int flags,
                 const struct sockaddr *to, uint64_t *sent)
 {
     tarpc_many_sendto_in  in;
@@ -328,7 +328,7 @@ rpc_close_and_socket(rcf_rpc_server *rpcs, int fd,
 
 int
 rpc_timely_round_trip(rcf_rpc_server *rpcs, int sock_num, int *s,
-                      size_t size, size_t vector_len,
+                      tarpc_size_t size, tarpc_size_t vector_len,
                       uint32_t timeout, uint32_t time2wait,
                       int flags, int addr_num, struct sockaddr *to)
 {
@@ -453,7 +453,7 @@ rpc_timely_round_trip(rcf_rpc_server *rpcs, int sock_num, int *s,
     
 int
 rpc_round_trip_echoer(rcf_rpc_server *rpcs, int sock_num, int *s,
-                      int addr_num, size_t size, size_t vector_len,
+                      int addr_num, tarpc_size_t size, tarpc_size_t vector_len,
                       uint32_t timeout, int flags)
 {
     int       *ss; 
@@ -571,10 +571,10 @@ blk_aio_mode_rpc2str(tarpc_blocking_aio_mode mode)
  *
  * @return  number of bytes read, otherwise -1 on error.
  */
-ssize_t 
+tarpc_ssize_t
 rpc_aio_read_blk_gen(rcf_rpc_server *rpcs,
-                     int s, void *buf, size_t len,
-                     tarpc_blocking_aio_mode mode, size_t rbuflen)
+                     int s, void *buf, tarpc_size_t len,
+                     tarpc_blocking_aio_mode mode, tarpc_size_t rbuflen)
 {
     tarpc_aio_read_blk_in  in;
     tarpc_aio_read_blk_out out;
@@ -629,9 +629,9 @@ rpc_aio_read_blk_gen(rcf_rpc_server *rpcs,
  *
  * @return Number of bytes received, otherwise -1 when error occured
  */
-ssize_t 
+tarpc_ssize_t
 rpc_aio_write_blk(rcf_rpc_server *rpcs,
-                  int s, const void *buf, size_t len, 
+                  int s, const void *buf, tarpc_size_t len,
                   tarpc_blocking_aio_mode mode)
 {
     tarpc_aio_write_blk_in  in;
@@ -743,7 +743,7 @@ rpc_nested_requests_test(rcf_rpc_server *rpcs, int s, int req_num)
 
 void
 rpc_write_at_offset_continuous(rcf_rpc_server *rpcs, int fd, char* buf,
-                               size_t buflen, off_t offset, uint64_t time)
+                               tarpc_size_t buflen, off_t offset, uint64_t time)
 {
     struct tarpc_write_at_offset_continuous_in  in;
     struct tarpc_write_at_offset_continuous_out out;
@@ -1086,8 +1086,8 @@ rpc_get_socket_from_array(rcf_rpc_server *rpcs, rpc_ptr handle,
 }
 
 int
-rpc_many_recv(rcf_rpc_server *rpcs, int sock, size_t length, int num,
-              int duration, void *last_packet, size_t last_packet_len,
+rpc_many_recv(rcf_rpc_server *rpcs, int sock, tarpc_size_t length, int num,
+              int duration, void *last_packet, tarpc_size_t last_packet_len,
               te_bool count_fails, int *fails_num)
 {
     struct tarpc_many_recv_in  in;
@@ -1119,8 +1119,8 @@ rpc_many_recv(rcf_rpc_server *rpcs, int sock, size_t length, int num,
 }
 
 int
-rpc_many_send_num_func(rcf_rpc_server *rpcs, int sock, size_t length_min,
-                       size_t length_max, int num, int duration,
+rpc_many_send_num_func(rcf_rpc_server *rpcs, int sock, tarpc_size_t length_min,
+                       tarpc_size_t length_max, int num, int duration,
                        const char *func_name, te_bool check_len,
                        te_bool count_fails, int *fails_num)
 {
@@ -1834,9 +1834,9 @@ rpc_onload_zc_unregister_buffers(rcf_rpc_server *rpcs,
 }
 
 /* See description in sockapi-ts_rpc.h */
-ssize_t
+tarpc_ssize_t
 rpc_onload_zc_send_msg_more(rcf_rpc_server *rpcs, int s, rpc_ptr buf,
-                            size_t first_len, size_t second_len,
+                            tarpc_size_t first_len, tarpc_size_t second_len,
                             te_bool first_zc, te_bool second_zc,
                             te_bool use_reg_bufs,
                             te_bool set_nodelay)
@@ -1970,7 +1970,7 @@ onload_zc_mmsg_rpc2str(rcf_rpc_server *rpcs,
                        struct rpc_onload_zc_mmsg *mmsg, te_string *str)
 {
     te_errno rc = 0;
-    size_t i;
+    tarpc_size_t i;
 
     rc = te_string_append(str, "{ ");
     if (rc != 0)
@@ -2461,7 +2461,7 @@ rpc_simple_zc_recv_gen(rcf_rpc_server *rpcs, int s,
 }
 
 /* See description in the sockapi-ts_rpc.h */
-ssize_t
+tarpc_ssize_t
 rpc_simple_hlrx_recv_zc(rcf_rpc_server *rpcs,
                         int s, struct rpc_msghdr *msg,
                         rpc_send_recv_flags flags,
@@ -2532,13 +2532,13 @@ rpc_simple_hlrx_recv_zc(rcf_rpc_server *rpcs,
                  s, msg, msghdr_rpc2str(msg, &str_msg),
                  send_recv_flags_rpc2str(flags),
                  (os_inline ? "TRUE" : "FALSE"),
-                 (ssize_t)(out.retval));
+                 (tarpc_ssize_t)(out.retval));
 
     RETVAL_INT(simple_hlrx_recv_zc, out.retval);
 }
 
 /* See description in the sockapi-ts_rpc.h */
-extern ssize_t
+extern tarpc_ssize_t
 rpc_simple_hlrx_recv_copy(rcf_rpc_server *rpcs,
                           int s, struct rpc_msghdr *msg,
                           rpc_send_recv_flags flags,
@@ -2610,7 +2610,7 @@ rpc_simple_hlrx_recv_copy(rcf_rpc_server *rpcs,
                  s, msg, msghdr_rpc2str(msg, &str_msg),
                  send_recv_flags_rpc2str(flags),
                  (os_inline ? "TRUE" : "FALSE"),
-                 (ssize_t)(out.retval));
+                 (tarpc_ssize_t)(out.retval));
 
     RETVAL_INT(simple_hlrx_recv_copy, out.retval);
 }
@@ -2644,9 +2644,9 @@ rpc_onload_set_recv_filter_capture(rcf_rpc_server *rpcs, int s, int flags)
 }
 
 /* See description in the sockapi-ts_rpc.h */
-ssize_t
+tarpc_ssize_t
 rpc_sockts_recv_filtered_pkt(rcf_rpc_server *rpcs, int s,
-                             char *buf, size_t len)
+                             char *buf, tarpc_size_t len)
 {
     tarpc_sockts_recv_filtered_pkt_in  in;
     tarpc_sockts_recv_filtered_pkt_out out;
@@ -2706,7 +2706,7 @@ rpc_sockts_recv_filtered_pkts_clear(rcf_rpc_server *rpcs)
 
 int
 rpc_simple_set_recv_filter(rcf_rpc_server *rpcs, int s, const void *buf,
-                           size_t len, int flags)
+                           tarpc_size_t len, int flags)
 {
     tarpc_simple_set_recv_filter_in  in;
     tarpc_simple_set_recv_filter_out out;
@@ -2738,10 +2738,10 @@ rpc_simple_set_recv_filter(rcf_rpc_server *rpcs, int s, const void *buf,
 }
 
 void
-iov_h2rpc(struct tarpc_iovec* iov_arr, const rpc_iovec* iov, size_t iovcnt,
+iov_h2rpc(struct tarpc_iovec* iov_arr, const rpc_iovec* iov, tarpc_size_t iovcnt,
           char *strbuf, int strbuf_len)
 {
-    size_t i;
+    tarpc_size_t i;
 
     memset(strbuf, 0, strbuf_len);
     snprintf(strbuf, strbuf_len, "{");
@@ -2774,7 +2774,7 @@ static int
 rpc_onload_msg_template_in_init(tarpc_onload_msg_template_alloc_in *in,
                                 rcf_rpc_server *rpcs, int fd,
                                 struct tarpc_iovec *iov_arr, rpc_iovec* iov,
-                                size_t iovcnt, size_t riovcnt,
+                                tarpc_size_t iovcnt, tarpc_size_t riovcnt,
                                 rpc_onload_template_handle* handle,
                                 int flags)
 {
@@ -2815,7 +2815,7 @@ rpc_onload_msg_template_in_init(tarpc_onload_msg_template_alloc_in *in,
 /* See description in the sockapi-ts_rpc.h */
 int
 rpc_onload_msg_template_alloc_gen(rcf_rpc_server *rpcs, int fd,
-                              rpc_iovec* iov, size_t iovcnt, size_t riovcnt,
+                              rpc_iovec* iov, tarpc_size_t iovcnt, tarpc_size_t riovcnt,
                               rpc_onload_template_handle* handle,
                               int flags)
 {
@@ -2878,13 +2878,13 @@ int
 rpc_onload_msg_template_update_gen(rcf_rpc_server *rpcs, int fd,
                               rpc_onload_template_handle handle,
                               rpc_onload_template_msg_update_iovec *updates,
-                              size_t iovcnt, size_t riovcnt, int flags)
+                              tarpc_size_t iovcnt, tarpc_size_t riovcnt, int flags)
 {
     tarpc_onload_msg_template_update_in     in;
     tarpc_onload_msg_template_update_out    out;
     tarpc_onload_template_msg_update_iovec  upd_arr[RCF_RPC_MAX_IOVEC];
 
-    size_t  i;
+    tarpc_size_t  i;
 
     memset(&in, 0, sizeof(in));
     memset(&out, 0, sizeof(out));
@@ -2938,7 +2938,7 @@ rpc_onload_msg_template_update_gen(rcf_rpc_server *rpcs, int fd,
 /* See description in the sockapi-ts_rpc.h */
 int
 rpc_template_send(rcf_rpc_server *rpcs, int fd, rpc_iovec* iov,
-                  size_t iovcnt, size_t riovcnt, int flags)
+                  tarpc_size_t iovcnt, tarpc_size_t riovcnt, int flags)
 {
     tarpc_template_send_in  in;
     tarpc_template_send_out out;
@@ -3014,7 +3014,7 @@ rpc_popen_flooder_toggle(rcf_rpc_server *rpcs, te_bool enable)
 static void
 oo_epollevt2str(struct rpc_epoll_event *evts,
                 rpc_onload_ordered_epoll_event *oo_events,
-                int n_evts, char *buf, size_t buflen)
+                int n_evts, char *buf, tarpc_size_t buflen)
 {
     int i;
     int rc;
@@ -3027,7 +3027,7 @@ oo_epollevt2str(struct rpc_epoll_event *evts,
 
     do {
         rc = snprintf(buf, buflen, "{");
-        if ((size_t)rc > buflen)
+        if ((tarpc_size_t)rc > buflen)
             break;
         buflen -= rc;
         buf += rc;
@@ -3039,13 +3039,13 @@ oo_epollevt2str(struct rpc_epoll_event *evts,
                           (long)oo_events[i].ts.tv_sec,
                           oo_events[i].ts.tv_nsec,
                           epoll_event_rpc2str(evts[i].events));
-            if ((size_t)rc > buflen)
+            if ((tarpc_size_t)rc > buflen)
                 break;
             buflen -= rc;
             buf += rc;
         }
         rc = snprintf(buf, buflen, "}");
-        if ((size_t)rc > buflen)
+        if ((tarpc_size_t)rc > buflen)
             break;
         buflen -= rc;
         buf += rc;
@@ -3145,8 +3145,8 @@ rpc_onload_ordered_epoll_wait_gen(rcf_rpc_server *rpcs, int epfd,
 int rpc_send_msg_warm_flow(rcf_rpc_server *rpcs,
                            const char *func_name,
                            int fd1, int fd2,
-                           size_t buf_size_min,
-                           size_t buf_size_max,
+                           tarpc_size_t buf_size_min,
+                           tarpc_size_t buf_size_max,
                            unsigned int time2run,
                            uint64_t *sent1, uint64_t *sent2)
 {
@@ -3197,8 +3197,8 @@ int rpc_send_msg_warm_flow(rcf_rpc_server *rpcs,
 /* See decription in sockapi-ts_rpc.h */
 int
 rpc_many_send_cork(rcf_rpc_server *rpcs, int fd, int fd_aux,
-                   size_t size_min, size_t size_max, size_t send_num,
-                   size_t length, int send_usleep, te_bool tcp_nodelay,
+                   tarpc_size_t size_min, tarpc_size_t size_max, tarpc_size_t send_num,
+                   tarpc_size_t length, int send_usleep, te_bool tcp_nodelay,
                    te_bool no_trigger)
 {
     tarpc_many_send_cork_in  in;
@@ -3233,9 +3233,9 @@ rpc_many_send_cork(rcf_rpc_server *rpcs, int fd, int fd_aux,
 }
 
 /* See decription in sockapi-ts_rpc.h */
-ssize_t
+tarpc_ssize_t
 rpc_recv_timing(rcf_rpc_server *rpcs, int fd, int fd_aux,
-                size_t length, uint64_t *duration)
+                tarpc_size_t length, uint64_t *duration)
 {
     tarpc_recv_timing_in  in;
     tarpc_recv_timing_out out;
@@ -3474,7 +3474,7 @@ static const char *recv_func2str(tarpc_recv_function f)
 int
 rpc_send_var_size(rcf_rpc_server *rpcs,
                   tarpc_send_function send_func,
-                  int s, size_t len,
+                  int s, tarpc_size_t len,
                   rpc_send_recv_flags flags,
                   const struct sockaddr *addr)
 {
@@ -3511,7 +3511,7 @@ rpc_send_var_size(rcf_rpc_server *rpcs,
 int
 rpc_recv_var_size(rcf_rpc_server *rpcs,
                   tarpc_recv_function recv_func,
-                  int s, size_t len,
+                  int s, tarpc_size_t len,
                   rpc_send_recv_flags flags)
 {
     tarpc_recv_var_size_in in;
@@ -3567,7 +3567,7 @@ rpc_sockts_alloc_send_func_ctx(rcf_rpc_server *rpcs)
 int
 rpc_sockts_send_func_ctx_init_zc_buf(rcf_rpc_server *rpcs,
                                      rpc_ptr ctx, int fd,
-                                     size_t buf_size)
+                                     tarpc_size_t buf_size)
 {
     tarpc_sockts_send_func_ctx_init_zc_buf_in     in;
     tarpc_sockts_send_func_ctx_init_zc_buf_out    out;
