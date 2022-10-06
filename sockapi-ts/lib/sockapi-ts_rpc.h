@@ -96,7 +96,7 @@ extern int rpc_send_traffic(rcf_rpc_server *handle, int num, int *s,
  * @return   -1 in the case of failure or 0 on success
  */
 extern int rpc_many_send(rcf_rpc_server *handle, int sock, int flags,
-                         const int *vector, int nops, uint64_t *sent);
+                         const tarpc_size_t *vector, int nops, uint64_t *sent);
 
 /**
  * Execute a number of sendto() operation each after other with no delay.

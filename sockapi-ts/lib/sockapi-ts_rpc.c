@@ -198,7 +198,7 @@ rpc_many_sendto(rcf_rpc_server *rpcs, int num,
 
 int
 rpc_many_send(rcf_rpc_server *rpcs, int sock, int flags,
-              const int *vector, int nops, uint64_t *sent)
+              const tarpc_size_t *vector, int nops, uint64_t *sent)
 {
     tarpc_many_send_in  in;
     tarpc_many_send_out out;
