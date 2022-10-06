@@ -191,7 +191,7 @@ main(int argc, char *argv[])
     csap_handle_t              csap = CSAP_INVALID_HANDLE;
     unsigned int               received_packets_number = 0;
     unsigned int               i;
-    int                        send_length[MAX_PACKETS_NUM];
+    tarpc_size_t               send_length[MAX_PACKETS_NUM];
     uint64_t                   sent;
     te_bool                    remove_cork = FALSE;
     te_bool                    set_maxseg = FALSE;
