@@ -190,5 +190,12 @@ ol_create_and_connect_socket(ol_connection_type conn_type, int sock_type,
 void
 ol_hex_diff_dump(const uint8_t  *ex_pkt, const uint8_t *rx_pkt, size_t size)
 {
-    te_hex_diff_dump(ex_pkt, rx_pkt, size, puts);
+    te_string buf = TE_STRING_INIT;
+
+    te_hex_diff_dump(ex_pkt, size, rx_pkt, size, 0, &buf);
+    fputs(buf.ptr, stdout);
+    if (buf.len == 0 || buf.ptr[buf.len - 1] != '\n')
+        fputc('\n', stdout);
+
+    te_string_free(&buf);
 }
