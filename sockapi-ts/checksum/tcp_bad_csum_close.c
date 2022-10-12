@@ -155,7 +155,7 @@ main(int argc, char *argv[])
         if (rc != 0)
             TEST_VERDICT("recv() on IUT returned non-zero");
 
-        rpc_close(pco_iut, iut_s);
+        RPC_CLOSE(pco_iut, iut_s);
         tapi_tcp_wait_packet(tcp_conn, TAPI_WAIT_NETWORK_DELAY);
         tapi_tcp_ack_all(tcp_conn);
         TAPI_WAIT_NETWORK;
@@ -177,5 +177,6 @@ cleanup:
     CLEANUP_CHECK_RC(tapi_update_arp(pco_iut->ta, iut_if->if_name,
                                      pco_tst->ta, tst_if->if_name,
                                      tst_addr, NULL, FALSE));
+    CLEANUP_RPC_CLOSE(pco_iut, iut_s);
     TEST_END;
 }
