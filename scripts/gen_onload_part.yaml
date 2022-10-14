@@ -4,7 +4,7 @@ params:
   medford_host: [elrond, hurin, bifur, olorin, loni, balin, farin, nali, frar, fili,
     fror, fundin, mim, nar, oin, gloin]
   ef100_host: [xce-fpgahost18, xce-fpgahost18-soc]
-  x3_host: [cmod-x3sim-ub1804, dellr220ae]
+  x3_host: [cmod-x3sim-ub1804, dellr220ae, dellr250e, dellr250g]
   no_ipvlan: [floi, frar]
   no_m32: [xce-fpgahost18-soc]
   no_netns: []

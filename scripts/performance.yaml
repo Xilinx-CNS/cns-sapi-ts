@@ -32,6 +32,9 @@ frar:    [fw_low_latency, nopio, phys_mode]
 fundin:  [fw_low_latency]
 nxp02:   [fw_low_latency]
 dellr410g:  [fw_low_latency]
+dellr250i:  [fw_low_latency]
+dellr250k:  [fw_low_latency]
+dellr250m:  [fw_low_latency]
 
 # Folloing parameters were stolen from ool_params_freqs:
 # scooby;high_throughput
