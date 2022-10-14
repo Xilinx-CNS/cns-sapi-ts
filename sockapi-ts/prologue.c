@@ -487,7 +487,7 @@ copy_lib_for_zfshim()
     val_type = CVT_STRING;
     CHECK_RC(cfg_get_instance_fmt(&val_type, &agt_dir, "/agent:%s/dir:",
                                   ta));
-    CHECK_RC(te_string_append(&dst, "%s/libonload_zf.so", agt_dir));
+    CHECK_RC(te_string_append(&dst, "%s/libonload_zf.so.1", agt_dir));
 
     /*
      * Zetaferno has a separate repo after onload-8.0 release.
