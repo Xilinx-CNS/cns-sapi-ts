@@ -144,7 +144,7 @@ main(int argc, char *argv[])
         TEST_FAIL("Only %d bytes of data sent from 'tst_s' socket",
                   rc);
     }
-    MSLEEP(100);
+    TAPI_WAIT_NETWORK;
 
     for (i = 0; i < (buf1_len - 1); i++)
     {
@@ -226,7 +226,7 @@ main(int argc, char *argv[])
         TEST_FAIL("Only %d bytes of data sent from 'tst_s' socket",
                    rc);
     }
-    MSLEEP(100);
+    TAPI_WAIT_NETWORK;
 
     for (i = 0; i < (buf2_len - 1); i++)
     {
