@@ -1838,6 +1838,7 @@ sockts_share_socket_2proc(rcf_rpc_server *rpcs1, rcf_rpc_server *rpcs2,
     int                 rpcs1_us = -1;
     int                 rpcs2_us = -1;
     struct sockaddr_un  us_addr;
+    te_string           us_path = TE_STRING_BUF_INIT(us_addr.sun_path);
     char                rmcmd[sizeof(us_addr.sun_path) + 4];
 
     memset(&msg, 0, sizeof(msg));
@@ -1850,8 +1851,7 @@ sockts_share_socket_2proc(rcf_rpc_server *rpcs1, rcf_rpc_server *rpcs2,
                          RPC_PROTO_DEF);
 
     us_addr.sun_family = AF_UNIX;
-    snprintf(us_addr.sun_path, sizeof(us_addr.sun_path),
-             "/tmp/%s_share_usocket", tapi_file_generate_name());
+    tapi_file_make_custom_pathname(&us_path, "/tmp", "_share_usocket");
 
     rpc_bind(rpcs2, rpcs2_us, (struct sockaddr *)&us_addr);
     rpc_connect(rpcs1, rpcs1_us, (struct sockaddr *)&us_addr);
