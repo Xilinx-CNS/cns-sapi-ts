@@ -200,7 +200,7 @@ fi
 if test "x$SFC_ONLOAD_LOCAL" == "xyes" ; then
     mkdir -p "${SOCKAPI_TS_LIBDIR}/talib_sockapi_ts/copied_headers"
 fi
-for header in extensions.h extensions_zc.h extensions_timestamping.h \
+for header in extensions.h extensions_zc.h extensions_timestamping.h extensions_zc_hlrx.h\
     test_intf.h ; do
     dst_name="${SOCKAPI_TS_LIBDIR}/talib_sockapi_ts/${header}"
     if test "x$SFC_ONLOAD_LOCAL" == "xyes" ; then

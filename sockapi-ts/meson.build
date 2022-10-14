@@ -89,6 +89,9 @@ foreach h : oo_extensions_h
     if cc.has_header_symbol('extensions_zc.h', h, include_directories: talib_dir)
          add_project_arguments('-D' + have_decl + '=1', language: 'c')
     endif
+    if cc.has_header_symbol('extensions_zc_hlrx.h', h, include_directories: talib_dir)
+         add_project_arguments('-D' + have_decl + '=1', language: 'c')
+    endif
 endforeach
 
 lib_dir = include_directories('lib', onload_tslib_dir)
