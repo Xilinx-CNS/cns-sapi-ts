@@ -130,7 +130,8 @@ main(int argc, char *argv[])
            events[0].revents == (EVT_EXC | EVT_NVAL) &&
            events[1].revents == 0) ||
           ((iomux != IC_POLL && iomux != IC_PPOLL) &&
-           events[0].revents == 0 && events[1].revents == EVT_RD)))
+           ((events[0].revents == 0 && events[1].revents == EVT_RD) ||
+           (events[1].revents == 0 && events[0].revents == EVT_RD)))))
     {
         TEST_FAIL("Incorrect events have been reported.");
     }
