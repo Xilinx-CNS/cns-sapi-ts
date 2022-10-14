@@ -1116,7 +1116,9 @@
             <arg name="opening">
                 <value>active</value>
                 <value>passive_open</value>
-                <value>passive_close</value>
+                <!-- There is no analogue for 'onload_stackdump netstat'
+                     in zf_stackdump -->
+                <value reqs="ZF_INCOMPATIBLE">passive_close</value>
             </arg>
         </run>
 
