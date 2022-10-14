@@ -80,6 +80,10 @@
 #include <sys/mman.h>
 #endif
 
+#ifdef HAVE_EXTENSIONS_ZC_HLRX_H
+#include "extensions_zc_hlrx.h"
+#endif
+
 #include <ifaddrs.h>
 
 #include "extensions.h"

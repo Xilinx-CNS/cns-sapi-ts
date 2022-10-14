@@ -90,6 +90,7 @@ foreach h : oo_extensions_h
     have_decl = 'HAVE_DECL_' + h.to_upper().underscorify()
     if cc.has_header_symbol('extensions_zc_hlrx.h', h, include_directories: talib_dir)
         c_args += [ '-D' + have_decl + '=1' ]
+        c_args += [ '-DHAVE_EXTENSIONS_ZC_HLRX_H=1']
     endif
     if cc.has_header_symbol('extensions_zc.h', h, include_directories: talib_dir)
         c_args += [ '-D' + have_decl + '=1' ]
