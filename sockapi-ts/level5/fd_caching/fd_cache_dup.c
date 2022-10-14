@@ -95,6 +95,7 @@ dup_unix(rcf_rpc_server *rpcs, int sock)
     int                 rpcs1_us = -1;
     int                 rpcs2_us = -1;
     struct sockaddr_un  us_addr;
+    te_string           us_filename = TE_STRING_BUF_INIT(us_addr.sun_path);
 
     memset(&msg, 0, sizeof(msg));
     memset(&us_addr, 0, sizeof(us_addr));
@@ -106,8 +107,7 @@ dup_unix(rcf_rpc_server *rpcs, int sock)
                          RPC_PROTO_DEF);
 
     us_addr.sun_family = AF_UNIX;
-    snprintf(us_addr.sun_path, sizeof(us_addr.sun_path),
-             "/tmp/%s_share_usocket", tapi_file_generate_name());
+    tapi_file_make_custom_pathname(&us_filename, "/tmp", "_share_usocket");
 
     rpc_bind(rpcs, rpcs2_us, (struct sockaddr *)&us_addr);
     rpc_connect(rpcs, rpcs1_us, (struct sockaddr *)&us_addr);

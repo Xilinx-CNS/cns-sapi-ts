@@ -62,7 +62,7 @@ main(int argc, char *argv[])
     struct cmsghdr *cmsg_tx;
     struct cmsghdr *cmsg_rx;
     struct sockaddr_un us_addr;
-    char *us_file_name = NULL;
+    te_string us_file_name = TE_STRING_BUF_INIT(us_addr.sun_path);
 
     void *tx_buf = NULL;
     void *rx_buf = NULL;
@@ -121,8 +121,7 @@ main(int argc, char *argv[])
                          RPC_PROTO_DEF);
 
     us_addr.sun_family = AF_UNIX;
-    us_file_name = tapi_file_generate_name();
-    strncpy(us_addr.sun_path, us_file_name, sizeof(us_addr.sun_path));
+    tapi_file_make_name(&us_file_name);
 
     rpc_bind(pco_iut2, iut2_us, (struct sockaddr *)&us_addr);
 

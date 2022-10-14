@@ -101,7 +101,7 @@ main(int argc, char *argv[])
     te_bool is_shutdown_close_func = FALSE;
     te_bool is_send_recv_func = FALSE;
 
-    char *sendfile_fn = NULL;
+    te_string sendfile_fn = TE_STRING_INIT;
     int sendfile_fd = -1;
     te_bool file_created = FALSE;
 
@@ -123,8 +123,8 @@ main(int argc, char *argv[])
     {
         TEST_STEP("If @p test_func is @b sendfile(), create a file "
                   "on IUT to send.");
-        CHECK_NOT_NULL(sendfile_fn = tapi_file_generate_name());
-        RPC_FOPEN_D(sendfile_fd, pco_iut, sendfile_fn,
+        tapi_file_make_name(&sendfile_fn);
+        RPC_FOPEN_D(sendfile_fd, pco_iut, sendfile_fn.ptr,
                     RPC_O_RDWR | RPC_O_CREAT, 0);
         file_created = TRUE;
         rpc_write(pco_iut, sendfile_fd, send_data, PKT_LEN);
@@ -577,7 +577,7 @@ cleanup:
     CLEANUP_RPC_CLOSE(pco_tst, tst_s);
 
     if (file_created)
-        REMOVE_REMOTE_FILE(pco_iut->ta, sendfile_fn);
+        REMOVE_REMOTE_FILE(pco_iut->ta, sendfile_fn.ptr);
 
     TEST_END;
 }
