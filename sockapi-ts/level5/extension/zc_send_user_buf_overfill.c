@@ -166,7 +166,7 @@ main(int argc, char *argv[])
               "of size which is multiple of system page size and is "
               "larger than available space in send socket buffer on IUT "
               "plus receive socket buffer on Tester.");
-    buf_ptr = rpc_memalign(pco_iut, sys_page_size, alloc_size);
+    rpc_posix_memalign(pco_iut, &buf_ptr, sys_page_size, alloc_size);
 
     TEST_STEP("Register the allocated buffer with "
               "@b onload_zc_register_buffers().");

@@ -460,7 +460,7 @@ main(int argc, char *argv[])
 
     CHECK_NOT_NULL(localfile = tapi_file_create(DATA_BULK, pattern, TRUE));
 
-    CHECK_RC(tapi_file_create_ta(pco_iut->ta, "/tmp/.netrc",
+    CHECK_RC(tapi_file_create_ta(pco_iut->ta, "/tmp/.netrc", "%s",
                                  "default login anonymous password foobar"));
     TMP_FILE(pco_iut->ta, "/tmp/.netrc");
 

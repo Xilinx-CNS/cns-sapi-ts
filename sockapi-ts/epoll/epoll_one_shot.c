@@ -164,7 +164,7 @@ main(int argc, char *argv[])
         else
         {
 #define UDP_SEND_PACKETS 10000
-            int         vector[UDP_SEND_PACKETS];
+            tarpc_size_t vector[UDP_SEND_PACKETS];
             uint64_t    size;
             int         i;
 

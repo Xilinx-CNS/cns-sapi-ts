@@ -29,7 +29,10 @@ subdir('lib')
 # Build apps
 apps = [
     'apprtt',
-    'ceph',
+    # ol-ceph tool contains original ceph headers which break sapi-ts building
+    # with gcc 11.3.0. We do not want to maintain ceph headers, so just disable
+    # the ol-ceph building.
+    # 'ceph',
     'nfq_daemon',
 ]
 

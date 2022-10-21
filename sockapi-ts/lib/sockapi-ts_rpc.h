@@ -79,7 +79,7 @@ extern tarpc_ssize_t rpc_sapi_get_sizeof(rcf_rpc_server *rpcs,
  * @return 0 in case of success, -1 in case of failure
  */ 
 extern int rpc_send_traffic(rcf_rpc_server *handle, int num, int *s,
-                            const void *buf, size_t len, int flags,
+                            const void *buf, tarpc_size_t len, int flags,
                             struct sockaddr *to);
 
 /**
@@ -96,7 +96,7 @@ extern int rpc_send_traffic(rcf_rpc_server *handle, int num, int *s,
  * @return   -1 in the case of failure or 0 on success
  */
 extern int rpc_many_send(rcf_rpc_server *handle, int sock, int flags,
-                         const int *vector, int nops, uint64_t *sent);
+                         const tarpc_size_t *vector, int nops, uint64_t *sent);
 
 /**
  * Execute a number of sendto() operation each after other with no delay.
@@ -111,7 +111,7 @@ extern int rpc_many_send(rcf_rpc_server *handle, int sock, int flags,
  *
  * @return   -1 in the case of failure or 0 on success
  */
-extern int rpc_many_sendto(rcf_rpc_server *rpcs, int num, int s, size_t len,
+extern int rpc_many_sendto(rcf_rpc_server *rpcs, int num, int s, tarpc_size_t len,
                            int flags, const struct sockaddr *to,
                            uint64_t *sent);
 /**
@@ -143,7 +143,7 @@ extern int rpc_many_sendto(rcf_rpc_server *rpcs, int num, int s, size_t len,
  *                             (memory allocation etc.)
  */ 
 extern int rpc_timely_round_trip(rcf_rpc_server *rpcs, int sock_num, int *s,
-                                 size_t size, size_t vector_len,
+                                 tarpc_size_t size, tarpc_size_t vector_len,
                                  uint32_t timeout, uint32_t time2wait,
                                  int flags, int addr_num, 
                                  struct sockaddr *to);
@@ -173,8 +173,8 @@ extern int rpc_timely_round_trip(rcf_rpc_server *rpcs, int sock_num, int *s,
  *                              (memory allocation etc.)
  */ 
 extern int rpc_round_trip_echoer(rcf_rpc_server *rpcs, int sock_num, int *s,
-                                 int addr_num, size_t size, 
-                                 size_t vector_len,
+                                 int addr_num, tarpc_size_t size,
+                                 tarpc_size_t vector_len,
                                  uint32_t timeout, int flags);
 
 /**
@@ -230,10 +230,10 @@ extern int rpc_close_and_socket(rcf_rpc_server *rpcs, int fd,
  *
  * @return  number of bytes read, otherwise -1 on error.
  */
-extern ssize_t rpc_aio_read_blk_gen(rcf_rpc_server *rpcs,
-                                    int s, void *buf, size_t len,
+extern tarpc_ssize_t rpc_aio_read_blk_gen(rcf_rpc_server *rpcs,
+                                    int s, void *buf, tarpc_size_t len,
                                     tarpc_blocking_aio_mode mode, 
-                                    size_t rbuflen);
+                                    tarpc_size_t rbuflen);
 
 /**
  * Emulate blocking reading using AIO requests.
@@ -246,9 +246,9 @@ extern ssize_t rpc_aio_read_blk_gen(rcf_rpc_server *rpcs,
  *
  * @return Number of bytes received, otherwise -1 when error occured
  */
-static inline ssize_t
+static inline tarpc_ssize_t
 rpc_aio_read_blk(rcf_rpc_server *rpcs,
-                 int s, void *buf, size_t len, tarpc_blocking_aio_mode mode)
+                 int s, void *buf, tarpc_size_t len, tarpc_blocking_aio_mode mode)
 {
     return rpc_aio_read_blk_gen(rpcs, s, buf, len, mode, len);
 }
@@ -264,8 +264,8 @@ rpc_aio_read_blk(rcf_rpc_server *rpcs,
  *
  * @return Number of bytes received, otherwise -1 when error occured
  */
-extern ssize_t rpc_aio_write_blk(rcf_rpc_server *rpcs,
-                                 int s, const void *buf, size_t len, 
+extern tarpc_ssize_t rpc_aio_write_blk(rcf_rpc_server *rpcs,
+                                 int s, const void *buf, tarpc_size_t len,
                                  tarpc_blocking_aio_mode mode);
 
 /**
@@ -304,7 +304,7 @@ extern int rpc_nested_requests_test(rcf_rpc_server *rpcs,
  * @return size of data written
  */
 extern void rpc_write_at_offset_continuous(rcf_rpc_server *rpcs, int fd,
-                                           char* buf, size_t buflen,
+                                           char* buf, tarpc_size_t buflen,
                                            off_t offset, uint64_t time);
 
 #if 0
@@ -494,9 +494,9 @@ extern int rpc_get_socket_from_array(rcf_rpc_server *rpcs, rpc_ptr handle,
  * 
  * @return Received packets number or @c -1 in case of failure
  */
-extern int rpc_many_recv(rcf_rpc_server *rpcs, int sock, size_t length, 
+extern int rpc_many_recv(rcf_rpc_server *rpcs, int sock, tarpc_size_t length,
                          int num, int duration, void *last_packet,
-                         size_t last_packet_len, te_bool count_fails,
+                         tarpc_size_t last_packet_len, te_bool count_fails,
                          int *fails_num);
 
 
@@ -517,7 +517,7 @@ extern int rpc_many_recv(rcf_rpc_server *rpcs, int sock, size_t length,
  * @return Sent packets number or @c -1 in case of failure
  */
 extern int rpc_many_send_num_func(rcf_rpc_server *rpcs, int sock,
-                                  size_t length_min, size_t length_max,
+                                  tarpc_size_t length_min, tarpc_size_t length_max,
                                   int num, int duration,
                                   const char *func_name, te_bool check_len,
                                   te_bool count_fails, int *fails_num);
@@ -537,7 +537,7 @@ extern int rpc_many_send_num_func(rcf_rpc_server *rpcs, int sock,
  * @return Sent packets number or @c -1 in case of failure
  */
 static inline int
-rpc_many_send_num(rcf_rpc_server *rpcs, int sock, size_t length, int num,
+rpc_many_send_num(rcf_rpc_server *rpcs, int sock, tarpc_size_t length, int num,
                   int duration, te_bool check_len, te_bool count_fails,
                   int *fails_num)
 {
@@ -917,9 +917,9 @@ extern int rpc_onload_zc_unregister_buffers(rcf_rpc_server *rpcs,
  *
  * @return On succes, number of bytes actually sent, otherwise -1.
  */
-extern ssize_t rpc_onload_zc_send_msg_more(rcf_rpc_server *rpcs, int s,
-                                           rpc_ptr buf, size_t first_len,
-                                           size_t second_len,
+extern tarpc_ssize_t rpc_onload_zc_send_msg_more(rcf_rpc_server *rpcs, int s,
+                                           rpc_ptr buf, tarpc_size_t first_len,
+                                           tarpc_size_t second_len,
                                            te_bool first_zc,
                                            te_bool second_zc,
                                            te_bool use_reg_bufs,
@@ -1285,7 +1285,7 @@ rpc_simple_zc_recv_acc(rcf_rpc_server *rpcs, int s, struct rpc_msghdr *msg,
  *
  * @return Number of received bytes on success, @c -1 on failure.
  */
-extern ssize_t rpc_simple_hlrx_recv_zc(rcf_rpc_server *rpcs,
+extern tarpc_ssize_t rpc_simple_hlrx_recv_zc(rcf_rpc_server *rpcs,
                                        int s, struct rpc_msghdr *msg,
                                        rpc_send_recv_flags flags,
                                        te_bool os_inline);
@@ -1302,7 +1302,7 @@ extern ssize_t rpc_simple_hlrx_recv_zc(rcf_rpc_server *rpcs,
  *
  * @return Number of received bytes on success, @c -1 on failure.
  */
-extern ssize_t rpc_simple_hlrx_recv_copy(rcf_rpc_server *rpcs,
+extern tarpc_ssize_t rpc_simple_hlrx_recv_copy(rcf_rpc_server *rpcs,
                                          int s, struct rpc_msghdr *msg,
                                          rpc_send_recv_flags flags,
                                          te_bool os_inline);
@@ -1332,8 +1332,8 @@ extern int rpc_onload_set_recv_filter_capture(rcf_rpc_server *rpcs, int s,
  *
  * @return Number of bytes in packet on success, @c -1 on failure.
  */
-extern ssize_t rpc_sockts_recv_filtered_pkt(rcf_rpc_server *rpcs, int s,
-                                            char *buf, size_t len);
+extern tarpc_ssize_t rpc_sockts_recv_filtered_pkt(rcf_rpc_server *rpcs, int s,
+                                            char *buf, tarpc_size_t len);
 
 /**
  * Clear a queue of packets captured with UDP-RX filter.
@@ -1346,7 +1346,7 @@ extern int rpc_sockts_recv_filtered_pkts_clear(rcf_rpc_server *rpcs);
 
 extern int
 rpc_simple_set_recv_filter(rcf_rpc_server *rpcs, int s, const void *buf,
-                           size_t len, int flags);
+                           tarpc_size_t len, int flags);
 
 /** RPC definition of opaque pointer to the template metadata */
 typedef rpc_ptr rpc_onload_template_handle;
@@ -1364,8 +1364,8 @@ typedef enum rpc_onload_template_flags {
  */
 typedef struct rpc_onload_template_msg_update_iovec {
     void*     otmu_base;         /**< Pointer to new data */
-    size_t    otmu_len;          /**< Length of new data */
-    size_t    otmu_rlen;         /**< Actual length of update */
+    tarpc_size_t    otmu_len;          /**< Length of new data */
+    tarpc_size_t    otmu_rlen;         /**< Actual length of update */
     off_t     otmu_offset;       /**< Offset within template to update */
     uint32_t  otmu_flags;        /**< For future use. Must be set to 0 */
 } rpc_onload_template_msg_update_iovec;
@@ -1387,7 +1387,7 @@ typedef struct rpc_onload_template_msg_update_iovec {
  */
 extern int rpc_onload_msg_template_alloc_gen(rcf_rpc_server *rpcs, int fd,
                                          rpc_iovec* iov,
-                                         size_t iovcnt, size_t riovcnt,
+                                         tarpc_size_t iovcnt, tarpc_size_t riovcnt,
                                          rpc_onload_template_handle *handle,
                                          int flags);
 
@@ -1406,10 +1406,10 @@ extern int rpc_onload_msg_template_alloc_gen(rcf_rpc_server *rpcs, int fd,
  */
 static inline int
 rpc_onload_msg_template_alloc(rcf_rpc_server *rpcs, int fd, rpc_iovec* iov,
-                              size_t iovcnt, 
+                              tarpc_size_t iovcnt,
                               rpc_onload_template_handle *handle, int flags)
 {
-    size_t i;
+    tarpc_size_t i;
 
     for (i = 0; i < iovcnt; i++)
         iov[i].iov_rlen = iov[i].iov_len;
@@ -1436,7 +1436,7 @@ rpc_onload_msg_template_alloc(rcf_rpc_server *rpcs, int fd, rpc_iovec* iov,
 extern int rpc_onload_msg_template_update_gen(rcf_rpc_server *rpcs, int fd,
                               rpc_onload_template_handle handle,
                               rpc_onload_template_msg_update_iovec *updates,
-                              size_t iovcnt, size_t riovcnt,
+                              tarpc_size_t iovcnt, tarpc_size_t riovcnt,
                               int flags);
 
 /**
@@ -1456,9 +1456,9 @@ static inline int
 rpc_onload_msg_template_update(rcf_rpc_server *rpcs, int fd,
                               rpc_onload_template_handle handle,
                               rpc_onload_template_msg_update_iovec *updates,
-                              size_t iovcnt, int flags)
+                              tarpc_size_t iovcnt, int flags)
 {
-    size_t i;
+    tarpc_size_t i;
 
     for (i = 0; i < iovcnt; i++)
         updates[i].otmu_rlen = updates[i].otmu_len;
@@ -1494,7 +1494,7 @@ extern int rpc_onload_msg_template_abort(rcf_rpc_server *rpcs, int fd,
  * @return Status code
  */
 extern int rpc_template_send(rcf_rpc_server *rpcs, int fd, rpc_iovec* iov,
-                             size_t iovcnt, size_t riovcnt, int flags);
+                             tarpc_size_t iovcnt, tarpc_size_t riovcnt, int flags);
 
 /**
  * Repeatedly call functios popen()-fread()-pclose() in multiple threads.
@@ -1574,7 +1574,7 @@ rpc_onload_ordered_epoll_wait(rcf_rpc_server *rpcs, int epfd,
  * @param strbuf_len The string buffer length
  */
 extern void iov_h2rpc(struct tarpc_iovec* iov_arr, const rpc_iovec* iov,
-                      size_t iovcnt, char *strbuf, int strbuf_len);
+                      tarpc_size_t iovcnt, char *strbuf, int strbuf_len);
 
 /**
  * Send data from one or two sockets for a while, sometimes passing
@@ -1602,8 +1602,8 @@ extern void iov_h2rpc(struct tarpc_iovec* iov_arr, const rpc_iovec* iov,
 extern int rpc_send_msg_warm_flow(rcf_rpc_server *rpcs,
                                   const char *func_name,
                                   int fd1, int fd2,
-                                  size_t buf_size_min,
-                                  size_t buf_size_max,
+                                  tarpc_size_t buf_size_min,
+                                  tarpc_size_t buf_size_max,
                                   unsigned int time2run,
                                   uint64_t *sent1, uint64_t *sent2);
 
@@ -1630,8 +1630,8 @@ extern int rpc_send_msg_warm_flow(rcf_rpc_server *rpcs,
  * @return @c 0 on success, @c -1 on failure.
  */
 extern int rpc_many_send_cork(rcf_rpc_server *rpcs, int fd, int fd_aux,
-                              size_t size_min, size_t size_max,
-                              size_t send_num, size_t length,
+                              tarpc_size_t size_min, tarpc_size_t size_max,
+                              tarpc_size_t send_num, tarpc_size_t length,
                               int send_usleep, te_bool tcp_nodelay,
                               te_bool no_trigger);
 
@@ -1652,8 +1652,8 @@ extern int rpc_many_send_cork(rcf_rpc_server *rpcs, int fd, int fd_aux,
  * @return Length of data actually received on success, or @c -1 in case of
  *         failure.
  */
-extern ssize_t rpc_recv_timing(rcf_rpc_server *rpcs, int fd, int fd_aux,
-                               size_t length, uint64_t *duration);
+extern tarpc_ssize_t rpc_recv_timing(rcf_rpc_server *rpcs, int fd, int fd_aux,
+                               tarpc_size_t length, uint64_t *duration);
 
 /**
  * Call epoll_wait() in a loop until it returns non-zero (expect at most
@@ -1752,7 +1752,7 @@ extern int rpc_get_tcp_socket_state(rcf_rpc_server *rpcs,
  * @param rpcs          RPC server handle.
  * @param send_func     Transmitting function.
  * @param s             Socket descriptor.
- * @param len           Size of datagram (can be any within size_t type).
+ * @param len           Size of datagram (can be any within tarpc_size_t type).
  * @param flags         bitwise OR of zero or more of the following flags:
  *                      - RPC_MSG_OOB send out-of-band data if supported.
  *                      - RPC_MSG_DONTWAIT enable non-blocking operation.
@@ -1764,7 +1764,7 @@ extern int rpc_get_tcp_socket_state(rcf_rpc_server *rpcs,
  */
 extern int rpc_send_var_size(rcf_rpc_server *rpcs,
                              tarpc_send_function send_func,
-                             int s, size_t len,
+                             int s, tarpc_size_t len,
                              rpc_send_recv_flags flags,
                              const struct sockaddr *addr);
 
@@ -1778,7 +1778,7 @@ extern int rpc_send_var_size(rcf_rpc_server *rpcs,
  * @param rpcs          RPC server handle.
  * @param recv_func     Receiving function.
  * @param s             Socket descriptor.
- * @param len           Size of packet (can be any within size_t type).
+ * @param len           Size of packet (can be any within tarpc_size_t type).
  * @param flags         bitwise OR of zero or more of the following flags:
  *                      - RPC_MSG_OOB send out-of-band data if supported.
  *                      - RPC_MSG_DONTWAIT enable non-blocking operation.
@@ -1789,7 +1789,7 @@ extern int rpc_send_var_size(rcf_rpc_server *rpcs,
  */
 extern int rpc_recv_var_size(rcf_rpc_server *rpcs,
                              tarpc_recv_function recv_func,
-                             int s, size_t len,
+                             int s, tarpc_size_t len,
                              rpc_send_recv_flags flags);
 
 /**
@@ -1823,7 +1823,7 @@ extern rpc_ptr rpc_sockts_alloc_send_func_ctx(rcf_rpc_server *rpcs);
  */
 extern int rpc_sockts_send_func_ctx_init_zc_buf(rcf_rpc_server *rpcs,
                                                 rpc_ptr ctx, int fd,
-                                                size_t buf_size);
+                                                tarpc_size_t buf_size);
 
 /**
  * Clean ZC-related fields of sending function context set with

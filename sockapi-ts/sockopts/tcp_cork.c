@@ -163,7 +163,7 @@ main(int argc, char *argv[])
     
     const struct if_nameindex *tst_if = NULL;
 
-    int                    send_length[2];
+    tarpc_size_t           send_length[2];
     uint64_t               total_sent;
     unsigned int           num;
     int                    ret;
