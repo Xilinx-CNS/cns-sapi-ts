@@ -21,10 +21,14 @@ extern "C" {
 typedef enum sockts_tcp_segment {
     SOCKTS_TCP_SYN,
     SOCKTS_TCP_SYNACK,
+    SOCKTS_TCP_FIN,
+    SOCKTS_TCP_RST,
 } sockts_tcp_segment;
 
 /** List of TCP segments to pass as test argument. */
 #define SOCKTS_TCP_SEGMENT_TYPES \
+    {"RST", SOCKTS_TCP_RST},      \
+    {"FIN", SOCKTS_TCP_FIN},      \
     {"SYN", SOCKTS_TCP_SYN },     \
     {"SYNACK", SOCKTS_TCP_SYNACK}
 
@@ -59,6 +63,30 @@ typedef enum sockts_csum_val {
 const char *sockts_tcpflags2str(uint8_t flags);
 
 /**
+ * Convert TCP segment value of type @ref sockts_tcp_segment to raw TCP flags
+ * value.
+ *
+ * @param segment   The segment type.
+ *
+ * @return TCP header flags value.
+ */
+uint8_t sockts_tcpseg2flags(sockts_tcp_segment segment);
+
+/**
+ * Convert TCP segment value of type @ref sockts_tcp_segment into string
+ * representation.
+ *
+ * @param segment   The segment type.
+ *
+ * @return null-terminated string with TCP flags definition.
+ */
+static inline const char *
+sockts_tcpseg2str(sockts_tcp_segment segment)
+{
+    return sockts_tcpflags2str(sockts_tcpseg2flags(segment));
+}
+
+/**
  * Given a traffic TCP template, set its IPv4 header checksum according
  * to @p csum value.
  *
@@ -81,12 +109,23 @@ te_errno sockts_set_ip_csum(asn_value *tmpl, sockts_csum_val csum);
 te_errno sockts_set_tcp_csum(asn_value *tmpl, sockts_csum_val csum);
 
 /**
+ * Given a traffic UDP template, set its UDP header checksum according
+ * to @p csum value.
+ *
+ * @param tmpl  The traffic template
+ * @param csum  The checksum value
+ *
+ * @return Status code
+ */
+te_errno sockts_set_udp_csum(asn_value *tmpl, sockts_csum_val csum);
+
+/**
  * Given a traffic TCP template, set checksum field in @p proto header with
  * the @p csum value.
  *
  * @param tmpl  TCP traffic template
- * @param proto Protocol header to corrupt its checksum (supported RPC_IPPROTO_IP
- *              and RPC_IPPROTO_TCP)
+ * @param proto Protocol header to corrupt its checksum (supported protocols are
+ *              RPC_IPPROTO_IP, RPC_IPPROTO_TCP and RPC_IPPROTO_UDP)
  * @param csum  What value to set as a checksum
  *
  * @return Status code

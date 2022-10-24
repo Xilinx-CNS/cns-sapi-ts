@@ -42,8 +42,34 @@ sockts_tcpflags2str(uint8_t flags)
         case TCP_RST_FLAG:
             return "RST";
 
+        case TCP_FIN_FLAG:
+            return "FIN";
+
         default:
             return "[undefined]";
+    }
+}
+
+/* See description in checksum_lib.h */
+uint8_t
+sockts_tcpseg2flags(sockts_tcp_segment segment)
+{
+    switch (segment)
+    {
+        case SOCKTS_TCP_SYN:
+            return TCP_SYN_FLAG;
+
+        case SOCKTS_TCP_SYNACK:
+            return TCP_SYN_FLAG | TCP_ACK_FLAG;
+
+        case SOCKTS_TCP_FIN:
+            return TCP_FIN_FLAG;
+
+        case SOCKTS_TCP_RST:
+            return TCP_RST_FLAG;
+
+        default:
+            return 0;
     }
 }
 
@@ -88,17 +114,30 @@ sockts_set_tcp_csum(asn_value *tmpl, sockts_csum_val csum)
     return 0;
 }
 
-/**
- * Given a traffic TCP template, set checksum field in @p proto header with
- * the @p csum value.
- *
- * @param tmpl  TCP traffic template
- * @param proto Protocol header to corrupt its checksum (supported RPC_IPPROTO_IP
- *              and RPC_IPPROTO_TCP)
- * @param csum  What value to set as a checksum
- *
- * @return Status code
- */
+/* See description in checksum_lib.h */
+te_errno
+sockts_set_udp_csum(asn_value *tmpl, sockts_csum_val csum)
+{
+    switch (csum)
+    {
+        case SOCKTS_CSUM_ZERO:
+            return tapi_ndn_tmpl_set_udp_cksum(tmpl,
+                                               TE_IP4_UPPER_LAYER_CSUM_ZERO,
+                                               TAPI_NDN_INNER_L4);
+
+        case SOCKTS_CSUM_BAD:
+            return tapi_ndn_tmpl_set_udp_cksum(tmpl,
+                                               TE_IP4_UPPER_LAYER_CSUM_BAD,
+                                               TAPI_NDN_INNER_L4);
+
+        default:
+            break;
+    }
+
+    return 0;
+}
+
+/* See description in checksum_lib.h */
 te_errno
 sockts_set_hdr_csum(asn_value *tmpl, rpc_socket_proto proto,
                     sockts_csum_val csum)
@@ -110,6 +149,9 @@ sockts_set_hdr_csum(asn_value *tmpl, rpc_socket_proto proto,
 
         case RPC_IPPROTO_TCP:
             return sockts_set_tcp_csum(tmpl, csum);
+
+        case RPC_IPPROTO_UDP:
+            return sockts_set_udp_csum(tmpl, csum);
 
         default:
             return TE_RC(TE_TAPI, TE_EPROTONOSUPPORT);

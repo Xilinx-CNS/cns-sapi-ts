@@ -35,7 +35,87 @@
                         <value reqs="TCP_ACTIVE">SYNACK</value>
                     </arg>
                 </run>
+                <run>
+                    <script name="tcp_bad_csum_close">
+                        <req id="TCP_ACTIVE"/>
+                    </script>
+                    <arg name="segment">
+                        <value>FIN</value>
+                        <value>RST</value>
+                    </arg>
+                </run>
+                <run>
+                    <script name="tcp_bad_csum_conn"/>
+                    <arg name="check_ack" type="boolean" list="">
+                        <!-- check_ack=FALSE,check_data=FALSE is senseless -->
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                        <value>TRUE</value>
+                    </arg>
+                    <arg name="check_data" type="boolean" list="">
+                        <!-- check_ack=FALSE,check_data=FALSE is senseless -->
+                        <value>TRUE</value>
+                        <value>FALSE</value>
+                        <value>TRUE</value>
+                    </arg>
+                </run>
             </session>
+        </run>
+
+        <run>
+            <script name="bad_udp_csum" track_conf="nohistory">
+                <req id="IF_DOWN_UP"/>
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_tst"/>
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+            </arg>
+            <arg name="checksum">
+                <value>zero</value>
+                <value reqs="NO_OOL1509_NDEBUG">bad</value>
+            </arg>
+            <arg name="protocol">
+                <value>IPPROTO_IP</value>
+                <value>IPPROTO_UDP</value>
+            </arg>
+            <!-- AF_XDP doesn't support big MTU value. ST-2188 -->
+            <arg name="mtu_size">
+                <value reqs="V5_SANITY">-1</value>
+                <value reqs="NO_VLAN,JUMBO_FRAME">7000</value>
+            </arg>
+            <arg name="fragmented">
+                <value>FALSE</value>
+            </arg>
+        </run>
+        <run>
+            <script name="bad_udp_csum" track_conf="nohistory">
+                <req id="BAD_CSUM_JUMBO"/>
+                <req id="IF_DOWN_UP"/>
+                <req id="SOCK_DGRAM"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_tst"/>
+                <value ref="env.peer2peer_ipv6"/>
+                <value ref="env.peer2peer_tst_ipv6"/>
+            </arg>
+            <arg name="checksum" type="checksum_val_type"/>
+            <arg name="protocol">
+                <value>IPPROTO_IP</value>
+                <value>IPPROTO_UDP</value>
+            </arg>
+            <!-- AF_XDP doesn't support big MTU value. ST-2188 -->
+            <arg name="mtu_size">
+                <value reqs="V5_SANITY">-1</value>
+                <value reqs="NO_VLAN,JUMBO_FRAME">2500</value>
+                <value reqs="NO_VLAN,JUMBO_FRAME">4500</value>
+            </arg>
+            <arg name="fragmented">
+                <value reqs="RECV_IP_FRAG">TRUE</value>
+            </arg>
         </run>
     </session>
 

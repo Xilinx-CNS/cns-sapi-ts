@@ -10,7 +10,6 @@ udp_test_deps += declare_dependency(include_directories: udptest_lib_dir,
                                     link_with: udptest_lib)
 
 tests = [
-    'bad_udp_csum',
     'check_double_bind',
     'close_tx_active',
     'epilogue',

@@ -34,5 +34,249 @@
         </results>
       </iter>
     </test>
+    <test name="bad_udp_csum" type="script">
+      <objective>Check that socket receives packets with correct or zero checksum and drops packets with bad checksum.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="checksum">bad</arg>
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="fragmented">TRUE</arg>
+        <arg name="mtu_size"/>
+        <arg name="protocol">IPPROTO_UDP</arg>
+        <notes/>
+        <results tags="v5">
+          <result value="FAILED" key="ON-12870">
+            <verdict>IUT socket is readable but it should not be</verdict>
+            <verdict>recv() on IUT unexpectedly failed with error RPC-EAGAIN</verdict>
+          </result>
+          <result value="PASSED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="checksum">bad</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="fragmented">TRUE</arg>
+        <arg name="mtu_size"/>
+        <arg name="protocol"/>
+        <notes/>
+        <results tags="v5">
+          <result value="FAILED" key="ON-12870">
+            <verdict>IUT socket is readable but it should not be</verdict>
+            <verdict>recv() on IUT unexpectedly failed with error RPC-EAGAIN</verdict>
+          </result>
+          <result value="PASSED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="checksum"/>
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="fragmented"/>
+        <arg name="mtu_size"/>
+        <arg name="protocol">IPPROTO_IP</arg>
+        <notes/>
+        <results tags="linux" key="11964">
+          <result value="SKIPPED">
+            <verdict>IPv6 header checksum corrupting is not supported yet</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="checksum"/>
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="fragmented"/>
+        <arg name="mtu_size"/>
+        <arg name="protocol">IPPROTO_IP</arg>
+        <notes/>
+        <results tags="linux" key="11964">
+          <result value="SKIPPED">
+            <verdict>IPv6 header checksum corrupting is not supported yet</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="checksum">bad</arg>
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="fragmented"/>
+        <arg name="mtu_size"/>
+        <arg name="protocol">IPPROTO_UDP</arg>
+        <notes/>
+        <results tags="v5&amp;laddr_all" key="ON-12870">
+          <result value="FAILED">
+            <verdict>IUT socket is readable but it should not be</verdict>
+            <verdict>recv() on IUT unexpectedly failed with error RPC-EAGAIN</verdict>
+          </result>
+          <result value="PASSED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="checksum">bad</arg>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="fragmented"/>
+        <arg name="mtu_size"/>
+        <arg name="protocol"/>
+        <notes/>
+        <results tags="v5&amp;laddr_all" key="ON-12870">
+          <result value="FAILED">
+            <verdict>IUT socket is readable but it should not be</verdict>
+            <verdict>recv() on IUT unexpectedly failed with error RPC-EAGAIN</verdict>
+          </result>
+          <result value="PASSED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="checksum">zero</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="fragmented">FALSE</arg>
+        <arg name="mtu_size">-1</arg>
+        <arg name="protocol">IPPROTO_UDP</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="checksum">bad</arg>
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="fragmented">FALSE</arg>
+        <arg name="mtu_size"/>
+        <arg name="protocol">IPPROTO_UDP</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="checksum">zero</arg>
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="fragmented"/>
+        <arg name="mtu_size"/>
+        <arg name="protocol">IPPROTO_UDP</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="checksum">zero</arg>
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="fragmented"/>
+        <arg name="mtu_size"/>
+        <arg name="protocol">IPPROTO_UDP</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="checksum">zero</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="fragmented">TRUE</arg>
+        <arg name="mtu_size"/>
+        <arg name="protocol"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="checksum"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="fragmented"/>
+        <arg name="mtu_size">7000</arg>
+        <arg name="protocol"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="checksum">zero</arg>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="fragmented"/>
+        <arg name="mtu_size"/>
+        <arg name="protocol"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="checksum">zero</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="fragmented">FALSE</arg>
+        <arg name="mtu_size">-1</arg>
+        <arg name="protocol">IPPROTO_IP</arg>
+        <notes/>
+        <results tags="v5&amp;af_xdp" key="11837">
+          <result value="FAILED">
+            <verdict>IUT socket is readable but it should not be</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="checksum">bad</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="fragmented">FALSE</arg>
+        <arg name="mtu_size">-1</arg>
+        <arg name="protocol"/>
+        <notes/>
+        <results tags="v5&amp;af_xdp" key="11837">
+          <result value="FAILED">
+            <verdict>IUT socket is readable but it should not be</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="tcp_bad_csum_close" type="script">
+      <objective>Send FIN, RST segments with invalid checksum and check that IUT ignores it</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="csum_val"/>
+        <arg name="env"/>
+        <arg name="protocol"/>
+        <arg name="segment">RST</arg>
+        <notes/>
+        <results tags="af_xdp" key="11837">
+          <result value="FAILED">
+            <verdict>recv() on IUT was unblocked unexpectedly after receiving RST with invalid checksum</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="csum_val"/>
+        <arg name="env"/>
+        <arg name="protocol"/>
+        <arg name="segment">FIN</arg>
+        <notes/>
+        <results tags="af_xdp" key="11837">
+          <result value="FAILED">
+            <verdict>recv() on IUT was unblocked unexpectedly after receiving FIN with invalid checksum</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
+    <test name="tcp_bad_csum_conn" type="script">
+      <objective>Send ACK segment with invalid checksum and check that IUT ignores it</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="check_ack">TRUE</arg>
+        <arg name="check_data">TRUE</arg>
+        <arg name="csum_val"/>
+        <arg name="env"/>
+        <arg name="protocol"/>
+        <notes/>
+        <results tags="af_xdp" key="11837">
+          <result value="FAILED">
+            <verdict>Socket 'iut_s' is not expected to be readable, but it is</verdict>
+            <verdict>IUT sent segment which is not a retransmit</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_ack"/>
+        <arg name="check_data">FALSE</arg>
+        <arg name="csum_val"/>
+        <arg name="env"/>
+        <arg name="protocol"/>
+        <notes/>
+        <results tags="af_xdp" key="11837">
+          <result value="FAILED">
+            <verdict>IUT does not retransmit data after receiving ACK with invalid checksum</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_ack">FALSE</arg>
+        <arg name="check_data"/>
+        <arg name="csum_val"/>
+        <arg name="env"/>
+        <arg name="protocol"/>
+        <notes/>
+        <results tags="af_xdp" key="11837">
+          <result value="FAILED">
+            <verdict>Socket 'iut_s' is not expected to be readable, but it is</verdict>
+          </result>
+        </results>
+      </iter>
+    </test>
   </iter>
 </test>
