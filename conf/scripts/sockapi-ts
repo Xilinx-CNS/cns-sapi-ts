@@ -12,10 +12,29 @@
 [[ -e "${TE_TS_RIGSDIR}/scripts/lib.run" ]] \
     && source "${TE_TS_RIGSDIR}/scripts/lib.run"
 
+. ${SF_TS_CONFDIR}/scripts/lib
 . ${SF_TS_CONFDIR}/scripts/ipvlan
 . ${SF_TS_CONFDIR}/scripts/sfptpd
 
 guess_libdir="/usr/lib"
+
+#######################################
+# Copy a file/directory from a remote host to a local
+# directory using rsync.
+# Arguments:
+#   Host name
+#   Source
+#   Destination
+# Returns:
+#   Status code from rsync tool
+#######################################
+rsync_from() {
+    local host="$1" ; shift
+    local from="$1" ; shift
+    local to="$1" ; shift
+
+    rsync -q -c -r "${host}:${from}" "$(dirname ${to})"
+}
 
 case "$IUT_KERNEL_NAME" in
     Linux )
@@ -186,7 +205,7 @@ fi
 if test -n "${SFC_ONLOAD_GNU}" -a -z "${SFC_PROFILE_DIR}" ; then
     if test "x$SFC_ONLOAD_LOCAL" == "xyes" ; then
         export SFC_PROFILE_DIR="${SOCKAPI_TS_LIBDIR}/talib_sockapi_ts/onload_profiles"
-        scp_dir "$TE_IUT" \
+        rsync_from "$TE_IUT" \
                 "${SFC_ONLOAD_GNU}/../../scripts/onload_profiles" \
                 "$SFC_PROFILE_DIR"
     else
@@ -212,7 +231,7 @@ for header in extensions.h extensions_zc.h extensions_timestamping.h extensions_
     if test "x$SFC_ONLOAD_LOCAL" == "xyes" ; then
         local_file="${SFC_ONLOAD_EXT_HEADERS}/${header}"
         target="${SOCKAPI_TS_LIBDIR}/talib_sockapi_ts/copied_headers/${header}"
-        scp_dir "$TE_IUT" "$local_file" "$target"
+        rsync_from "$TE_IUT" "$local_file" "$target"
     else
         target="${SFC_ONLOAD_EXT_HEADERS}/${header}"
     fi
@@ -223,10 +242,10 @@ done
 
 if test "x$SFC_ONLOAD_LOCAL" == "xyes" ; then
 
-    scp_dir "$TE_IUT" "${SFC_ONLOAD_EXT_HEADERS}" \
+    rsync_from "$TE_IUT" "${SFC_ONLOAD_EXT_HEADERS}" \
             "${SOCKAPI_TS_LIBDIR}/talib_sockapi_ts/copied_headers/onload"
 
-    scp_dir "$TE_IUT" "${SFC_ONLOAD_EXT_HEADERS}/../etherfabric" \
+    rsync_from "$TE_IUT" "${SFC_ONLOAD_EXT_HEADERS}/../etherfabric" \
             "${SOCKAPI_TS_LIBDIR}/talib_sockapi_ts/copied_headers/etherfabric"
 
     # Make link to "onload" folder itself, as headers in it may contain
