@@ -10,12 +10,19 @@ popd >/dev/null
 [ "$(basename $RUNDIR)" = "scripts" ] && RUNDIR="$(realpath "${RUNDIR}/..")"
 [ -e "${RUNDIR}/scripts/guess.sh" ] && source "${RUNDIR}/scripts/guess.sh"
 
+source "${TE_BASE}/scripts/lib"
+source "${TE_BASE}/scripts/lib.grab_cfg"
+file_to_src="${TE_TS_RIGSDIR}/scripts/lib/grab_cfg_handlers"
+[[ -f "$file_to_src" ]] && source "$file_to_src"
+
 # Include the file if it really exists - this allows sapi-ts not to break.
 # It seems that the following functions may become unavailable on some
 # TE_TS_RIGSDIR implementations: 'export_cmdclient', 'get_sfx_ifs' and
 # 'export_iut_fw_version'.
 [[ -e "${TE_TS_RIGSDIR}/scripts/lib.run" ]] \
     && source "${TE_TS_RIGSDIR}/scripts/lib.run"
+
+source "${SF_TS_CONFDIR}/scripts/lib"
 
 if test -z "${TE_TS_SOCKAPI}" -a -d "${RUNDIR}/sockapi-ts" ; then
     export TE_TS_SOCKAPI="${RUNDIR}/sockapi-ts"
@@ -40,6 +47,11 @@ SUITE_SCRIPTS="${SUITE_SCRIPTS} ${RUNDIR}/html-log.sh"
 SUITE_SCRIPTS="${SUITE_SCRIPTS} ${RUNDIR}/live-log.sh"
 export SUITE_SCRIPTS
 
+on_exit() {
+    call_if_defined grab_cfg_release
+}
+trap "on_exit" EXIT
+
 usage() {
 cat <<EOF
 USAGE: run.sh [run.sh options] [dispatcher.sh options]
@@ -50,13 +62,13 @@ Options:
   --ignore-nm               To suppress NetworkManager checking
   --run-ts-no-sfptpd        Enable HW timestamps testing, but without starting
                             SFPTP daemon in timestamps prologue
-  --no-item                 Do not use item for host ownership
   --night-testing           This is the night testing run, perform some
                             appropriate actions. For now: do not clear kmemleak
                             on debugging kernels.
   --logs-history=<link>     Link to logs history
-
 EOF
+    call_if_defined grab_cfg_print_help
+
 ${TE_BASE}/dispatcher.sh --help
 exit 1
 }
@@ -66,16 +78,18 @@ ZF_SHIM_RUN=false
 RUN_OPTS="${RUN_OPTS} --trc-comparison=normalised"
 RUN_OPTS="${RUN_OPTS} --sniff-not-feed-conf"
 RUN_OPTS="${RUN_OPTS} --tester-only-req-logues"
-do_item=true
 is_cmod=false
 is_mlx=false
 while test -n "$1" ; do
+    if call_if_defined grab_cfg_check_opt "$1" ; then
+        shift 1
+        continue
+    fi
     case $1 in
         --help) usage ;;
         --ignore-nm) ignore_network_manager="true" ;;
         --ignore-zeroconf) ignore_zeroconf="true" ;;
         --run-ts-no-sfptpd) export ST_RUN_TS_NO_SFPTPD="1" ;;
-        --no-item) do_item=false ;;
         --ool-profile=*)
         # OOL specific profiles
         pf=${1#--ool-profile=}
@@ -121,9 +135,7 @@ while test -n "$1" ; do
         fi
 
         RUN_OPTS="${RUN_OPTS} --opts=run/$cfg"
-        if $do_item; then
-            ${is_cmod} || take_items "$hostname"
-        fi
+        ${is_cmod} || call_if_defined grab_cfg_process "${cfg}"
             ;;
         --tester-req=!IP6_ONLOAD|--tester-req=!IP6)
             export ST_IPV4_ONLY_RUN=yes
