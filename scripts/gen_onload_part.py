@@ -263,14 +263,15 @@ def fix_testing_parms(host, ools, reqs, sl, slice_name,
 
 
 def gen_testing_part(rand, part_id, host, branch=None, parts_num_only=False,
-                     name_spec=False, af_xdp_strict=False):
-    if yamale_invalid(join(dirname(abspath(__file__)),
-                           "gen_onload_part.yaml")):
+                     name_spec=False, af_xdp_strict=False, params_file=None):
+    if params_file is None:
+        params_file = join(dirname(abspath(__file__)), "gen_onload_part.yaml")
+
+    if yamale_invalid(params_file, schema="gen_onload_part_schema.yaml"):
         print("Invalid configuration file!")
         exit()
 
-    with open(join(dirname(abspath(__file__)), "gen_onload_part.yaml"),
-              "r", encoding="utf-8") as cfg_file:
+    with open(params_file, "r", encoding="utf-8") as cfg_file:
         test_parts = load_yaml(cfg_file)
 
     parts = test_parts["parts"]
@@ -347,10 +348,13 @@ if __name__ == "__main__":
                         action="store_true")
     parser.add_argument("-x", help="Use af_xdp for testing",
                         action="store_true")
+    parser.add_argument("-u", "--use-params-file", dest="use_params_file",
+                        help="Use the specified file instead of gen_onload_part.yaml")
     args = parser.parse_args()
 
     gen_parts = gen_testing_part(args.rand_num, args.part, args.iut_host,
-                                 args.branch, False, args.n, args.x)
+                                 args.branch, False, args.n, args.x,
+                                 params_file=args.use_params_file)
     output = ""
 
     for p in gen_parts:
