@@ -267,7 +267,9 @@ def gen_testing_part(rand, part_id, host, branch=None, parts_num_only=False,
     if params_file is None:
         params_file = join(dirname(abspath(__file__)), "gen_onload_part.yaml")
 
-    if yamale_invalid(params_file, schema="gen_onload_part_schema.yaml"):
+    params_file_schema = join(dirname(abspath(__file__)),
+                              "gen_onload_part_schema.yaml")
+    if yamale_invalid(params_file, schema=params_file_schema):
         print("Invalid configuration file!")
         exit()
 
