@@ -5,7 +5,7 @@
 # configuration.
 #
 . ${SF_TS_CONFDIR}/scripts/sfc_onload_gnu
-. ${SF_TS_CONFDIR}/scripts/lib.run
+. ${TE_TS_RIGSDIR}/scripts/lib.run
 . ${SF_TS_CONFDIR}/scripts/ipvlan
 . ${SF_TS_CONFDIR}/scripts/sfptpd
 

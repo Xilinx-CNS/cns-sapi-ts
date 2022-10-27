@@ -10,7 +10,7 @@ popd >/dev/null
 [ "$(basename $RUNDIR)" = "scripts" ] && RUNDIR="$(realpath "${RUNDIR}/..")"
 [ -e "${RUNDIR}/scripts/guess.sh" ] && source "${RUNDIR}/scripts/guess.sh"
 
-. ${SF_TS_CONFDIR}/scripts/lib.run
+. ${TE_TS_RIGSDIR}/scripts/lib.run
 
 if test -z "${TE_TS_SOCKAPI}" -a -d "${RUNDIR}/sockapi-ts" ; then
     export TE_TS_SOCKAPI="${RUNDIR}/sockapi-ts"
@@ -179,13 +179,13 @@ if test -z "${TE_BUILD}" ; then
 fi
 
 MY_OPTS=
-MY_OPTS="${MY_OPTS} --conf-dirs=\"${RUNDIR}/conf:${SF_TS_CONFDIR}\""
+MY_OPTS="${MY_OPTS} --conf-dirs=\"${RUNDIR}/conf:${SF_TS_CONFDIR}:${TE_TS_RIGSDIR}\""
 if test -e "${RUNDIR}/sockapi-ts" ; then
     MY_OPTS="${MY_OPTS} --trc-db=${RUNDIR}/trc/trc-sockapi-ts.xml"
 fi
 MY_OPTS="${MY_OPTS} --trc-html=trc-report.html"
 MY_OPTS="${MY_OPTS} --trc-no-total --trc-no-unspec"
-MY_OPTS="${MY_OPTS} --trc-key2html=${SF_TS_CONFDIR}/trc.key2html"
+MY_OPTS="${MY_OPTS} --trc-key2html=${TE_TS_RIGSDIR}/trc.key2html"
 
 if test "$TE_NOBUILD" = "yes" ; then
     RUN_OPTS="$RUN_OPTS --no-builder --tester-nobuild"
@@ -199,8 +199,8 @@ if test -n "$TE_TESTER_CONF" ; then
 fi    
 
 if ! $is_cmod ; then
-    export_te_workspace_make_dirs "${SF_TS_CONFDIR}/env/$hostname"
-    hosts=$(cat ${SF_TS_CONFDIR}/env/$hostname | egrep "(TE_IUT=|TE_TST[0-9]*=)" | sed "s/.*=//")
+    export_te_workspace_make_dirs "${TE_TS_RIGSDIR}/env/$hostname"
+    hosts=$(cat ${TE_TS_RIGSDIR}/env/$hostname | egrep "(TE_IUT=|TE_TST[0-9]*=)" | sed "s/.*=//")
 
     if test -z "$ignore_network_manager" ; then
         for curr_host in ${hosts}; do
