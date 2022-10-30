@@ -177,7 +177,7 @@ ool_put_before() {
 #
 # Check whether a configuration is a specific DUT.
 # Checking is perfomed by searhing "--script=dut/<dut>" lines in configuration
-# file - SF_TS_CONFDIR/run/<cfg>.
+# file - TE_TS_RIGSDIR/run/<cfg>.
 #
 # Argumens:
 #   cfg - configuration name
@@ -188,7 +188,7 @@ ool_put_before() {
 cfg_is_dut () {
     local cfg=$1
     local dut=$2
-    local rc=$(grep -c --line-regexp -e --script=dut/$dut $SF_TS_CONFDIR/run/$cfg)
+    local rc=$(grep -c --line-regexp -e --script=dut/$dut $TE_TS_RIGSDIR/run/$cfg)
 
     [[ -n "$rc" && "$rc" != "0" ]] && return 0 || return 1
 }
