@@ -88,7 +88,6 @@
 
 #include "extensions.h"
 #include "extensions_zc.h"
-#include "test_intf.h"
 
 #include "te_sleep.h"
 #include "te_alloc.h"
