@@ -78,8 +78,11 @@ ZF_SHIM_RUN=false
 RUN_OPTS="${RUN_OPTS} --trc-comparison=normalised"
 RUN_OPTS="${RUN_OPTS} --sniff-not-feed-conf"
 RUN_OPTS="${RUN_OPTS} --tester-only-req-logues"
-is_cmod=false
-is_mlx=false
+ST_IGNORE_NM=false
+ST_IGNORE_ZEROCONF=false
+ST_IUT_IS_CMOD=false
+is_nonsf=false
+cfg_sfx=""
 while test -n "$1" ; do
     if call_if_defined grab_cfg_check_opt "$1" ; then
         shift 1
@@ -87,8 +90,8 @@ while test -n "$1" ; do
     fi
     case $1 in
         --help) usage ;;
-        --ignore-nm) ignore_network_manager="true" ;;
-        --ignore-zeroconf) ignore_zeroconf="true" ;;
+        --ignore-nm) ST_IGNORE_NM=true ;;
+        --ignore-zeroconf) ST_IGNORE_ZEROCONF=true ;;
         --run-ts-no-sfptpd) export ST_RUN_TS_NO_SFPTPD="1" ;;
         --ool-profile=*)
         # OOL specific profiles
@@ -123,7 +126,7 @@ while test -n "$1" ; do
         fi
         ;;
         --cfg=cmod-x3sim-*)
-            is_cmod=true
+            ST_IUT_IS_CMOD=true
             ;;&
         --cfg=*)
         cfg=${1#--cfg=}
@@ -135,7 +138,7 @@ while test -n "$1" ; do
         fi
 
         RUN_OPTS="${RUN_OPTS} --opts=run/$cfg"
-        ${is_cmod} || call_if_defined grab_cfg_process "${cfg}"
+        ${ST_IUT_IS_CMOD} || call_if_defined grab_cfg_process "${cfg}"
             ;;
         --tester-req=!IP6_ONLOAD|--tester-req=!IP6)
             export ST_IPV4_ONLY_RUN=yes
@@ -161,6 +164,9 @@ while test -n "$1" ; do
     shift 1
 done
 
+export ST_IGNORE_NM
+export ST_IGNORE_ZEROCONF
+export ST_IUT_IS_CMOD
 export L5_RUN=$L5_RUN
 export ZF_SHIM_RUN=$ZF_SHIM_RUN
 
@@ -215,33 +221,11 @@ if test -n "$TE_TESTER_CONF" ; then
     RUN_OPTS="$RUN_OPTS --conf-tester=$TE_TESTER_CONF"
 fi    
 
-if ! $is_cmod ; then
-    export_te_workspace_make_dirs "${TE_TS_RIGSDIR}/env/$hostname"
-    hosts=$(cat ${TE_TS_RIGSDIR}/env/$hostname | egrep "(TE_IUT=|TE_TST[0-9]*=)" | sed "s/.*=//")
-
-    if test -z "$ignore_network_manager" ; then
-        for curr_host in ${hosts}; do
-            [ -n "`ssh $curr_host ps aux 2>/dev/null | egrep NetworkManager.*/var/run/NetworkManager | grep -v grep`" ] || continue
-            echo "NetworkManager is running on $curr_host. Use --ignore-nm to suppress warning."
-            exit 1
-        done
-    fi
-
-    if test -z "$ignore_zeroconf" ; then
-        for curr_host in ${hosts}; do
-            [ -n "`ssh $curr_host /sbin/route 2>/dev/null | grep ^link-local`" ] || continue
-            echo "ZEROCONF is enabled on $curr_host. Use --ignore-zeroconf to suppress warning."
-            echo "Add 'NOZEROCONF=yes' line to /etc/sysconfig/network to disable ZEROCONF."
-            exit 1
-        done
-    fi
-fi
-
-OOL_SET=$(${RUNDIR}/scripts/ool_fix_consistency.sh $hostname $OOL_SET)
-AUX_REQS=$(${RUNDIR}/scripts/ool_fix_reqs.py --ools="$OOL_SET")
+OOL_SET=$(${RUNDIR}/scripts/ool_fix_consistency.sh $hostname "$cfg_sfx" $OOL_SET)
+AUX_REQS=$(${RUNDIR}/scripts/ool_fix_reqs.py --ools="$OOL_SET" --cfg_sfx="$cfg_sfx")
 RUN_OPTS="${RUN_OPTS} ${AUX_REQS}"
 
-if ! $is_cmod && ! $is_mlx ; then
+if ! $ST_IUT_IS_CMOD && ! $is_nonsf ; then
     export_cmdclient $hostname
 
     # Note: firmware variants (full/low) applicable for sfc only

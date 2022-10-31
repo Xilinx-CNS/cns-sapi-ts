@@ -329,3 +329,38 @@ else
 fi
 # Use the same ta_rpcprovider for non-IUT hosts
 export SF_TS_TST_RPCPROVIDER=ta_rpcs
+
+if ! ${ST_IUT_IS_CMOD} ; then
+
+    if [[ -n "$SF_TS_TMPDIR" ]] ; then
+        if [[ -z "$TE_WORKSPACE_DIR" ]] ; then
+            export TE_WORKSPACE_DIR="$SF_TS_TMPDIR"
+        fi
+
+        # Create dir on all hosts from configuration if SF_TS_TMPDIR is exported
+        hosts="$TE_IUT $TE_TST1 $TE_TST2 $TE_LOG_LISTENER"
+        for host in $ts_host_names ; do
+            ssh $host mkdir -p $SF_TS_TMPDIR
+        done
+    fi
+
+    # List of hosts from the testing triangle
+    hosts="$TE_IUT $TE_TST1 $TE_TST2"
+
+    if ! ${ST_IGNORE_NM} ; then
+        for curr_host in ${hosts}; do
+            [ -n "`ssh $curr_host ps aux 2>/dev/null | egrep NetworkManager.*/var/run/NetworkManager | grep -v grep`" ] || continue
+            echo "NetworkManager is running on $curr_host. Use --ignore-nm to suppress warning."
+            exit 1
+        done
+    fi
+
+    if ! ${ST_IGNORE_ZEROCONF} ]] ; then
+        for curr_host in ${hosts}; do
+            [ -n "`ssh $curr_host /sbin/route 2>/dev/null | grep ^link-local`" ] || continue
+            echo "ZEROCONF is enabled on $curr_host. Use --ignore-zeroconf to suppress warning."
+            echo "Add 'NOZEROCONF=yes' line to /etc/sysconfig/network to disable ZEROCONF."
+            exit 1
+        done
+    fi
+fi
