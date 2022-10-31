@@ -16,6 +16,16 @@
 . ${SF_TS_CONFDIR}/scripts/ipvlan
 . ${SF_TS_CONFDIR}/scripts/sfptpd
 
+source "${TE_BASE}/scripts/lib"
+file_to_src="${TE_TS_RIGSDIR}/scripts/lib/ts_funcs"
+[[ -f "$src_file" ]] &&  source "$src_file"
+
+#
+# The called function can export the following variables:
+# LIBBPF_SRC, SF_TS_PINGPONG_IUT and SF_TS_PINGPONG_TST.
+#
+call_if_defined export_sapi_ts_site_envs
+
 guess_libdir="/usr/lib"
 
 #######################################
@@ -362,5 +372,15 @@ if ! ${ST_IUT_IS_CMOD} ; then
             echo "Add 'NOZEROCONF=yes' line to /etc/sysconfig/network to disable ZEROCONF."
             exit 1
         done
+    fi
+
+    if [[ -z "$SF_TS_CMDCLIENT" ]] ; then
+        call_if_defined export_cmdclient "$TE_IUT"
+    fi
+
+    # Note: firmware variants (full/low) applicable for sfc driver only
+    if [[ "$TE_ENV_IUT_NET_DRIVER" == "sfc" ]] ; then
+        export_iut_fw_version "$TE_IUT" "$TE_IUT_TST1"
+        check_fw_var_consistency
     fi
 fi
