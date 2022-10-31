@@ -81,7 +81,6 @@ RUN_OPTS="${RUN_OPTS} --tester-only-req-logues"
 ST_IGNORE_NM=false
 ST_IGNORE_ZEROCONF=false
 ST_IUT_IS_CMOD=false
-is_nonsf=false
 cfg_sfx=""
 while test -n "$1" ; do
     if call_if_defined grab_cfg_check_opt "$1" ; then
@@ -134,7 +133,7 @@ while test -n "$1" ; do
         # Use cfg without '-mlx' as hostname
         hostname="${cfg/%-mlx/}"
         if test "x$hostname" != "x$cfg" ; then
-            is_mlx=true
+            cfg_sfx="${cfg/${hostname}-/}"
         fi
 
         RUN_OPTS="${RUN_OPTS} --opts=run/$cfg"
@@ -225,20 +224,6 @@ OOL_SET=$(${RUNDIR}/scripts/ool_fix_consistency.sh $hostname "$cfg_sfx" $OOL_SET
 AUX_REQS=$(${RUNDIR}/scripts/ool_fix_reqs.py --ools="$OOL_SET" --cfg_sfx="$cfg_sfx")
 RUN_OPTS="${RUN_OPTS} ${AUX_REQS}"
 
-if ! $ST_IUT_IS_CMOD && ! $is_nonsf ; then
-    export_cmdclient $hostname
-
-    # Note: firmware variants (full/low) applicable for sfc only
-    iut_ifs=( $(get_sfx_ifs $hostname sfc "") )
-    export_iut_fw_version $hostname ${iut_ifs[0]}
-fi
-
-if ! $is_mlx ; then
-    OOL_SET=$(fw_var_consistency $OOL_SET)
-    if test $? -eq 1 ; then
-        exit 1
-    fi
-fi
 RUN_OPTS="$RUN_OPTS $OOL_PROFILE"
 for i in $OOL_SET ; do
     if [[ "$i" == "hwport2" ]] ; then
