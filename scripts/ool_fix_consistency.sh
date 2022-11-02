@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved.
-cfg="$1" ; shift
+iut_drv="$1" ; shift
+iut_dut="$1" ; shift
 ool_set=" $@ "
 
 ring() {
@@ -174,25 +175,6 @@ ool_put_before() {
     fi
 }
 
-#
-# Check whether a configuration is a specific DUT.
-# Checking is perfomed by searhing "--script=dut/<dut>" lines in configuration
-# file - TE_TS_RIGSDIR/run/<cfg>.
-#
-# Argumens:
-#   cfg - configuration name
-#   dut - dut name, for example ef100_soc
-#
-# Return: 0 if 'cfg' has 'dut', 1 otherwise
-#
-cfg_is_dut () {
-    local cfg=$1
-    local dut=$2
-    local rc=$(grep -c --line-regexp -e --script=dut/$dut $TE_TS_RIGSDIR/run/$cfg)
-
-    [[ -n "$rc" && "$rc" != "0" ]] && return 0 || return 1
-}
-
 function syscall_fix()
 {
     # Bug 81775 comment 1: syscall is supported for x86_64-only
@@ -204,7 +186,7 @@ function syscall_fix()
 
 function ef100soc_fix()
 {
-    if cfg_is_dut "$cfg" "ef100_soc" ; then
+    if [[ "$iut_dut" == "ef100_soc" ]] ; then
         # ON-13715: there are few VIs available for EF100 SOC, so we should
         # avoid creating too much stacks.
         if ! ool_contains "reuse_stack" ; then
