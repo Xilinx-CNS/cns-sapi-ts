@@ -75,7 +75,7 @@ main(int argc, char *argv[])
     cfg_handle             route_handle;
     char                  *sendbuf = NULL;
     char                  *recvbuf = NULL;
-    int                    inst;
+    int32_t                inst;
     char                   src_addr_char[INET6_ADDRSTRLEN];
     te_bool                connect_iut;
     te_bool                sock_readable;
@@ -195,10 +195,8 @@ main(int argc, char *argv[])
     CHECK_NOT_NULL(inet_ntop(af, te_sockaddr_get_netaddr(SA(&src_addr)),
                              src_addr_char, INET6_ADDRSTRLEN));
 
-    if (cfg_get_instance_fmt(CVT_INTEGER, &inst,
-                             "/agent:%s/interface:%s/net_addr:%s",
-                             pco_iut->ta, iut_if->if_name,
-                             src_addr_char) != 0)
+    if (cfg_get_int32(&inst, "/agent:%s/interface:%s/net_addr:%s",
+                      pco_iut->ta, iut_if->if_name, src_addr_char) != 0)
     {
         TEST_FAIL("Some other interface was used to send");
     }
