@@ -85,10 +85,10 @@ do {                                                                        \
     inet_ntop(_addr->sa_family,                                             \
               te_sockaddr_get_netaddr(_addr),                               \
               addr_str, sizeof(addr_str));                                  \
-    _addr_on_if = (cfg_get_instance_fmt(CVT_INTEGER, &inst,                 \
-                                       "/agent:%s/interface:%s/net_addr:%s",\
-                                       _rpcs->ta, _if->if_name,             \
-                                       addr_str) == 0);                     \
+    _addr_on_if = (cfg_get_int32(&inst,                                     \
+                                 "/agent:%s/interface:%s/net_addr:%s",      \
+                                 _rpcs->ta, _if->if_name,                   \
+                                 addr_str) == 0);                           \
 } while (0)
 
 int
@@ -129,7 +129,7 @@ main(int argc, char *argv[])
     size_t                     buf_len;
     struct tarpc_mreqn         mreq;
     const char                *opt_param = NULL;
-    int                        inst;
+    int32_t                    inst;
     cfg_handle                 rh1 = CFG_HANDLE_INVALID;
     cfg_handle                 rh2 = CFG_HANDLE_INVALID;
     int                        route_prefix;
