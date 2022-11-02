@@ -73,6 +73,61 @@ ${TE_BASE}/dispatcher.sh --help
 exit 1
 }
 
+#######################################
+# Process '--script=env/' instructions in TE_TS_RIGSDIR directory.
+# Globals:
+#   TE_TS_RIGSDIR
+# Arguments:
+#   Scripts
+#######################################
+process_env_scripts() {
+    local scripts="$*"
+    local item=
+    local src=
+
+    for item in $scripts ; do
+        src="${item/--script=env\//}"
+        if [[ "$item" != "$src" ]] ; then
+            TE_EXTRA_OPTS=
+            source "${TE_TS_RIGSDIR}/env/${src}"
+            if [[ -n "$TE_EXTRA_OPTS" ]] ; then
+                process_env_scripts "$TE_EXTRA_OPTS"
+            fi
+        fi
+    done
+}
+
+#######################################
+# Get environment variable from configuration (e.g. TE_IUT).
+# Globals:
+#   TE_TS_RIGSDIR
+# Arguments:
+#   Configuration name
+#   Variable name
+# Outputs:
+#   Writes variable value to stdout
+#######################################
+get_cfg_env() {
+    local cfg="$1" ; shift
+    local env_var="$1" ; shift
+    local cfg_env_scripts=
+
+    [[ -n "${TE_TS_RIGSDIR}" ]] || exit 1
+
+    cfg_env_scripts="$(cat ${TE_TS_RIGSDIR}/run/${cfg} | grep "^--script=env/")"
+    # use subshell to avoid variables propagation
+    (
+        process_env_scripts "$cfg_env_scripts"
+
+        if [[ -r "${SF_TS_CONFDIR}/scripts/nic-pci2dut" ]] ; then
+            # Obtain TE_ENV_IUT_EF_DUT and TE_ENV_TST1_EF_DUT variables
+            source "${SF_TS_CONFDIR}/scripts/nic-pci2dut"
+        fi
+
+        echo "${!env_var}"
+    )
+}
+
 L5_RUN=false
 ZF_SHIM_RUN=false
 RUN_OPTS="${RUN_OPTS} --trc-comparison=normalised"
@@ -81,7 +136,6 @@ RUN_OPTS="${RUN_OPTS} --tester-only-req-logues"
 ST_IGNORE_NM=false
 ST_IGNORE_ZEROCONF=false
 ST_IUT_IS_CMOD=false
-cfg_sfx=""
 while test -n "$1" ; do
     if call_if_defined grab_cfg_check_opt "$1" ; then
         shift 1
@@ -129,12 +183,6 @@ while test -n "$1" ; do
             ;;&
         --cfg=*)
         cfg=${1#--cfg=}
-
-        # Use cfg without '-mlx' as hostname
-        hostname="${cfg/%-mlx/}"
-        if test "x$hostname" != "x$cfg" ; then
-            cfg_sfx="${cfg/${hostname}-/}"
-        fi
 
         RUN_OPTS="${RUN_OPTS} --opts=run/$cfg"
         ${ST_IUT_IS_CMOD} || call_if_defined grab_cfg_process "${cfg}"
@@ -220,8 +268,11 @@ if test -n "$TE_TESTER_CONF" ; then
     RUN_OPTS="$RUN_OPTS --conf-tester=$TE_TESTER_CONF"
 fi    
 
-OOL_SET=$(${RUNDIR}/scripts/ool_fix_consistency.sh $hostname "$cfg_sfx" $OOL_SET)
-AUX_REQS=$(${RUNDIR}/scripts/ool_fix_reqs.py --ools="$OOL_SET" --cfg_sfx="$cfg_sfx")
+
+iut_drv="$(get_cfg_env ${cfg} TE_ENV_IUT_NET_DRIVER)"
+iut_dut="$(get_cfg_env ${cfg} TE_ENV_IUT_EF_DUT)"
+OOL_SET=$(${RUNDIR}/scripts/ool_fix_consistency.sh $iut_drv $iut_dut $OOL_SET)
+AUX_REQS=$(${RUNDIR}/scripts/ool_fix_reqs.py --ools="$OOL_SET")
 RUN_OPTS="${RUN_OPTS} ${AUX_REQS}"
 
 RUN_OPTS="$RUN_OPTS $OOL_PROFILE"
