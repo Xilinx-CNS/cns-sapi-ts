@@ -5,7 +5,13 @@
 # configuration.
 #
 . ${SF_TS_CONFDIR}/scripts/sfc_onload_gnu
-. ${TE_TS_RIGSDIR}/scripts/lib.run
+
+# Include the file if it really exists - this allows sapi-ts not to break.
+# It seems that the following functions may become unavailable on some
+# TE_TS_RIGSDIR implementations: 'scp_dir', 'ln_sf_safe'.
+[[ -e "${TE_TS_RIGSDIR}/scripts/lib.run" ]] \
+    && source "${TE_TS_RIGSDIR}/scripts/lib.run"
+
 . ${SF_TS_CONFDIR}/scripts/ipvlan
 . ${SF_TS_CONFDIR}/scripts/sfptpd
 
