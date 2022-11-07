@@ -12,15 +12,13 @@ popd >/dev/null
 
 source "${TE_BASE}/scripts/lib"
 source "${TE_BASE}/scripts/lib.grab_cfg"
-file_to_src="${TE_TS_RIGSDIR}/scripts/lib/grab_cfg_handlers"
-[[ -f "$file_to_src" ]] && source "$file_to_src"
+source_if_exists "${TE_TS_RIGSDIR}/scripts/lib/grab_cfg_handlers"
 
 # Include the file if it really exists - this allows sapi-ts not to break.
 # It seems that the following functions may become unavailable on some
 # TE_TS_RIGSDIR implementations: 'export_cmdclient', 'get_sfx_ifs' and
 # 'export_iut_fw_version'.
-[[ -e "${TE_TS_RIGSDIR}/scripts/lib.run" ]] \
-    && source "${TE_TS_RIGSDIR}/scripts/lib.run"
+source_if_exists "${TE_TS_RIGSDIR}/scripts/lib.run"
 
 source "${SF_TS_CONFDIR}/scripts/lib"
 
