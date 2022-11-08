@@ -253,7 +253,8 @@ if test -e "${RUNDIR}/sockapi-ts" ; then
 fi
 MY_OPTS="${MY_OPTS} --trc-html=trc-report.html"
 MY_OPTS="${MY_OPTS} --trc-no-total --trc-no-unspec"
-MY_OPTS="${MY_OPTS} --trc-key2html=${TE_TS_RIGSDIR}/trc.key2html"
+[[ -e "${TE_TS_RIGSDIR}/trc.key2html" ]] \
+    && MY_OPTS="${MY_OPTS} --trc-key2html=${TE_TS_RIGSDIR}/trc.key2html"
 
 if test "$TE_NOBUILD" = "yes" ; then
     RUN_OPTS="$RUN_OPTS --no-builder --tester-nobuild"
