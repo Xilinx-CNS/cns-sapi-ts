@@ -72,24 +72,34 @@ exit 1
 }
 
 #######################################
-# Process '--script=env/' instructions in TE_TS_RIGSDIR directory.
+# Process '--script=' instructions in known directories.
 # Globals:
 #   TE_TS_RIGSDIR
+#   SF_TS_CONFDIR
 # Arguments:
 #   Scripts
 #######################################
-process_env_scripts() {
+process_scripts() {
     local scripts="$*"
     local item=
     local src=
 
     for item in $scripts ; do
-        src="${item/--script=env\//}"
+        src="${item/--script=/}"
         if [[ "$item" != "$src" ]] ; then
             TE_EXTRA_OPTS=
-            source "${TE_TS_RIGSDIR}/env/${src}"
+            if [[ -e "${TE_TS_RIGSDIR}/${src}" ]] ; then
+                source "${TE_TS_RIGSDIR}/${src}"
+            elif [[ -e "${SF_TS_CONFDIR}/${src}" ]] ; then
+                source "${SF_TS_CONFDIR}/${src}"
+            elif [[ -e "${RUNDIR}/conf/${src}" ]] ; then
+                source "${RUNDIR}/conf/${src}"
+            else
+                echo "Failed to find $src" >&2
+                exit 1
+            fi
             if [[ -n "$TE_EXTRA_OPTS" ]] ; then
-                process_env_scripts "$TE_EXTRA_OPTS"
+                process_scripts "$TE_EXTRA_OPTS"
             fi
         fi
     done
@@ -108,14 +118,14 @@ process_env_scripts() {
 get_cfg_env() {
     local cfg="$1" ; shift
     local env_var="$1" ; shift
-    local cfg_env_scripts=
+    local cfg_scripts=
 
     [[ -n "${TE_TS_RIGSDIR}" ]] || exit 1
 
-    cfg_env_scripts="$(cat ${TE_TS_RIGSDIR}/run/${cfg} | grep "^--script=env/")"
+    cfg_scripts="$(cat ${TE_TS_RIGSDIR}/run/${cfg} | grep "^--script=")"
     # use subshell to avoid variables propagation
     (
-        process_env_scripts "$cfg_env_scripts"
+        process_scripts "$cfg_scripts"
 
         if [[ -r "${SF_TS_CONFDIR}/scripts/nic-pci2dut" ]] ; then
             # Obtain TE_ENV_IUT_DUT and TE_ENV_TST1_DUT variables
