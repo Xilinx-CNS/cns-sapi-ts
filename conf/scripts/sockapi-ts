@@ -377,7 +377,7 @@ if ! ${ST_IUT_IS_CMOD} ; then
     fi
 
     # Note: firmware variants (full/low) applicable for sfc driver only
-    if [[ "$TE_ENV_IUT_NET_DRIVER" == "sfc" ]] ; then
+    if [[ "$TE_ENV_IUT_NET_DRIVER" == "sfc" && "$TE_TS_BUILD_ONLY" != "yes" ]] ; then
         export_iut_fw_version "$TE_IUT" "$TE_IUT_TST1"
         check_fw_var_consistency
     fi

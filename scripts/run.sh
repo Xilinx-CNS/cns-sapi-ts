@@ -214,6 +214,9 @@ while test -n "$1" ; do
             # Link to logs history
             export TE_NIGHT_LOGS_HISTORY=${1#--logs-history=}
             ;;
+        --build-only)
+            export TE_TS_BUILD_ONLY="yes"
+            ;;&
         *)  RUN_OPTS="${RUN_OPTS} $1" ;;
     esac
     shift 1
@@ -277,24 +280,26 @@ if test -n "$TE_TESTER_CONF" ; then
     RUN_OPTS="$RUN_OPTS --conf-tester=$TE_TESTER_CONF"
 fi    
 
+# We do not need to determine correct set of ools and reqs in case of build only
+if [[ "$TE_TS_BUILD_ONLY" != "yes" ]] ; then
+    iut_drv="$(get_cfg_env ${cfg} TE_ENV_IUT_NET_DRIVER)"
+    iut_dut="$(get_cfg_env ${cfg} TE_ENV_IUT_DUT)"
+    OOL_SET=$(${RUNDIR}/scripts/ool_fix_consistency.sh "$iut_drv" "$iut_dut" $OOL_SET)
+    AUX_REQS=$(${RUNDIR}/scripts/ool_fix_reqs.py --ools="$OOL_SET")
+    RUN_OPTS="${RUN_OPTS} ${AUX_REQS}"
 
-iut_drv="$(get_cfg_env ${cfg} TE_ENV_IUT_NET_DRIVER)"
-iut_dut="$(get_cfg_env ${cfg} TE_ENV_IUT_DUT)"
-OOL_SET=$(${RUNDIR}/scripts/ool_fix_consistency.sh "$iut_drv" "$iut_dut" $OOL_SET)
-AUX_REQS=$(${RUNDIR}/scripts/ool_fix_reqs.py --ools="$OOL_SET")
-RUN_OPTS="${RUN_OPTS} ${AUX_REQS}"
-
-RUN_OPTS="$RUN_OPTS $OOL_PROFILE"
-for i in $OOL_SET ; do
-    if [[ "$i" == "hwport2" ]] ; then
-        # This option should be processed before env/sfc
-        RUN_OPTS="--script=ool/config/$i $RUN_OPTS"
-        echo "RING: hwport2 should be processed before env/sfc," \
-             "using hwport2 as the first --script" >&2
-    else
-        RUN_OPTS="$RUN_OPTS --script=ool/config/$i"
-    fi
-done
+    RUN_OPTS="$RUN_OPTS $OOL_PROFILE"
+    for i in $OOL_SET ; do
+        if [[ "$i" == "hwport2" ]] ; then
+            # This option should be processed before env/sfc
+            RUN_OPTS="--script=ool/config/$i $RUN_OPTS"
+            echo "RING: hwport2 should be processed before env/sfc," \
+                 "using hwport2 as the first --script" >&2
+        else
+            RUN_OPTS="$RUN_OPTS --script=ool/config/$i"
+        fi
+    done
+fi
 
 eval "${TE_BASE}/dispatcher.sh ${MY_OPTS} ${RUN_OPTS}"
 RESULT=$?
