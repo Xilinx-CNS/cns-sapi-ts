@@ -68,7 +68,7 @@ main(int argc, char *argv[])
     TEST_STEP("Increase @b RLIMIT_MEMLOCK up to @c SOCKTS_BPF_RLIMITS_MEMLOCK "
               "value.");
     sockts_bpf_set_rlim_memlock(pco_used,
-                                (unsigned int)SOCKTS_BPF_RLIMITS_MEMLOCK);
+                                (uint64_t)SOCKTS_BPF_RLIMITS_MEMLOCK);
 
     TEST_STEP("Set @b cplane_track_xdp to @c Y");
     set_cplane_track_xdp(pco_used);

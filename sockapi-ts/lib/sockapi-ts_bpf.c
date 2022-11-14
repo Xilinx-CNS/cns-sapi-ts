@@ -379,23 +379,22 @@ sockts_bpf_prog_unlink(rcf_rpc_server *rpcs,
 
 /* See description in sockts_bpf.h */
 void
-sockts_bpf_set_rlim_memlock(rcf_rpc_server *rpcs, unsigned int value)
+sockts_bpf_set_rlim_memlock(rcf_rpc_server *rpcs, uint64_t value)
 {
-    cfg_val_type    val_t_int = CVT_INTEGER;
-    unsigned int    memlock_cur, memlock_max;
+    uint64_t    memlock_cur, memlock_max;
 
-    CHECK_RC(cfg_get_instance_fmt(&val_t_int, &memlock_cur,
+    CHECK_RC(cfg_get_uint64(&memlock_cur,
                         "/agent:%s/rlimits:/memlock:/cur:", rpcs->ta));
-    CHECK_RC(cfg_get_instance_fmt(&val_t_int, &memlock_max,
+    CHECK_RC(cfg_get_uint64(&memlock_max,
                         "/agent:%s/rlimits:/memlock:/max:", rpcs->ta));
 
     if (memlock_cur != value || memlock_max != value)
     {
         RING("Current rlimits/memlock values: cur=%u, max=%u", memlock_cur,
              memlock_max);
-        CHECK_RC(cfg_set_instance_fmt(val_t_int, &value,
+        CHECK_RC(cfg_set_instance_fmt(CFG_VAL(UINT64, value),
                         "/agent:%s/rlimits:/memlock:/max:", rpcs->ta));
-        CHECK_RC(cfg_set_instance_fmt(val_t_int, &value,
+        CHECK_RC(cfg_set_instance_fmt(CFG_VAL(UINT64, value),
                         "/agent:%s/rlimits:/memlock:/cur:", rpcs->ta));
     }
 }
