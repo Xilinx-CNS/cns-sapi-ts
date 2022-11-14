@@ -231,7 +231,7 @@ sockts_bpf_unlink_xdp(rcf_rpc_server *rpcs,
  * @param value         New value to set
  */
 extern void sockts_bpf_set_rlim_memlock(rcf_rpc_server *rpcs,
-                                        unsigned int value);
+                                        uint64_t value);
 
 /**
  * Convert key/values of the map to string representation, where are both
