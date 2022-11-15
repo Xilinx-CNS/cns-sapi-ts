@@ -347,7 +347,7 @@ if ! ${ST_IUT_IS_CMOD} ; then
 
         # Create dir on all hosts from configuration if SF_TS_TMPDIR is exported
         hosts="$TE_IUT $TE_TST1 $TE_TST2 $TE_LOG_LISTENER"
-        for host in $ts_host_names ; do
+        for host in $hosts ; do
             ssh $host mkdir -p $SF_TS_TMPDIR
         done
     fi
@@ -363,7 +363,7 @@ if ! ${ST_IUT_IS_CMOD} ; then
         done
     fi
 
-    if ! ${ST_IGNORE_ZEROCONF} ]] ; then
+    if ! ${ST_IGNORE_ZEROCONF} ; then
         for curr_host in ${hosts}; do
             [ -n "`ssh $curr_host /sbin/route 2>/dev/null | grep ^link-local`" ] || continue
             echo "ZEROCONF is enabled on $curr_host. Use --ignore-zeroconf to suppress warning."
