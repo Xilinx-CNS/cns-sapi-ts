@@ -113,4 +113,9 @@ if "loop4" in ools and "m32" in ools:
 if "use_chk_funcs" not in ools:
     add_req("!CHK_FUNC", "the use_chk_funcs option is not specified")
 
+# Do not run onload_zc_send() iterations with registered ZC buffer, see
+# ON-13696.
+add_req("!ONLOAD_ZC_SEND_USER_BUF",
+        "ON-13696: onload_zc_send() with registered ZC buffer is broken")
+
 print(reqs)
