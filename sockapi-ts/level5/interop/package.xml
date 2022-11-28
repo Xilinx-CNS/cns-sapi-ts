@@ -240,7 +240,11 @@
         <run>
             <session track_conf="silent">
                 <arg name="env" ref="env.peer2peer"/>
-                <arg name="child_sys_call" type="syscall_bool"/>
+                <arg name="child_sys_call">
+                    <!-- ON 14026 -->
+                    <value reqs="BROKEN">TRUE</value>
+                    <value>FALSE</value>
+                </arg>
 
                 <run>
                     <script name="fcntl_nonblock"/>
@@ -380,7 +384,11 @@
             <arg name="is_pipe">
                 <value>TRUE</value>
             </arg>
-            <arg name="child_sys_call" type="syscall_bool"/>
+            <arg name="child_sys_call">
+                <!-- ON 14026 -->
+                <value reqs="BROKEN">TRUE</value>
+                <value>FALSE</value>
+            </arg>
             <arg name="start_blocking" type="boolean"/>
             <arg name="change_iut" type="boolean"/>
             <arg name="fcntl_sys_call" type="boolean"/>
