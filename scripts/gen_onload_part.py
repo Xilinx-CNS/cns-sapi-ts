@@ -174,6 +174,9 @@ def fix_testing_parms(host, ools, reqs, sl, slice_name,
         remove_silent(ools, "hwport2")
         # ON-13343: temporarily disable rss:active:passive mode
         remove_silent(ools, "scalable_active_passive")
+        # ON-14439: problems with configuring bond/team interfaces
+        ools = remove_pattern(ools, "bond")
+        ools = remove_pattern(ools, "team")
 
     if slice_name in ["transparent"]:
         remove_silent(ools, "safe", "scalable_active_passive",
