@@ -1,5 +1,0 @@
-# SPDX-License-Identifier: Apache-2.0
-# (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved.
-# Format: <option1>;<option2>;; <option1_frequence>/<option2_frequence>/<without_such_options_frequence>
-ndebug;; 2/5
-build_cloud;build_ulhelper;; 1/2/3
