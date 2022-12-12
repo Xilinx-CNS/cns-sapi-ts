@@ -372,6 +372,11 @@ main(int argc, char *argv[])
 #endif
 
     tsa_create_session(&ss, 0);
+    /*
+     * Enabling promiscuous mode can take some time on virtual hosts,
+     * see ST-2675.
+     */
+    VSLEEP(1, "Wait for promiscuous mode to turn on");
 
     TEST_STEP("If @p timestamp is @c 'too_big', create a CSAP on @p pco_gw "
               "which will capture packets sent from IUT and check whether "

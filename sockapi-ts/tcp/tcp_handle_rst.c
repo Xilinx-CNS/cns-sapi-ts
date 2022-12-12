@@ -238,6 +238,11 @@ main(int argc, char *argv[])
         flags |= TSA_ESTABLISH_PASSIVE | TSA_MOVE_IGNORE_START_ERR;
 
     tsa_create_session(&ss, flags);
+    /*
+     * Enabling promiscuous mode can take some time on virtual hosts,
+     * see ST-2675.
+     */
+    VSLEEP(1, "Wait for promiscuous mode to turn on");
 
     if (tsa_state_cur(&ss) == RPC_TCP_UNKNOWN)
     {

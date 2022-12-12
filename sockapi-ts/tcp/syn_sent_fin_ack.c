@@ -72,6 +72,11 @@ main(int argc, char *argv[])
                               (const uint8_t *)alien_link_addr->sa_data,
                               (const uint8_t *)gw_tst_lladdr->sa_data,
                               0, &tst_csap_s));
+    /*
+     * Enabling promiscuous mode can take some time on virtual hosts,
+     * see ST-2675.
+     */
+    VSLEEP(1, "Wait for promiscuous mode to turn on");
 
     TEST_STEP("Establish connection actively from IUT.");
 

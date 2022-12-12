@@ -234,6 +234,11 @@ main(int argc, char *argv[])
 
     TEST_STEP("Create a tcp socket on IUT and CSAP on tester.");
     tsa_create_session(&ss, 0);
+    /*
+     * Enabling promiscuous mode can take some time on virtual hosts,
+     * see ST-2675.
+     */
+    VSLEEP(1, "Wait for promiscuous mode to turn on");
 
     TEST_STEP("Move the socket and the CSAP to the ESTABLISHED TCP state.");
     tcp_move_to_state(&ss, RPC_TCP_ESTABLISHED,

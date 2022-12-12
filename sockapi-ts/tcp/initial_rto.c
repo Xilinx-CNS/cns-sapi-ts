@@ -98,6 +98,11 @@ main(int argc, char *argv[])
                                       (uint8_t *)alien_link_addr->sa_data,
                                       gw_tst_link_addr,
                                       0, &csap_tst_s));
+    /*
+     * Enabling promiscuous mode can take some time on virtual hosts,
+     * see ST-2675.
+     */
+    VSLEEP(1, "Wait for promiscuous mode to turn on");
 
     TEST_STEP("Receive the first SYN-ACK from IUT.");
     if (tapi_tcp_wait_packet(csap_tst_s, INITIAL_TIMEOUT) != 0)
@@ -128,6 +133,11 @@ main(int argc, char *argv[])
                                       (uint8_t *)alien_link_addr->sa_data,
                                       gw_tst_link_addr,
                                       0, &csap_tst_s));
+    /*
+     * Enabling promiscuous mode can take some time on virtual hosts,
+     * see ST-2675.
+     */
+    VSLEEP(1, "Wait for promiscuous mode to turn on");
 
     iut_s = rpc_create_and_bind_socket(pco_iut, RPC_SOCK_STREAM,
                                        RPC_PROTO_DEF, FALSE, FALSE,

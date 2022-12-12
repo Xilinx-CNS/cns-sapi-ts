@@ -173,6 +173,12 @@ main(int argc, char *argv[])
     }
 
     tsa_create_session(&ss, 0);
+    /*
+     * Enabling promiscuous mode can take some time on virtual hosts,
+     * see ST-2675.
+     */
+    VSLEEP(1, "Wait for promiscuous mode to turn on");
+
     if (state == RPC_TCP_FIN_WAIT1)
     {
         /* From TCP_FIN_WAIT1 we can move to TCP_FIN_WAIT2 after

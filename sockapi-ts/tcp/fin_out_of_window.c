@@ -80,6 +80,11 @@ main(int argc, char *argv[])
                                       (uint8_t *)alien_link_addr->sa_data,
                                       (uint8_t *)gw_tst_lladdr->sa_data,
                                       0, &csap_tst_s));
+    /*
+     * Enabling promiscuous mode can take some time on virtual hosts,
+     * see ST-2675.
+     */
+    VSLEEP(1, "Wait for promiscuous mode to turn on");
 
     pco_iut->op = RCF_RPC_CALL;
     rpc_connect(pco_iut, iut_s, tst_addr);

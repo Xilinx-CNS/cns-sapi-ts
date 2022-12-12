@@ -283,6 +283,12 @@ main(int argc, char *argv[])
                alien_link_addr->sa_data);
 
     CHECK_RC(tsa_create_session(&ss, 0));
+    /*
+     * Enabling promiscuous mode can take some time on virtual hosts,
+     * see ST-2675.
+     */
+    VSLEEP(1, "Wait for promiscuous mode to turn on");
+
     csap_tst_s = tsa_tst_sock(&ss);
 
     CHECK_RC(tapi_tcp_conn_enable_ts(csap_tst_s, TRUE, start_ts));
