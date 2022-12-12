@@ -211,6 +211,12 @@ main(int argc, char *argv[])
             break;
     }
 
+    /*
+     * Disabling promiscuous mode on virtual hosts can cause problems with
+     * receiving of packates. Let's wait for a while. See ST-2675.
+     */
+    VSLEEP(1, "Wait after disabling promiscuous mode.");
+
     TEST_STEP("Pass traffic between IUT and Tester.");
     sockts_test_connection(pco_iut, iut_s, pco_tst, tst_s);
 
