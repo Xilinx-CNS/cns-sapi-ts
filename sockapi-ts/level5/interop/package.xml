@@ -202,7 +202,8 @@
           </run>
         </session>
         <arg name="syscall_method">
-          <value>libc</value>
+          <!-- ON-14026 libc close is broken -->
+          <value reqs="BROKEN">libc</value>
           <value reqs="CLOSE_INT,UL_32,PPC64_SF_DISABLED">interrupt</value>
           <!-- What is the point? syscall == libc always (x86_64);
                sysenter == libc (i686) iff it works, because vsyscall page
