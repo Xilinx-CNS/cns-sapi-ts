@@ -420,6 +420,24 @@ function sleep_spin_fix()
     fi
 }
 
+function safe_epoll_fix()
+{
+    # Replace "safe + epollN" options with a single "safe_epollN" option.
+    # It fixes the issue related to the order of these options - if "epollN"
+    # comes before "safe" we get a TRC tag that does not match the actual
+    # behavior, because safe profile does not overwrite EF_UL_EPOLL variable,
+    # but still adds the tag. That breaks epoll tests expectations.
+
+    local info="safe_epoll_fix"
+
+    if ool_contains "safe"; then
+        ool_replace "epoll0" "safe_epoll0" "$info"
+        ool_replace "epoll1" "safe_epoll1" "$info"
+        ool_replace "epoll3" "safe_epoll3" "$info"
+        ool_contains "safe_epoll*" && ool_remove "safe" "$info"
+    fi
+}
+
 function epoll_fix()
 {
     local info="epoll_fix"
@@ -600,6 +618,7 @@ disable_timestamps_fix
 pkt_nocomp_fix
 ipvlan_fix
 cplane_default_fix
+safe_epoll_fix
 # epoll_fix should be at the end but before branch_order_fix
 epoll_fix
 defaults_fix
