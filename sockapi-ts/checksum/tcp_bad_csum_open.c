@@ -290,6 +290,7 @@ main(int argc, char *argv[])
         TEST_STEP("Finish the connection establishment if @p segment is @c SYN "
                   "(send @c ACK from CSAP)");
         CHECK_RC(tapi_tcp_ack_all(tcp_conn));
+        TAPI_WAIT_NETWORK;
     }
 
     TEST_STEP("Check that the RPC call on IUT is unblocked");
