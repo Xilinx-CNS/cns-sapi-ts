@@ -234,6 +234,8 @@ def fix_testing_parms(host, ools, reqs, sl, slice_name,
         x3_deny_list += ["scalable_iut", "scalable_any"]
         # Disable temporarily: X3-698/X3-700/X3-701
         x3_deny_list += ["bond1", "bond4", "team1", "team4"]
+        # ON-14567: AF_XDP doesn't work on X3
+        x3_deny_list += ["af_xdp_no_filters", "af_xdp", "zc_af_xdp"]
 
         for item in x3_deny_list:
             remove_silent(ools, item)
