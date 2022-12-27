@@ -10,7 +10,6 @@ tcp_test_deps += declare_dependency(include_directories: tcptest_lib_dir,
                                     link_with: tcptest_lib)
 tests = [
     'ack_out_of_window',
-    'check_recv_truncate',
     'close_no_ack',
     'close_send_buf',
     'close_send_buf_no_ack',

@@ -705,6 +705,31 @@
         </run>
 
         <run>
+            <script name="check_recv_truncate">
+                <req id="SOCK_STREAM"/>
+                <req id="MSG_TRUNC"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="func" type="recv_func_with_flags">
+                <value>recv</value>
+                <value>recvfrom</value>
+                <value>recvmsg</value>
+                <value>recvmmsg</value>
+            </arg>
+            <arg name="null_buffer" type="boolean">
+                <value>FALSE</value>
+                <value reqs="NO_CHK_FUNCS">TRUE</value>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram">
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+            </arg>
+        </run>
+
+        <run>
             <script name="send_more_stream" track_conf="nohistory">
                 <req id="SOCK_STREAM"/>
                 <req id="MSG_MORE"/>

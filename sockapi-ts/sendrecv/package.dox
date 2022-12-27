@@ -67,6 +67,8 @@ The following send/receive flags are tested:
 
 -# @ref sendrecv-send_to_incomplete
 
+-# @ref sendrecv-check_recv_truncate
+
 -# @ref sendrecv-send_oob_data
 -# @ref sendrecv-oob_span
 -# @ref sendrecv-oob_overwritten

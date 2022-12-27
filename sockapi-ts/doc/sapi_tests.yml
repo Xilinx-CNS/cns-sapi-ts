@@ -2672,6 +2672,10 @@ groups:
     - test: send_to_incomplete
       summary: Sharing of the one socket by several threads for different socket operations
 
+    - test: check_recv_truncate
+      summary: Discarding received data in TCP case and partially receiving in UDP case with MSG_TRUNC
+      ref: sendrecv-check_recv_truncate
+
     - test: sendmsg_pktinfo
       summary: Using IP_PKTINFO/IPV6_PKTINFO with sendmsg() or sendmmsg() to set outgoing interface
 
@@ -3330,10 +3334,6 @@ groups:
 
     - test: syn_ack_ts_corrupted
       summary: Timestamp in sent SYN-ACK is lost
-
-    - test: check_recv_truncate
-      summary: Discarding received data with MSG_TRUNC
-      ref: tcp-check_recv_truncate
 
     - test: syn_bad_addr
       summary: Receiving SYN with incorrect source address

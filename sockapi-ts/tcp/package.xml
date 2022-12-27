@@ -2646,27 +2646,6 @@
           </session>
         </run>
 
-        <run>
-            <script name="check_recv_truncate">
-                <req id="SOCK_STREAM"/>
-                <req id="MSG_TRUNC"/>
-            </script>
-            <arg name="env">
-                <value ref="env.peer2peer"/>
-                <value ref="env.peer2peer_ipv6"/>
-            </arg>
-            <arg name="func" type="recv_func_with_flags">
-                <value>recv</value>
-                <value>recvfrom</value>
-                <value>recvmsg</value>
-                <value>recvmmsg</value>
-            </arg>
-            <arg name="null_buffer" type="boolean">
-                <value>FALSE</value>
-                <value reqs="NO_CHK_FUNCS">TRUE</value>
-            </arg>
-        </run>
-
         <!-- This session is for iterating tests using TSA library
              with IPv4 and IPv6 gateway environments -->
         <run>

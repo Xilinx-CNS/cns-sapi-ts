@@ -59,7 +59,6 @@ TCP packets, etc.
 -# @ref tcp-last_ack_recv_pkt
 -# @ref tcp-ts_recv_values
 -# @ref tcp-syn_ack_ts_corrupted
--# @ref tcp-check_recv_truncate
 -# @ref tcp-syn_bad_addr
 -# @ref tcp-tcp_handle_syn
 -# @ref tcp-tcp_handle_fin

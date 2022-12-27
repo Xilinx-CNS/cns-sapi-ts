@@ -3739,6 +3739,45 @@
         <notes/>
       </iter>
     </test>
+    <test name="check_recv_truncate" type="script">
+      <objective>Check that on a TCP socket part of received data may be discarded by calling receive function with MSG_TRUNC flag.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">recv</arg>
+        <arg name="null_buffer"/>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">recvfrom</arg>
+        <arg name="null_buffer"/>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">recvmsg</arg>
+        <arg name="null_buffer"/>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="FAILED">
+        <arg name="env"/>
+        <arg name="func">recvmmsg</arg>
+        <arg name="null_buffer"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">recvmmsg</arg>
+        <arg name="null_buffer"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+    </test>
     <test name="send_to_incomplete" type="script">
       <objective>Check that several threads may use a single socket for different socket operations.</objective>
       <notes/>

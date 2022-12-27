@@ -49,6 +49,7 @@ tests = [
     'send_oob_data',
     'send_recv_shutdown',
     'send_to_incomplete',
+    'check_recv_truncate',
     'sendmsg_pktinfo',
     'sendmsg_pktinfo_src',
     'stream_iov_recv',

@@ -7493,16 +7493,6 @@
         <notes/>
       </iter>
     </test>
-	  <test name="check_recv_truncate" type="script">
-      <objective>Check that on a TCP socket part of received data may be discarded by calling receive function with MSG_TRUNC flag.</objective>
-      <notes/>
-      <iter result="PASSED">
-        <arg name="env"/>
-        <arg name="func"/>
-        <arg name="null_buffer"/>
-        <notes/>
-      </iter>
-    </test>
     <test name="syn_bad_addr" type="script">
       <objective>Send from tester SYN with incorrect source address and check that IUT drops it</objective>
       <notes/>
