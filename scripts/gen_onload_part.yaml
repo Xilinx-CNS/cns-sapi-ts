@@ -12,8 +12,8 @@ params:
   # ST-1523: Do not test vlan+macvlan on linux < 3.16
   no_vlan_macvlan: [floi, frar]
   # AF_XDP requires linux >= 5.4 or RHEL8 and x86_64
-  no_af_xdp: [floi, frar,
-              fror, fundin, xce-fpgahost18-soc, loni, telchar]
+  no_af_xdp: [floi, frar, fror, fundin, xce-fpgahost18-soc,
+              loni, telchar, dellr250m]
 # Before adding new parameter add realisation to delete it
 bad_ool_host:
   # X3-975: No tiny_spin allowed for dellr220ae
