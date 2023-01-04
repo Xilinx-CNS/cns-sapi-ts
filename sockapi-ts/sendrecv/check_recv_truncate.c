@@ -77,7 +77,7 @@ main(int argc, char *argv[])
     memcpy(rx_buf_orig, rx_buf, SOCKTS_MSG_STREAM_MAX);
 
     TEST_STEP("Create two TCP or UDP sockets and connect them");
-    GEN_CONNECTION(pco_iut, pco_tst, RPC_SOCK_STREAM, RPC_PROTO_DEF,
+    GEN_CONNECTION(pco_iut, pco_tst, sock_type, RPC_PROTO_DEF,
                    iut_addr, tst_addr, &iut_s, &tst_s);
     sockts_test_connection(pco_iut, iut_s, pco_tst, tst_s);
 

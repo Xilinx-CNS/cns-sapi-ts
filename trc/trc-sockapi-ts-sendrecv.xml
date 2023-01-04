@@ -3763,12 +3763,15 @@
         <arg name="sock_type"/>
         <notes/>
       </iter>
-      <iter result="FAILED">
+      <iter result="PASSED">
         <arg name="env"/>
         <arg name="func">recvmmsg</arg>
         <arg name="null_buffer"/>
         <arg name="sock_type">SOCK_STREAM</arg>
         <notes/>
+        <results tags="v5" notes="recvmmsg() is not supported for TCP socket on onload">
+          <result value="FAILED"/>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
