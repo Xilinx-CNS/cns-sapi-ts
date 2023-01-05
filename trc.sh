@@ -6,4 +6,7 @@
 
 [[ "$SF_TS_CONFDIR" = "" ]] && echo "Env SF_TS_CONFDIR must be specified" >&2 && exit 1
 
-. ${TE_BASE}/scripts/trc.sh --key2html=${SF_TS_CONFDIR}/trc.key2html $@
+KEY2HTML="${SF_TS_CONFDIR}/trc.key2html"
+[ ! -e "$KEY2HTML" ] && KEY2HTML="${TE_TS_RIGSDIR}/trc.key2html"
+
+. ${TE_BASE}/scripts/trc.sh --key2html=${KEY2HTML} $@
