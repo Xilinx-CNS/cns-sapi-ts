@@ -83,6 +83,7 @@ All tests check that traffic which is passed throug SFC interfaces is Onload acc
 -# @ref route-multipath_del_add_same_conns
 -# @ref route-rt_switched_tos
 -# @ref route-asymmetric
+-# @ref route-blackhole
 -# @ref route-rt_hoplimit
 -# @ref route-retransmit_change_route
 -# @ref route-if_change_netns

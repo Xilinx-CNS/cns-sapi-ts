@@ -10,6 +10,7 @@ route_test_deps += declare_dependency(include_directories: route_lib_dir,
                                       link_with: route_lib)
 tests = [
     'asymmetric',
+    'blackhole',
     'conn_changed_gw',
     'epilogue',
     'if_change_netns',
