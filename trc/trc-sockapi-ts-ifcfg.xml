@@ -147,7 +147,7 @@
         <arg name="env"/>
         <arg name="sock_type"/>
         <notes/>
-        <results tags="v5&amp;(scalable_active|scalable_passive|af_xdp|x3)" key="OL 11852,ON-8270,ON-12615,ON-13769">
+        <results tags="v5&amp;(scalable_active|scalable_passive|af_xdp)" key="OL 11852,ON-8270,ON-12615">
           <result value="FAILED">
             <verdict>Socket 'iut_s' is not expected to be readable, but it is</verdict>
           </result>
@@ -170,7 +170,7 @@
         <arg name="conn"/>
         <arg name="env"/>
         <notes/>
-        <results tags="v5&amp;(scalable_passive|scalable_active|af_xdp|x3)" key="OL 11852,ON-5557,ON-12615,ON-13769">
+        <results tags="v5&amp;(scalable_passive|scalable_active|af_xdp)" key="OL 11852,ON-5557,ON-12615">
           <result value="FAILED">
             <verdict>Socket 'acc_s[i]' is not expected to be readable, but it is</verdict>
           </result>
@@ -372,11 +372,6 @@
         <arg name="same_net"/>
         <arg name="traffic">TRUE</arg>
         <notes/>
-        <results tags="v5&amp;x3" key="ON-13769">
-          <result value="PASSED">
-            <verdict>Sending after adding the address again: Unexpected datagram was received</verdict>
-          </result>
-        </results>
       </iter>
     </test>
   </iter>
