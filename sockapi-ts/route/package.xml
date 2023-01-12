@@ -1525,6 +1525,45 @@
         </run>
 
         <run>
+            <script name="blackhole"/>
+                <arg name="env" type="env.two_ifs_variants">
+                    <value ref="env.two_nets.iut_first"/>
+                    <value ref="env.two_nets.iut_second"/>
+                </arg>
+                <arg name="sock_type" type="socket_type_all" list="mylist">
+                    <value>udp</value>
+                    <value>udp</value>
+                    <value>udp_notconn</value>
+                    <value>tcp_active</value>
+                    <value>tcp_active</value>
+                    <value>tcp_passive</value>
+                    <value>tcp_passive</value>
+                    <value>tcp_passive_close</value>
+                </arg>
+                <arg name="route_type">
+                    <value>blackhole</value>
+                    <value>unreachable</value>
+                    <value>prohibit</value>
+                    <value>throw</value>
+                </arg>
+                <arg name="connected" type="boolean" list="mylist">
+                    <!-- udp -->
+                    <value>TRUE</value>
+                    <value>FALSE</value>
+                    <!-- udp_notconn -->
+                    <value>TRUE</value>
+                    <!-- tcp_active -->
+                    <value>TRUE</value>
+                    <value>FALSE</value>
+                    <!-- tcp_passive -->
+                    <value>TRUE</value>
+                    <value>FALSE</value>
+                    <!-- tcp_passive_close -->
+                    <value>TRUE</value>
+                </arg>
+        </run>
+
+        <run>
             <script name="rt_hoplimit">
                 <req id="RT_HOPLIMIT"/>
             </script>

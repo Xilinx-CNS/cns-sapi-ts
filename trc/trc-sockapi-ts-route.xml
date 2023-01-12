@@ -4924,6 +4924,17 @@
         </results>
       </iter>
     </test>
+    <test name="blackhole" type="script">
+      <objective>Check that the connection is not established when a blackhole is set.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="sock_type"/>
+        <arg name="route_type"/>
+        <arg name="connected"/>
+        <notes/>
+      </iter>
+    </test>
     <test name="if_change_netns" type="script">
       <objective>Check that data can be sent and received over an interface after moving it to/from a network namespace.</objective>
       <notes/>
