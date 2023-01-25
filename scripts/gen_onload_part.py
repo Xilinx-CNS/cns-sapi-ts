@@ -118,19 +118,12 @@ def fix_testing_parms(host, ools, reqs, sl, slice_name,
     if older_then(branch, "onload-8.0"):
         remove_silent(ools, "af_xdp_no_filters", "af_xdp", "zc_af_xdp")
 
-    # Remove ipvlan and macvlan before checking netns_iut + bond
+    # Remove ipvlan and macvlan if they are not allowed in the host
     if host in params["no_ipvlan"]:
         remove_silent(ools, "ipvlan")
     if host in params["no_vlan_macvlan"]:
         if "vlan" in ools and "macvlan" in ools:
             remove_silent(ools, "macvlan")
-
-    if "netns_iut" in ools and not is_pattern_in_list(ools, "vlan") and \
-       is_pattern_in_list(ools, "bond", "team"):
-        for i in range(len(ools)):
-            if "bond" in ools[i] or "team" in ools[i]:
-                ools.insert(i + 1, "vlan")
-                break
 
     # ST-1567 comment 10
     if "scalable_active_passive" in ools and "no_reuse_pco" not in ools:
