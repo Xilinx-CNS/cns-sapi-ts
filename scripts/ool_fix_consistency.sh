@@ -526,6 +526,22 @@ function ipvlan_fix()
     fi
 }
 
+function aggregation_fix()
+{
+    local info="aggregation_fix"
+
+    if ool_contains "aggregation" || ool_contains "team*" || ool_contains "bond*" ; then
+        # aggregation interface + netns_iut has to be tested with either
+        # macvlan/ipvlan or vlan
+        if ool_contains "netns_iut" && ! ool_contains "*vlan"; then
+            # The ordering is important, netns should be after
+            # team/bond and after macvlan/ipvlan/vlan;
+            ool_put_before "vlan" "netns_iut" \
+                "$info: aggregation + netns_iut should be tested at least with (mac/ip)vlan"
+        fi
+    fi
+}
+
 # All AF_XDP limitations can be found in ON-12141
 # Must be called before scalable_fix.
 function af_xdp_fix()
@@ -640,6 +656,7 @@ zf_shim_fix
 syscall_fix
 ef100soc_fix
 build_ulhelper_fix
+aggregation_fix
 af_xdp_fix
 # socket_cache_fix should be before scalable_fix
 socket_cache_fix
