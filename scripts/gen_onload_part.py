@@ -294,8 +294,9 @@ def gen_testing_part(rand, part_id, host, branch=None, parts_num_only=False,
 
     # Generate random ool params for testing
     test_ool = gen_ools(rand, "ool_params_freqs.yaml")
-    if af_xdp_strict and "af_xdp" not in test_ool and "af_xdp_no_filters" not in test_ool:
-        test_ool += ["af_xdp"]
+    if af_xdp_strict:
+        if "af_xdp" not in test_ool and "af_xdp_no_filters" not in test_ool:
+            test_ool += ["af_xdp"]
         # We can't remove af_xdp in such case, so let's remove transparent
         # slice
         for i in range(len(part)):
