@@ -544,6 +544,11 @@ function af_xdp_fix()
                     "$info/SWNETLINUX-4809/Bug 11986: disable netns on SFC NICs with zc_af_xdp"
             fi
         fi
+
+        if ool_contains "tiny_spin" ; then
+                ool_remove "tiny_spin" \
+                    "$info/Bug 12656: disable tiny_spin with af_xdp"
+        fi
     else
         # zc_af_xdp should be used only with AF_XDP
         ool_remove "zc_af_xdp" \
