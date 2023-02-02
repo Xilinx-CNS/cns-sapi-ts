@@ -546,6 +546,7 @@
               <value ref="env.peer2peer_lo_ipv6"/>
             </arg>
             <arg name="recv_f" type="recv_func_with_msg"/>
+            <arg name="use_null_buffer" type="boolean"/>
         </run>
         <run>
             <script name="recvmsg_peek_trunc">

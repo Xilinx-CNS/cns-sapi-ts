@@ -14,10 +14,11 @@
  *
  * @reference @ref STEVENS section 13.5
  *
- * @param env       Testing environment:
- *                  - @ref arg_types_env_peer2peer_all_ipv4_ipv6
- * @param recv_f    Receiving function to check:
- *                  - @ref arg_types_recv_func_with_msg
+ * @param env                Testing environment:
+ *                           - @ref arg_types_env_peer2peer_all_ipv4_ipv6
+ * @param recv_f             Receiving function to check:
+ *                           - @ref arg_types_recv_func_with_msg
+ * @param use_null_buffer    Whether to use null buffer
  *
  * @par Scenario:
  *
@@ -66,6 +67,7 @@ main(int argc, char *argv[])
     int len;
 
     rpc_msg_read_f recv_f;
+    te_bool use_null_buffer;
 
     TEST_START;
 
@@ -76,10 +78,19 @@ main(int argc, char *argv[])
     TEST_GET_ADDR(pco_iut, iut_addr);
     TEST_GET_ADDR(pco_tst, tst_addr);
     TEST_GET_MSG_READ_FUNC(recv_f);
+    TEST_GET_BOOL_PARAM(use_null_buffer);
 
     if (strcmp(rpc_msg_read_func_name(recv_f), "onload_zc_recv") == 0)
         TEST_VERDICT("The test is not suitable for onload_zc_recv() "
                      "function");
+
+    if (use_null_buffer)
+    {
+        recv_len = 0;
+        vector.iov_base = NULL;
+        vector.iov_len = 0;
+        vector.iov_rlen = 0;
+    }
 
     TEST_STEP("Create a pair of connected @c SOCK_DGRAM sockets on IUT and "
               "Tester.");
@@ -95,7 +106,7 @@ main(int argc, char *argv[])
 
     TEST_STEP("Call @p recv_f function to receive data on the IUT socket, "
               "passing to it a buffer one byte shorter than datagram sent "
-              "from Tester.");
+              "from Tester or null buffer.");
     len = recv_f(pco_iut, iut_s, &msg, 0);
 
     TEST_STEP("Check that expected data was received and that @c MSG_TRUNC "

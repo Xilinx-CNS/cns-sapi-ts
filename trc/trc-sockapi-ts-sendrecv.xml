@@ -3610,16 +3610,19 @@
       <iter result="PASSED">
         <arg name="env"/>
         <arg name="recv_f">recvmsg</arg>
+        <arg name="use_null_buffer"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
         <arg name="recv_f">recvmmsg</arg>
+        <arg name="use_null_buffer"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
         <arg name="recv_f">onload_zc_recv</arg>
+        <arg name="use_null_buffer"/>
         <notes/>
         <results tags="v5">
           <result value="FAILED">
@@ -3630,11 +3633,13 @@
       <iter result="PASSED">
         <arg name="env"/>
         <arg name="recv_f">onload_zc_hlrx_recv_zc</arg>
+        <arg name="use_null_buffer"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
         <arg name="recv_f">onload_zc_hlrx_recv_copy</arg>
+        <arg name="use_null_buffer"/>
         <notes/>
       </iter>
     </test>
