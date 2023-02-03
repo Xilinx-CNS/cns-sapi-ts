@@ -342,6 +342,12 @@ main(int argc, char *argv[])
                             SIN(iut_addr)->sin_port,
                             &csap);
 
+    /*
+     * Enabling promiscuous mode can take some time on virtual hosts,
+     * see ST-2675.
+     */
+    VSLEEP(1, "Wait for promiscuous mode to turn on");
+
     /* CSAP part end */
 
     iut_s = rpc_socket(pco_iut, rpc_socket_domain_by_addr(iut_addr),
