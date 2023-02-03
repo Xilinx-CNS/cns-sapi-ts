@@ -13,6 +13,37 @@ fail() {
     exit 1
 }
 
+#######################################
+# Checks whether the 'input_set' contains the 'value' item.
+# Globals:
+#   None
+# Arguments:
+#   value       - what to search, can be a pattern
+#   input_set   - where to search the 'value'
+# Return:
+#   0 if the 'value' is found, 1 otherwise
+#######################################
+is_value_in_set() {
+    local value="$1" ; shift
+    local input_set="$@"
+    local it=
+
+    if [[ -z "$value" ]] ; then
+        fail "is_value_in_set(): value argument cannot be empty"
+    fi
+
+    if [[ -z "$input_set" ]] ; then
+        fail "is_value_in_set(): input_set argument cannot be empty"
+    fi
+
+    for it in $input_set ; do
+        if [[ "$it" == $value ]] ; then
+            return 0
+        fi
+    done
+    return 1
+}
+
 #
 # Checks whether the 'ool_set' contains the 'value' item
 #
@@ -26,18 +57,12 @@ fail() {
 #
 ool_contains() {
     local value="$1" ; shift
-    local it=
 
     if [[ -z "$value" ]] ; then
         fail "ool_contains(): value cannot be empty"
     fi
 
-    for it in $ool_set ; do
-        if [[ "$it" == $value ]] ; then
-            return 0
-        fi
-    done
-    return 1
+    is_value_in_set "$value" "$ool_set"
 }
 
 #
