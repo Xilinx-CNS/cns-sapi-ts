@@ -17,12 +17,15 @@
 
         <run>
             <session>
-                <arg name="env">
+                <arg name="env" list="env_proto_pairs">
                     <value ref="env.peer2peer"/>
+                    <value ref="env.peer2peer"/>
+                    <value ref="env.peer2peer_ipv6"/>
                 </arg>
                 <arg name="csum_val" type="checksum_val_type"/>
-                <arg name="protocol">
+                <arg name="protocol" list="env_proto_pairs">
                     <value>IPPROTO_IP</value>
+                    <value>IPPROTO_TCP</value>
                     <value>IPPROTO_TCP</value>
                 </arg>
 

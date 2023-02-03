@@ -13,6 +13,7 @@
  *
  * @param env      Testing environment:
  *      - @ref arg_types_env_peer2peer
+ *      - @ref arg_types_env_peer2peer_ipv6
  * @param segment  What segment to send with invalid checksum:
  *      - SYN
  *      - SYNACK
