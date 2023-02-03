@@ -13,6 +13,7 @@
  *
  * @param env       Testing environment:
  *      - @ref arg_types_env_peer2peer
+ *      - @ref arg_types_env_peer2peer_ipv6
  * @param check_ack Check that IUT restransmits allegedly ACKed data:
  *      - FALSE
  *      - TRUE
@@ -53,16 +54,18 @@
  * used as the segment payload.
  *
  * @param _tcp_conn TAPI handler of TCP connection
+ * @param _ipv6     Whether to create IPv6 template (otherwise IPv4)
  * @param _data     Pointer to buffer with payload octets
  * @param _datalen  Payload length
  * @param _tmpl     Location for pointer to ASN value (OUT)
  */
-#define PREPARE_ACK_TMPL(_tcp_conn, _data, _datalen, _tmpl) \
-    CHECK_RC(tapi_tcp_segment_template(tapi_tcp_next_seqn(_tcp_conn),        \
-                                       tapi_tcp_next_ackn(_tcp_conn), FALSE, \
-                                       TRUE, FALSE, FALSE, FALSE, FALSE,     \
-                                       check_data ? _data : NULL,            \
-                                       _datalen, _tmpl))
+#define PREPARE_ACK_TMPL(_tcp_conn, _ipv6, _data, _datalen, _tmpl) \
+    CHECK_RC(tapi_tcp_ip_segment_template(_ipv6,                          \
+                                    tapi_tcp_next_seqn(_tcp_conn),        \
+                                    tapi_tcp_next_ackn(_tcp_conn), FALSE, \
+                                    TRUE, FALSE, FALSE, FALSE, FALSE,     \
+                                    check_data ? _data : NULL,            \
+                                    _datalen, _tmpl))
 
 int
 main(int argc, char *argv[])
@@ -89,6 +92,7 @@ main(int argc, char *argv[])
     tapi_tcp_pos_t got_seqn_initial = 0;
     tapi_tcp_pos_t got_seqn = 0;
     te_bool test_failed = FALSE;
+    te_bool ipv6_env = FALSE;
 
     TEST_START;
     TEST_GET_PCO(pco_iut);
@@ -144,7 +148,8 @@ main(int argc, char *argv[])
     TEST_STEP("Send ACK with invalid checksum from Tester according to "
               "@p check_data parameter");
 
-    PREPARE_ACK_TMPL(tcp_conn, data, datalen, &tmpl);
+    ipv6_env = (rpc_socket_domain_by_addr(iut_addr) == RPC_PF_INET6);
+    PREPARE_ACK_TMPL(tcp_conn, ipv6_env, data, datalen, &tmpl);
     CHECK_RC(sockts_set_hdr_csum(tmpl, protocol, csum_val));
     CHECK_RC(tapi_tcp_send_template(tcp_conn, tmpl, RCF_MODE_BLOCKING));
 
@@ -201,7 +206,7 @@ main(int argc, char *argv[])
     if (check_data)
         te_fill_buf(data, datalen);
 
-    PREPARE_ACK_TMPL(tcp_conn, data, datalen, &tmpl);
+    PREPARE_ACK_TMPL(tcp_conn, ipv6_env, data, datalen, &tmpl);
     CHECK_RC(tapi_tcp_send_template(tcp_conn, tmpl, RCF_MODE_BLOCKING));
     CHECK_RC(tapi_tcp_update_sent_ack(tcp_conn, tapi_tcp_next_ackn(tcp_conn)));
     if (check_data)
