@@ -21338,7 +21338,7 @@
             <verdict>Event is reported twice</verdict>
           </result>
         </results>
-        <results tags="v5&amp;ool_epoll=1&amp;!(ool_loop=0)&amp;(!ool_spin|small_spin)&amp;!ool_sleep_spin" key="ON-5898">
+        <results tags="v5&amp;ool_epoll=1&amp;!(ool_loop=0)&amp;(!ool_spin|small_spin|int_spin)&amp;!ool_sleep_spin" key="ON-5898">
           <result value="FAILED">
             <verdict>Event is reported twice</verdict>
           </result>
