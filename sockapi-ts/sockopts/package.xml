@@ -641,7 +641,7 @@
                 <value ref="env.two_nets.iut_first_ipv6"/>
                 <!-- Bug 58706 for NO_SCALABLE -->
                 <value reqs="NO_SCALABLE" ref="env.two_nets.iut_second_ipv6"/>
-                <value reqs="ENV-2LINKS-IUT">'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'alien_addr':inet6:alien,addr:'alien_gw':inet6:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tst_host'{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net1a':IUT{'iut_host'{addr:'iut_addr2':inet6:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tst_host'{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</value>
+                <value reqs="ENV-2LINKS-IUT,IP6,IP6_ONLOAD">'net1':IUT{'iut_host'{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'alien_addr':inet6:alien,addr:'alien_gw':inet6:alien,if:'iut_if1',addr:'iut_if1_hwaddr':ether:unicast},'tst_host'{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast,if:'tst1_if',addr:'tst1_hwaddr':ether:unicast}},'net1a':IUT{'iut_host'{addr:'iut_addr2':inet6:unicast,if:'iut_if2',addr:'iut_if2_hwaddr':ether:unicast},'tst_host'{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast,if:'tst2_if',addr:'tst2_hwaddr':ether:unicast}}</value>
             </arg>
             <arg name="create_if">
                 <value>FALSE</value>
