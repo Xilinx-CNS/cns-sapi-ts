@@ -22676,11 +22676,6 @@
         <arg name="create_socket">FALSE</arg>
         <arg name="env"/>
         <notes/>
-        <results tags="v5&amp;!socket_cache" key="ON-13243">
-          <result value="FAILED">
-            <verdict>FD is not closed.</verdict>
-          </result>
-        </results>
       </iter>
     </test>
     <test name="small_maxevents" type="script">

@@ -18486,17 +18486,7 @@
         <arg name="fd_type">epoll</arg>
         <arg name="other_user">TRUE</arg>
         <notes/>
-        <results tags="v5&amp;!socket_cache" key="ON-13243">
-          <result value="PASSED"/>
-          <result value="PASSED">
-            <verdict>epoll_create() failed with error RPC-ENFILE</verdict>
-          </result>
-          <result value="FAILED">
-            <verdict>epoll_create() failed with error RPC-ENFILE</verdict>
-            <verdict>FD is not closed.</verdict>
-          </result>
-        </results>
-        <results tags="!v5|v5&amp;socket_cache">
+        <results tags="linux|v5">
           <result value="PASSED">
             <verdict>epoll_create() failed with error RPC-ENFILE</verdict>
           </result>
@@ -18507,17 +18497,7 @@
         <arg name="fd_type">epoll</arg>
         <arg name="other_user">FALSE</arg>
         <notes/>
-        <results tags="v5&amp;!socket_cache" key="ON-13243">
-          <result value="PASSED"/>
-          <result value="PASSED">
-            <verdict>epoll_create() failed with error RPC-EMFILE</verdict>
-          </result>
-          <result value="FAILED">
-            <verdict>epoll_create() failed with error RPC-EMFILE</verdict>
-            <verdict>FD is not closed.</verdict>
-          </result>
-        </results>
-        <results tags="v5&amp;socket_cache" key="ON-13243">
+        <results tags="linux|v5">
           <result value="PASSED">
             <verdict>epoll_create() failed with error RPC-EMFILE</verdict>
           </result>
@@ -18539,24 +18519,12 @@
         <arg name="fd_type">pipe</arg>
         <arg name="other_user">FALSE</arg>
         <notes/>
-        <results tags="v5&amp;socket_cache" key="ON-13243">
-          <result value="PASSED"/>
-          <result value="PASSED">
-            <verdict>pipe() failed with error RPC-EMFILE</verdict>
-          </result>
-        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
         <arg name="fd_type">udp</arg>
         <arg name="other_user">FALSE</arg>
         <notes/>
-        <results tags="v5&amp;socket_cache" key="ON-13243">
-          <result value="PASSED"/>
-          <result value="PASSED">
-            <verdict>socket() failed with error RPC-EMFILE</verdict>
-          </result>
-        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
@@ -18574,12 +18542,6 @@
         <arg name="fd_type">tcp_passive</arg>
         <arg name="other_user">FALSE</arg>
         <notes/>
-        <results tags="v5&amp;socket_cache" key="ON-13243">
-          <result value="PASSED"/>
-          <result value="PASSED">
-            <verdict>accept() failed with error RPC-EMFILE</verdict>
-          </result>
-        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
