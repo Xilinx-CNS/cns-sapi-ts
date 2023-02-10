@@ -18519,12 +18519,22 @@
         <arg name="fd_type">pipe</arg>
         <arg name="other_user">FALSE</arg>
         <notes/>
+        <results tags="linux|v5">
+          <result value="PASSED">
+            <verdict>pipe() failed with error RPC-EMFILE</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
         <arg name="fd_type">udp</arg>
         <arg name="other_user">FALSE</arg>
         <notes/>
+        <results tags="linux|v5">
+          <result value="PASSED">
+            <verdict>socket() failed with error RPC-EMFILE</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
@@ -18542,6 +18552,11 @@
         <arg name="fd_type">tcp_passive</arg>
         <arg name="other_user">FALSE</arg>
         <notes/>
+        <results tags="linux|v5">
+          <result value="PASSED">
+            <verdict>accept() failed with error RPC-EMFILE</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
@@ -18570,6 +18585,11 @@
         <arg name="fd_type">tcp</arg>
         <arg name="other_user">FALSE</arg>
         <notes/>
+        <results tags="linux|v5">
+          <result value="PASSED">
+            <verdict>socket() failed with error RPC-EMFILE</verdict>
+          </result>
+        </results>
       </iter>
     </test>
     <test name="chk_too_big_len" type="script">

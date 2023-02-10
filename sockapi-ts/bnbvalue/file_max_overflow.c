@@ -37,7 +37,7 @@
  * Maximum number of file descriptors this test tries to create.
  * Should not exceed number of FDs allowed to be opened in a single process.
 */
-#define MAX_FDS 1000
+#define MAX_FDS 1500
 
 /** Number of available FDs after decreasing file-max */
 #define AVAILABLE_FDS 500
