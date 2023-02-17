@@ -11085,12 +11085,57 @@
       <objective>Check possibility of performing Path MTU discovery functionality on SOCK_DGRAM type socket.</objective>
       <notes>The test is unstable on Level5. It is not clear why Linux 2.6 starts PMTU from MTU/2.</notes>
       <iter result="PASSED">
-        <arg name="connected"/>
+        <arg name="connected">TRUE</arg>
         <arg name="env"/>
         <arg name="pmtu_val"/>
         <arg name="ip_recverr"/>
         <arg name="route_direct"/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connected">FALSE</arg>
+        <arg name="env"/>
+        <arg name="pmtu_val">dont</arg>
+        <arg name="ip_recverr"/>
+        <arg name="route_direct"/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connected">FALSE</arg>
+        <arg name="env"/>
+        <arg name="pmtu_val">want</arg>
+        <arg name="ip_recverr"/>
+        <arg name="route_direct"/>
         <notes/>
+        <results tags="linux" notes="Linux updates IP_MTU on aux_s only after sending packet.">
+          <result value="PASSED">
+            <verdict>Path MTU on aux_s changed only after sending a packet from aux_s</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connected">FALSE</arg>
+        <arg name="env"/>
+        <arg name="pmtu_val">do</arg>
+        <arg name="ip_recverr"/>
+        <arg name="route_direct"/>
+        <notes/>
+        <results tags="linux" notes="Linux updates IP_MTU on aux_s only after sending packet.">
+          <result value="PASSED">
+            <verdict>Path MTU on aux_s changed only after sending a packet from aux_s</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connected">FALSE</arg>
+        <arg name="env"/>
+        <arg name="pmtu_val">probe</arg>
+        <arg name="ip_recverr"/>
+        <arg name="route_direct"/>
+        <notes/>
+        <results tags="linux" notes="Linux updates IP_MTU on aux_s only after sending packet.">
+          <result value="PASSED">
+            <verdict>Path MTU on aux_s changed only after sending a packet from aux_s</verdict>
+          </result>
+        </results>
       </iter>
     </test>
     <test name="tcp_cork" type="script">
