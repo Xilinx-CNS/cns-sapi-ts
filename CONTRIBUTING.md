@@ -59,9 +59,10 @@ The summary line should:
     - `lib/onload`
     - `doc`
     - `scripts`
-    - `trc`
-    - `tcp|udp|epoll|...` (for changes in tests of a specific package)
-    - `tcp/close_linger` (for changes in a specific test)
+    - `tcp|udp|epoll|...` (for changes related to a specific package)
+    - `tcp/close_linger` (for changes related to a specific test)
+      - **Note:** changes to TRC, package.xml and other similar files
+                  should be attributed to the relevant package/test
  - start with the imperative of a verb, for example:
 
    ```
