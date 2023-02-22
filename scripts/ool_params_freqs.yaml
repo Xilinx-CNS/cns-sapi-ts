@@ -41,6 +41,7 @@
 - {null: 1, loop2: 2, loop3: 2, loop4: 2}
 # safe should be after any epoll
 - {null: 5, safe: 2}
+- {null: 1, oo_single_if: 1}
 - {null: 3, disable_timestamps: 2}
 - {null: 5, fdtable_strict: 3, 'fdtable_strict,socket_cache': 2, socket_cache: 1}
 - {null: 2, int_spin: 1, small_spin: 1, spin: 1, tiny_spin: 1}
