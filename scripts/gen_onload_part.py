@@ -39,7 +39,7 @@ def is_pattern_in_list(lst, *patterns):
 
 
 branch_seq = [["eol5"], ["eol6"], ["onload-7.0"], ["onload-7.1"],
-              ["onload-8.0"]]
+              ["eol7"], ["onload-8.0"]]
 
 
 def older_then(branch1, branch2):
