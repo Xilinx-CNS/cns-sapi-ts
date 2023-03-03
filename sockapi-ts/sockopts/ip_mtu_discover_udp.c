@@ -69,6 +69,8 @@
 #define TST_TIME_TO_SLEEP           1
 #define TIME_TO_WAIT_MTU_INCREASING ((MTU_EXPIRES_VALUE * 2) / \
                                      TST_TIME_TO_SLEEP)
+#define MSG_STR_LEN_MAX             64
+#define MTU_MAX_ATTEMPTS            5
 
 #define IP_MTU_MODES \
     {"want", IP_PMTUDISC_WANT},    \
@@ -83,12 +85,69 @@
         memset(_rx_buf, 0, _rx_buf_len);                                    \
         int _received = rpc_recv(_pco_rcv, _rcv_s, _rx_buf, _rx_buf_len, 0);\
         if (_sent != _received)                                             \
-            TEST_VERDICT(_msg ": unexpected number of bytes was "           \
-                         "received");                                       \
+            TEST_VERDICT("%s: unexpected number of bytes was "              \
+                         "received", _msg);                                 \
         if (memcmp(_tx_buf, _rx_buf, _sent) != 0)                           \
-            TEST_VERDICT(_msg ": received data "                            \
-                         "does not match with sent data");                  \
+            TEST_VERDICT("%s: received data "                               \
+                         "does not match with sent data", _msg);            \
     } while (0)
+
+/*
+ * After a packet was sent, but not received (recv=-1), try and check that
+ * we got the corresponding error message. In more detail:
+ * if ip_recverr=TRUE, get ICMP or ICMPV6 message from error queue;
+ * if ip_recverr=FALSE, send() 1-byte UDP message from IUT and check that
+ * for connected socket send() fails with EMSGSIZE, while for not connected
+ * socket data is sent successfully and received on pco_tst.
+ */
+#define MTU_CHECK_SEND_ERROR(_connected, _ip_recverr, _iut_addr, _pco_iut, \
+                             _iut_s, _msg, _mtu_gw_new, _tx_buf, _sent,    \
+                             _tst_addr, _pco_tst, _tst_s, _rx_buf, _stage) \
+    do {                                                                   \
+        TE_SPRINTF(msg_str, "Stage %d", _stage);                           \
+        if (ip_recverr)                                                    \
+        {                                                                  \
+            if (ip_version_6(iut_addr))                                    \
+            {                                                              \
+                check_iperrque_msg(pco_iut, iut_s, &msg, msg_str,          \
+                                   SO_EE_ORIGIN_ICMP6,                     \
+                                   ICMP6_PACKET_TOO_BIG, 0, mtu_gw_new,    \
+                                   TRUE);                                  \
+            }                                                              \
+            else                                                           \
+            {                                                              \
+                check_iperrque_msg(pco_iut, iut_s, &msg, msg_str,          \
+                                   SO_EE_ORIGIN_ICMP,                      \
+                                   ICMP_DEST_UNREACH, ICMP_FRAG_NEEDED,    \
+                                   mtu_gw_new, FALSE);                     \
+            }                                                              \
+        }                                                                  \
+        else                                                               \
+        {                                                                  \
+            RPC_AWAIT_IUT_ERROR(pco_iut);                                  \
+            if (connected)                                                 \
+            {                                                              \
+                sent = rpc_send(pco_iut, iut_s, tx_buf, 1, 0);             \
+                if (sent != -1)                                            \
+                    TEST_FAIL("Attempt to get previous error message "     \
+                              "returns %d instead of -1", sent);           \
+                CHECK_RPC_ERRNO(pco_iut, RPC_EMSGSIZE, "%s", msg_str);     \
+            }                                                              \
+            else                                                           \
+            {                                                              \
+                sent = rpc_sendto(pco_iut, iut_s, tx_buf, 1, 0, tst_addr); \
+                if (sent < 0)                                              \
+                    TEST_VERDICT("%s: sendto() failed with errno %r",      \
+                                 msg_str, RPC_ERRNO(pco_iut));             \
+                                                                           \
+                TE_SPRINTF(msg_str, "Stage %d: sending data from IUT",     \
+                           _stage);                                        \
+                IMDU_CHECK_RECEIVE(sent, tx_buf, pco_tst, tst_s, rx_buf,   \
+                                   TST_BUF_LEN, msg_str);                  \
+            }                                                              \
+        }                                                                  \
+    } while (0)
+
 
 /* Check that ip error queue containts only one icmp message with
    specific params */
@@ -187,12 +246,15 @@ main(int argc, char *argv[])
     uint8_t                tx_buf[TST_BUF_LEN];
     uint8_t                rx_buf[TST_BUF_LEN];
     size_t                 buf_len;
+    size_t                 buf_len_small;
     uint8_t                iut_if_mac[ETHER_ADDR_LEN];
     uint8_t                tst_if_mac[ETHER_ADDR_LEN];
     size_t                 mac_len = ETHER_ADDR_LEN;
     int                    received;
     int                    sent;
-
+    int                    mtu_attempts_n = 1;
+    int                    stage = 1;
+    char                   msg_str[MSG_STR_LEN_MAX];
 
     cfg_val_type                 type = CVT_INTEGER;
     const struct if_nameindex   *gw_tst_if = NULL;
@@ -561,68 +623,84 @@ main(int argc, char *argv[])
               "and check that @b send() fails with @c EMSGSIZE, if "
               "@p ip_recverr is @c TRUE check @c ICMP/@c ICMPV6 message in "
               "error queue using @b recvmsg(@c MSG_ERRQUEUE).");
-    if (connected)
-    {
-        if (ip_recverr)
-        {
-            if (ip_version_6(iut_addr))
-            {
-                check_iperrque_msg(pco_iut, iut_s, &msg, "Stage 1",
-                                   SO_EE_ORIGIN_ICMP6, ICMP6_PACKET_TOO_BIG,
-                                   0, mtu_gw_new, TRUE);
-            }
-            else
-            {
-                check_iperrque_msg(pco_iut, iut_s, &msg, "Stage 1",
-                                   SO_EE_ORIGIN_ICMP, ICMP_DEST_UNREACH,
-                                   ICMP_FRAG_NEEDED, mtu_gw_new, FALSE);
-            }
-        }
-        else
-        {
-            RPC_AWAIT_IUT_ERROR(pco_iut);
-            sent = rpc_send(pco_iut, iut_s, tx_buf, 1, 0);
-            if (sent != -1)
-                TEST_FAIL("Attempt to get previous error message "
-                          "returns %d instead -1", sent);
-            CHECK_RPC_ERRNO(pco_iut, RPC_EMSGSIZE, "Stage 1");
-        }
-
-    }
-    else /* connected == FALSE */
-    {
-        if (ip_recverr)
-        {
-            if (ip_version_6(iut_addr))
-            {
-                check_iperrque_msg(pco_iut, iut_s, &msg, "Stage 2",
-                                   SO_EE_ORIGIN_ICMP6, ICMP6_PACKET_TOO_BIG,
-                                   0, mtu_gw_new, TRUE);
-            }
-            else
-            {
-                check_iperrque_msg(pco_iut, iut_s, &msg, "Stage 2",
-                                   SO_EE_ORIGIN_ICMP, ICMP_DEST_UNREACH,
-                                   ICMP_FRAG_NEEDED, mtu_gw_new, FALSE);
-            }
-        }
-        else
-        {
-            RPC_AWAIT_IUT_ERROR(pco_iut);
-            sent = rpc_sendto(pco_iut, iut_s, tx_buf, 1, 0, tst_addr);
-            if (sent < 0)
-                TEST_VERDICT("Stage 2: sendto() failed with errno %r",
-                             RPC_ERRNO(pco_iut));
-
-            IMDU_CHECK_RECEIVE(sent, tx_buf, pco_tst, tst_s, rx_buf,
-                               TST_BUF_LEN,
-                               "Stage 2: sending data from IUT");
-        }
-
-    } /* if (connected) */
-
+    MTU_CHECK_SEND_ERROR(connected, ip_recverr, iut_addr, pco_iut, iut_s,
+                         msg, mtu_gw_new, tx_buf, sent, tst_addr, pco_tst,
+                         tst_s, rx_buf, stage);
+    stage++;
     rpc_getsockopt(pco_iut, aux_s, mtu_opt, &mtu_sock_current);
     RING("Current 'aux_s' MTU=%d", mtu_sock_current);
+
+    /*
+     * Now we expect that Path MTU is updated.
+     * However, in the case connected=FALSE getsockopt() gives the former
+     * value. In order to get the new value, we send a small packet from the
+     * connected socket aux_s (to the same destination) and then call
+     * getsockopt() on aux_s.
+     */
+    if (connected == FALSE && mtu_sock_current == mtu_sock_saved)
+    {
+        buf_len_small = mtu_gw_new - TST_UDP_RSV;
+        sent = rpc_send(pco_iut, aux_s, tx_buf, buf_len_small, 0);
+        IMDU_CHECK_RECEIVE(sent, tx_buf, pco_tst, tst_s, rx_buf,
+                           TST_BUF_LEN, "Packet sent from aux_s");
+        rpc_getsockopt(pco_iut, aux_s, mtu_opt, &mtu_sock_current);
+        RING("Current 'aux_s' MTU=%d (connected=FALSE)", mtu_sock_current);
+    }
+
+    TEST_STEP("Check that PMTU has changed and resend the packet up to "
+              "@c MTU_MAX_ATTEMPTS if it hasn't.");
+    while (mtu_sock_current == mtu_sock_saved
+           && mtu_attempts_n++ < MTU_MAX_ATTEMPTS)
+    {
+        if (connected)
+        {
+            RPC_AWAIT_IUT_ERROR(pco_iut);
+            sent = rpc_send(pco_iut, iut_s, tx_buf, buf_len, 0);
+        }
+        else
+        {
+            RPC_AWAIT_IUT_ERROR(pco_iut);
+            sent = rpc_sendto(pco_iut, iut_s, tx_buf, buf_len, 0, tst_addr);
+        }
+        TAPI_WAIT_NETWORK;
+        RPC_AWAIT_IUT_ERROR(pco_tst);
+        received = rpc_recv(pco_tst, tst_s, rx_buf, TST_BUF_LEN,
+                            RPC_MSG_DONTWAIT);
+        if (received != -1)
+        {
+            TEST_VERDICT("recv(MSG_DONTWAIT) should return -1"
+                         " because 'gw' interface Path MTU is reduced");
+        }
+        CHECK_RPC_ERRNO(pco_tst, RPC_EAGAIN, "recv() after reduce MTU");
+        MTU_CHECK_SEND_ERROR(connected, ip_recverr, iut_addr, pco_iut,
+                             iut_s, msg, mtu_gw_new, tx_buf, sent, tst_addr,
+                             pco_tst, tst_s, rx_buf, stage);
+        stage++;
+        if (connected == FALSE)
+        {
+            buf_len_small = mtu_gw_new - TST_UDP_RSV;
+            sent = rpc_send(pco_iut, aux_s, tx_buf, buf_len_small, 0);
+            IMDU_CHECK_RECEIVE(sent, tx_buf, pco_tst, tst_s, rx_buf,
+                               TST_BUF_LEN, "Packet sent from aux_s");
+        }
+        rpc_getsockopt(pco_iut, aux_s, mtu_opt, &mtu_sock_current);
+        RING("Current 'aux_s' MTU=%d (mtu_attempts_n=%d)",
+             mtu_sock_current, mtu_attempts_n);
+    }
+    /* Ring verdict if PMTU was not updated after sending 1 packet */
+    if (mtu_attempts_n > 1)
+    {
+        if (mtu_sock_current != mtu_sock_saved)
+        {
+            RING_VERDICT("IUT has sent multiple (%d) packets to get Path"
+                         " MTU updated", mtu_attempts_n);
+        }
+        else
+        {
+            TEST_VERDICT("Failed to get Path MTU updated after sending %d"
+                         " packets", MTU_MAX_ATTEMPTS);
+        }
+    }
 
     TEST_STEP("Send message again with initial length equal to "
               "@b mtu_sock_saved and check result:");
