@@ -13,7 +13,8 @@
 - {null: 1, iomux_no_fast: 1}
 - {null: 3, epoll_ctl_fast: 1}
 - {null: 2, sleep_spin: 1}
-- {null: 2, m32: 1}
+# Disable m32 testing, because it's broken in TE. See ST-2696
+#- {null: 2, m32: 1}
 - {scalable_any: 2, scalable_iut: 1}
 - {null: 60, reuse_stack: 3, scalable: 1, scalable_active: 1, scalable_active_passive: 3,
   scalable_passive: 1}
