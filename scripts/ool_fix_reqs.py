@@ -118,4 +118,8 @@ if "use_chk_funcs" not in ools:
 add_req("!ONLOAD_ZC_SEND_USER_BUF",
         "ON-13696: onload_zc_send() with registered ZC buffer is broken")
 
+# onload_zc_hlrx_recv_zc() function is broken, see ON-14302.
+add_req("!ONLOAD_ZC_HLRX",
+        "ON-14302: onload_zc_hlrx_recv_zc() is broken")
+
 print(reqs)
