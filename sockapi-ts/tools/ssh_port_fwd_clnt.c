@@ -43,6 +43,12 @@
  */
 #define SSH_PORT_FWD_CLNT_MAX_FORWARDING_BUF_LENGTH 50
 
+/**
+ * Amount of trials to establish connection via tunnel
+ * @note The value is dictated by the cases when five
+ *       attempts were not enough to establish connection.
+ */
+#define SSH_PORT_FWD_CLNT_CONNECTION_ATTEMPTS 8
 
 static rcf_rpc_server *pco_iut = NULL;
 static rcf_rpc_server *pco_tst1 = NULL;
@@ -342,6 +348,8 @@ create_tunnel(ssh_port_fwd_clnt_tunnel_t *tdata)
 static void
 create_connections(ssh_port_fwd_clnt_tunnel_t *tdata)
 {
+    int rc;
+    unsigned int i = 0;
 
     if (tdata->remote_port_forwarding)
         te_sockaddr_set_loopback(SA(&tdata->proxy_addr));
@@ -356,7 +364,25 @@ create_connections(ssh_port_fwd_clnt_tunnel_t *tdata)
     tdata->s_clnt[1] = rpc_socket(tdata->clnt, RPC_AF_INET,
                                   RPC_SOCK_STREAM, RPC_PROTO_DEF);
 
-    rpc_connect(tdata->tst, tdata->s_clnt[0], SA(&tdata->proxy_addr));
+    /* Perform several connection till the tunnel is up */
+    do {
+        RPC_AWAIT_ERROR(tdata->tst);
+        rc = rpc_connect(tdata->tst, tdata->s_clnt[0], SA(&tdata->proxy_addr));
+
+        if (rc != 0)
+        {
+            if (RPC_ERRNO(tdata->tst) == RPC_ECONNREFUSED)
+            {
+                TAPI_WAIT_NETWORK;
+            }
+            else
+            {
+                TEST_FAIL("connect() call returned unexpected errno %s",
+                errno_rpc2str(RPC_ERRNO(tdata->tst)));
+            }
+        }
+    } while ((rc == -1) && ((++i) < SSH_PORT_FWD_CLNT_CONNECTION_ATTEMPTS));
+
     tdata->s_acc[0] = rpc_accept(tdata->srv, tdata->s_srv,
                                  NULL, NULL);
 
