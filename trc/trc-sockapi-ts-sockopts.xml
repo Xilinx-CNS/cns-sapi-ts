@@ -11085,12 +11085,49 @@
       <objective>Check possibility of performing Path MTU discovery functionality on SOCK_DGRAM type socket.</objective>
       <notes>The test is unstable on Level5. It is not clear why Linux 2.6 starts PMTU from MTU/2.</notes>
       <iter result="PASSED">
-        <arg name="connected"/>
+        <arg name="connected">FALSE</arg>
         <arg name="env"/>
         <arg name="pmtu_val"/>
         <arg name="ip_recverr"/>
         <arg name="route_direct"/>
         <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connected">TRUE</arg>
+        <arg name="env"/>
+        <arg name="pmtu_val">want</arg>
+        <arg name="ip_recverr"/>
+        <arg name="route_direct"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connected">TRUE</arg>
+        <arg name="env"/>
+        <arg name="pmtu_val">dont</arg>
+        <arg name="ip_recverr"/>
+        <arg name="route_direct"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connected">TRUE</arg>
+        <arg name="env"/>
+        <arg name="pmtu_val">do</arg>
+        <arg name="ip_recverr"/>
+        <arg name="route_direct"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="connected">TRUE</arg>
+        <arg name="env"/>
+        <arg name="pmtu_val">probe</arg>
+        <arg name="ip_recverr"/>
+        <arg name="route_direct"/>
+        <notes/>
+        <results tags="v5" key="ON-14756">
+          <result value="FAILED">
+            <verdict>Failed to get Path MTU updated after sending 5 packets</verdict>
+          </result>
+        </results>
       </iter>
     </test>
     <test name="tcp_cork" type="script">
