@@ -126,4 +126,12 @@ add_req("!ONLOAD_ZC_SEND_USER_BUF",
 add_req("!ONLOAD_ZC_HLRX",
         "ON-14302: onload_zc_hlrx_recv_zc() is broken")
 
+# netns + zc_af_xdp parameter combination
+# on sfc crashes further testing, see SWNETLINUX-4809/Bug-11986.
+if iut_drv in ["sfc"]:
+    if "zc_af_xdp" in ools:
+        add_req("!NETNS",
+        "SWNETLINUX-4809/Bug-11986: do not test network namespaces of "
+        "SFC NICs with zc_af_xdp")
+
 print(reqs)
