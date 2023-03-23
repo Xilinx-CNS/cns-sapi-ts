@@ -33,6 +33,9 @@
 
 #define BUF_LEN 1024
 
+/* Minimum amount of accelerated sockets. See ST-2698 */
+#define MIN_ACCEL_SOCKS 5
+
 int
 main(int argc, char *argv[])
 {
@@ -51,6 +54,7 @@ main(int argc, char *argv[])
     const char            *read_socket;
     int                    iter_num;
     int                    i;
+    int                    accel_sockets = 0;
 
     rpc_socket_domain      domain;
 
@@ -103,12 +107,27 @@ main(int argc, char *argv[])
                   "a newly chosen port if @p read_socket is @c last.");
         last_s = rpc_socket(pco_iut, domain, RPC_SOCK_DGRAM,
                             RPC_IPPROTO_UDP);
+
+        if (tapi_onload_is_onload_fd(pco_iut, last_s))
+            accel_sockets += 1;
+        else
+            break;
+
         if (strcmp(read_socket, "last") == 0)
         {
             TAPI_SET_NEW_PORT(pco_iut, SA(&iut_addr_aux));
             rpc_bind(pco_iut, last_s, SA(&iut_addr_aux));
             read_s = last_s;
         }
+    }
+
+    if (accel_sockets != iter_num)
+    {
+        if (accel_sockets < MIN_ACCEL_SOCKS)
+                TEST_FAIL("Failed to create enough accelerated sockets");
+
+        RING("%d accelerated sockets were created", accel_sockets);
+        RING_VERDICT("Some created sockets were not accelerated");
     }
 
     TEST_STEP("Check that FD of the IUT socket created the last time is not "
