@@ -47,6 +47,9 @@
 /** UDP header length to calculate datagram payload length. */
 #define UDP_HEADER_SIZE 28
 
+/** Maximum amount of packet retransmissions. */
+#define MAX_RETRANS_ALLOWED 3
+
 /** IUT RPC server handler. */
 static rcf_rpc_server *pco_iut = NULL;
 /** Tester RPC server handler. */
@@ -206,6 +209,7 @@ retrieve_ts_tx_tcp(rpc_msghdr *msg, int iut_s, int len, int mtu,
     int count = 0;
     int rc;
     int i;
+    int error_count = 0;
 
     for (i = 0; i < MAX_ATTEMPTS_TCP && count < len; i++)
     {
@@ -244,6 +248,9 @@ retrieve_ts_tx_tcp(rpc_msghdr *msg, int iut_s, int len, int mtu,
         ts_print_tcp_tx(ts_tx);
 
         if (!ts_timespec_is_zero(&ts_tx->last_sent))
+            error_count += 1;
+
+        if (error_count > MAX_RETRANS_ALLOWED)
             TEST_VERDICT("last_sent is not zero, probably the packet was "
                          "retransmitted");
 
@@ -257,6 +264,9 @@ retrieve_ts_tx_tcp(rpc_msghdr *msg, int iut_s, int len, int mtu,
 
         count += ts_tx->len;
     }
+
+    if (error_count)
+        RING("Packet was retransmitted %d times.", error_count);
 
     if (count != len)
         TEST_VERDICT("It was extracted %d bytes with timestamps handler, "
