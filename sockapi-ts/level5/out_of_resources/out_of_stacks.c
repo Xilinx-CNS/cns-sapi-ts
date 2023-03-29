@@ -65,6 +65,7 @@ main(int argc, char *argv[])
     struct sockaddr_storage    tst_addr_aux;
 
     char                    name[64];
+    char                   *pars_signal = NULL;
 
     int         rcvbuf = 100000;
     uint64_t    sent;
@@ -80,6 +81,14 @@ main(int argc, char *argv[])
     TEST_GET_ADDR_NO_PORT(iut_addr);
     TEST_GET_ADDR(pco_tst, tst_addr);
     TEST_GET_BOOL_PARAM(ef_no_fail);
+
+    /* Turn off allocate_stack parser */
+    CHECK_RC(cfg_get_instance_fmt(NULL, &pars_signal,
+                                  "/local:/tester:/event:allocate_stack"
+                                  "/handler:internal_handler/signal:"));
+    CHECK_RC(cfg_set_instance_fmt(CVT_STRING, "none",
+                                  "/local:/tester:/event:allocate_stack"
+                                  "/handler:internal_handler/signal:"));
 
     memset(child, 0, sizeof(child));
     for (i = 0; i < MAX_SOCKS; i++)
@@ -181,6 +190,15 @@ main(int argc, char *argv[])
     TEST_FAIL("Failed to get out-of-stacks condition.");
 
 cleanup:
+    if (pars_signal != NULL)
+    {
+        CLEANUP_CHECK_RC(cfg_set_instance_fmt(CVT_STRING, pars_signal,
+                                              "/local:/tester:/event:"
+                                              "allocate_stack/handler:"
+                                              "internal_handler/signal:"));
+        free(pars_signal);
+    }
+
     SLEEP(1);
     i = 0;
     while(sock_tst[i] != -1 || i == 1)
