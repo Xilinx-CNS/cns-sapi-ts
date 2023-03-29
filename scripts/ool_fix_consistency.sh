@@ -227,6 +227,18 @@ function ef100soc_fix()
     fi
 }
 
+function x3_fix()
+{
+    if [[ "$iut_dut" == "x3" ]] ; then
+        # ST-2641: there are few VIs available for X3, so we should
+        # avoid creating too much stacks.
+        if ! ool_contains "reuse_stack" ; then
+            ool_replace "no_reuse_pco" "reuse_pco" \
+                "X3/ST-2641: avoid creating too much stacks"
+        fi
+    fi
+}
+
 function build_ulhelper_fix()
 {
     local info="ulhelper_fix"
@@ -688,6 +700,7 @@ ool_contains "no_reuse_pco" || ool_add "reuse_pco" "set reuse_pco by default"
 zf_shim_fix
 syscall_fix
 ef100soc_fix
+x3_fix
 build_ulhelper_fix
 aggregation_fix
 af_xdp_fix
