@@ -3440,6 +3440,24 @@
             <verdict>Multicast packets were detected on IUT vlan2 interface when they should be detected only on IUT vlan1 or IUT master interface</verdict>
           </result>
         </results>
+        <results tags="v5&amp;x3" key="ON-14776">
+          <result value="FAILED">
+            <verdict>Multicast packets were detected on IUT master interface when they should be detected only on IUT vlan1 or IUT vlan2 interface</verdict>
+            <verdict>IUT socket receives data from address on TESTER master interface but it is expected to receive from address on TESTER vlan1 interface or address on TESTER vlan2 interface</verdict>
+            <verdict>Multicast packets were detected on IUT vlan2 interface when they should be detected only on IUT vlan1 or IUT master interface</verdict>
+            <verdict>IUT socket receives data from address on TESTER vlan2 interface but it is expected to receive from address on TESTER vlan1 interface or address on TESTER master interface</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>Multicast packets were detected on IUT vlan2 interface when they should be detected only on IUT vlan1 interface</verdict>
+            <verdict>Multicast packets were detected on IUT master interface when they should be detected only on IUT vlan1 interface</verdict>
+            <verdict>IUT socket receives data from address on TESTER vlan2 interface but it is expected to receive from address on TESTER vlan1 interface</verdict>
+            <verdict>IUT socket receives data from address on TESTER master interface but it is expected to receive from address on TESTER vlan1 interface</verdict>
+            <verdict>Multicast packets were detected on IUT vlan1 interface when they should be detected only on IUT master interface</verdict>
+            <verdict>Multicast packets were detected on IUT vlan2 interface when they should be detected only on IUT master interface</verdict>
+            <verdict>IUT socket receives data from address on TESTER vlan1 interface but it is expected to receive from address on TESTER master interface</verdict>
+            <verdict>IUT socket receives data from address on TESTER vlan2 interface but it is expected to receive from address on TESTER master interface</verdict>
+          </result>
+        </results>
         <results tags="linux&amp;!v5">
           <result value="PASSED">
             <verdict>Multicast packets were detected on IUT vlan1 interface</verdict>
@@ -3491,6 +3509,24 @@
             <verdict>Multicast packets were detected on IUT vlan1 interface when they should be detected only on IUT master interface</verdict>
             <verdict>Multicast packets were detected on IUT vlan2 interface when they should be detected only on IUT master interface</verdict>
             <verdict>Multicast packets were detected on IUT master interface</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;x3" key="ON-14776">
+          <result value="FAILED">
+            <verdict>Multicast packets were detected on IUT master interface when they should be detected only on IUT vlan1 or IUT vlan2 interface</verdict>
+            <verdict>IUT socket receives data from address on TESTER master interface but it is expected to receive from address on TESTER vlan1 interface or address on TESTER vlan2 interface</verdict>
+            <verdict>Multicast packets were detected on IUT vlan2 interface when they should be detected only on IUT vlan1 or IUT master interface</verdict>
+            <verdict>IUT socket receives data from address on TESTER vlan2 interface but it is expected to receive from address on TESTER vlan1 interface or address on TESTER master interface</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>Multicast packets were detected on IUT vlan2 interface when they should be detected only on IUT vlan1 interface</verdict>
+            <verdict>Multicast packets were detected on IUT master interface when they should be detected only on IUT vlan1 interface</verdict>
+            <verdict>IUT socket receives data from address on TESTER vlan2 interface but it is expected to receive from address on TESTER vlan1 interface</verdict>
+            <verdict>IUT socket receives data from address on TESTER master interface but it is expected to receive from address on TESTER vlan1 interface</verdict>
+            <verdict>Multicast packets were detected on IUT vlan1 interface when they should be detected only on IUT master interface</verdict>
+            <verdict>Multicast packets were detected on IUT vlan2 interface when they should be detected only on IUT master interface</verdict>
+            <verdict>IUT socket receives data from address on TESTER vlan1 interface but it is expected to receive from address on TESTER master interface</verdict>
+            <verdict>IUT socket receives data from address on TESTER vlan2 interface but it is expected to receive from address on TESTER master interface</verdict>
           </result>
         </results>
       </iter>
