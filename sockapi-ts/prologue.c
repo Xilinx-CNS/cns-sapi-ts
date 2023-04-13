@@ -17,12 +17,14 @@
 
 #include "sockapi-test.h"
 
+#include "sockapi-ts.h"
 #include "logger_ten.h"
 #include "tapi_test.h"
 #include "tapi_proc.h"
 #include "tapi_cfg_iptables.h"
 #include "tapi_network.h"
 #include "tapi_host_ns.h"
+#include "tapi_tags.h"
 #include "onload.h"
 #include "lib-ts.h"
 #include "lib-ts_netns.h"
@@ -707,6 +709,93 @@ set_onload_module_params(void)
 }
 
 /**
+ * Add TRC tags reflecting device information.
+ *
+ * @note The macro has to be called inside @ref trc_tags_add
+ *
+ * @param ta_     Test agent name.
+ * @param ifname_ Interface name.
+ * @param info_   Device information to retrieve and tag.
+ */
+#define TRC_TAGS_ADD_DEVICE_INFO(ta_, ifname_, info_) \
+    do {                                                                      \
+        char *dev_info_ = NULL;                                               \
+        te_string dev_info_str_ = TE_STRING_INIT;                             \
+                                                                              \
+        te_string_append(&dev_info_str_, "%s", #info_ "-");                   \
+                                                                              \
+        rc = tapi_cfg_if_deviceinfo_##info_##_get(ta_, ifname_, &dev_info_);  \
+        if (rc != 0)                                                          \
+        {                                                                     \
+            ERROR("tapi_cfg_if_deviceinfo_" #info_ "_get() failed to get "    \
+                  #info_ " for interface %s on %s: %r", ifname_, ta_, rc);    \
+            free(dev_info_);                                                  \
+            goto out;                                                         \
+        }                                                                     \
+        te_string_append(&dev_info_str_, "%s", dev_info_);                    \
+                                                                              \
+        rc = te_string_replace_all_substrings(&dev_info_str_, "-", " ");      \
+        if (rc != 0)                                                          \
+        {                                                                     \
+            ERROR("te_string_replace_all_substrings() failed to replace "     \
+                  "spaces on hyphens in %s: %r", dev_info_str_.ptr, rc);      \
+            te_string_free(&dev_info_str_);                                   \
+            free(dev_info_);                                                  \
+            goto out;                                                         \
+        }                                                                     \
+                                                                              \
+        rc = tapi_tags_add_tag(dev_info_str_.ptr, NULL);                      \
+        if (rc != 0)                                                          \
+        {                                                                     \
+            ERROR("tapi_tags_add_tag() failed to add " #info_ " tag "         \
+                  "for interface %s on %s: %r", ifname_, ta_, rc);            \
+            te_string_free(&dev_info_str_);                                   \
+            free(dev_info_);                                                  \
+            goto out;                                                         \
+        }                                                                     \
+                                                                              \
+        te_string_free(&dev_info_str_);                                       \
+        free(dev_info_);                                                      \
+    } while(0)
+
+/**
+ * Add TRC tags for the test configuration.
+ *
+ * @return Status code.
+ */
+static te_errno
+trc_tags_add(rcf_rpc_server *rpcs, const char *ifname)
+{
+    tqe_string *phys_iface;
+    te_errno rc = 0;
+    tqh_strings phys_ifaces = TAILQ_HEAD_INITIALIZER(phys_ifaces);
+    const char *ta = sockts_get_used_agt_name(rpcs, ifname);
+
+    sockts_find_parent_if(rpcs, ifname, &phys_ifaces);
+    phys_iface = TAILQ_FIRST(&phys_ifaces);
+
+    if (phys_iface != NULL)
+    {
+        TRC_TAGS_ADD_DEVICE_INFO(ta, phys_iface->v, drivername);
+        TRC_TAGS_ADD_DEVICE_INFO(ta, phys_iface->v, driverversion);
+        TRC_TAGS_ADD_DEVICE_INFO(ta, phys_iface->v, firmwareversion);
+    }
+    else
+    {
+        ERROR("sockts_find_parent_if() failed to get "
+              "parent (physical) interface");
+
+        rc = TE_RC(TE_TAPI, TE_ENOENT);
+    }
+
+out:
+    sockts_free_used_params_name();
+    tq_strings_free(&phys_ifaces, &free);
+
+    return rc;
+}
+
+/**
  * Set Socket API library names for Test Agents in accordance
  * with configuration in configurator.conf.
  *
@@ -929,6 +1018,9 @@ main(int argc, char **argv)
             sockts_kmemleak_clear(ta);
         }
     }
+
+    TEST_STEP("Add TRC tags");
+    CHECK_RC(trc_tags_add(pco_iut, iut_if->if_name));
 
     CHECK_RC(rc = cfg_tree_print(NULL, TE_LL_RING, "/:"));
 
