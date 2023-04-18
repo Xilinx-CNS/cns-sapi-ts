@@ -256,6 +256,8 @@ should be fixed):
 @table_2c_first SCALABLE_FILTERS_ENABLE_WORKER
 @table_2c_second Tests which require some RSS scalable filters being enabled
                  with a special SCALABLE_FILTERS_ENABLE_WORKE mode
+@table_2c_first USE_SCALABLE
+@table_2c_second Tests which are trying to configure scalable filters
 @table_2c_first ONLOAD_ZC_RELEASE_OS_INLINE
 @table_2c_second Tests checking explicit release of Onload ZC buffer with kernel data
 @table_2c_first ONLOAD_UDP_OUT_OF_RESOURCES

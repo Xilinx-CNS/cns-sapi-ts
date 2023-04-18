@@ -1231,6 +1231,8 @@
                      Test on many listener sockets already exists in
                      zetaferno-ts: tcp/listeners_limit -->
                 <req id="ZF_INCOMPATIBLE"/>
+                <!-- See ST-2700 -->
+                <req id="USE_SCALABLE"/>
              </script>
             <arg name="env">
                 <value ref="env.peer2peer"/>
