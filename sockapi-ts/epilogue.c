@@ -77,7 +77,7 @@ stop_nfqueue(rcf_rpc_server *pco)
         ifname_2 = getenv("TE_TST1_IUT_IUT");
     }
 
-    if (ifname_2 != NULL)
+    if (!te_str_is_null_or_empty(ifname_2))
     {
         CHECK_RC(tapi_cfg_iptables_chain_del(pco->ta, ifname_2,
                                              "mangle", "NFQ_B"));
