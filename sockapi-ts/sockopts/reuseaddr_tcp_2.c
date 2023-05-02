@@ -360,12 +360,12 @@ cleanup:
     free(rx_buf1);
     free(rx_buf2);
 
-    CLEANUP_RPC_CLOSE(pco_iut1, iut1_s);
-    CLEANUP_RPC_CLOSE(pco_iut2, iut2_s);
     CLEANUP_RPC_CLOSE(pco_tst, tst_srv1);
     CLEANUP_RPC_CLOSE(pco_tst, tst_srv2);
     CLEANUP_RPC_CLOSE(pco_tst, tst_acc1);
     CLEANUP_RPC_CLOSE(pco_tst, tst_acc2);
+    CLEANUP_RPC_CLOSE(pco_iut1, iut1_s);
+    CLEANUP_RPC_CLOSE(pco_iut2, iut2_s);
 
     if (route_added)
     {

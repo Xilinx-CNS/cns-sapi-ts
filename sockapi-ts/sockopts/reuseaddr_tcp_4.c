@@ -321,8 +321,8 @@ cleanup:
 
     for ( i--; i >= 0; i--)
     {
-        CLEANUP_RPC_CLOSE(pco_iut1, acc1_s[i]);
         CLEANUP_RPC_CLOSE(pco_tst, tst_s[i]);
+        CLEANUP_RPC_CLOSE(pco_iut1, acc1_s[i]);
     }
 
     free(tx_buf);
