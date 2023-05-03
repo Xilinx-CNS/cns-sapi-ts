@@ -74,11 +74,11 @@ typedef struct bpf_tuple {
 static inline te_bool
 sockts_not_pure_netns_used()
 {
-    return (getenv("SOCKAPI_TS_NETNS") != NULL &&
-            (getenv("TE_IUT_TST1_MV") != NULL ||
-            getenv("TE_IUT_TST1_VLAN") != NULL ||
-            getenv("SOCKAPI_TS_BOND_NAME") != NULL) ||
-            getenv("SOCKAPI_TS_IPVLAN_ENV"));
+    return getenv("SOCKAPI_TS_NETNS") != NULL &&
+           (getenv("TE_IUT_TST1_MV") != NULL ||
+           getenv("TE_IUT_TST1_VLAN") != NULL ||
+           getenv("SOCKAPI_TS_BOND_NAME") != NULL ||
+           getenv("SOCKAPI_TS_IPVLAN_ENV") != NULL);
 }
 
 /**
