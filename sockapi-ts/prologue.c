@@ -716,9 +716,6 @@ set_onload_module_params(void)
 int
 main(int argc, char **argv)
 {
-    cfg_val_type    val_type;
-    unsigned int    sleep_time;
-
     char           *st_rpcs_no_share = getenv("ST_RPCS_NO_SHARE");
     char           *disable_timestamps = getenv("DISABLE_TIMESTAMPS");
     char           *st_no_ip6 = getenv("ST_NO_IP6");
