@@ -4,8 +4,7 @@
 # should be after bond and vlan; vlan should be after bond, etc.
 - {null: 3, pkt_nocomp: 1, pkt_nohuge: 1}
 - {null: 1, hwport2: 1}
-# Disable libc_close testing because it is broken. See ON-14026
-# - {null: 5, libc_close: 1}
+- {null: 5, libc_close: 1}
 - {null: 12, ip_options: 1}
 - {null: 4, laddr_all: 1, laddr_prefsrc: 1}
 - {null: 2, udp_connect_no_handover: 1}
