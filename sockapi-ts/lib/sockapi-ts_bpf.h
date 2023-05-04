@@ -11,6 +11,7 @@
 #ifndef __SOCKAPI_TS_BPF_H__
 #define __SOCKAPI_TS_BPF_H__
 
+#include "sockapi-ts.h"
 #include "tapi_bpf.h"
 #include <sys/resource.h>
 
@@ -66,64 +67,6 @@ typedef struct bpf_tuple {
 } bpf_tuple;
 
 /**
- * Determine if it is needed to find parent agent and interface
- *
- * @return    @c TRUE if netns used with vlan/macvlan/ipvlan or bond/team
- *            @c FALSE if only netns used or netns not used
- */
-static inline te_bool
-sockts_not_pure_netns_used()
-{
-    return getenv("SOCKAPI_TS_NETNS") != NULL &&
-           (getenv("TE_IUT_TST1_MV") != NULL ||
-           getenv("TE_IUT_TST1_VLAN") != NULL ||
-           getenv("SOCKAPI_TS_BOND_NAME") != NULL ||
-           getenv("SOCKAPI_TS_IPVLAN_ENV") != NULL);
-}
-
-/**
- * Find parent interface and agent for NETNS interface
- *
- * @param[in] rpcs            RPC server handle
- * @param[in] ifname          Interface name
- * @param[out] agent_parent   Parent agent name
- * @param[out] ifname_parent  Parent interface name
- *
- * @return Status code
- */
-extern te_errno
-sockts_find_parent_netns(rcf_rpc_server *rpcs,
-                         const char *ifname,
-                         char *agent_parent,
-                         char *ifname_parent);
-
-/**
- * Free used_agt_name and used_interface_name variables
- */
-extern void
-sockts_free_used_params_name();
-
-/**
- * Getter for used_agt_name
- *
- * @param rpcs                RPC server handle
- * @param ifname              Interface name
- */
-extern char*
-sockts_get_used_agt_name(rcf_rpc_server *rpcs,
-                         const char *ifname);
-
-/**
- * Getter for used_interface_name
- *
- * @param rpcs                RPC server handle
- * @param ifname              Interface name
- */
-extern char*
-sockts_get_used_if_name(rcf_rpc_server *rpcs,
-                        const char *ifname);
-
-/**
  * Get full path to BPF object on Test Agent.
  *
  * @note Return value should be freed when it is no longer needed.
@@ -149,17 +92,6 @@ sockts_bpf_get_path(rcf_rpc_server *rpcs, const char *ifname,
     free(ta_dir);
     return strdup(buf);
 }
-
-/**
- * Find parent physical interfaces.
- *
- * @param rpcs              RPC server handle
- * @param ifname            Interface name
- * @param[out] xdp_ifaces   List of interfaces
- */
-extern void sockts_bpf_find_parent_if(rcf_rpc_server *rpcs,
-                                      const char *ifname,
-                                      tqh_strings *xdp_ifaces);
 
 /**
  * Link BPF program to a @p link_type attach point on interface. If interface
