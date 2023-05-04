@@ -3984,6 +3984,75 @@ extern void sockts_kmemleak_clear(const char *ta);
  */
 extern void sockts_kmemleak_get_report(const char *ta);
 
+/**
+ * Determine if it is needed to find parent agent and interface
+ *
+ * @return    @c TRUE if netns used with vlan/macvlan/ipvlan or bond/team
+ *            @c FALSE if only netns used or netns not used
+ */
+static inline te_bool
+sockts_not_pure_netns_used()
+{
+    return getenv("SOCKAPI_TS_NETNS") != NULL &&
+           (getenv("TE_IUT_TST1_MV") != NULL ||
+           getenv("TE_IUT_TST1_VLAN") != NULL ||
+           getenv("SOCKAPI_TS_BOND_NAME") != NULL ||
+           getenv("SOCKAPI_TS_IPVLAN_ENV") != NULL);
+}
+
+/**
+ * Find parent interface and agent for NETNS interface
+ *
+ * @param[in] rpcs            RPC server handle
+ * @param[in] ifname          Interface name
+ * @param[out] agent_parent   Parent agent name
+ * @param[out] ifname_parent  Parent interface name
+ *
+ * @return Status code
+ */
+extern te_errno
+sockts_find_parent_netns(rcf_rpc_server *rpcs,
+                         const char *ifname,
+                         char *agent_parent,
+                         char *ifname_parent);
+
+/**
+ * Free used_agt_name and used_interface_name variables
+ */
+extern void
+sockts_free_used_params_name();
+
+/**
+ * Getter for used_agt_name
+ *
+ * @param rpcs                RPC server handle
+ * @param ifname              Interface name
+ */
+extern char*
+sockts_get_used_agt_name(rcf_rpc_server *rpcs,
+                         const char *ifname);
+
+/**
+ * Getter for used_interface_name
+ *
+ * @param rpcs                RPC server handle
+ * @param ifname              Interface name
+ */
+extern char*
+sockts_get_used_if_name(rcf_rpc_server *rpcs,
+                        const char *ifname);
+
+/**
+ * Find parent physical interfaces.
+ *
+ * @param rpcs              RPC server handle
+ * @param ifname            Interface name
+ * @param[out] ifaces       List of interfaces
+ */
+extern void sockts_find_parent_if(rcf_rpc_server *rpcs,
+                                  const char *ifname,
+                                  tqh_strings *ifaces);
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

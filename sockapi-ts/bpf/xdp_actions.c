@@ -218,7 +218,7 @@ main(int argc, char *argv[])
     if (link_type == TAPI_BPF_LINK_TC_INGRESS)
     {
         if (parent_if)
-            sockts_bpf_find_parent_if(pco_iut, iut_if->if_name, &bpf_ifaces);
+            sockts_find_parent_if(pco_iut, iut_if->if_name, &bpf_ifaces);
         else
             CHECK_RC(tq_strings_add_uniq_dup(&bpf_ifaces,
                                              sockts_get_used_if_name(pco_iut,
