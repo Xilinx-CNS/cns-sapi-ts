@@ -733,6 +733,14 @@ set_onload_module_params(void)
             goto out;                                                         \
         }                                                                     \
         te_string_append(&dev_info_str_, "%s", dev_info_);                    \
+        /* SWNETLINUX-5028: firmware-version in not available for EF100 */    \
+        if (strcmp(dev_info_str_.ptr, #info_ "-N/A") == 0)                    \
+        {                                                                     \
+            WARN(#info_ " is not available.");                                \
+            te_string_free(&dev_info_str_);                                   \
+            free(dev_info_);                                                  \
+            break;                                                            \
+        }                                                                     \
                                                                               \
         rc = te_string_replace_all_substrings(&dev_info_str_, "-", " ");      \
         if (rc != 0)                                                          \
