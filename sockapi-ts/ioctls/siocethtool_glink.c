@@ -88,7 +88,7 @@ main(int argc, char *argv[])
     }
 
     tapi_cfg_base_if_up(pco_iut->ta, iut_if->if_name);
-    CFG_WAIT_CHANGES;
+    CHECK_RC(sockts_wait_for_if_up(pco_iut, iut_if->if_name));
 
     rpc_ioctl(pco_iut, iut_s, RPC_SIOCETHTOOL, &ifreq_var);
 
