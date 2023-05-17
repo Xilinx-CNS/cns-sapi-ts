@@ -25,7 +25,10 @@
         </run>
 
         <run>
-            <script name="ssh_port_fwd_clnt"/>
+            <script name="ssh_port_fwd_clnt">
+               <!-- See ST-2707 -->
+               <req id ="NO_SCALABLE_ACTIVE_PASSIVE"/>
+            </script>
             <arg name="env">
                <value ref="env.two_nets.iut_first"/>
             </arg>
