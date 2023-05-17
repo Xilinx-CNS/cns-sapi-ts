@@ -88,6 +88,12 @@
 
 #include "sockapi-test.h"
 
+static te_bool
+is_loopback(const struct sockaddr *a1, const struct sockaddr *a2)
+{
+    return te_sockaddrcmp_no_ports(a1, te_sockaddr_get_size(a1),
+                                   a2, te_sockaddr_get_size(a2)) == 0;
+}
 
 int
 main(int argc, char *argv[])
@@ -349,6 +355,14 @@ cleanup:
     CLEANUP_RPC_CLOSE(pco_iut, iut_s);
     CLEANUP_RPC_CLOSE(pco_iut, acc_s);
     CLEANUP_RPC_CLOSE(pco_tst, tst_s);
+
+    /*
+     * Loopback iterations produces too much zombie stacks which results
+     * in high consuming of NIC resources. In particular, packet buffers are
+     * exhausted if compound pages are disabled (EF_COMPOUND_PAGES_MODE=2).
+     */
+    if (tapi_onload_run() && is_loopback(iut_addr, tst_addr))
+        sockts_kill_zombie_stacks(pco_iut);
 
     TEST_END;
 }
