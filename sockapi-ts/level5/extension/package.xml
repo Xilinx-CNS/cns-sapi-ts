@@ -758,6 +758,8 @@
           <req id="SF_TEMPLATE_SEND"/>
           <req id="UL_64"/>
           <req id="ONLOAD_ONLY"/>
+          <!-- See ST-2707 -->
+          <req id ="NO_SCALABLE_ACTIVE_PASSIVE"/>
         </script>
           <arg name="env" ref="env.peer2peer"/>
           <arg name="total">
