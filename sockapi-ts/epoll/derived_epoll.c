@@ -286,9 +286,9 @@ main(int argc, char *argv[])
 
 cleanup:
 
+    CLEANUP_RPC_CLOSE(pco_tst, tst_s);
     CLEANUP_RPC_CLOSE(pco_iut, epfd);
     CLEANUP_RPC_CLOSE(pco_iut, iut_s);
-    CLEANUP_RPC_CLOSE(pco_tst, tst_s);
 
     if (inst_num == 2)
     {
