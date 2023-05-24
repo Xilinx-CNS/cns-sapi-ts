@@ -367,8 +367,8 @@ main(int argc, char *argv[])
     TEST_SUCCESS;
 
 cleanup:
-    CLEANUP_RPC_CLOSE(pco_iut, iut_s);
     CLEANUP_RPC_CLOSE(pco_tst, tst_s);
+    CLEANUP_RPC_CLOSE(pco_iut, iut_s);
     if (use_epollet)
         CLEANUP_RPC_CLOSE(pco_iut, epfd);
 
