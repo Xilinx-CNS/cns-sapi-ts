@@ -244,12 +244,12 @@ main(int argc, char *argv[])
     TEST_SUCCESS;
 
 cleanup:
+    CLEANUP_RPC_CLOSE(pco_tst, tst_s);
     CLEANUP_RPC_CLOSE(pco_iut, iut1_us);
     CLEANUP_RPC_CLOSE(pco_iut2, iut2_us);
     CLEANUP_RPC_CLOSE(pco_iut, iut_s);
     CLEANUP_RPC_CLOSE(pco_iut, iut_l);
     CLEANUP_RPC_CLOSE(pco_iut2, iut_s2);
-    CLEANUP_RPC_CLOSE(pco_tst, tst_s);
 
     CLEANUP_CHECK_RC(rcf_rpc_server_destroy(pco_iut2));
 
