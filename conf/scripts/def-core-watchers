@@ -1,0 +1,7 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (C) 2023 OKTET Labs Ltd. All rights reserved.
+
+# Place the dumps in SF_TS_TMPDIR directory if it is exported.
+export TE_TA_CORE_PATTERN="${SF_TS_TMPDIR:-/var/tmp}/core.te.%h-%p-%t"
+# Run core watchers for each agent, loglistener and hypervisor.
+export TE_TA_CORE_WATCHER="yes"
