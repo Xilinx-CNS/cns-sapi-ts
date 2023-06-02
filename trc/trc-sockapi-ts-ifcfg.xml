@@ -153,6 +153,12 @@
           </result>
           <result value="PASSED"/>
         </results>
+        <results tags="x3" key="ON-13769">
+          <result value="FAILED">
+            <verdict>Socket 'iut_s' is not expected to be readable, but it is</verdict>
+          </result>
+          <result value="PASSED"/>
+        </results>
       </iter>
     </test>
     <test name="if_remove_addr_after_listen" type="script">
@@ -174,6 +180,12 @@
           <result value="FAILED">
             <verdict>Socket 'acc_s[i]' is not expected to be readable, but it is</verdict>
           </result>
+        </results>
+        <results tags="x3" key="ON-13769">
+          <result value="FAILED">
+            <verdict>Socket 'acc_s[i]' is not expected to be readable, but it is</verdict>
+          </result>
+          <result value="PASSED"/>
         </results>
       </iter>
     </test>
