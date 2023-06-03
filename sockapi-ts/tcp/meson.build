@@ -67,6 +67,7 @@ tests = [
     'tcp_handle_syn',
     'tcp_last_data',
     'tcp_loopback',
+    'tcp_server_restart',
     'tcp_small_segment',
     'tcp_small_window',
     'tcp_state_hang',

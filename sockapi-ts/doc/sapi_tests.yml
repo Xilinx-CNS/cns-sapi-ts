@@ -3292,6 +3292,9 @@ groups:
     - test: tcp_loopback
       summary: Testing of TCP connection between sockets on the same host
 
+    - test: tcp_server_restart
+      summary: Test which simulates TCP server restart
+
     - test: tcp_small_segment
       summary: Small segment receiving
 
