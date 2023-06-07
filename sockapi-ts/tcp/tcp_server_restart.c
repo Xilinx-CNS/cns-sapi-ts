@@ -125,7 +125,6 @@ main(int argc, char *argv[])
     iut_new_s = rpc_socket(pco_iut_new, rpc_socket_domain_by_addr(iut_addr),
                            RPC_SOCK_STREAM, RPC_PROTO_DEF);
     rpc_setsockopt_int(pco_iut_new, iut_new_s, RPC_SO_REUSEADDR, 1);
-    rpc_setsockopt_int(pco_iut_new, iut_new_s, RPC_SO_REUSEPORT, 1);
     rpc_bind(pco_iut_new, iut_new_s, iut_addr);
     rpc_listen(pco_iut_new, iut_new_s, SOCKTS_BACKLOG_DEF);
 
