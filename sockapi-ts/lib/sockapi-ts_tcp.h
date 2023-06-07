@@ -355,6 +355,27 @@ extern void sockts_shutdown_check_tcp_state(rcf_rpc_server *pco_iut,
 extern te_errno sockts_check_tcp_conn_csap(rcf_rpc_server *rpcs, int s,
                                            tapi_tcp_handler_t csap_s);
 
+/**
+ * Try to connect to IUT, making many attempts with 1 second intervals
+ * between them
+ *
+ * @param rpcs               RPC server
+ * @param sock               Socket
+ * @param iut_addr           Host address to connect it
+ * @param wait_accept_min_s  If rpc_connect() failed, its next calls should
+ *                           fail again until this number of seconds;
+ *                           or @c -1, in which case this is not checked
+ * @param wait_accept_max_s  If rpc_connect() failed, its next call should
+ *                           succeed before this number of seconds;
+ *                           or @c -1, in which case this is not checked
+ *
+ * @return Status code.
+ */
+extern te_errno sockts_connect_retry(rcf_rpc_server *rpcs, int sock,
+                                     const struct sockaddr *iut_addr,
+                                     int wait_accept_min_s,
+                                     int wait_accept_max_s);
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

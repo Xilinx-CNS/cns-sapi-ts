@@ -785,6 +785,39 @@
         </run>
 
         <run>
+            <script name="tcp_server_restart">
+                <req id="SOCK_STREAM"/>
+                <req id="SO_REUSEADDR"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="accepted_num" list="">
+                <value>200</value>
+                <value>200</value>
+                <value>833</value>
+                <value>833</value>
+            </arg>
+            <arg name="time_wait_num" list="">
+                <value>0</value>
+                <value>7</value>
+                <value>442</value>
+                <value>111</value>
+            </arg>
+            <arg name="closed_num" list="">
+                <!-- all old connections were closed -->
+                <value>200</value>
+                <!-- all are closed, some of them are in TIME_WAIT state -->
+                <value>193</value>
+                <!-- many sockets in TIME_WAIT, few are alive -->
+                <value>321</value>
+                <!-- many sockets are alive -->
+                <value>511</value>
+            </arg>
+        </run>
+
+        <run>
             <script name="syn_recv_fin_wait1" track_conf="silent">
                 <req id="SOCK_STREAM"/>
             </script>

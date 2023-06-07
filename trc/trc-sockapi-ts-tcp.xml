@@ -5428,6 +5428,17 @@
         </results>
       </iter>
     </test>
+    <test name="tcp_server_restart" type="script">
+      <objective>Create many TCP connections, restart RPC server, accept and check a new connection, check not closed connections.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="accepted_num"/>
+        <arg name="time_wait_num"/>
+        <arg name="closed_num"/>
+        <notes/>
+      </iter>
+    </test>
     <test name="tcp_zero_window_ext" type="script">
       <objective>Check that TCP socket closes properly despite it received a packet with the zero window.</objective>
       <notes/>

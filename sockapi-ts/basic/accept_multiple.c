@@ -35,71 +35,8 @@
 
 #include "sockapi-test.h"
 
-/* Number of attempts to establish a connection */
-#define WAIT_FOR_ACCEPTING 60
-
-/**
- * Try to connect to IUT in loop
- * 
- * @param rpcs      RPC server
- * @param sock      Socket
- * @param iut_addr  Host address to connect it
- * 
- * @return Status code  @c 0 for success, @c -1 in casse of errors
- */
-static int
-test_connect_loop(rcf_rpc_server *rpcs, int sock,
-                  const struct sockaddr *iut_addr)
-{
-    tarpc_timeval   tv = {0, 0};
-    int             i;
-    time_t          sec;
-
-    rpc_gettimeofday(rpcs, &tv, NULL);
-
-    for (i = 0; i < WAIT_FOR_ACCEPTING; i++)
-    {
-        RPC_AWAIT_IUT_ERROR(rpcs);
-        rpcs->timeout = 100000;
-        if (rpc_connect(rpcs, sock, iut_addr) == 0)
-            break;
-
-        if (RPC_ERRNO(rpcs) != RPC_ECONNREFUSED &&
-            RPC_ERRNO(rpcs) != RPC_ETIMEDOUT)
-        {
-            ERROR_VERDICT("connect() fails after %d attempts with errno %s",
-                          i, errno_rpc2str(RPC_ERRNO(rpcs)));
-            return -1;
-        }
-        SLEEP(1);
-    }
-
-    sec = tv.tv_sec;
-    rpc_gettimeofday(rpcs, &tv, NULL);
-    sec = tv.tv_sec - sec;
-
-    if (i != 0)
-        RING("Connect attempts %d", i);
-
-    if (i == WAIT_FOR_ACCEPTING)
-    {
-        ERROR_VERDICT("connect() fails after %d seconds with errno %s",
-                      sec, errno_rpc2str(RPC_ERRNO(rpcs)));
-        return -1;
-    }
-
-    else if (i > 0 && i < WAIT_FOR_ACCEPTING)
-    {
-        if (sec >= 30 && sec < 120)
-            RING_VERDICT("Connection has been established after waiting "
-                         "30-120 seconds");
-        else
-            ERROR_VERDICT("Connection has been established after waiting "
-                          "%d seconds", sec);
-    }
-
-    return 0;
-}
+#define WAIT_ACCEPT_MIN_S   30
+#define WAIT_ACCEPT_MAX_S   120
 
 /**
  * Create sockets and connect IUT and TST via TCP @p connections times
@@ -132,7 +69,8 @@ test_multiple_connection(rcf_rpc_server *pco_iut, rcf_rpc_server *pco_tst,
         tst_s = rpc_socket(pco_tst, rpc_socket_domain_by_addr(iut_addr),
                            RPC_SOCK_STREAM, RPC_PROTO_DEF);
 
-        if (test_connect_loop(pco_tst, tst_s, iut_addr) != 0)
+        if (sockts_connect_retry(pco_tst, tst_s, iut_addr,
+                                 WAIT_ACCEPT_MIN_S, WAIT_ACCEPT_MAX_S) != 0)
         {
             RPC_CLOSE(pco_tst, tst_s);
             RPC_CLOSE(pco_iut, iut_s);

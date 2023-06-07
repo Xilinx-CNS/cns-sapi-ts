@@ -72,6 +72,7 @@ TCP packets, etc.
 -# @ref tcp-ack_out_of_window
 -# @ref tcp-ts_send
 -# @ref tcp-rst_send_partial
+-# @ref tcp-tcp_server_restart
 
 @}
 

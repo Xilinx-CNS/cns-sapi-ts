@@ -1143,3 +1143,86 @@ cleanup:
     te_dbuf_free(&recv_dbuf);
     return result;
 }
+
+/* See description in sockapi-ts_tcp.h */
+te_errno
+sockts_connect_retry(rcf_rpc_server *rpcs, int sock,
+                     const struct sockaddr *iut_addr, int wait_accept_min_s,
+                     int wait_accept_max_s)
+{
+/* Number of attempts to establish a connection */
+#define ACCEPT_ATTEMPTS_NUM  60
+/* Timeout for connect() */
+#define WAIT_CONNECT_TO_MS   100000
+    tarpc_timeval   tv = {0, 0};
+    int             i;
+    time_t          sec;
+    te_errno        errno;
+
+    rpc_gettimeofday(rpcs, &tv, NULL);
+    sec = tv.tv_sec;
+
+    for (i = 0; i < ACCEPT_ATTEMPTS_NUM; i++)
+    {
+        RPC_AWAIT_IUT_ERROR(rpcs);
+        /*
+         * After some number of connections, rpc_connect() may hang for more
+         * than 10 seconds, which is the default rpcs->timeout
+         */
+        rpcs->timeout = WAIT_CONNECT_TO_MS;
+        if (rpc_connect(rpcs, sock, iut_addr) == 0)
+            break;
+
+        errno = RPC_ERRNO(rpcs);
+        if (errno != RPC_ECONNREFUSED && errno != RPC_ETIMEDOUT)
+        {
+            ERROR("connect() fails after %d attempts", i);
+            ERROR_VERDICT("connect() fails with errno %s",
+                          errno_rpc2str(errno));
+            return errno;
+        }
+        /*
+         * Do not call connect() calls very fast to prevent IUT side
+         * considering this as an attack
+         */
+        sleep(1);
+    }
+
+    rpc_gettimeofday(rpcs, &tv, NULL);
+    sec = tv.tv_sec - sec;
+
+    if (i != 0)
+        VERB("Connect attempts %d", i);
+
+    if (i == ACCEPT_ATTEMPTS_NUM)
+    {
+        ERROR("connect() fails after %d seconds", sec);
+        ERROR_VERDICT("connect() fails with errno %s",
+                      errno_rpc2str(errno));
+        return errno;
+    }
+    else if (i > 0)
+    {
+        RING("Connection has been established after waiting %d seconds",
+             sec);
+        if (sec < wait_accept_min_s || sec >= wait_accept_max_s)
+        {
+            if (wait_accept_min_s != -1 && sec < wait_accept_min_s)
+            {
+                ERROR_VERDICT("Connection has been established too"
+                              " quickly");
+                return TE_EFAIL;
+            }
+            if (wait_accept_max_s != -1 && sec >= wait_accept_max_s)
+            {
+                ERROR_VERDICT("Connection took too long to establish");
+                return TE_ETIMEDOUT;
+            }
+        }
+    }
+
+    return 0;
+
+#undef ACCEPT_ATTEMPTS_NUM
+#undef WAIT_CONNECT_TO_MS
+}
