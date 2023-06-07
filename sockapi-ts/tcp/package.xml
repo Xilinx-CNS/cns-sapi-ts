@@ -787,7 +787,6 @@
         <run>
             <script name="tcp_server_restart">
                 <req id="SOCK_STREAM"/>
-                <req id="SO_REUSEPORT"/>
                 <req id="SO_REUSEADDR"/>
             </script>
             <arg name="env">
