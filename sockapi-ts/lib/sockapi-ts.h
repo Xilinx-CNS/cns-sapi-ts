@@ -3165,6 +3165,24 @@ sockts_get_zombie_stacks(rcf_rpc_server *rpcs)
 }
 
 /**
+ * Kill zombie stacks on the server if there is more than allowed.
+ *
+ * @param rpcs          RPC server
+ * @param stacks_num    Max number of allowed zombie stacks
+ */
+extern void sockts_kill_zombie_stacks_gen(rcf_rpc_server *rpcs,
+                                          unsigned int stacks_num);
+
+/**
+ * Wrapper for sockts_kill_zombie_stacks_gen that
+ * uses the number of allowed zombie stacks obtained
+ * from the SF_V5_MAX_ALLOWED_ZOMBIE_STACKS env variable.
+ *
+ * @param rpcs          RPC server
+ */
+extern void sockts_kill_zombie_stacks_if_many(rcf_rpc_server *rpcs);
+
+/**
  * Cleanup zombie stacks on the server if Onload provides few stacks: for
  * example, in af_xdp mode (in this case, the variable @c SF_V5_FEW_STACKS
  * should be set to yes).

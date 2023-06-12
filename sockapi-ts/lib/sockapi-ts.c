@@ -1905,6 +1905,51 @@ sockts_get_kill_zombie_stacks(rcf_rpc_server *rpcs, te_bool check_only)
 
 /* See description in sockapi-ts.h */
 void
+sockts_kill_zombie_stacks_gen(rcf_rpc_server *rpcs, unsigned int stacks_num)
+{
+    struct timeval tv_start;
+    struct timeval tv_end;
+
+    gettimeofday(&tv_start, NULL);
+    while (tapi_onload_stacks_number(rpcs) > stacks_num)
+    {
+        sockts_kill_zombie_stacks(rpcs);
+        TAPI_WAIT_NETWORK;
+        gettimeofday(&tv_end, NULL);
+        if (TE_US2SEC(TIMEVAL_SUB(tv_end, tv_start)) >=
+            SOCKTS_ZOMBIE_STACK_KILLING_TIMEOUT)
+        {
+            ERROR_VERDICT("Failed to kill zombie stacks");
+            break;
+        }
+    }
+}
+
+/* See description in sockapi-ts.h */
+void
+sockts_kill_zombie_stacks_if_many(rcf_rpc_server *rpcs)
+{
+    char *max_stacks_s = getenv("SF_V5_MAX_ALLOWED_ZOMBIE_STACKS");
+    unsigned int max_stacks = 0;
+    te_errno rc = 0;
+
+    if (max_stacks_s == NULL)
+        return;
+
+    rc = te_strtoui(max_stacks_s, 10, &max_stacks);
+    if (rc != 0)
+    {
+        ERROR_VERDICT("Incorrect max allowed stacks input, "
+                      "stacks were not killed: %r", rc);
+    }
+    else
+    {
+        sockts_kill_zombie_stacks_gen(rpcs, max_stacks);
+    }
+}
+
+/* See description in sockapi-ts.h */
+void
 update_arp(rcf_rpc_server *rpcs_src, const struct if_nameindex *iface_src,
            rcf_rpc_server *rpcs_dest, const struct if_nameindex *iface_dest,
            const struct sockaddr *addr_dest,
@@ -2191,8 +2236,6 @@ sockts_close(rcf_rpc_server *rpcs, rcf_rpc_server *parent, int *sock,
 void
 sockts_kill_check_zombie_stack(rcf_rpc_server *rpcs, te_bool reboot)
 {
-    struct timeval tv_start;
-    struct timeval tv_end;
     char          *ef_name;
 
     if (reboot)
@@ -2203,19 +2246,7 @@ sockts_kill_check_zombie_stack(rcf_rpc_server *rpcs, te_bool reboot)
                                            NULL));
     }
 
-    gettimeofday(&tv_start, NULL);
-    while (tapi_onload_stacks_number(rpcs) > 0)
-    {
-        sockts_kill_zombie_stacks(rpcs);
-        TAPI_WAIT_NETWORK;
-        gettimeofday(&tv_end, NULL);
-        if (TE_US2SEC(TIMEVAL_SUB(tv_end, tv_start)) >=
-            SOCKTS_ZOMBIE_STACK_KILLING_TIMEOUT)
-        {
-            ERROR_VERDICT("Failed to kill zombie stacks");
-            break;
-        }
-    }
+    sockts_kill_zombie_stacks_gen(rpcs, 0);
 }
 
 /* See description in sockapi-ts.h */
