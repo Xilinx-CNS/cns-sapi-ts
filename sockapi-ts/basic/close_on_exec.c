@@ -213,5 +213,7 @@ cleanup:
     if (close_on_exec == FALSE)
         CLEANUP_RPC_CLOSE(pco_iut, iut_s);
 
+    sockts_kill_zombie_stacks_if_many(pco_iut);
+
     TEST_END;
 }

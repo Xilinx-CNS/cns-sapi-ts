@@ -288,5 +288,7 @@ cleanup:
     if (!acc_pipe)
         CHECK_RC(tapi_sh_env_set(pco_iut, "EF_PIPE", "1", TRUE, TRUE));
 
+    sockts_kill_zombie_stacks_if_many(pco_iut);
+
     TEST_END;
 }
