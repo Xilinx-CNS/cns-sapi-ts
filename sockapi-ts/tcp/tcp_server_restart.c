@@ -119,6 +119,7 @@ main(int argc, char *argv[])
 
     TEST_STEP("Create new RPC server.");
     CHECK_RC(rcf_rpc_server_create(pco_iut->ta, "iut_new", &pco_iut_new));
+    CHECK_RC(rcf_rpc_setlibname(pco_iut_new, pco_iut->nv_lib));
 
     TEST_STEP("Create a listening socket on the new RPC server using the"
               " port that was used on the original IUT RPC server.");
