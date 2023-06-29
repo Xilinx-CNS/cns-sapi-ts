@@ -38,10 +38,12 @@ def add_req(new_req: str, reason: str = "") -> None:
     """
     global reqs
 
-    reqs += " --tester-req=" + new_req
-    if reason != "":
-        reason += ": "
-    ring("req_fix: " + reason + "adding --tester-req=" + new_req)
+    new_req = "--tester-req=" + new_req
+    if new_req not in reqs:
+        reqs += " " + new_req
+        if reason != "":
+            reason += ": "
+        ring("req_fix: " + reason + "adding " + new_req)
 
 # Socket caching is disabled.
 # Do not run FD cahcing tests.
