@@ -386,5 +386,7 @@ cleanup:
     te_dbuf_free(&read_data);
     te_dbuf_free(&payload);
 
+    sockts_kill_zombie_stacks_if_many(pco_iut);
+
     TEST_END;
 }

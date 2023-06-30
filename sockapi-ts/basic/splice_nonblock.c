@@ -421,5 +421,7 @@ cleanup:
 
     CHECK_CLEAR_TRANSPARENT(iut_addr, pco_tst, tst_addr);
 
+    sockts_kill_zombie_stacks_if_many(pco_iut);
+
     TEST_END;
 }
