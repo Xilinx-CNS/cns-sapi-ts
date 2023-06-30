@@ -116,6 +116,8 @@ send_receive_packet(int iut_s, int tst_s, te_bool tx,
     struct timespec     tsh;
     struct timespec     ts_o;
     struct tarpc_timeval *tv;
+
+    int                  check_length = length;
     iomux_evt_fd         event;
     tarpc_timeval        timeout = {.tv_sec = 0, .tv_usec = 500000};
     te_bool              any_event = ts_any_event(tx, sock_type) ||
@@ -312,9 +314,15 @@ send_receive_packet(int iut_s, int tst_s, te_bool tx,
                 rc = rpc_simple_zc_recv_gen_mmsg(
                                             pco_iut, iut_s, &mmsg[i], 1,
                                             &args_msg, flags, NULL, TRUE);
+                /*
+                 * Do not check payload in this case in further
+                 * ts_check_cmsghdr() call.
+                 */
+                check_length = 0;
+
                 if (rc == 0)
                 {
-                    if (!tx || !onload_ext)
+                    if (!tx)
                     {
                         TEST_VERDICT("onload_zc_recv() did not return any "
                                      "messages but succeeded");
@@ -358,8 +366,9 @@ send_receive_packet(int iut_s, int tst_s, te_bool tx,
 
             if (rc >= 0)
             {
-                ts_check_cmsghdr(checked_msg, rc, length, sndbuf[i], tx,
-                                 sock_type, onload_ext, vlan, &ts_o, &ts);
+                ts_check_cmsghdr(checked_msg, rc, check_length, sndbuf[i],
+                                 tx, sock_type, onload_ext, vlan, &ts_o,
+                                 &ts);
                 TIMEVAL_TO_TIMESPEC(&tv[i], &tsh);
                 if (checked_msg->msg_controllen > 0 &&
                     ts_check_deviation(&ts_o, &tsh, 0, TST_PRECISION * 2))
