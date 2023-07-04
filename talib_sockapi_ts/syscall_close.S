@@ -10,6 +10,13 @@
  * $Id$
  */
 
+/* By default, assembler code starts process with executable stack.
+ * This line switches to non-executable stack.
+ * See
+ * https://lore.kernel.org/lkml/20191208171918.GC19716@avx2/
+ */
+.section .note.GNU-stack,"",@progbits
+
 #ifdef __CYGWIN__
 #undef __unix__
 #endif
