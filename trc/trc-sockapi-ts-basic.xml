@@ -6926,13 +6926,13 @@
         <arg name="iter_num"/>
         <arg name="read_socket"/>
         <notes/>
-        <results tags="x3" key="ST-2698" notes="Because of small amount of stacks on X3 not all sockets can be accelerated">
+        <results tags="x3&amp;!reuse_stack" key="ST-2698" notes="Because of small amount of stacks on X3 not all sockets can be accelerated">
           <result value="PASSED">
             <verdict>Some created sockets were not accelerated</verdict>
             <verdict>Test caught the SIGUSR2 signal</verdict>
           </result>
         </results>
-        <results tags="ef100" key="ST-2698" notes="Because of small amount of stacks on EF100 not all sockets can be accelerated">
+        <results tags="ef100&amp;!reuse_stack" key="ST-2698" notes="Because of small amount of stacks on EF100 not all sockets can be accelerated">
           <result value="PASSED">
             <verdict>Some created sockets were not accelerated</verdict>
             <verdict>Test caught the SIGUSR2 signal</verdict>
