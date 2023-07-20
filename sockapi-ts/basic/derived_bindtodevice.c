@@ -373,5 +373,7 @@ cleanup:
 
     CLEANUP_CHECK_RC(tapi_cfg_del_route(&rt_handle));
 
+    sockts_kill_zombie_stacks_if_many(pco_iut);
+
     TEST_END;
 }

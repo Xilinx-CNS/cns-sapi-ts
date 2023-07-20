@@ -224,5 +224,7 @@ cleanup:
         CLEANUP_CHECK_RC(rcf_rpc_server_destroy(pco_child));
     free(buffer);
 
+    sockts_kill_zombie_stacks_if_many(pco_iut);
+
     TEST_END;
 }

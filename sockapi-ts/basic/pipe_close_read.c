@@ -227,5 +227,7 @@ cleanup:
     if (pco_child != NULL)
         rcf_rpc_server_destroy(pco_child);
 
+    sockts_kill_zombie_stacks_if_many(pco_iut);
+
     TEST_END;
 }

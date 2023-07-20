@@ -424,5 +424,8 @@ cleanup:
     free(iut_buf2);
     free(tst_buf1);
     free(tst_buf2);
+
+    sockts_kill_zombie_stacks_if_many(pco_iut);
+
     TEST_END;
 }

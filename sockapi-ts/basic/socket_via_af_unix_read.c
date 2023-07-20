@@ -242,5 +242,7 @@ cleanup:
     free(rx_buf);
     free(tx_buf);
 
+    sockts_kill_zombie_stacks_if_many(pco_iut);
+
     TEST_END;
 }
