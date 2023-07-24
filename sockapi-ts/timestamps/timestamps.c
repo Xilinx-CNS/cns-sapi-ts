@@ -505,3 +505,92 @@ ts_get_tx_ack_ts(rpc_msghdr *msg, int rc, int length, char *sndbuf)
 
     return ts_tx;
 }
+
+/**
+ * FIXME: This function is called after ts_check_cmsghdr_addr(), which
+ * checks SW timestamp without checking, that HW timestamp is not zero.
+ * And this one checks only HW, without checking SW.
+ * To improve both checks this function should be integrated to
+ * ts_check_cmsghdr_addr(), and it should return all three timestamps: SW,
+ * SYS HW and RAW HW for further checking in certain tests. Now
+ * ts_check_cmsghdr_addr() returns only one timestamp.
+ */
+void
+ts_check_second_cmsghdr(rcf_rpc_server *rpcs, int s,
+                        rpc_msghdr *msg,
+                        struct timespec *ts_check,
+                        const struct sockaddr *addr,
+                        struct sock_extended_err *err_in,
+                        te_bool skip_check,
+                        te_bool *zero_ts_reported,
+                        te_bool *no_ts_reported)
+{
+/* Maximum deviation */
+#define DEV_MS 10000
+
+/* Lenght for packet with cmsg header */
+#define PKT_LEN 2000
+
+    struct timespec       ts_hw;
+    rpc_scm_timestamping *ts;
+    int                   rc;
+
+    rpc_msghdr  msg_aux = {.msg_iov = NULL, .msg_control = NULL};
+    rpc_msghdr *msg_ptr;
+
+    RPC_AWAIT_IUT_ERROR(rpcs);
+    /*
+     * There are no SW timestamps in Onload and SOF_TIMESTAMPING_OPT_TX_SWHW
+     * is not supported, so HW timestamp was returned in the first message
+     * and there is no second one.
+     */
+    if (tapi_onload_run())
+        return;
+
+    if (msg == NULL)
+    {
+        ts_init_msghdr(TRUE, &msg_aux, PKT_LEN);
+        rc = rpc_recvmsg(rpcs, s, &msg_aux,
+                         RPC_MSG_ERRQUEUE | RPC_MSG_DONTWAIT);
+        if (rc < 0)
+        {
+            if (no_ts_reported == NULL || !(*no_ts_reported))
+            {
+                *no_ts_reported = TRUE;
+                ERROR_VERDICT("Second timestamp was not received.");
+            }
+            return;
+        }
+        msg_ptr = &msg_aux;
+    }
+    else
+    {
+        msg_ptr = msg;
+    }
+
+    ts_print_msg_control_data(msg_ptr);
+    if (skip_check)
+        return;
+    ts = ts_check_msg_control_data(msg_ptr, TRUE, err_in, addr);
+    ts_print_sys(ts);
+
+    if(ts_timespec_is_zero(&ts->hwtimeraw))
+    {
+        if (zero_ts_reported == NULL || !(*zero_ts_reported))
+        {
+            if (zero_ts_reported != NULL)
+                *zero_ts_reported = TRUE;
+            ERROR_VERDICT("Raw HW timestamp in second packet is zero");
+        }
+        return;
+    }
+    if (ts_check != NULL)
+    {
+        memcpy(&ts_hw, &ts->hwtimeraw, sizeof(ts_hw));
+        if (ts_cmp(ts_check, &ts_hw) >= 0)
+            RING_VERDICT("Timestamps are not monotonic");
+        ts_check_deviation(&ts_hw, ts_check, 0, DEV_MS);
+    }
+#undef DEV_MS
+#undef PKT_LEN
+}

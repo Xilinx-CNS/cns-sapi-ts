@@ -288,6 +288,34 @@ ts_check_cmsghdr(rpc_msghdr *msg, int rc, size_t length, char *sndbuf,
                           onload_ext, vlan, TRUE, NULL, ts_o, ts_prev);
 }
 
+/**
+ * Check second received TS cmsg sanity. Two timestamp messages are
+ * received when both SW and HW timestamps are enabled and
+ * @c SOF_TIMESTAMPING_OPT_TX_SWHW flag is set.
+ *
+ * @param rpcs             RPC server
+ * @param s                Socket
+ * @param msg              cmsg itself or @c NULL if it should be received
+ *                         by this function
+ * @param ts_check         Timestamp for comparison with obtained one or
+ *                         @c NULL
+ * @param addr             Address for comparison with obtained one or
+ *                         @c NULL
+ * @param err_in           Expected extended error value or @c NULL
+ * @param skip_check       Receive message but do not check it
+ * @param zero_ts_reported Whether already reported that HW timestamp is
+ *                         zero or @c NULL
+ * @param no_ts_reported   Whether already reported that there is no HW
+ *                         timestamp in the message or @c NULL
+ */
+extern void ts_check_second_cmsghdr(rcf_rpc_server *rpcs, int s,
+                                    rpc_msghdr *msg,
+                                    struct timespec *ts_check,
+                                    const struct sockaddr *addr,
+                                    struct sock_extended_err *err_in,
+                                    te_bool skip_check,
+                                    te_bool *zero_ts_reported,
+                                    te_bool *no_ts_reported);
 
 /**
  * Timestamps types.
