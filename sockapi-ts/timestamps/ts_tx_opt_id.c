@@ -173,6 +173,7 @@ main(int argc, char *argv[])
     struct timespec ts_h;
     tarpc_timeval   tv_h = {.tv_sec = 0, .tv_usec = 0};
     te_bool         no_events = FALSE;
+    te_bool         zero_reported = FALSE;
 
     uint32_t count = 0;
     uint32_t ee_data = 0;
@@ -183,6 +184,11 @@ main(int argc, char *argv[])
 
     te_saved_mtus   iut_mtus = LIST_HEAD_INITIALIZER(iut_mtus);
     te_saved_mtus   tst_mtus = LIST_HEAD_INITIALIZER(tst_mtus);
+
+    struct sock_extended_err   template = {.ee_errno = ENOMSG,
+                                           .ee_info = 0,
+                                           .ee_origin =
+                                                SO_EE_ORIGIN_TIMESTAMPING};
 
     TEST_START;
     TEST_GET_PCO(pco_iut);
@@ -227,6 +233,9 @@ main(int argc, char *argv[])
 
     if (onload_ext)
         flags |= RPC_ONLOAD_SOF_TIMESTAMPING_STREAM;
+
+    if (!tapi_onload_run())
+        flags |= RPC_SOF_TIMESTAMPING_OPT_TX_SWHW;
 
     RPC_AWAIT_IUT_ERROR(pco_iut);
     rc = rpc_setsockopt_int(pco_iut, iut_s, RPC_SO_TIMESTAMPING, flags);
@@ -280,7 +289,10 @@ main(int argc, char *argv[])
             TEST_VERDICT("Unexpected datagram number is returned in "
                          "ee_data field");
         count = ee_data;
-
+        TIMEVAL_TO_TIMESPEC(&tv_h, &ts_h);
+        template.ee_data = ee_data;
+        ts_check_second_cmsghdr(pco_iut, iut_s, NULL, &ts_h, NULL,
+                                &template, FALSE, &zero_reported, NULL);
     }
 
     TEST_SUCCESS;

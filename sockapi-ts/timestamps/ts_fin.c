@@ -53,6 +53,7 @@ main(int argc, char *argv[])
     iomux_evt_fd           event;
     tarpc_timeval          timeout = {.tv_sec = 0, .tv_usec = 500000};
     te_bool                vlan = FALSE;
+    te_bool                zero_reported = FALSE;
 
     int exp;
     int iut_s = -1;
@@ -99,6 +100,8 @@ main(int argc, char *argv[])
             rc = rpc_recvmsg(pco_iut, iut_s, &mmsg->msg_hdr, RPC_MSG_ERRQUEUE);
             ts_check_cmsghdr(&mmsg->msg_hdr, rc, length, sndbuf, tx,
                              RPC_SOCK_STREAM, onload_ext, vlan, NULL, NULL);
+            ts_check_second_cmsghdr(pco_iut, iut_s, NULL, NULL, NULL, NULL,
+                                    FALSE, &zero_reported, NULL);
         }
         else
         {
@@ -146,8 +149,13 @@ main(int argc, char *argv[])
                              "with %r", RPC_ERRNO(pco_iut));
         }
         else
+        {
             ts_check_cmsghdr(&mmsg->msg_hdr, rc, length, sndbuf, tx,
                              RPC_SOCK_STREAM, onload_ext, vlan, NULL, NULL);
+            zero_reported = FALSE;
+            ts_check_second_cmsghdr(pco_iut, iut_s, NULL, NULL, NULL, NULL,
+                                    FALSE, &zero_reported, NULL);
+        }
 
         memset(&timeout, 0, sizeof(timeout));
         IOMUX_CHECK_ZERO(iomux_call(iomux, pco_iut, &event, 1, &timeout));

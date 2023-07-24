@@ -50,6 +50,7 @@ main(int argc, char *argv[])
     tarpc_timeval   tv_h = {.tv_sec = 0, .tv_usec = 0};
     te_bool         tx_ack;
     te_bool         vlan = FALSE;
+    te_bool         zero_reported = FALSE;
 
     int flags;
     int iut_s = -1;
@@ -87,6 +88,9 @@ main(int argc, char *argv[])
             RPC_SOF_TIMESTAMPING_SOFTWARE |
             RPC_SOF_TIMESTAMPING_TX_HARDWARE |
             RPC_SOF_TIMESTAMPING_TX_SOFTWARE;
+
+    if (!tapi_onload_run())
+        flags |= RPC_SOF_TIMESTAMPING_OPT_TX_SWHW;
 
     if (tx_ack)
         flags |= RPC_SOF_TIMESTAMPING_TX_ACK;
@@ -134,6 +138,10 @@ main(int argc, char *argv[])
                          vlan, &ts, &ts_h);
     }
     ts_check_deviation(&ts, &ts_h, 0, 100000);
+    TIMEVAL_TO_TIMESPEC(&tv_h, &ts_h);
+    ts_check_second_cmsghdr(pco_iut, iut_s, NULL, &ts_h,
+                            opt_cmsg ? iut_addr : NULL, NULL, FALSE,
+                            &zero_reported, NULL);
 
     TEST_STEP("Check that TX ACK event is generated for TCP packets.");
     if (tx_ack && sock_type == RPC_SOCK_STREAM)

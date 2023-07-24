@@ -107,6 +107,10 @@ retrieve_ts_tx(rpc_msghdr *msg, int iut_s, char *sndbuf, int len,
     int hsize;
     int rc;
     int i;
+    struct timespec ts_aux;
+
+    te_bool zero_reported = FALSE;
+    te_bool no_reported = FALSE;
 
     if (sock_type == RPC_SOCK_DGRAM)
         hsize = LINUX_DGRAM_HEADER_LEN;
@@ -186,8 +190,11 @@ retrieve_ts_tx(rpc_msghdr *msg, int iut_s, char *sndbuf, int len,
         sndbuf = NULL;
     }
 
+    memcpy(&ts_aux, ts_prev, sizeof(ts_aux));
     ts_check_cmsghdr(msg, rc, len, sndbuf, TRUE, sock_type, FALSE, vlan,
                      &ts_rx, ts_prev);
+    ts_check_second_cmsghdr(pco_iut, iut_s, NULL, &ts_aux, NULL, NULL,
+                            FALSE, &zero_reported, &no_reported);
 }
 
 /**

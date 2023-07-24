@@ -78,6 +78,7 @@ main(int argc, char *argv[])
     size_t          buf_len;
     te_bool         vlan = FALSE;
     te_bool         blocked_ack = FALSE;
+    te_bool         zero_reported = FALSE;
 
     int iut_s = -1;
     int tst_s = -1;
@@ -160,6 +161,9 @@ main(int argc, char *argv[])
 
     if (onload_ext)
         flags |= RPC_ONLOAD_SOF_TIMESTAMPING_STREAM;
+
+    if (!tapi_onload_run())
+        flags |= RPC_SOF_TIMESTAMPING_OPT_TX_SWHW;
 
     rpc_setsockopt(pco_iut, iut_s, RPC_SO_TIMESTAMPING, &flags);
     if (select_err_queue)
@@ -303,6 +307,8 @@ main(int argc, char *argv[])
                 rc = rpc_recvmsg(pco_iut, iut_s, &msg, RPC_MSG_ERRQUEUE);
                 ts_check_cmsghdr(&msg, rc, buf_len, tx_buf, TRUE,
                                  RPC_SOCK_STREAM, FALSE, vlan, &ts, NULL);
+                ts_check_second_cmsghdr(pco_iut, iut_s, NULL, NULL, NULL,
+                                        NULL, FALSE, &zero_reported, NULL);
             }
 
             if (!blocked_ack && rc != 0)
@@ -332,7 +338,8 @@ main(int argc, char *argv[])
     timeout.tv_sec = 0;
     timeout.tv_usec = 100000;
     IOMUX_CHECK_ZERO(iomux_call(iomux, pco_iut, &event, 1, &timeout));
-    rpc_system(pco_iut, "te_onload_stdump tcp_stats");
+    if (tapi_onload_run())
+        rpc_system(pco_iut, "te_onload_stdump tcp_stats");
 
     if (onload_ext)
     {

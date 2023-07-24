@@ -80,6 +80,7 @@ main(int argc, char *argv[])
     int        acc_s = -1;
     int        domain;
     te_bool    vlan = FALSE;
+    te_bool    zero_reported = FALSE;
 
     TEST_START;
     TEST_GET_PCO(pco_iut);
@@ -112,6 +113,8 @@ main(int argc, char *argv[])
     else
         flags |= RPC_SOF_TIMESTAMPING_RX_HARDWARE |
                  RPC_SOF_TIMESTAMPING_RX_SOFTWARE;
+    if (!tapi_onload_run())
+        flags |= RPC_SOF_TIMESTAMPING_OPT_TX_SWHW;
 
     TEST_STEP("Create TCP connection between IUT and tester.");
     domain = rpc_socket_domain_by_addr(iut_addr);
@@ -197,6 +200,12 @@ do {                                                                 \
     ts_check_cmsghdr(&msg, rc, buf_len, tx_buf, tx, sock_type, onload_ext,
                      vlan, &ts, &ts_h);
     ts_check_deviation(&ts, &ts_h, 0, 500000);
+    if (tx)
+    {
+        TIMEVAL_TO_TIMESPEC(&tv_h, &ts_h);
+        ts_check_second_cmsghdr(pco_iut, iut_s, NULL, &ts_h, NULL, NULL,
+                                FALSE, &zero_reported, NULL);
+    }
 
     TEST_SUCCESS;
 

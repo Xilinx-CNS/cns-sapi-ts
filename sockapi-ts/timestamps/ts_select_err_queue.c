@@ -44,6 +44,7 @@ main(int argc, char *argv[])
     iomux_call_type iomux;
     te_bool         tx;
     te_bool         onload_ext;
+    te_bool         zero_reported = FALSE;
 
     char                  *sndbuf = NULL;
     size_t                 length;
@@ -130,8 +131,15 @@ main(int argc, char *argv[])
             TEST_VERDICT("recvmsg() had to fail with EAGAIN");
     }
     else
+    {
         ts_check_cmsghdr(&msg, rc, length, sndbuf, tx, sock_type, onload_ext,
                          vlan, NULL, NULL);
+        if (tx)
+        {
+            ts_check_second_cmsghdr(pco_iut, iut_s, NULL, NULL, NULL, NULL,
+                                    FALSE, &zero_reported, NULL);
+        }
+    }
 
     TEST_SUCCESS;
 cleanup:

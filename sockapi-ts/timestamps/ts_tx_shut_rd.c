@@ -52,6 +52,7 @@ main(int argc, char *argv[])
     iomux_evt_fd    event;
     tarpc_timeval   timeout = {.tv_sec = 0, .tv_usec = 500000};
     te_bool         vlan = FALSE;
+    te_bool         zero_reported = FALSE;
 
     int exp;
     int iut_s = -1;
@@ -101,6 +102,10 @@ main(int argc, char *argv[])
         ts_check_cmsghdr(&msg, rc, length, sndbuf, TRUE, sock_type, onload_ext,
                          vlan, &ts, &ts_h);
         ts_check_deviation(&ts, &ts_h, 0, 100000);
+
+        TIMEVAL_TO_TIMESPEC(&tv_h, &ts_h);
+        ts_check_second_cmsghdr(pco_iut, iut_s, NULL, &ts_h, NULL, NULL,
+                                FALSE, &zero_reported, NULL);
     }
     else
     {

@@ -46,6 +46,7 @@ main(int argc, char *argv[])
     struct timespec ts_h;
     tarpc_timeval   tv_h = {.tv_sec = 0, .tv_usec = 0};
 
+    te_bool         zero_reported;
 
     int flags;
     int iut_s = -1;
@@ -71,6 +72,9 @@ main(int argc, char *argv[])
         RPC_SOF_TIMESTAMPING_RAW_HARDWARE | RPC_SOF_TIMESTAMPING_SOFTWARE |
         RPC_SOF_TIMESTAMPING_TX_HARDWARE | RPC_SOF_TIMESTAMPING_TX_SOFTWARE |
         RPC_SOF_TIMESTAMPING_OPT_TSONLY;
+
+    if (!tapi_onload_run())
+        flags |= RPC_SOF_TIMESTAMPING_OPT_TX_SWHW;
 
     if (onload_ext)
         flags |= RPC_ONLOAD_SOF_TIMESTAMPING_STREAM;
@@ -102,6 +106,9 @@ main(int argc, char *argv[])
     ts_check_cmsghdr(&msg, rc, onload_ext ? length : 0, sndbuf, TRUE,
                      sock_type, onload_ext, FALSE, &ts, &ts_h);
     ts_check_deviation(&ts, &ts_h, 0, 100000);
+    TIMEVAL_TO_TIMESPEC(&tv_h, &ts_h);
+    ts_check_second_cmsghdr(pco_iut, iut_s, NULL, &ts_h, NULL, NULL, FALSE,
+                            &zero_reported, NULL);
 
     TEST_SUCCESS;
 cleanup:
