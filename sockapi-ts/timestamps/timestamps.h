@@ -172,11 +172,18 @@ static inline void ts_enable_hw_ts(rcf_rpc_server *pco, int sock,
         flags |= RPC_ONLOAD_SOF_TIMESTAMPING_STREAM;
 
     if (tx)
+    {
         flags |= RPC_SOF_TIMESTAMPING_TX_HARDWARE |
                  RPC_SOF_TIMESTAMPING_TX_SOFTWARE;
+        /* ST-2712: Onload returns EINVAL with such flag. */
+        if (!tapi_onload_run())
+            flags |= RPC_SOF_TIMESTAMPING_OPT_TX_SWHW;
+    }
     else
+    {
         flags |= RPC_SOF_TIMESTAMPING_RX_HARDWARE |
                  RPC_SOF_TIMESTAMPING_RX_SOFTWARE;
+    }
 
     rpc_setsockopt_int(pco, sock, RPC_SO_TIMESTAMPING, flags);
     TAPI_WAIT_NETWORK;
