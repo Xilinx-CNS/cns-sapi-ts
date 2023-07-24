@@ -380,10 +380,7 @@ ts_check_cmsghdr_addr(rpc_msghdr *msg, int rc, size_t sent_len,
         /* Don't check payload if @p recv_len is @c 0. */
         if (recv_len != 0)
         {
-            /** UDP datagram is returned with VLAN addition with Onload, it
-             * is thought to be correct, see bug 56367. */
-            if (tx && vlan &&
-                (sock_type == RPC_SOCK_STREAM || tapi_onload_run()))
+            if (tx && vlan)
                 hsize += 4;
 
             if (rc - hsize != (int)recv_len)
