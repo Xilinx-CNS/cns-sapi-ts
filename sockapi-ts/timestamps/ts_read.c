@@ -124,12 +124,15 @@ send_receive_packet(int iut_s, int tst_s, te_bool tx,
                                      onload_ext || !tx;
 
     te_bool vlan = FALSE;
+    te_bool zero_reported = FALSE;
 
     int exp_rc;
     int exp_ev;
     int rc;
     int flags = 0;
     int i;
+    int mmsg_num;
+    int cnt;
 
     vlan = ts_check_vlan(pco_iut, iut_if->if_name);
 
@@ -158,7 +161,15 @@ send_receive_packet(int iut_s, int tst_s, te_bool tx,
     sndbuf = te_calloc_fill(num, sizeof(*sndbuf), 0);
     tv = te_calloc_fill(num, sizeof(*tv), 0);
 
-    ts_init_mmsghdr(tx, num, length + (tx ? 300 : 0), &mmsg);
+    /*
+     * In case of transmit TS and non-onload test will receive doubled
+     * number of timestamps: SW and HW in different timestmps.
+     */
+    mmsg_num = num;
+    if (tx && !tapi_onload_run())
+        mmsg_num *= 2;
+
+    ts_init_mmsghdr(tx, mmsg_num, length + (tx ? 300 : 0), &mmsg);
     ts_init_msghdr(tx, &args_msg, 0);
 
     if (tx)
@@ -172,7 +183,7 @@ send_receive_packet(int iut_s, int tst_s, te_bool tx,
         tapi_onload_lib_exists(pco_iut->ta))
     {
         RPC_AWAIT_IUT_ERROR(pco_iut);
-        rc = rpc_recvmmsg_alt(pco_iut, iut_s, mmsg, num, flags, NULL);
+        rc = rpc_recvmmsg_alt(pco_iut, iut_s, mmsg, mmsg_num, flags, NULL);
         if (rc != -1 || RPC_ERRNO(pco_iut) != RPC_ENOSYS)
         {
             TEST_VERDICT("recvmmsg failure with ENOSYS was expected, but "
@@ -191,7 +202,7 @@ send_receive_packet(int iut_s, int tst_s, te_bool tx,
         pco_iut->op = RCF_RPC_CALL;
         if (func == FUNC_RECVMMSG)
         {
-            rpc_recvmmsg_alt(pco_iut, iut_s, mmsg, num, flags, NULL);
+            rpc_recvmmsg_alt(pco_iut, iut_s, mmsg, mmsg_num, flags, NULL);
         }
         else if (func == FUNC_RECVMSG)
         {
@@ -212,7 +223,8 @@ send_receive_packet(int iut_s, int tst_s, te_bool tx,
         RPC_AWAIT_ERROR(pco_iut);
         if (func == FUNC_RECVMMSG)
         {
-            rc = rpc_recvmmsg_alt(pco_iut, iut_s, mmsg, num, flags, NULL);
+            rc = rpc_recvmmsg_alt(pco_iut, iut_s, mmsg, mmsg_num, flags,
+                                  NULL);
         }
         else if (func == FUNC_RECVMSG)
         {
@@ -376,6 +388,13 @@ send_receive_packet(int iut_s, int tst_s, te_bool tx,
                     TEST_VERDICT("HW timestamp differs from the host time "
                                  "too much");
                 }
+                if (tx)
+                {
+                    TIMEVAL_TO_TIMESPEC(&tv[i], &tsh);
+                    ts_check_second_cmsghdr(pco_iut, iut_s, NULL, &tsh,
+                                            NULL, NULL, FALSE,
+                                            &zero_reported, NULL);
+                }
             }
         }
     }
@@ -384,19 +403,31 @@ send_receive_packet(int iut_s, int tst_s, te_bool tx,
         if (!blocking)
             IOMUX_CHECK_EXP(exp_rc, exp_ev, event,
                             iomux_call(iomux, pco_iut, &event, 1, &timeout));
-        rc = rpc_recvmmsg_alt(pco_iut, iut_s, mmsg, num, flags, NULL);
-        if (rc != num)
+        rc = rpc_recvmmsg_alt(pco_iut, iut_s, mmsg, mmsg_num, flags, NULL);
+        if (rc != mmsg_num)
             TEST_VERDICT("Unexpected events number was received.");
 
         for (i = 0; i < num; i++)
         {
-            ts_check_cmsghdr(&mmsg[i].msg_hdr, mmsg[i].msg_len, length,
-                             sndbuf[i], tx, sock_type, onload_ext, vlan,
-                             &ts_o, &ts);
+            cnt = (mmsg_num == num) ? i : (2 * i);
+            ts_check_cmsghdr(&mmsg[cnt].msg_hdr, mmsg[cnt].msg_len,
+                             length, sndbuf[i], tx, sock_type, onload_ext,
+                             vlan, &ts_o, &ts);
             TIMEVAL_TO_TIMESPEC(&tv[i], &tsh);
-            if (mmsg[i].msg_hdr.msg_controllen > 0 &&
+            if (mmsg[cnt].msg_hdr.msg_controllen > 0 &&
                 ts_check_deviation(&ts_o, &tsh, 0, TST_PRECISION * 2))
-                TEST_VERDICT("HW timestamp differs from the host time too much");
+            {
+                TEST_VERDICT("HW timestamp differs from the host time too "
+                             "much");
+            }
+            if (mmsg_num != num)
+            {
+                TIMEVAL_TO_TIMESPEC(&tv[i], &tsh);
+                ts_check_second_cmsghdr(pco_iut, iut_s,
+                                        &mmsg[(2 * i + 1)].msg_hdr,
+                                        &tsh, NULL, NULL, FALSE,
+                                        &zero_reported, NULL);
+            }
         }
     }
 
@@ -465,11 +496,21 @@ main(int argc, char *argv[])
     TEST_STEP("Initialize @b flags to @c SOF_TIMESTAMPING_SYS_HARDWARE | "
               "@c SOF_TIMESTAMPING_RAW_HARDWARE | "
               "@c SOF_TIMESTAMPING_TX_SOFTWARE | "
+              "@c SOF_TIMESTAMPING_RX_SOFTWARE | "
               "@c SOF_TIMESTAMPING_SOFTWARE.");
     flags = RPC_SOF_TIMESTAMPING_SYS_HARDWARE |
             RPC_SOF_TIMESTAMPING_RAW_HARDWARE |
             RPC_SOF_TIMESTAMPING_TX_SOFTWARE |
+            RPC_SOF_TIMESTAMPING_RX_SOFTWARE |
             RPC_SOF_TIMESTAMPING_SOFTWARE;
+
+    /*
+     * SOF_TIMESTAMPING_OPT_TX_SWHW flag should be added here in case of
+     * Linux for correct TX timestamps in case when SW and HW timestamps
+     * are enabled. This flag is not supported in Onload.
+     */
+    if (!tapi_onload_run())
+        flags |= RPC_SOF_TIMESTAMPING_OPT_TX_SWHW;
 
     TEST_STEP("If @p tx and @p onload_ext are @c TRUE and @p sock_type "
               "is @c SOCK_STREAM, add to @b flags "
