@@ -3292,8 +3292,8 @@ sockts_kmemleak_get_report(const char *ta)
     CHECK_RC(rcf_rpc_server_create(ta, "pco_kmemleak",
                                    &pco_kmemleak));
 
-    /* Scanning and reading may take more than 10 seconds on some hosts */
-    pco_kmemleak->timeout = pco_kmemleak->def_timeout = TE_SEC2MS(60);
+    /* Scanning and reading may take more than 4 minutes */
+    pco_kmemleak->timeout = pco_kmemleak->def_timeout = TE_SEC2MS(600);
 
     RPC_AWAIT_IUT_ERROR(pco_kmemleak);
     rc = rpc_system(pco_kmemleak, "echo scan > " SOCKTS_SYS_KERN_DBG_KMEMLEAK);
