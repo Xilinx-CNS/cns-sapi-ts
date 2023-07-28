@@ -580,9 +580,6 @@ function af_xdp_fix()
         ool_add "no_rx_ts" \
             "$info/ON-12141: rx/tx hw timestamps are not supported"
 
-        ool_add "few_stacks" \
-            "$info/Bug 11802/ON-12446"
-
         # phys_mode is not compatible with AF_XDP
         ool_remove "phys_mode" "$info/ON-12141: phys_mode is not compatible"
 

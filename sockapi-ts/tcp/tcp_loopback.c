@@ -510,7 +510,7 @@ cleanup:
      * test. */
     tapi_no_reuse_pco_disable_once();
 
-    CLEANUP_ZOMBIE_WHEN_FEW_STACKS(pco_iut);
+    sockts_kill_zombie_stacks_if_many(pco_iut);
 
     TEST_END;
 }

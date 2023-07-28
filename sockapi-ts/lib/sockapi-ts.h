@@ -3183,29 +3183,6 @@ extern void sockts_kill_zombie_stacks_gen(rcf_rpc_server *rpcs,
 extern void sockts_kill_zombie_stacks_if_many(rcf_rpc_server *rpcs);
 
 /**
- * Cleanup zombie stacks on the server if Onload provides few stacks: for
- * example, in af_xdp mode (in this case, the variable @c SF_V5_FEW_STACKS
- * should be set to yes).
- *
- * @param rpcs_     RPC server
- */
-#define CLEANUP_ZOMBIE_WHEN_FEW_STACKS(rpcs_)   \
-    do {                                                                    \
-        if (tapi_onload_run())                                              \
-        {                                                                   \
-            char *cleanup_zs = getenv("SF_V5_FEW_STACKS");                  \
-            if (cleanup_zs != NULL && strcmp(cleanup_zs, "yes") == 0)       \
-            {                                                               \
-                rpc_wait_status rc;                                         \
-                RPC_AWAIT_IUT_ERROR(rpcs_);                                 \
-                rc = rpc_system(rpcs_, "te_onload_stdump -z kill");         \
-                if (rc.value != 0)                                          \
-                    ERROR_VERDICT("Failed to terminate orphaned stacks");   \
-            }                                                               \
-        }                                                                   \
-    } while (FALSE)
-
-/**
  * Update ARP table to set fake or actual MAC address
  * 
  * @param rpcs_src          Source RPC server

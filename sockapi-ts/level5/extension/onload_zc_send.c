@@ -268,7 +268,7 @@ cleanup:
     free(tx_buf2);
     free(rx_buf1);
     free(rx_buf2);
-    CLEANUP_ZOMBIE_WHEN_FEW_STACKS(pco_iut);
+    sockts_kill_zombie_stacks_if_many(pco_iut);
 
     TEST_END;
 }
