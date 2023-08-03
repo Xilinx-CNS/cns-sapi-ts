@@ -395,5 +395,7 @@ cleanup:
     if (test_pipe && pco_tst != NULL)
         rcf_rpc_server_destroy(pco_tst);
 
+    sockts_kill_zombie_stacks_if_many(pco_iut);
+
     TEST_END;
 }
