@@ -82,13 +82,24 @@ main(int argc, char *argv[])
     TEST_GET_ADDR(pco_tst, tst_addr);
     TEST_GET_BOOL_PARAM(ef_no_fail);
 
-    /* Turn off allocate_stack parser */
-    CHECK_RC(cfg_get_instance_fmt(NULL, &pars_signal,
-                                  "/local:/tester:/event:allocate_stack"
-                                  "/handler:internal_handler/signal:"));
-    CHECK_RC(cfg_set_instance_fmt(CVT_STRING, "none",
-                                  "/local:/tester:/event:allocate_stack"
-                                  "/handler:internal_handler/signal:"));
+    /*
+     * Turn off allocate_stack parser if allocate_stack log event
+     * is turned on
+     */
+    rc = (cfg_get_instance_fmt(NULL, &pars_signal,
+                               "/local:/tester:/event:allocate_stack"
+                               "/handler:internal_handler/signal:"));
+    if (rc == 0)
+    {
+        CHECK_RC(cfg_set_instance_fmt(CVT_STRING, "none",
+                                      "/local:/tester:/event:allocate_stack"
+                                      "/handler:internal_handler/signal:"));
+    }
+    else if (TE_RC_GET_ERROR(rc) != TE_ENOENT)
+    {
+        TEST_FAIL("Test could not access Configurator to get allocate_stack"
+                  " event handler");
+    }
 
     memset(child, 0, sizeof(child));
     for (i = 0; i < MAX_SOCKS; i++)
