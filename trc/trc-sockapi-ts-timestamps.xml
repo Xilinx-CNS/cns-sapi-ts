@@ -677,12 +677,82 @@
       <notes/>
       <iter result="PASSED">
         <arg name="env"/>
-        <arg name="length_max"/>
+        <arg name="length_max">1000</arg>
         <arg name="length_min"/>
         <arg name="mtu"/>
         <arg name="packets_num"/>
         <arg name="sock_type"/>
         <arg name="onload_ext"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="length_max">8400</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="packets_num"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="onload_ext"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="length_max">40000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="packets_num"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="onload_ext"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="length_max">8400</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="packets_num"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="onload_ext">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-15049">
+          <result value="FAILED">
+            <verdict>Wrong stream bytes counter value</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="length_max">40000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="packets_num"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="onload_ext">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-15049">
+          <result value="FAILED">
+            <verdict>Wrong stream bytes counter value</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="length_max">8400</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="packets_num"/>
+        <arg name="sock_type"/>
+        <arg name="onload_ext">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="length_max">40000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="packets_num"/>
+        <arg name="sock_type"/>
+        <arg name="onload_ext">TRUE</arg>
         <notes/>
       </iter>
     </test>
