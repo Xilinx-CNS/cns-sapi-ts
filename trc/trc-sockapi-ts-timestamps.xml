@@ -1147,10 +1147,39 @@
         <arg name="length_max">9000</arg>
         <arg name="length_min"/>
         <arg name="mtu"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="total"/>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="length_max">9000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
         <arg name="onload_ext">FALSE</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
         <arg name="total"/>
-        <arg name="tx"/>
+        <arg name="tx">TRUE</arg>
+        <notes/>
+        <results tags="v5" key="ON-15069">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="length_max">40000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="total"/>
+        <arg name="tx">FALSE</arg>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -1163,8 +1192,11 @@
         <arg name="onload_ext">FALSE</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
         <arg name="total"/>
-        <arg name="tx"/>
+        <arg name="tx">TRUE</arg>
         <notes/>
+        <results tags="v5" key="ON-15069">
+          <result value="FAILED"/>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="enable_ts"/>
@@ -1213,6 +1245,48 @@
         <arg name="length_min"/>
         <arg name="mtu"/>
         <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="total"/>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="length_max">8800</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="total"/>
+        <arg name="tx"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="length_max">8800</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext">FALSE</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="total"/>
+        <arg name="tx">TRUE</arg>
+        <notes/>
+        <results tags="v5" key="ON-15069">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="length_max">8800</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext">TRUE</arg>
         <arg name="sock_type"/>
         <arg name="total"/>
         <arg name="tx"/>
@@ -1226,6 +1300,37 @@
         <arg name="length_min"/>
         <arg name="mtu"/>
         <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="total"/>
+        <arg name="tx"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="length_max">2000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext">FALSE</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="total"/>
+        <arg name="tx"/>
+        <notes/>
+        <results tags="v5" key="ON-15033">
+          <result value="PASSED">
+            <verdict>Iomux function returned non-zero value</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="length_max">2000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext">TRUE</arg>
         <arg name="sock_type"/>
         <arg name="total"/>
         <arg name="tx"/>
