@@ -379,8 +379,29 @@
       <iter result="PASSED">
         <arg name="env"/>
         <arg name="iomux"/>
-        <arg name="use_tx_ack"/>
+        <arg name="use_tx_ack">FALSE</arg>
+        <arg name="onload_ext">FALSE</arg>
+        <arg name="select_err_queue"/>
+        <notes/>
+        <results tags="v5" key="ON-15045">
+          <result value="FAILED">
+            <verdict>Retransmit packet timestamp is not observed</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="use_tx_ack">TRUE</arg>
         <arg name="onload_ext"/>
+        <arg name="select_err_queue"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux"/>
+        <arg name="use_tx_ack"/>
+        <arg name="onload_ext">TRUE</arg>
         <arg name="select_err_queue"/>
         <notes/>
       </iter>
