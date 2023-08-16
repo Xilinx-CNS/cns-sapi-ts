@@ -417,36 +417,7 @@
         <arg name="select_err_queue"/>
         <arg name="send_after_disabling"/>
         <arg name="send_num"/>
-        <arg name="sock_type">SOCK_STREAM</arg>
-        <arg name="tx">TRUE</arg>
-        <notes/>
-        <results tags="v5" key="ON-5411">
-          <result value="FAILED">
-            <verdict>Ancillary message IP_RECVERR was not retrieved</verdict>
-          </result>
-        </results>
-      </iter>
-      <iter result="PASSED">
-        <arg name="env"/>
-        <arg name="iomux"/>
-        <arg name="length"/>
-        <arg name="onload_ext"/>
-        <arg name="select_err_queue"/>
-        <arg name="send_after_disabling"/>
-        <arg name="send_num"/>
-        <arg name="sock_type">SOCK_STREAM</arg>
-        <arg name="tx">FALSE</arg>
-        <notes/>
-      </iter>
-      <iter result="PASSED">
-        <arg name="env"/>
-        <arg name="iomux"/>
-        <arg name="length"/>
-        <arg name="onload_ext"/>
-        <arg name="select_err_queue"/>
-        <arg name="send_after_disabling"/>
-        <arg name="send_num"/>
-        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="sock_type"/>
         <arg name="tx"/>
         <notes/>
       </iter>
@@ -461,6 +432,11 @@
         <arg name="sock_type"/>
         <arg name="tx"/>
         <notes/>
+        <results tags="v5" key="ON-15048">
+          <result value="FAILED">
+            <verdict>Failed to find control message for ONLOAD_SCM_TIMESTAMPING_STREAM</verdict>
+          </result>
+        </results>
       </iter>
     </test>
     <test name="ts_fin" type="script">
