@@ -762,7 +762,26 @@
       <iter result="PASSED">
         <arg name="env"/>
         <arg name="opt_cmsg"/>
-        <arg name="sock_type"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="tx_ack">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="opt_cmsg"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="tx_ack">TRUE</arg>
+        <notes/>
+        <results tags="v5" key="ON-15071">
+          <result value="FAILED">
+            <verdict>Wrong packet length is returned</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="opt_cmsg"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
         <arg name="tx_ack"/>
         <notes/>
       </iter>
