@@ -155,7 +155,7 @@ main(int argc, char *argv[])
     TEST_STEP("Disable pipe acceleration on @p pco_iut according to "
               "@p acc_pipe parameter");
     if (!acc_pipe)
-        CHECK_RC(tapi_sh_env_unset(pco_iut, "EF_PIPE", TRUE, TRUE));
+        CHECK_RC(tapi_sh_env_set(pco_iut, "EF_PIPE", "0", TRUE, TRUE));
 
     if (overfill_pipe)
         CHECK_RC(rcf_rpc_server_thread_create(pco_iut, "iut_thread",
