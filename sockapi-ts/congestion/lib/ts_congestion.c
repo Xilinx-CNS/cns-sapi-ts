@@ -133,38 +133,17 @@ sockts_ct_tst_netns_setup(const char *ta, tapi_env_net *net,
                         sockts_ct_param_get("ns_agent_rcf_port"));
     rcfport = atoi(ct_ns_agent_rcf_port);
 
-    CHECK_RC(tapi_netns_add(ta, ct_ns_name));
-    CHECK_RC(tapi_netns_if_set(ta, ct_ns_name, ct_recv_veth2_name));
-    CHECK_RC(tapi_netns_add_ta(host, ct_ns_name, ct_ns_agent_name, ta_type,
-                               rcfport, NULL, NULL, TRUE));
-    CHECK_RC(cfg_synchronize("/:", TRUE));
-    CHECK_RC(cfg_set_instance_fmt(CVT_STRING, ct_ns_agent_rpcprovider,
-                                  "/agent:%s/rpcprovider:", ct_ns_agent_name));
-
-    CHECK_RC(tapi_cfg_base_if_add_rsrc(ct_ns_agent_name, ct_recv_veth2_name));
-    CHECK_RC(tapi_cfg_base_if_up(ct_ns_agent_name, ct_recv_veth2_name));
-
     CHECK_RC(tapi_env_allocate_addr(net, AF_INET, &ns_addr, NULL));
-    CHECK_RC(tapi_cfg_base_if_add_net_addr(ct_ns_agent_name, ct_recv_veth2_name,
-                                           ns_addr,
-                                           te_netaddr_get_bitsize(AF_INET),
-                                           FALSE, NULL));
+
+    sockts_netns_setup_common(ta, host, ta_type, ct_ns_agent_rpcprovider,
+                              CFG_HANDLE_INVALID, ct_recv_veth2_name,
+                              ct_ns_name, ct_ns_agent_name, ct_ns_pco_name,
+                              rcfport, NULL, &ns_addr, NULL);
+
     CHECK_RC(tapi_cfg_add_route_simple(ct_ns_agent_name, ns_addr, net->ip4pfx,
                                        NULL, ct_recv_veth2_name));
+
     free(ns_addr);
-
-    /*
-     * TE grabs interface by its name, so it does not allow to grab
-     * "lo" interface in two different namespaces by two different
-     * TAs simultaneously.
-     */
-    CHECK_RC(tapi_cfg_base_if_del_rsrc(ta, "lo"));
-    CHECK_RC(tapi_cfg_base_if_add_rsrc(ct_ns_agent_name, "lo"));
-    CHECK_RC(tapi_cfg_base_if_up(ct_ns_agent_name, "lo"));
-
-    CHECK_RC(rcf_rpc_server_create(ct_ns_agent_name, ct_ns_pco_name, NULL));
-    CFG_WAIT_CHANGES;
-
     free(ct_ns_name);
     free(ct_ns_agent_name);
     free(ct_ns_agent_rcf_port);
