@@ -455,6 +455,9 @@ groups:
     - test: dgram_crd_unbound
       summary: Connect/reconnect/disconnect of not bound datagram socket
 
+    - test: diff_ipvlan_macvlan_check
+      summary: Check that received packets have correct destination IP
+
     - test: exec_bound
       summary: Exec robustness for bound socket
 
