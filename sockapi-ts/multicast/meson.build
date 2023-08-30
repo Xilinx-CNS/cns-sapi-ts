@@ -13,6 +13,7 @@ tests = [
     'bindtodevice_vs_ip_multicast_if',
     'conn_two_socks_same_addr',
     'default_if_for_join',
+    'diff_vlan_mcast_check_id',
     'imr_ifindex_vs_imr_address',
     'iomux_multicast',
     'ip_add_drop_membership',
