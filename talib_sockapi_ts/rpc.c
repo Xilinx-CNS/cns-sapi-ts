@@ -6756,6 +6756,7 @@ TARPC_FUNC(send_traffic, {},
     {
         free(addr_arr);
         out->common._errno = TE_RC(TE_TA_UNIX, TE_ENOMEM);
+        out->retval = -1;
         return;
     }
 
