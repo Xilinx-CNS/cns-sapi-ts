@@ -59,6 +59,8 @@
 #include "tapi_sh_env.h"
 #include "tapi_tcp_states.h"
 #include "tapi_mem.h"
+#include "tapi_namespaces.h"
+#include "tapi_host_ns.h"
 
 #include "sockapi-ts_rpc.h"
 #include "sockapi-ts_env.h"
@@ -4047,6 +4049,81 @@ sockts_get_used_if_name(rcf_rpc_server *rpcs,
 extern void sockts_find_parent_if(rcf_rpc_server *rpcs,
                                   const char *ifname,
                                   tqh_strings *ifaces);
+
+/**
+ * Add namespace on @p host and @p recv_veth2_name interface to it.
+ * If @p ns_addr is not @c NULL and it doesn't point to @c NULL, use this
+ * address; otherwise, allocate an IP address from @p net_handle. Add the
+ * address to the interface.
+ * Start test agent and RPC server in namespace.
+ *
+ * @param ta_name               Test agent name.
+ * @param host                  Host name.
+ * @param ta_type               Test agent type.
+ * @param ta_rpcprovider        RPC provider.
+ * @param net_handle            Network handle (network addresses pool).
+ * @param recv_veth2_name       Name of the interface to pass to namespace.
+ * @param netns                 Name of the created namespace.
+ * @param netns_ta              Name of the created Test Agent.
+ * @param netns_rpcs            Name of the created RPC server.
+ * @param rcf_port              Port number.
+ * @param rpcs_ns               Location for netns RPC server.
+ * @param ns_addr               Location for allocated address.
+ * @param addr_handle           Location for allocated address configuration
+ *                              handle.
+ *
+ * @note The function jumps to cleanup in case of failure.
+ */
+extern void
+sockts_netns_setup_common(const char *ta_name, const char *host,
+                          const char *ta_type, const char *ta_rpcprovider,
+                          cfg_handle net_handle,
+                          const char *recv_veth2_name, const char *netns,
+                          const char *netns_ta, const char *netns_rpcs,
+                          uint16_t rcf_port, rcf_rpc_server **rpcs_ns,
+                          struct sockaddr **ns_addr,
+                          cfg_handle *addr_handle);
+
+
+/**
+ * Add namespace on IUT host and @p recv_veth2_name interface to it.
+ * Allocate IP address from @p net_handle and add it to interface.
+ * Start test agent and RPC server in namespace.
+ *
+ * @param pco_iut               RPC server in the original namespace.
+ * @param net_handle            Network handle (network addresses pool).
+ * @param recv_veth2_name       Name of the interface to pass to namespace.
+ * @param netns                 Name of the created namespace.
+ * @param netns_ta              Name of the created Test Agent.
+ * @param netns_rpcs            Name of the created RPC server.
+ * @param rpcs_ns               Location for netns RPC server.
+ * @param ns_addr               Location for allocated address.
+ * @param addr_handle           Location for allocated address configuration
+ *                              handle.
+ *
+ * @note The function jumps to cleanup in case of failure.
+ */
+extern void
+sockts_iut_netns_setup(rcf_rpc_server *pco_iut, cfg_handle net_handle,
+                       const char *recv_veth2_name, const char *netns,
+                       const char *netns_ta, const char *netns_rpcs,
+                       rcf_rpc_server **rpcs_ns, struct sockaddr **ns_addr,
+                       cfg_handle *addr_handle);
+
+/**
+ * Destroy the created network namespace together with TA and RPC server
+ * created in it.
+ *
+ * @param ta          Test agent on IUT.
+ * @param rpcs_ns     RPC server in the created namespace.
+ * @param netns       Name of the namespace.
+ * @param netns_ta    Name of the Test Agent.
+ *
+ * @note The function jumps to cleanup in case of failure.
+ */
+extern void
+sockts_destroy_netns(const char *ta, rcf_rpc_server *rpcs_ns,
+                     const char *netns, const char *netns_ta);
 
 #ifdef __cplusplus
 } /* extern "C" */
