@@ -3611,3 +3611,102 @@ sockts_find_parent_if(rcf_rpc_server *rpcs,
 {
     sockts_find_parent_if_ext(rpcs, ifname, ifaces, TRUE);
 }
+
+/* See description in sockapi-ts.h */
+void
+sockts_netns_setup_common(const char *ta_name, const char *host,
+                          const char *ta_type, const char *ta_rpcprovider,
+                          cfg_handle net_handle, const char *recv_veth2_name,
+                          const char *netns, const char *netns_ta,
+                          const char *netns_rpcs, uint16_t rcf_port,
+                          rcf_rpc_server **rpcs_ns, struct sockaddr **ns_addr,
+                          cfg_handle *addr_handle)
+{
+    struct sockaddr *addr = NULL;
+
+    CHECK_NOT_NULL(ta_name);
+    CHECK_NOT_NULL(host);
+    CHECK_NOT_NULL(ta_type);
+    CHECK_NOT_NULL(ta_rpcprovider);
+    CHECK_NOT_NULL(recv_veth2_name);
+    CHECK_NOT_NULL(netns);
+    CHECK_NOT_NULL(netns_ta);
+    CHECK_NOT_NULL(netns_rpcs);
+    CHECK_NOT_NULL(rpcs_ns);
+
+    CHECK_RC(tapi_netns_add(ta_name, netns));
+    CHECK_RC(tapi_netns_if_set(ta_name, netns, recv_veth2_name));
+    CHECK_RC(tapi_netns_add_ta(host, netns, netns_ta, ta_type,
+                               rcf_port, NULL, NULL, TRUE));
+    CHECK_RC(cfg_synchronize("/:", TRUE));
+    CHECK_RC(cfg_set_instance_fmt(CVT_STRING, ta_rpcprovider,
+                                  "/agent:%s/rpcprovider:", netns_ta));
+
+    CHECK_RC(tapi_cfg_base_if_add_rsrc(netns_ta, recv_veth2_name));
+    CHECK_RC(tapi_cfg_base_if_up(netns_ta, recv_veth2_name));
+
+    if (ns_addr == NULL)
+        ns_addr = &addr;
+    if (*ns_addr == NULL)
+        CHECK_RC(tapi_cfg_alloc_net_addr(net_handle, addr_handle, ns_addr));
+
+    CHECK_RC(tapi_cfg_base_if_add_net_addr(netns_ta, recv_veth2_name,
+                                           *ns_addr,
+                                           te_netaddr_get_bitsize(AF_INET),
+                                           FALSE, NULL));
+
+    /*
+     * Loopback interface should be UP in the namespace for logging from
+     * RPC servers to work correctly.
+     * TE grabs interface by its name, so it does not allow to grab
+     * "lo" interface in two different namespaces by two different
+     * TAs simultaneously.
+     */
+    CHECK_RC(tapi_cfg_base_if_del_rsrc(ta_name, "lo"));
+    CHECK_RC(tapi_cfg_base_if_add_rsrc(netns_ta, "lo"));
+    CHECK_RC(tapi_cfg_base_if_up(netns_ta, "lo"));
+
+    CHECK_RC(tapi_cfg_base_if_del_rsrc(netns_ta, "lo"));
+    CHECK_RC(tapi_cfg_base_if_add_rsrc(ta_name, "lo"));
+
+    CHECK_RC(rcf_rpc_server_create(netns_ta, netns_rpcs, rpcs_ns));
+    CFG_WAIT_CHANGES;
+}
+
+/* See description in sockapi-ts.h */
+void
+sockts_iut_netns_setup(rcf_rpc_server *pco_iut, cfg_handle net_handle,
+                       const char *recv_veth2_name, const char *netns,
+                       const char *netns_ta, const char *netns_rpcs,
+                       rcf_rpc_server **rpcs_ns, struct sockaddr **ns_addr,
+                       cfg_handle *addr_handle)
+{
+    const char *host;
+    const char *ta_type;
+    const char *ta_rpcprovider;
+    uint16_t rcf_port;
+
+    CHECK_NOT_NULL(host = getenv("TE_IUT"));
+    CHECK_NOT_NULL(ta_type = getenv("TE_IUT_TA_TYPE"));
+    CHECK_NOT_NULL(ta_rpcprovider = getenv("SF_TS_IUT_RPCPROVIDER"));
+
+    CHECK_RC(tapi_allocate_port_htons(pco_iut, &rcf_port));
+
+    sockts_netns_setup_common(pco_iut->ta, host, ta_type, ta_rpcprovider,
+                              net_handle, recv_veth2_name, netns, netns_ta,
+                              netns_rpcs, rcf_port, rpcs_ns, ns_addr,
+                              addr_handle);
+}
+
+/* See description in sockapi-ts.h */
+void
+sockts_destroy_netns(const char *ta, rcf_rpc_server *rpcs_ns,
+                     const char *netns, const char *netns_ta)
+{
+    CHECK_RC(rcf_rpc_server_destroy(rpcs_ns));
+    CHECK_RC(rcf_del_ta(netns_ta));
+    CHECK_RC(tapi_host_ns_agent_del(netns_ta));
+    CHECK_RC(tapi_netns_del(ta, netns));
+
+    CHECK_RC(cfg_synchronize_fmt(TRUE, "/agent:%s", netns_ta));
+}
