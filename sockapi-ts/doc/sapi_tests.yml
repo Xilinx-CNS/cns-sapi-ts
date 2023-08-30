@@ -2124,6 +2124,9 @@ groups:
       summary: IP_ADD_MEMBERSHIP behaviour in case of wildcard local address and zero
         interface index.
 
+    - test: diff_vlan_mcast_check_id
+      summary: Check that received packets have correct VLAN tag, using multicast join
+
     - test: imr_ifindex_vs_imr_address
       summary: IP_ADD_MEMBERSHIP behaviour with incorrect ip_mreqn parameter.
 

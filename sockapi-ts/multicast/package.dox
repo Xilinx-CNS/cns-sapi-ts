@@ -48,6 +48,7 @@ Socket options related to multicasting are tested.
     -# @ref multicast-mcast_unicast_inaddr_any
     -# @ref multicast-mcast_bind_if
     -# @ref muilticast-iomux_multicast
+    -# @ref muilticast-diff_vlan_mcast_check_id
 
 @}
  

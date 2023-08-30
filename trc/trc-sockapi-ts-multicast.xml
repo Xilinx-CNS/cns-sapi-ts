@@ -8482,5 +8482,17 @@
         <notes/>
       </iter>
     </test>
+    <test name="diff_vlan_mcast_check_id" type="script">
+      <objective>Check that received packets have correct VLAN tag</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="packet_number"/>
+        <arg name="method"/>
+        <arg name="vlan1"/>
+        <arg name="vlan2"/>
+        <notes/>
+      </iter>
+    </test>
   </iter>
 </test>
