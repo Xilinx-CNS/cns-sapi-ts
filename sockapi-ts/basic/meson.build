@@ -38,6 +38,7 @@ tests = [
     'dgram_crd_bound_lb',
     'dgram_crd_bound_wc',
     'dgram_crd_unbound',
+    'diff_ipvlan_macvlan_check',
     'exec_bound',
     'exec_conn',
     'exec_created',

@@ -3063,5 +3063,19 @@
             </arg>
         </run>
 
+        <run>
+            <script name="diff_ipvlan_macvlan_check" track_conf="nohistory">
+                <req id="SOCK_DGRAM"/>
+                <req id="NO_VLAN"/>
+                <req id="NO_IPVLAN"/>
+                <req id="CREATE_NET_IF"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+            </arg>
+            <arg name="use_macvlan" type="boolean"/>
+            <arg name="use_netns" type="boolean"/>
+        </run>
+
     </session>
 </package>
