@@ -458,6 +458,9 @@ groups:
     - test: diff_ipvlan_macvlan_check
       summary: Check that received packets have correct destination IP
 
+    - test: diff_vlan_check_id
+      summary: Check that received packets have correct VLAN tag
+
     - test: exec_bound
       summary: Exec robustness for bound socket
 

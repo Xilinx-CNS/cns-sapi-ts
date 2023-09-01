@@ -156,6 +156,7 @@ values: correct host global IP address, loopback address, bad IP address.
 -# @ref basic-listen_via_af_unix
 -# @ref basic-pthread_cancellation_point
 -# @ref basic-diff_ipvlan_macvlan_check
+-# @ref basic-diff_vlan_check_id
 @}
 
 */

@@ -11934,5 +11934,16 @@
         <notes/>
       </iter>
     </test>
+    <test name="diff_vlan_check_id" type="script">
+      <objective>Check that received packets have correct VLAN tag</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="use_netns"/>
+        <arg name="vlan1"/>
+        <arg name="vlan2"/>
+        <notes/>
+      </iter>
+    </test>
   </iter>
 </test>

@@ -3077,5 +3077,25 @@
             <arg name="use_netns" type="boolean"/>
         </run>
 
+        <run>
+            <script name="diff_vlan_check_id" track_conf="nohistory">
+                <req id="SOCK_DGRAM"/>
+                <req id="NO_VLAN"/>
+                <!-- Linux doesn't support vlan over ipvlan. ST-2001-->
+                <req id="NO_IPVLAN"/>
+                <req id="CREATE_NET_IF"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+            </arg>
+            <arg name="use_netns" type="boolean"/>
+            <arg name="vlan1">
+                <value>999</value>
+            </arg>
+            <arg name="vlan2">
+                <value>1001</value>
+            </arg>
+        </run>
+
     </session>
 </package>
