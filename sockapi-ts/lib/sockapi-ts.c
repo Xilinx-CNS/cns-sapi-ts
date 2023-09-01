@@ -1929,12 +1929,25 @@ sockts_kill_zombie_stacks_gen(rcf_rpc_server *rpcs, unsigned int stacks_num)
 void
 sockts_kill_zombie_stacks_if_many(rcf_rpc_server *rpcs)
 {
-    char *max_stacks_s = getenv("SF_V5_MAX_ALLOWED_ZOMBIE_STACKS");
-    unsigned int max_stacks = 0;
-    te_errno rc = 0;
+    char            *max_stacks_s = NULL;
+    rcf_rpc_server  *pco_kill_zombie=NULL;
+    unsigned int     max_stacks = 0;
+    te_errno         rc = 0;
+
+    max_stacks_s = getenv("SF_V5_MAX_ALLOWED_ZOMBIE_STACKS");
 
     if (max_stacks_s == NULL)
         return;
+
+    CHECK_RC(rcf_rpc_server_get(rpcs->ta, PCO_KILL_ZOMBIE, NULL,
+                                RCF_RPC_SERVER_GET_EXISTING |
+                                RCF_RPC_SERVER_GET_REUSE,
+                                &pco_kill_zombie));
+
+    if (pco_kill_zombie == NULL)
+    {
+        ERROR_VERDICT("pco_kill_zombie is not present");
+    }
 
     rc = te_strtoui(max_stacks_s, 10, &max_stacks);
     if (rc != 0)
@@ -1944,7 +1957,7 @@ sockts_kill_zombie_stacks_if_many(rcf_rpc_server *rpcs)
     }
     else
     {
-        sockts_kill_zombie_stacks_gen(rpcs, max_stacks);
+        sockts_kill_zombie_stacks_gen(pco_kill_zombie, max_stacks);
     }
 }
 

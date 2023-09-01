@@ -989,6 +989,12 @@ main(int argc, char **argv)
         rpc_socket(pco_reuse_stack, RPC_AF_INET, RPC_SOCK_STREAM,
                           RPC_PROTO_DEF);
     }
+
+    /* Create rpc server to kill zombie stacks on it. */
+    if (getenv("SF_V5_MAX_ALLOWED_ZOMBIE_STACKS"))
+    {
+        CHECK_RC(rcf_rpc_server_create(pco_iut->ta, PCO_KILL_ZOMBIE, NULL));
+    }
     /*
      * Sometimes after rebooting the hos ipmi/conserver stops showing
      * anything. This problem is solved if you send "enter" to console.

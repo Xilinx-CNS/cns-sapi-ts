@@ -146,6 +146,9 @@
 /** Path to Kernel Memory Leak Detector */
 #define SOCKTS_SYS_KERN_DBG_KMEMLEAK "/sys/kernel/debug/kmemleak"
 
+/* Name of the pco server for killing Onload zombie stacks on. */
+#define PCO_KILL_ZOMBIE "pco_kill_zombie"
+
 /**
  * Check the function executing time and report if not success.
  * All time intervals are measured in microseconds.
