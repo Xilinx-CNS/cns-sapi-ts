@@ -241,8 +241,15 @@ main(int argc, char *argv[])
                 total_bytes -= rc;
             } while (total_bytes != 0);
         }
-        rpc_splice(pco_iut, (i == 0) ? iut_s1 : fds[i - 1][0], NULL,
-                   fds[i][1], NULL, tx_buf_len, flags);
+        RPC_AWAIT_IUT_ERROR(pco_iut);
+        rc = rpc_splice(pco_iut, (i == 0) ? iut_s1 : fds[i - 1][0], NULL,
+                        fds[i][1], NULL, tx_buf_len, flags);
+        if (rc < 0)
+        {
+            TEST_VERDICT("Correct splice() call with first IUT socket "
+                         "unexpectedly failed with errno %r",
+                         RPC_ERRNO(pco_iut));
+        }
     }
 
     TEST_STEP("Read all data from the last pipe and check that it is correct "
@@ -257,8 +264,15 @@ main(int argc, char *argv[])
 
     TEST_STEP("Call @b splice() with @p iut_s2 socket and with read end of the "
               "last pipe pipe");
-    rpc_splice(pco_iut, fds[extra_pipes][0], NULL,
-               iut_s2, NULL, tx_buf_len, flags);
+    RPC_AWAIT_IUT_ERROR(pco_iut);
+    rc = rpc_splice(pco_iut, fds[extra_pipes][0], NULL,
+                    iut_s2, NULL, tx_buf_len, flags);
+    if (rc < 0)
+    {
+        TEST_VERDICT("Correct splice() call with second IUT socket "
+                     "unexpectedly failed with errno %r",
+                     RPC_ERRNO(pco_iut));
+    }
     TEST_STEP("Read all data from @p tst_s2 socket and check that it is correct "
               "if @p check_after_splice is @c TRUE");
     rc = rpc_recv(pco_tst2, tst_s2, rx_buf, rx_buf_len, 0);
