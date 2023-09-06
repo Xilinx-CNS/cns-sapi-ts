@@ -54,6 +54,7 @@ main(int argc, char *argv[])
     tarpc_pid_t             pid;
     char                   *str_rc = NULL;
     te_bool                 rpc_was_restarted = FALSE;
+    char                   *pars_signal = NULL;
 
     /* Test preambule */
     TEST_START;
@@ -61,6 +62,15 @@ main(int argc, char *argv[])
     TEST_GET_PCO(pco_killer);
     TEST_GET_SIGNUM(sig);
     TEST_GET_STRING_PARAM(func_sig);
+
+    /* Turn off segfault parser */
+    CHECK_RC(cfg_get_instance_fmt(NULL, &pars_signal,
+                                  "/local:/tester:/event:segfault"
+                                  "/handler:internal_handler/signal:"));
+
+    CHECK_RC(cfg_set_instance_fmt(CVT_STRING, "none",
+                                  "/local:/tester:/event:segfault"
+                                  "/handler:internal_handler/signal:"));
 
     rpc_sigaction_init(pco_iut, &new_act);
     rpc_sigaction_init(pco_iut, &old_act);
@@ -116,6 +126,17 @@ main(int argc, char *argv[])
     TEST_SUCCESS;
 
 cleanup:
+    if (pars_signal != NULL)
+    {
+
+        CLEANUP_CHECK_RC(cfg_set_instance_fmt(CVT_STRING, pars_signal,
+                                              "/local:/tester:/event:"
+                                              "segfault/handler:"
+                                              "internal_handler/signal:"));
+
+        free(pars_signal);
+    }
+
     if (!rpc_was_restarted)
     {
         if (restore_sig_handler)
