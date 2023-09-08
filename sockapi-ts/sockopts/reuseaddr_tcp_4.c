@@ -331,6 +331,8 @@ cleanup:
     if (loglevel != -1)
         TAPI_SYS_LOGLEVEL_CANCEL_DEBUG(pco_iut1, loglevel);
 
+    sockts_kill_zombie_stacks_if_many(pco_iut1);
+
     TEST_END;
 }
 

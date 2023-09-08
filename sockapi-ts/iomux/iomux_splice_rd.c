@@ -175,5 +175,7 @@ cleanup:
     if (pco_aux)
         CLEANUP_CHECK_RC(rcf_rpc_server_destroy(pco_aux));
 
+    sockts_kill_zombie_stacks_if_many(pco_iut);
+
     TEST_END;
 }
