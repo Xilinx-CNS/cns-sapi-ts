@@ -900,9 +900,14 @@
     <arg name="pipe_size"/>
     <arg name="use_fcntl"/>
     <notes/>
-    <results tags="v5" key="ON-15206">
+    <results tags="v5&amp;(linux-5&gt;4)" key="ON-15206">
       <result value="FAILED">
         <verdict>Correct splice() call with first IUT socket unexpectedly failed with errno RPC-EINVAL</verdict>
+      </result>
+    </results>
+    <results tags="v5&amp;(linux&lt;5|linux-5&lt;=4)" key="ON-15206">
+      <result value="FAILED">
+        <verdict>Correct splice() call with first IUT socket unexpectedly failed with errno RPC-EOPNOTSUPP</verdict>
       </result>
     </results>
   </iter>
@@ -919,9 +924,14 @@
     <arg name="pipe_size"/>
     <arg name="use_fcntl"/>
     <notes/>
-    <results tags="v5" key="ON-15206">
+    <results tags="v5&amp;(linux-5&gt;4)" key="ON-15206">
       <result value="FAILED">
         <verdict>Correct splice() call with first IUT socket unexpectedly failed with errno RPC-EINVAL</verdict>
+      </result>
+    </results>
+    <results tags="v5&amp;(linux&lt;5|linux-5&lt;=4)" key="ON-15206">
+      <result value="FAILED">
+        <verdict>Correct splice() call with first IUT socket unexpectedly failed with errno RPC-EOPNOTSUPP</verdict>
       </result>
     </results>
   </iter>
@@ -966,9 +976,14 @@
     <arg name="pipe_size"/>
     <arg name="use_fcntl"/>
     <notes/>
-    <results tags="v5" key="ON-15206">
+    <results tags="v5&amp;(linux-5&gt;4)" key="ON-15206">
       <result value="FAILED">
         <verdict>Correct splice() call with first IUT socket unexpectedly failed with errno RPC-EINVAL</verdict>
+      </result>
+    </results>
+    <results tags="v5&amp;(linux&lt;5|linux-5&lt;=4)" key="ON-15206">
+      <result value="FAILED">
+        <verdict>Correct splice() call with first IUT socket unexpectedly failed with errno RPC-EOPNOTSUPP</verdict>
       </result>
     </results>
   </iter>
@@ -999,9 +1014,14 @@
     <arg name="pipe_size"/>
     <arg name="use_fcntl"/>
     <notes/>
-    <results tags="v5" key="ON-15206">
+    <results tags="v5&amp;(linux-5&gt;4)" key="ON-15206">
       <result value="FAILED">
         <verdict>Correct splice() call with first IUT socket unexpectedly failed with errno RPC-EINVAL</verdict>
+      </result>
+    </results>
+    <results tags="v5&amp;(linux&lt;5|linux-5&lt;=4)" key="ON-15206">
+      <result value="FAILED">
+        <verdict>Correct splice() call with first IUT socket unexpectedly failed with errno RPC-EOPNOTSUPP</verdict>
       </result>
     </results>
   </iter>
@@ -1088,9 +1108,14 @@
     <arg name="pipe_size"/>
     <arg name="use_fcntl"/>
     <notes/>
-    <results tags="v5" key="ON-15206">
+    <results tags="v5&amp;(linux-5&gt;4)" key="ON-15206">
       <result value="FAILED">
         <verdict>Correct splice() call with first IUT socket unexpectedly failed with errno RPC-EINVAL</verdict>
+      </result>
+    </results>
+    <results tags="v5&amp;(linux&lt;5|linux-5&lt;=4)" key="ON-15206">
+      <result value="FAILED">
+        <verdict>Correct splice() call with first IUT socket unexpectedly failed with errno RPC-EOPNOTSUPP</verdict>
       </result>
     </results>
   </iter>
@@ -1121,9 +1146,14 @@
     <arg name="pipe_size"/>
     <arg name="use_fcntl"/>
     <notes/>
-    <results tags="v5" key="ON-15206">
+    <results tags="v5&amp;(linux-5&gt;4)" key="ON-15206">
       <result value="FAILED">
         <verdict>Correct splice() call with first IUT socket unexpectedly failed with errno RPC-EINVAL</verdict>
+      </result>
+    </results>
+    <results tags="v5&amp;(linux&lt;5|linux-5&lt;=4)" key="ON-15206">
+      <result value="FAILED">
+        <verdict>Correct splice() call with first IUT socket unexpectedly failed with errno RPC-EOPNOTSUPP</verdict>
       </result>
     </results>
   </iter>
