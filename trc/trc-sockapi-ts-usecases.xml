@@ -1034,10 +1034,34 @@
     <arg name="set_move"/>
     <arg name="set_nonblock"/>
     <arg name="acc_pipe">FALSE</arg>
-    <arg name="diff_stacks"/>
+    <arg name="diff_stacks">TRUE</arg>
     <arg name="pipe_size"/>
     <arg name="use_fcntl"/>
     <notes/>
+  </iter>
+  <iter result="PASSED">
+    <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}},'iut_addr2'='iut_addr1','tst1_addr'='iut_addr1'</arg>
+    <arg name="extra_pipes"/>
+    <arg name="check_after_splice"/>
+    <arg name="splice_before_data"/>
+    <arg name="overfill_pipe"/>
+    <arg name="set_move"/>
+    <arg name="set_nonblock"/>
+    <arg name="acc_pipe">FALSE</arg>
+    <arg name="diff_stacks">FALSE</arg>
+    <arg name="pipe_size"/>
+    <arg name="use_fcntl"/>
+    <notes/>
+    <results tags="v5&amp;(linux-5&gt;4)&amp;!(ool_loop=0)" key="ON-15206">
+      <result value="FAILED">
+        <verdict>Correct splice() call with first IUT socket unexpectedly failed with errno RPC-EINVAL</verdict>
+      </result>
+    </results>
+    <results tags="v5&amp;(linux&lt;5|linux-5&lt;=4)&amp;!(ool_loop=0)" key="ON-15206">
+      <result value="FAILED">
+        <verdict>Correct splice() call with first IUT socket unexpectedly failed with errno RPC-EOPNOTSUPP</verdict>
+      </result>
+    </results>
   </iter>
   <iter result="PASSED">
     <arg name="env">tester{{{'pco_iut':IUT},{'pco_tst2':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast}},'iut_addr2'='iut_addr1','tst2_addr'='iut_addr1'</arg>
@@ -1062,10 +1086,34 @@
     <arg name="set_move"/>
     <arg name="set_nonblock"/>
     <arg name="acc_pipe">FALSE</arg>
-    <arg name="diff_stacks"/>
+    <arg name="diff_stacks">TRUE</arg>
     <arg name="pipe_size"/>
     <arg name="use_fcntl"/>
     <notes/>
+  </iter>
+  <iter result="PASSED">
+    <arg name="env">tester{{{'pco_iut':IUT},{'pco_tst1':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast}},'iut_addr2'='iut_addr1','tst1_addr'='iut_addr1'</arg>
+    <arg name="extra_pipes"/>
+    <arg name="check_after_splice"/>
+    <arg name="splice_before_data"/>
+    <arg name="overfill_pipe"/>
+    <arg name="set_move"/>
+    <arg name="set_nonblock"/>
+    <arg name="acc_pipe">FALSE</arg>
+    <arg name="diff_stacks">FALSE</arg>
+    <arg name="pipe_size"/>
+    <arg name="use_fcntl"/>
+    <notes/>
+    <results tags="v5&amp;(linux-5&gt;4)&amp;!(ool_loop=0)" key="ON-15206">
+      <result value="FAILED">
+        <verdict>Correct splice() call with first IUT socket unexpectedly failed with errno RPC-EINVAL</verdict>
+      </result>
+    </results>
+    <results tags="v5&amp;(linux&lt;5|linux-5&lt;=4)&amp;!(ool_loop=0)" key="ON-15206">
+      <result value="FAILED">
+        <verdict>Correct splice() call with first IUT socket unexpectedly failed with errno RPC-EOPNOTSUPP</verdict>
+      </result>
+    </results>
   </iter>
   <iter result="PASSED">
     <arg name="env">tester{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast}},'pco_tst2'='pco_tst1','iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</arg>
@@ -1166,10 +1214,34 @@
     <arg name="set_move"/>
     <arg name="set_nonblock"/>
     <arg name="acc_pipe">FALSE</arg>
-    <arg name="diff_stacks"/>
+    <arg name="diff_stacks">TRUE</arg>
     <arg name="pipe_size"/>
     <arg name="use_fcntl"/>
     <notes/>
+  </iter>
+  <iter result="PASSED">
+    <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':IUT},addr:'iut_addr1':inet6:unicast},{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast}},'iut_addr2'='iut_addr1','tst1_addr'='iut_addr1'</arg>
+    <arg name="extra_pipes"/>
+    <arg name="check_after_splice"/>
+    <arg name="splice_before_data"/>
+    <arg name="overfill_pipe"/>
+    <arg name="set_move"/>
+    <arg name="set_nonblock"/>
+    <arg name="acc_pipe">FALSE</arg>
+    <arg name="diff_stacks">FALSE</arg>
+    <arg name="pipe_size"/>
+    <arg name="use_fcntl"/>
+    <notes/>
+    <results tags="v5&amp;(linux-5&gt;4)&amp;!(ool_loop=0)" key="ON-15206">
+      <result value="FAILED">
+        <verdict>Correct splice() call with first IUT socket unexpectedly failed with errno RPC-EINVAL</verdict>
+      </result>
+    </results>
+    <results tags="v5&amp;(linux&lt;5|linux-5&lt;=4)&amp;!(ool_loop=0)" key="ON-15206">
+      <result value="FAILED">
+        <verdict>Correct splice() call with first IUT socket unexpectedly failed with errno RPC-EOPNOTSUPP</verdict>
+      </result>
+    </results>
   </iter>
   <iter result="PASSED">
     <arg name="env">tester{{{'pco_iut':IUT},{'pco_tst2':IUT},addr:'iut_addr1':inet6:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast}},'iut_addr2'='iut_addr1','tst2_addr'='iut_addr1'</arg>
@@ -1194,10 +1266,34 @@
     <arg name="set_move"/>
     <arg name="set_nonblock"/>
     <arg name="acc_pipe">FALSE</arg>
-    <arg name="diff_stacks"/>
+    <arg name="diff_stacks">TRUE</arg>
     <arg name="pipe_size"/>
     <arg name="use_fcntl"/>
     <notes/>
+  </iter>
+  <iter result="PASSED">
+    <arg name="env">tester{{{'pco_iut':IUT},{'pco_tst1':IUT},addr:'iut_addr1':inet6:unicast},{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast}},'iut_addr2'='iut_addr1','tst1_addr'='iut_addr1'</arg>
+    <arg name="extra_pipes"/>
+    <arg name="check_after_splice"/>
+    <arg name="splice_before_data"/>
+    <arg name="overfill_pipe"/>
+    <arg name="set_move"/>
+    <arg name="set_nonblock"/>
+    <arg name="acc_pipe">FALSE</arg>
+    <arg name="diff_stacks">FALSE</arg>
+    <arg name="pipe_size"/>
+    <arg name="use_fcntl"/>
+    <notes/>
+    <results tags="v5&amp;(linux-5&gt;4)&amp;!(ool_loop=0)" key="ON-15206">
+      <result value="FAILED">
+        <verdict>Correct splice() call with first IUT socket unexpectedly failed with errno RPC-EINVAL</verdict>
+      </result>
+    </results>
+    <results tags="v5&amp;(linux&lt;5|linux-5&lt;=4)&amp;!(ool_loop=0)" key="ON-15206">
+      <result value="FAILED">
+        <verdict>Correct splice() call with first IUT socket unexpectedly failed with errno RPC-EOPNOTSUPP</verdict>
+      </result>
+    </results>
   </iter>
 </test>
     <test name="ipv6_del_ll_addrs_transmit" type="script">
