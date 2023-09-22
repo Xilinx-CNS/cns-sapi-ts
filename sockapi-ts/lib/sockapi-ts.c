@@ -3645,7 +3645,6 @@ sockts_netns_setup_common(const char *ta_name, const char *host,
     CHECK_NOT_NULL(netns);
     CHECK_NOT_NULL(netns_ta);
     CHECK_NOT_NULL(netns_rpcs);
-    CHECK_NOT_NULL(rpcs_ns);
 
     CHECK_RC(tapi_netns_add(ta_name, netns));
     CHECK_RC(tapi_netns_if_set(ta_name, netns, recv_veth2_name));

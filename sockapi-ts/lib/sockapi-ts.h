@@ -4070,7 +4070,7 @@ extern void sockts_find_parent_if(rcf_rpc_server *rpcs,
  * @param netns_ta              Name of the created Test Agent.
  * @param netns_rpcs            Name of the created RPC server.
  * @param rcf_port              Port number.
- * @param rpcs_ns               Location for netns RPC server.
+ * @param rpcs_ns               Location for netns RPC server or @c NULL.
  * @param ns_addr               Location for allocated address.
  * @param addr_handle           Location for allocated address configuration
  *                              handle.
