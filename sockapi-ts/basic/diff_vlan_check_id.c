@@ -133,6 +133,18 @@ main(int argc, char *argv[])
     CHECK_RC(tapi_cfg_alloc_ip4_net(&vlan_net_handle));
     CHECK_RC(cfg_get_oid_str(vlan_net_handle, &net_oid));
     val_type = CVT_INTEGER;
+
+    /*
+     * There is a problem on some systems: packets can be seen on
+     * NIC but socket doesn't receive them. To handle this, the value
+     * of rp_filter should be changed.
+     */
+    if (!use_netns)
+    {
+        CHECK_RC(tapi_cfg_sys_set_int(pco_iut->ta, 2, NULL,
+                                      "net/ipv4/conf:all/rp_filter"));
+    }
+
     CHECK_RC(cfg_get_instance_fmt(&val_type, &net_prefix, "%s/prefix:",
                                   net_oid));
     CREATE_CONFIGURE_VLAN_EXT(pco_iut, vlan_net_handle,
@@ -176,6 +188,15 @@ main(int argc, char *argv[])
                            RPC_SOCK_DGRAM, RPC_PROTO_DEF);
         rpcs_recv = rpcs_ns;
         send_addr = netns_vlan1_addr;
+        /*
+         * There is a problem on some systems: packets can be seen on
+         * NIC but socket doesn't receive them. To handle this, the value
+         * of rp_filter should be changed. Value 2 doesn't work here well,
+         * so 0 should be used.
+         */
+        CHECK_RC(tapi_cfg_sys_set_int(rpcs_ns->ta, 0, NULL,
+                                      "net/ipv4/conf:%s/rp_filter",
+                                      iut_vlan1_if_name));
     }
 
     TEST_STEP("Bind the socket to wildcard address and some new port.");
