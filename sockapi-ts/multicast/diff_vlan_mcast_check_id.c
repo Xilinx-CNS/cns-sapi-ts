@@ -164,7 +164,7 @@ main(int argc, char *argv[])
         TEST_FAIL("Failed to get MAC address of TST interface");
 
     TEST_STEP("Calculate MAC multicast address on IUT.");
-    tapi_ip4_to_mcast_mac(SIN(mcast_addr), mac_iut_mcast);
+    tapi_ip4_to_mcast_mac(SIN(mcast_addr)->sin_addr.s_addr, mac_iut_mcast);
 
     TEST_STEP("Create CSAP to send packets from TST to the first IUT "
               "VLAN interface.");
