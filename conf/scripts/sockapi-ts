@@ -13,6 +13,7 @@ source "${TE_BASE}/scripts/lib"
 # TE_TS_RIGSDIR implementations: 'scp_dir', 'ln_sf_safe'.
 source_if_exists "${TE_TS_RIGSDIR}/scripts/lib.run"
 
+. ${SF_TS_CONFDIR}/make_cmds
 . ${SF_TS_CONFDIR}/scripts/lib
 . ${SF_TS_CONFDIR}/scripts/ipvlan
 . ${SF_TS_CONFDIR}/scripts/sfptpd
