@@ -239,7 +239,18 @@ for header in extensions.h extensions_zc.h extensions_timestamping.h extensions_
     if test "x$SFC_ONLOAD_LOCAL" == "xyes" ; then
         local_file="${SFC_ONLOAD_EXT_HEADERS}/${header}"
         target="${SOCKAPI_TS_LIBDIR}/talib_sockapi_ts/copied_headers/${header}"
-        rsync_from "$TE_IUT" "$local_file" "$target"
+        for ignored_header in "${IGNORED_ONLOAD_HEADERS[@]}"; do
+            if [[ "${header}" == "${ignored_header}" ]]; then
+                HEADER_IS_IGNORED="yes"
+                break
+            fi
+        done
+        if [[ "${HEADER_IS_IGNORED}" == "yes" ]]; then
+            echo "INFO: file $header does not exist"
+        else
+            rsync_from "$TE_IUT" "$local_file" "$target"
+        fi
+        HEADER_IS_IGNORED=
     else
         target="${SFC_ONLOAD_EXT_HEADERS}/${header}"
     fi
