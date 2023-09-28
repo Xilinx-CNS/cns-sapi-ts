@@ -232,10 +232,6 @@ if test "${ZF_SHIM_RUN}" = "true" ; then
     check_sf_zetaferno_dir $OOL_SET
 fi
 
-if test -n "${TE_TS_SOCKAPI}" ; then
-    RUN_OPTS="${RUN_OPTS} --opts=opts.ts"
-fi
-
 if test "${ST_IP_TRANSPARENT}" = "yes" ; then
     RUN_OPTS="${RUN_OPTS} --tester-req=\"ENV-IUT-FAKE-ADDR\""
     # Scalable filters are not supported with AF_XDP. ST-2231.
@@ -299,6 +295,10 @@ if [[ "$TE_TS_BUILD_ONLY" != "yes" ]] ; then
             RUN_OPTS="$RUN_OPTS --script=ool/config/$i"
         fi
     done
+fi
+
+if test -n "${TE_TS_SOCKAPI}" ; then
+    RUN_OPTS="${RUN_OPTS} --opts=opts.ts"
 fi
 
 eval "${TE_BASE}/dispatcher.sh ${MY_OPTS} ${RUN_OPTS}"
