@@ -8483,7 +8483,7 @@
       </iter>
     </test>
     <test name="diff_vlan_mcast_check_id" type="script">
-      <objective>Check that received packets have correct VLAN tag</objective>
+      <objective>The test should check that VLAN interface receives packets with correct VLAN tag, and check that the interface does not receive packets with a wrong VLAN tag (or no VLAN tag).</objective>
       <notes/>
       <iter result="PASSED">
         <arg name="env"/>
@@ -8492,6 +8492,11 @@
         <arg name="vlan1"/>
         <arg name="vlan2"/>
         <notes/>
+        <results tags="v5&amp;x3" key="ON-14776">
+          <result value="FAILED">
+            <verdict>Socket 'iut_s' is not expected to be readable, but it is</verdict>
+          </result>
+        </results>
       </iter>
     </test>
   </iter>
