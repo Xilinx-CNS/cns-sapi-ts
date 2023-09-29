@@ -26,7 +26,7 @@
  * @author Boris Shleyfman <bshleyfman@oktet.co.il>
  */
 
-#define TE_TEST_NAME  "basic/diff_vlan_check_id"
+#define TE_TEST_NAME  "basic/diff_ipvlan_macvlan_check"
 
 #include "sockapi-test.h"
 
