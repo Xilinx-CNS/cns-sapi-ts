@@ -11925,12 +11925,23 @@
       </iter>
     </test>
     <test name="diff_ipvlan_macvlan_check" type="script">
-      <objective>Check that received packets have correct destination IP</objective>
+      <objective>The test should check that IP VLAN/MAC VLAN interface receives packets with correct destination IP/MAC, and check that the interface does not receive packets with a wrong destination IP.</objective>
       <notes/>
       <iter result="PASSED">
         <arg name="env"/>
         <arg name="use_macvlan"/>
-        <arg name="use_netns"/>
+        <arg name="use_netns">FALSE</arg>
+        <notes/>
+        <results tags="(v5|zf_shim)" key="ON-12773">
+          <result value="FAILED">
+            <verdict>Socket 'iut_s' is not expected to be readable, but it is</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="use_macvlan"/>
+        <arg name="use_netns">TRUE</arg>
         <notes/>
       </iter>
     </test>
