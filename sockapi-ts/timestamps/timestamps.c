@@ -314,6 +314,7 @@ ts_check_cmsghdr_addr(rpc_msghdr *msg, int rc, size_t sent_len,
                       const struct sockaddr *addr, struct timespec *ts_o,
                       struct timespec *ts_prev)
 {
+    char *disable_timestamps = getenv("DISABLE_TIMESTAMPS");
     rpc_onload_scm_timestamping_stream *ts_tx;
     rpc_scm_timestamping *ts;
     struct cmsghdr *cmsg = NULL;
@@ -382,6 +383,19 @@ ts_check_cmsghdr_addr(rpc_msghdr *msg, int rc, size_t sent_len,
         {
             if (tx && vlan)
                 hsize += 4;
+
+            /* If timestamps are enabled, tcp header will be longer
+             * by 12 bytes, because such header contains Options field.
+             * Options field uses 10 bytes to store timestamps info and
+             * 2 bytes are reserved for other options. If timestamps are
+             * disabled, no options field will be present.
+             */
+            if (disable_timestamps != NULL &&
+                strcmp(disable_timestamps, "yes") == 0 &&
+                sock_type == RPC_SOCK_STREAM)
+            {
+                hsize -= TCP_TIMESTAMPS_HSIZE;
+            }
 
             if (rc - hsize != (int)recv_len)
                 TEST_VERDICT("recvmsg() function returned unexpected "

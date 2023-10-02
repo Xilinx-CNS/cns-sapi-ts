@@ -36,6 +36,9 @@ do {                                            \
 /** MAC address length.  */
 #define LINUX_ETH_HEADER_LEN 14
 
+/** Length of timestamps record in tcp header. */
+#define TCP_TIMESTAMPS_HSIZE 12
+
 /**
  * Structure to keep delays between transmitted packets.
  */
