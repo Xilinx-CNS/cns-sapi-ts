@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
-# (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved.
+# (c) Copyright 2023 OKTET Labs Ltd., 2004 - 2022 Xilinx, Inc. All rights reserved.
 #
 # The file contains sockapi-ts specific environments processing and
 # configuration.
@@ -233,31 +233,6 @@ fi
 if test "x$SFC_ONLOAD_LOCAL" == "xyes" ; then
     mkdir -p "${SOCKAPI_TS_LIBDIR}/talib_sockapi_ts/copied_headers"
 fi
-for header in extensions.h extensions_zc.h extensions_timestamping.h extensions_zc_hlrx.h\
-    test_intf.h ; do
-    dst_name="${SOCKAPI_TS_LIBDIR}/talib_sockapi_ts/${header}"
-    if test "x$SFC_ONLOAD_LOCAL" == "xyes" ; then
-        local_file="${SFC_ONLOAD_EXT_HEADERS}/${header}"
-        target="${SOCKAPI_TS_LIBDIR}/talib_sockapi_ts/copied_headers/${header}"
-        for ignored_header in "${IGNORED_ONLOAD_HEADERS[@]}"; do
-            if [[ "${header}" == "${ignored_header}" ]]; then
-                HEADER_IS_IGNORED="yes"
-                break
-            fi
-        done
-        if [[ "${HEADER_IS_IGNORED}" == "yes" ]]; then
-            echo "INFO: file $header does not exist"
-        else
-            rsync_from "$TE_IUT" "$local_file" "$target"
-        fi
-        HEADER_IS_IGNORED=
-    else
-        target="${SFC_ONLOAD_EXT_HEADERS}/${header}"
-    fi
-    if test -f "$target"; then
-        ln_sf_safe "$target" "$dst_name"
-    fi
-done
 
 if test "x$SFC_ONLOAD_LOCAL" == "xyes" ; then
 
