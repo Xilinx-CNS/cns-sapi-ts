@@ -228,6 +228,11 @@ export ST_IUT_IS_CMOD
 export L5_RUN=$L5_RUN
 export ZF_SHIM_RUN=$ZF_SHIM_RUN
 
+# TODO: remove this when sapi-ts stops relying on Jenkins
+# to generate metadata file. Until then this is needed
+# to avoid overwriting Jenkins metadata file by TE.
+RUN_OPTS="${RUN_OPTS} --no-meta"
+
 if test "${ZF_SHIM_RUN}" = "true" ; then
     check_sf_zetaferno_dir $OOL_SET
 fi
