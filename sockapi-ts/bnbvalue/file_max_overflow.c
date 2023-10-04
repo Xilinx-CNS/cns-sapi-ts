@@ -1,5 +1,6 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 /* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/* (c) Copyright 2023 OKTET Labs Ltd. */
 /*
  * Socket API Test Suite
  * Bad Parameters and Boundary Values
@@ -237,7 +238,7 @@ cleanup:
     {
         /* Restart to rollback user ID. */
         CLEANUP_CHECK_RC(rcf_rpc_server_restart(pco_iut));
-        CHECK_RC(tapi_cfg_del_user(pco_iut->ta, SOCKTS_DEF_UID));
+        CLEANUP_CHECK_RC(tapi_cfg_del_user(pco_iut->ta, SOCKTS_DEF_UID));
     }
 
     /* Timeout needed because Onload can close FD for too long.
