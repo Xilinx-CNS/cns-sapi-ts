@@ -1,5 +1,6 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 /* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/* (c) Copyright 2023 OKTET Labs Ltd. */
 /*
  * Socket API Tests
  * This test package contains tests for special cases of TCP protocol,
@@ -122,6 +123,7 @@ main(int argc, char *argv[])
 
     CHECK_RC(tapi_tad_trrecv_start(pco_tst->ta, 0, csap, NULL,
                                    TAD_TIMEOUT_INF, 0, RCF_TRRECV_PACKETS));
+    TAPI_WAIT_NETWORK;
 
     TEST_STEP("If @p shutdown is @c TRUE: "
               "- call @b shutdown(WR) on IUT socket; "
