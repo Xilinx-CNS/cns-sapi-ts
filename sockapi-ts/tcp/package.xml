@@ -3288,5 +3288,22 @@
           <arg name="partial" type="boolean"/>
         </run>
 
+        <run>
+            <script name="send_retrans_fail">
+                <req id="SOCK_STREAM"/>
+                <req id="TAPI_TCP_STATES"/>
+            </script>
+            <arg name="env">
+                <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
+            </arg>
+            <arg name="send_func" type="send_func"/>
+            <arg name="retrans_fail_way">
+                <value>rto</value>
+                <value>user_timeout</value>
+                <value>rst</value>
+            </arg>
+        </run>
+
     </session>
 </package>

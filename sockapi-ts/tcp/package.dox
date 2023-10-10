@@ -73,6 +73,7 @@ TCP packets, etc.
 -# @ref tcp-ts_send
 -# @ref tcp-rst_send_partial
 -# @ref tcp-tcp_server_restart
+-# @ref tcp-send_retrans_fail
 
 @}
 

@@ -9108,5 +9108,14 @@
         </results>
       </iter>
     </test>
+    <test name="send_retrans_fail" type="script">
+      <objective>Test send functions when TCP send retransmission fails.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="send_func"/>
+        <arg name="retrans_fail_way"/>
+      </iter>
+    </test>
   </iter>
 </test>
