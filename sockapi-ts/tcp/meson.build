@@ -46,6 +46,7 @@ tests = [
     'rtt_calc',
     'same_tuple_new_isn',
     'send_block_unblock',
+    'send_retrans_fail',
     'shutdown_data',
     'shutdown_fin',
     'shutdown_rst',

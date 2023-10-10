@@ -3256,6 +3256,9 @@ groups:
     - test: send_block_unblock
       summary: TCP send() blocking and un-blocking
 
+    - test: send_retrans_fail
+      summary: Test send functions when TCP send retransmission fails
+
     - test: shutdown_data
       summary: Incoming data packet after calling shutdown
 
