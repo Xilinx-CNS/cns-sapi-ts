@@ -1,5 +1,6 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 /* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/* (c) Copyright 2023 OKTET Labs Ltd. */
 /* 
  * Socket API Test Suite
  * TCP tests
@@ -92,6 +93,7 @@ main(int argc, char *argv[])
     TEST_STEP("Start CSAP sniffer to track transmitetd packets.");
     CHECK_RC(tapi_tad_trrecv_start(pco_gw->ta, 0, csap, NULL,
                                    TAD_TIMEOUT_INF, 0, RCF_TRRECV_PACKETS));
+    TAPI_WAIT_NETWORK;
 
     TEST_STEP("Send data packet from IUT.");
     RPC_SEND(rc, pco_iut, iut_s, sndbuf, length, 0);
