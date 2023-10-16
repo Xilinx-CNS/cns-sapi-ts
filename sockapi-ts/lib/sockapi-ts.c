@@ -1,5 +1,6 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 /* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/* (c) Copyright 2023 OKTET Labs Ltd. */
 /** @file
  * @brief Socket API Test Suite
  *
@@ -17,6 +18,8 @@
 #include "tapi_cfg.h"
 #include "tapi_test.h"
 #include "tapi_file.h"
+#include "tapi_job.h"
+#include "tapi_job_factory_rpc.h"
 #include "tapi_mem.h"
 #include "tapi_route_gw.h"
 #include "onload.h"
@@ -3294,12 +3297,96 @@ sockts_iface_is_iut(tapi_env *env, const char *name)
     return (env_if->net->type == TAPI_ENV_IUT);
 }
 
+/**
+ * Read contents of Kernel Memory Leak Detector file.
+ *
+ * @param[in]  pco_kmemleak     RPC server context.
+ * @param[out] buf_p            Pointer to output buffer.
+ *
+ * @return Status code
+ */
+static te_errno
+kmemleak_read_report(rcf_rpc_server *pco_kmemleak, tapi_job_buffer_t* buf_p)
+{
+    tapi_job_factory_t *factory = NULL;
+    tapi_job_t *job = NULL;
+    tapi_job_channel_t *stdout_ch = NULL;
+    tapi_job_channel_t *out_filter = NULL;
+    tapi_job_status_t status;
+    const char *tool = "cat";
+    const char *tool_args[] = { tool, SOCKTS_SYS_KERN_DBG_KMEMLEAK, NULL };
+    te_errno rc;
+    te_errno rc2;
+
+    rc = tapi_job_factory_rpc_create(pco_kmemleak, &factory);
+    if (rc != 0)
+    {
+        ERROR("Failed to create factory for %s (%r)", tool, rc);
+        return rc;
+    }
+
+    rc = tapi_job_create(factory, NULL, tool, tool_args, NULL, &job);
+    if (rc != 0)
+    {
+        ERROR("Failed to create job for %s (%r)", tool, rc);
+        goto cleanup;
+    }
+
+    rc = tapi_job_alloc_output_channels(job, 1, &stdout_ch);
+    if (rc != 0)
+    {
+        ERROR("Failed to allocate output channel for %s job (%r)", tool, rc);
+        goto cleanup;
+    }
+
+    rc = tapi_job_attach_filter(TAPI_JOB_CHANNEL_SET(stdout_ch),
+                                "Out filter", TRUE, 0, &out_filter);
+    if (rc != 0)
+    {
+        ERROR("Failed to attach filter to output channel of %s job "
+              "(%r)", tool, rc);
+        goto cleanup;
+    }
+
+    rc = tapi_job_start(job);
+    if (rc != 0)
+    {
+        ERROR("Failed to start %s job (%r)", tool, rc);
+        goto cleanup;
+    }
+
+    tapi_job_set_tracing(job, FALSE);
+    while (!buf_p->eos)
+    {
+        rc = tapi_job_receive(TAPI_JOB_CHANNEL_SET(out_filter), -1, buf_p);
+        if (rc != 0)
+        {
+            ERROR("Failed to read data from the stdout channel (%r)", rc);
+            goto cleanup;
+        }
+    }
+    tapi_job_set_tracing(job, TRUE);
+
+    rc = tapi_job_wait(job, -1, &status);
+    if (rc != 0 || status.type != TAPI_JOB_STATUS_EXITED || status.value != 0)
+        ERROR("cat tool failed (%r)", rc);
+
+cleanup:
+    rc2 = tapi_job_destroy(job, -1);
+    if (rc2 != 0)
+        ERROR("Failed to destroy tapi job (%r)", rc2);
+
+    tapi_job_factory_destroy(factory);
+
+    return rc;
+}
+
 /* See description in sockapi-ts.h */
 void
 sockts_kmemleak_get_report(const char *ta)
 {
     rpc_wait_status rc;
-    char *out_str = NULL;
+    tapi_job_buffer_t buf = TAPI_JOB_BUFFER_INIT;
     rcf_rpc_server *pco_kmemleak= NULL;
 
     CHECK_RC(rcf_rpc_server_create(ta, "pco_kmemleak",
@@ -3317,23 +3404,21 @@ sockts_kmemleak_get_report(const char *ta)
     }
 
     RPC_AWAIT_IUT_ERROR(pco_kmemleak);
-    rc = rpc_shell_get_all(pco_kmemleak, &out_str,
-                           "cat " SOCKTS_SYS_KERN_DBG_KMEMLEAK, -1);
-    if (rc.value != 0)
-        ERROR_VERDICT("%s() getting report from kmemleak failed", __func__);
-
-    if (out_str != NULL)
+    if (kmemleak_read_report(pco_kmemleak, &buf) != 0)
     {
-        if (out_str[0] != '\0')
-        {
-            ERROR_VERDICT("Kmemleak detected possible kernel memory leaks");
-            WARN("%s", out_str);
-        }
-        free(out_str);
+        ERROR_VERDICT("%s() getting report from kmemleak failed", __func__);
+        goto cleanup;
+    }
+
+    if (buf.data.len > 0)
+    {
+        ERROR_VERDICT("Kmemleak detected possible kernel memory leaks");
+        WARN("%s", buf.data.ptr);
     }
 
 cleanup:
     CHECK_RC(rcf_rpc_server_destroy(pco_kmemleak));
+    te_string_free(&buf.data);
 }
 
 /* See description in sockapi-ts.h */
