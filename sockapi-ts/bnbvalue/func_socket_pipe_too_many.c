@@ -1,5 +1,6 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 /* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/* (c) Copyright 2023 OKTET Labs Ltd. */
 /*
  * Socket API Test Suite
  * Bad Parameters and Boundary Values
@@ -129,6 +130,33 @@ do {                                                                       \
                     use_pipe ? "pipe" : "socket");                         \
 } while (0);
 
+static int
+get_ef_max_packets(rcf_rpc_server *pco)
+{
+    int val;
+    tarpc_onload_stat ostat;
+    char *buf = NULL;
+    char *ptr = NULL;
+    int s = rpc_socket(pco, RPC_AF_INET, RPC_SOCK_STREAM, RPC_PROTO_DEF);
+
+    rpc_onload_fd_stat(pco, s, &ostat);
+    rpc_shell_get_all2(pco, &buf, "te_onload_stdump %d get_opt max_packets",
+                       ostat.stack_id);
+    rpc_close(pco, s);
+
+    /* Input string example - "[1] max_packets: 16384" */
+    if ((ptr = strrchr(buf, ' ')) == NULL)
+    {
+        free(buf);
+        TEST_FAIL("Couldn't parse stackdump output");
+    }
+
+    val = atoi(ptr);
+    free(buf);
+
+    return val;
+}
+
 int
 main(int argc, char *argv[])
 {
@@ -162,6 +190,8 @@ main(int argc, char *argv[])
     int                loglevel;
     int                failed;
     int                sleep_before_retry;
+    cfg_handle ef_max_packets = CFG_HANDLE_INVALID;
+    char *old_ef_max_packets = NULL;
 
     TEST_START;
     TEST_GET_BOOL_PARAM(use_pipe);
@@ -190,6 +220,16 @@ main(int argc, char *argv[])
             sockts_set_env_gen(pco_iut, "EF_TCP_SYNRECV_MAX",
                                ef_synrecv_max,
                                &old_ef_tcp_synrecv_max, FALSE);
+    }
+    /*
+     * The test creates big number of connections consuming a lot of packet
+     * memory. We should ensure that EF_MAX_PACKETS is not less than 32768,
+     * otherwise the test may fail because of lack of packet buffers.
+     */
+    if (tapi_onload_run() == TRUE && get_ef_max_packets(pco_iut) < 32768)
+    {
+        ef_max_packets = sockts_set_env_gen(pco_iut, "EF_MAX_PACKETS", "32768",
+                                            &old_ef_max_packets, FALSE);
     }
     ef_no_fail_handle = sockts_set_env(pco_iut, "EF_NO_FAIL", ef_no_fail,
                                            &old_ef_no_fail);
@@ -288,6 +328,11 @@ cleanup:
                                         old_ef_max_end, FALSE));
     CLEANUP_CHECK_RC(sockts_restore_env_gen(pco_iut, ef_tcp_synrecv_max_h,
                                         old_ef_tcp_synrecv_max, FALSE));
+    if (ef_max_packets != CFG_HANDLE_INVALID)
+    {
+        CLEANUP_CHECK_RC(sockts_restore_env_gen(pco_iut, ef_max_packets,
+                                                old_ef_max_packets, FALSE));
+    }
     CLEANUP_CHECK_RC(sockts_restore_env(pco_iut, ef_no_fail_handle,
                                         old_ef_no_fail));
     TEST_END;
