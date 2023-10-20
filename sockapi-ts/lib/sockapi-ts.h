@@ -1,5 +1,6 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 /* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
+/* (c) Copyright 2023 OKTET Labs Ltd. */
 /** @file
  * @brief Socket API Test Suite
  *
@@ -3955,7 +3956,7 @@ sockts_server_change_uid(rcf_rpc_server *rpcs)
 {
     tarpc_uid_t     uid = 0;
 
-    CHECK_RC(tapi_cfg_add_new_user(rpcs->ta, SOCKTS_DEF_UID));
+    CHECK_RC(tapi_cfg_add_user_if_needed(rpcs->ta, SOCKTS_DEF_UID, NULL));
     rpc_setuid(rpcs, SOCKTS_DEF_UID);
     uid = rpc_getuid(rpcs);
     if (uid != SOCKTS_DEF_UID)

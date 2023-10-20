@@ -151,7 +151,8 @@ main(int argc, char *argv[])
         TEST_STEP("If @p other_user is @c TRUE, create a new user on IUT "
                   "and use @b setuid() on @p pco_iut to switch to it.");
 
-        CHECK_RC(tapi_cfg_add_new_user(pco_iut->ta, SOCKTS_DEF_UID));
+        CHECK_RC(tapi_cfg_add_user_if_needed(pco_iut->ta, SOCKTS_DEF_UID,
+                                             NULL));
         rpc_setuid(pco_iut, SOCKTS_DEF_UID);
     }
 
