@@ -287,7 +287,8 @@ main(int argc, char *argv[])
             break;
 
         case DIFF_USERS:
-            CHECK_RC(tapi_cfg_add_new_user(pco_iut->ta, SOCKTS_DEF_UID));
+            CHECK_RC(tapi_cfg_add_user_if_needed(pco_iut->ta, SOCKTS_DEF_UID,
+                                                 NULL));
             diff_user = TRUE;
             SET_CHECK_USER_BY_ID(pco_tst, SOCKTS_DEF_UID);
             SET_CHECK_USER_BY_ID(pco_iut, passwd->pw_uid);
