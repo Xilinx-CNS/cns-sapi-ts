@@ -137,9 +137,15 @@ main(int argc, char *argv[])
     /*
      * There is a problem on some systems: packets can be seen on
      * NIC but socket doesn't receive them. To handle this, the value
-     * of rp_filter should be changed.
+     * of rp_filter should be changed to 2, and in case of net namespace
+     * to 0.
      */
-    if (!use_netns)
+    if (use_netns)
+    {
+        CHECK_RC(tapi_cfg_sys_set_int(pco_iut->ta, 0, NULL,
+                                      "net/ipv4/conf:all/rp_filter"));
+    }
+    else
     {
         CHECK_RC(tapi_cfg_sys_set_int(pco_iut->ta, 2, NULL,
                                       "net/ipv4/conf:all/rp_filter"));
