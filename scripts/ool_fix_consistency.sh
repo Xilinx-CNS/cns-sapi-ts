@@ -236,6 +236,7 @@ function x3_fix()
             ool_replace "no_reuse_pco" "reuse_pco" \
                 "X3/ST-2641: avoid creating too much stacks"
         fi
+        ool_remove "scooby" "ON-15354: scooby doesn't work with X3"
     fi
 }
 
