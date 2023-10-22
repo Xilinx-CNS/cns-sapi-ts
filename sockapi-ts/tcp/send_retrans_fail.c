@@ -148,7 +148,12 @@ main(int argc, char *argv[])
 
     TEST_STEP("Send a TCP packet from IUT to TST using some send"
               " function.");
+    RPC_AWAIT_IUT_ERROR(pco_iut);
     n_bytes = send_func(pco_iut, iut_s, tx_buf, PAYLOAD_LEN, 0);
+    if (n_bytes < 0)
+    {
+        TEST_VERDICT("send_func() failed with errno %r", RPC_ERRNO(pco_iut));
+    }
     if (n_bytes != PAYLOAD_LEN)
     {
         WARN("%d bytes were sent, instead of %d", n_bytes, PAYLOAD_LEN);

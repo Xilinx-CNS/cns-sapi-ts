@@ -9113,8 +9113,136 @@
       <notes/>
       <iter result="PASSED">
         <arg name="env"/>
+        <arg name="send_func">write</arg>
+        <arg name="retrans_fail_way">rto</arg>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="send_func">writev</arg>
+        <arg name="retrans_fail_way">rto</arg>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="send_func">send</arg>
+        <arg name="retrans_fail_way">rto</arg>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="send_func">sendto</arg>
+        <arg name="retrans_fail_way">rto</arg>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="send_func">sendmsg</arg>
+        <arg name="retrans_fail_way">rto</arg>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="send_func">onload_zc_send</arg>
+        <arg name="retrans_fail_way">rto</arg>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="send_func">onload_zc_send_user_buf</arg>
+        <arg name="retrans_fail_way">rto</arg>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="send_func">template_send</arg>
+        <arg name="retrans_fail_way">rto</arg>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="send_func">od_send</arg>
+        <arg name="retrans_fail_way">rto</arg>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="send_func">od_send_raw</arg>
+        <arg name="retrans_fail_way">rto</arg>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="send_func">write</arg>
+        <arg name="retrans_fail_way">rst</arg>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="send_func">writev</arg>
+        <arg name="retrans_fail_way">rst</arg>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="send_func">send</arg>
+        <arg name="retrans_fail_way">rst</arg>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="send_func">sendto</arg>
+        <arg name="retrans_fail_way">rst</arg>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="send_func">sendmsg</arg>
+        <arg name="retrans_fail_way">rst</arg>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="send_func">onload_zc_send</arg>
+        <arg name="retrans_fail_way">rst</arg>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="send_func">onload_zc_send_user_buf</arg>
+        <arg name="retrans_fail_way">rst</arg>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="send_func">template_send</arg>
+        <arg name="retrans_fail_way">rst</arg>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="send_func">od_send</arg>
+        <arg name="retrans_fail_way">rst</arg>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="send_func">od_send_raw</arg>
+        <arg name="retrans_fail_way">rst</arg>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="send_func">sendmmsg</arg>
+        <arg name="retrans_fail_way">rto</arg>
+        <notes/>
+        <results tags="v5" notes="sendmmsg() is not supported on TCP in Onload">
+          <result value="FAILED">
+            <verdict>send_func() failed with errno RPC-ENOSYS</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="send_func">sendmmsg</arg>
+        <arg name="retrans_fail_way">rst</arg>
+        <notes/>
+        <results tags="v5" notes="sendmmsg() is not supported on TCP in Onload">
+          <result value="FAILED">
+            <verdict>send_func() failed with errno RPC-ENOSYS</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
         <arg name="send_func"/>
-        <arg name="retrans_fail_way"/>
+        <arg name="retrans_fail_way">user_timeout</arg>
+        <notes/>
+        <results tags="v5" key="ON-2512">
+          <result value="FAILED">
+            <verdict>setsockopt() failed to enable TCP_USER_TIMEOUT, errno=RPC-ENOPROTOOPT</verdict>
+          </result>
+        </results>
       </iter>
     </test>
   </iter>
