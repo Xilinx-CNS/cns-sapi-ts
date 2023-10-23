@@ -79,7 +79,6 @@ main(int argc, char *argv[])
     const struct if_nameindex *iut_if = NULL;
 
     const void                *alien_link_addr = NULL;
-    const char                *tcp_ca_state_seq;
 
     tsa_session               ss = TSA_SESSION_INITIALIZER;
 
