@@ -211,7 +211,24 @@
       <notes/>
       <iter result="PASSED">
         <arg name="csum_val"/>
-        <arg name="env"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="protocol"/>
+        <arg name="segment">RST</arg>
+        <notes/>
+        <results tags="af_xdp" key="11837">
+          <result value="FAILED">
+            <verdict>recv() on IUT was unblocked unexpectedly after receiving RST with invalid checksum</verdict>
+          </result>
+        </results>
+        <results tags="zf_shim" notes="There is no 'netstat' option in zf_stackdump and 'dump' shows TCP_CLOSE sockets too">
+          <result value="FAILED">
+            <verdict>IUT socket moved to unexpected state TCP_CLOSE</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="csum_val"/>
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
         <arg name="protocol"/>
         <arg name="segment">RST</arg>
         <notes/>
