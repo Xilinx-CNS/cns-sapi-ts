@@ -3150,6 +3150,15 @@ extern int sockts_share_socket_2proc(rcf_rpc_server *rpcs1,
                                      rcf_rpc_server *rpcs2, int sock);
 
 /**
+ * Get the maximim limit of stacks that can be utilized.
+ *
+ * @param rpcs          RPC server.
+ *
+ * @return Stacks amount or 0 if no limit
+ */
+extern int sockts_get_limited_stacks(rcf_rpc_server *rpcs);
+
+/**
  * Kill zombie stacks on the server.
  * 
  * @param rpcs          RPC server

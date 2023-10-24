@@ -150,6 +150,7 @@ main(int argc, char *argv[])
     char   *tx_buf = NULL;
     size_t  buf_len;
     int     loglevel;
+    int     stacks_available = 0;
 
     TEST_START;
     TEST_GET_PCO(pco_iut);
@@ -162,6 +163,13 @@ main(int argc, char *argv[])
     TEST_GET_INT_PARAM(proc_num);
     TEST_GET_BOOL_PARAM(accept);
     TEST_GET_BOOL_PARAM(one_stack);
+
+    stacks_available = sockts_get_limited_stacks(pco_iut);
+    if (stacks_available && proc_num > stacks_available)
+    {
+        WARN("proc_num has been decreased due to stacks limitation");
+        proc_num = stacks_available;
+    }
 
     if (proc_num < 1)
         TEST_FAIL("Wrong argument proc_num %d, it must be more 0",

@@ -1890,6 +1890,20 @@ sockts_share_socket_2proc(rcf_rpc_server *rpcs1, rcf_rpc_server *rpcs2,
     return *((int*)CMSG_DATA(cmsg));
 }
 
+/* See the description in sockapi-ts.h */
+int
+sockts_get_limited_stacks(rcf_rpc_server *rpcs)
+{
+    int              max_stacks = 0;
+    te_errno         rc = 0;
+
+    rc = tapi_sh_env_get_int(rpcs, "SOCKTS_MAX_STACKS", &max_stacks);
+    if (rc != 0)
+        ERROR("Failed to get SOCKTS_MAX_STACKS: %r", rc);
+
+    return max_stacks;
+}
+
 void
 sockts_get_kill_zombie_stacks(rcf_rpc_server *rpcs, te_bool check_only)
 {
