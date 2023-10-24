@@ -3863,7 +3863,7 @@
         <notes/>
         <results tags="v5&amp;!(ool_loop=4&amp;!reuse_stack)" key="ON-8297">
           <result value="FAILED">
-            <verdict>Measured backlog is more than expected</verdict>
+            <verdict>Measured backlog is a bit more than expected</verdict>
           </result>
         </results>
         <results tags="v5&amp;ool_loop=4&amp;!reuse_stack" key="ON-8297" notes="Verdict about ECONNRESET is expected after fixing ON-8304">
@@ -3914,37 +3914,7 @@
         </results>
       </iter>
       <iter result="PASSED">
-        <arg name="backlog">0</arg>
-        <arg name="env">VAR.env.peer2peer_tst</arg>
-        <notes/>
-        <results tags="v5" key="ON-8297">
-          <result value="FAILED">
-            <verdict>Measured backlog is a bit more than expected</verdict>
-          </result>
-        </results>
-      </iter>
-      <iter result="PASSED">
-        <arg name="backlog">1</arg>
-        <arg name="env">VAR.env.peer2peer_tst</arg>
-        <notes/>
-        <results tags="v5" key="ON-8297">
-          <result value="FAILED">
-            <verdict>Measured backlog is a bit more than expected</verdict>
-          </result>
-        </results>
-      </iter>
-      <iter result="PASSED">
-        <arg name="backlog">10</arg>
-        <arg name="env">VAR.env.peer2peer_tst</arg>
-        <notes/>
-        <results tags="v5" key="ON-8297">
-          <result value="FAILED">
-            <verdict>Measured backlog is a bit more than expected</verdict>
-          </result>
-        </results>
-      </iter>
-      <iter result="PASSED">
-        <arg name="backlog">150</arg>
+        <arg name="backlog"/>
         <arg name="env">VAR.env.peer2peer_tst</arg>
         <notes/>
         <results tags="v5" key="ON-8297">
@@ -4007,21 +3977,6 @@
         <arg name="backlog">-1</arg>
         <arg name="env">VAR.env.peer2peer</arg>
         <notes/>
-        <results tags="v5" key="ON-8297">
-          <result value="FAILED">
-            <verdict>Measured backlog is more than expected</verdict>
-          </result>
-        </results>
-      </iter>
-      <iter result="PASSED">
-        <arg name="backlog">-1</arg>
-        <arg name="env">VAR.env.peer2peer_tst</arg>
-        <notes/>
-        <results tags="v5" key="ON-8297">
-          <result value="FAILED">
-            <verdict>Measured backlog is more than expected</verdict>
-          </result>
-        </results>
       </iter>
       <iter result="PASSED">
         <arg name="backlog">-1</arg>
