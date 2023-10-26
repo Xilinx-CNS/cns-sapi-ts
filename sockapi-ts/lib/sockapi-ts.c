@@ -3636,6 +3636,9 @@ sockts_netns_setup_common(const char *ta_name, const char *host,
                           cfg_handle *addr_handle)
 {
     struct sockaddr *addr = NULL;
+    char            *net_oid = NULL;
+    cfg_val_type     val_type = CVT_INTEGER;
+    unsigned int     net_prefix;
 
     CHECK_NOT_NULL(ta_name);
     CHECK_NOT_NULL(host);
@@ -3662,10 +3665,13 @@ sockts_netns_setup_common(const char *ta_name, const char *host,
     if (*ns_addr == NULL)
         CHECK_RC(tapi_cfg_alloc_net_addr(net_handle, addr_handle, ns_addr));
 
-    CHECK_RC(tapi_cfg_base_if_add_net_addr(netns_ta, recv_veth2_name,
-                                           *ns_addr,
-                                           te_netaddr_get_bitsize(AF_INET),
-                                           FALSE, NULL));
+    /* Get network prefix */
+    CHECK_RC(cfg_get_oid_str(net_handle, &net_oid));
+    CHECK_RC(cfg_get_instance_fmt(&val_type, &net_prefix, "%s/prefix:",
+                                  net_oid));
+
+    CHECK_RC(tapi_cfg_base_if_add_net_addr(netns_ta, recv_veth2_name, *ns_addr,
+                                           net_prefix, FALSE, NULL));
 
     /*
      * Loopback interface should be UP in the namespace for logging from
@@ -3683,6 +3689,8 @@ sockts_netns_setup_common(const char *ta_name, const char *host,
 
     CHECK_RC(rcf_rpc_server_create(netns_ta, netns_rpcs, rpcs_ns));
     CFG_WAIT_CHANGES;
+
+    free(net_oid);
 }
 
 /* See description in sockapi-ts.h */
