@@ -122,7 +122,9 @@
         </run>
 
         <run>
-            <script name="arp_table_full"/>
+            <script name="arp_table_full">
+                <req id="IF_DOWN_UP"/>
+            </script>
             <arg name="env">
                 <value ref="env.peer2peer"/>
             </arg>
@@ -133,7 +135,9 @@
         </run>
 
         <run>
-            <script name="arp_flooding"/>
+            <script name="arp_flooding">
+                <req id="IF_DOWN_UP"/>
+            </script>
             <arg name="env">
                 <value ref="env.peer2peer"/>
             </arg>
@@ -157,6 +161,7 @@
         <run>
             <script name="arp_packet_pool_empty">
                 <req id="TIME_CONSUMING_ON_SOLARIS"/>
+                <req id="IF_DOWN_UP"/>
             </script>
             <arg name ="env">
                 <value>'net'{'host1'{{'pco1_iut':IUT},{'pco2_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},'host2'{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</value>    
