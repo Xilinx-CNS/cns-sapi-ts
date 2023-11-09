@@ -392,7 +392,8 @@ ts_check_cmsghdr_addr(rpc_msghdr *msg, int rc, size_t sent_len,
              */
             if (disable_timestamps != NULL &&
                 strcmp(disable_timestamps, "yes") == 0 &&
-                sock_type == RPC_SOCK_STREAM)
+                sock_type == RPC_SOCK_STREAM &&
+                tx)
             {
                 hsize -= TCP_TIMESTAMPS_HSIZE;
             }
