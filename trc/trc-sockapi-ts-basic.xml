@@ -3667,94 +3667,15 @@
       <objective>Investigate treatment of listen() function backlog parameter.</objective>
       <notes/>
       <iter result="PASSED">
-        <arg name="backlog">0</arg>
+        <arg name="backlog"/>
         <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
         <notes/>
-        <results tags="v5&amp;((ool_loop=1|ool_loop=4)&amp;reuse_stack|ool_loop=2|ool_loop=3)" key="ON-4312">
-          <result value="FAILED">
-            <verdict>Measured backlog is more than expected</verdict>
-          </result>
-        </results>
-        <results tags="v5&amp;ool_loop=0" key="ON-8297">
+        <results tags="linux" notes="Default Linux behavior">
           <result value="FAILED">
             <verdict>Measured backlog is a bit more than expected</verdict>
           </result>
         </results>
-        <results tags="v5&amp;ool_loop=4&amp;!reuse_stack" key="ON-8297" notes="Verdict about ECONNRESET is expected after fixing SF bug 75246">
-          <result value="FAILED">
-            <verdict>Measuring backlog: recv() failed with errno RPC-ECONNRESET</verdict>
-            <verdict>Measured backlog is more than expected</verdict>
-          </result>
-        </results>
-      </iter>
-      <iter result="PASSED">
-        <arg name="backlog">1</arg>
-        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
-        <notes/>
-        <results tags="v5&amp;((ool_loop=1|ool_loop=4)&amp;reuse_stack|ool_loop=2|ool_loop=3)" key="ON-4312">
-          <result value="FAILED">
-            <verdict>Measured backlog is more than expected</verdict>
-          </result>
-        </results>
-        <results tags="v5&amp;ool_loop=0" key="ON-8297">
-          <result value="FAILED">
-            <verdict>Measured backlog is a bit more than expected</verdict>
-          </result>
-        </results>
-        <results tags="v5&amp;ool_loop=4&amp;!reuse_stack" key="ON-8297" notes="Verdict about ECONNRESET is expected after fixing SF bug 75246">
-          <result value="FAILED">
-            <verdict>Measuring backlog: recv() failed with errno RPC-ECONNRESET</verdict>
-            <verdict>Measured backlog is more than expected</verdict>
-          </result>
-        </results>
-      </iter>
-      <iter result="PASSED">
-        <arg name="backlog">10</arg>
-        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
-        <notes/>
-        <results tags="v5&amp;((ool_loop=1|ool_loop=4)&amp;reuse_stack|ool_loop=2|ool_loop=3)" key="ON-4312">
-          <result value="FAILED">
-            <verdict>Measured backlog is more than expected</verdict>
-          </result>
-        </results>
-        <results tags="v5&amp;ool_loop=0" key="ON-8297">
-          <result value="FAILED">
-            <verdict>Measured backlog is a bit more than expected</verdict>
-          </result>
-        </results>
-        <results tags="v5&amp;ool_loop=4&amp;!reuse_stack" key="ON-8297" notes="Verdict about ECONNRESET is expected after fixing SF bug 75246">
-          <result value="FAILED">
-            <verdict>Measuring backlog: recv() failed with errno RPC-ECONNRESET</verdict>
-            <verdict>Measured backlog is more than expected</verdict>
-          </result>
-        </results>
-      </iter>
-      <iter result="PASSED">
-        <arg name="backlog">150</arg>
-        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
-        <notes/>
-        <results tags="v5&amp;((ool_loop=1|ool_loop=4)&amp;reuse_stack|ool_loop=2|ool_loop=3)" key="ON-4312">
-          <result value="FAILED">
-            <verdict>Measured backlog is more than expected</verdict>
-          </result>
-        </results>
-        <results tags="v5&amp;ool_loop=0" key="ON-8297">
-          <result value="FAILED">
-            <verdict>Measured backlog is a bit more than expected</verdict>
-          </result>
-        </results>
-        <results tags="v5&amp;ool_loop=4&amp;!reuse_stack" key="ON-8297" notes="Verdict about ECONNRESET is expected after fixing SF bug 75246">
-          <result value="FAILED">
-            <verdict>Measuring backlog: recv() failed with errno RPC-ECONNRESET</verdict>
-            <verdict>Measured backlog is more than expected</verdict>
-          </result>
-        </results>
-      </iter>
-      <iter result="PASSED">
-        <arg name="backlog">-1</arg>
-        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
-        <notes/>
-        <results tags="v5&amp;!(ool_loop=4&amp;!reuse_stack)" key="ON-8297">
+        <results tags="v5&amp;(ool_loop=2|ool_loop=3)" key="ON-4312">
           <result value="FAILED">
             <verdict>Measured backlog is more than expected</verdict>
           </result>
@@ -3767,103 +3688,17 @@
         </results>
       </iter>
       <iter result="PASSED">
-        <arg name="backlog">1</arg>
+        <arg name="backlog"/>
         <arg name="env">VAR.env.peer2peer_lo</arg>
         <notes/>
-        <results tags="v5&amp;((ool_loop=1|ool_loop=4)&amp;reuse_stack|ool_loop=2|ool_loop=3)" key="ON-4312">
-          <result value="FAILED">
-            <verdict>Measured backlog is more than expected</verdict>
-          </result>
-        </results>
-        <results tags="v5&amp;ool_loop=0" key="ON-8297">
+        <results tags="linux" notes="Default Linux behavior">
           <result value="FAILED">
             <verdict>Measured backlog is a bit more than expected</verdict>
           </result>
         </results>
-        <results tags="v5&amp;ool_loop=4&amp;!reuse_stack" key="ON-8297" notes="Verdict about ECONNRESET is expected after fixing ON-8304">
-          <result value="FAILED">
-            <verdict>Measuring backlog: recv() failed with errno RPC-ECONNRESET</verdict>
-            <verdict>Measured backlog is more than expected</verdict>
-          </result>
-        </results>
-      </iter>
-      <iter result="PASSED">
-        <arg name="backlog">10</arg>
-        <arg name="env">VAR.env.peer2peer_lo</arg>
-        <notes/>
-        <results tags="v5&amp;((ool_loop=1|ool_loop=4)&amp;reuse_stack|ool_loop=2|ool_loop=3)" key="ON-4312">
+        <results tags="v5&amp;(ool_loop=2|ool_loop=3)" key="ON-4312">
           <result value="FAILED">
             <verdict>Measured backlog is more than expected</verdict>
-          </result>
-        </results>
-        <results tags="v5&amp;ool_loop=0" key="ON-8297">
-          <result value="FAILED">
-            <verdict>Measured backlog is a bit more than expected</verdict>
-          </result>
-        </results>
-        <results tags="v5&amp;ool_loop=4&amp;!reuse_stack" key="ON-8297" notes="Verdict about ECONNRESET is expected after fixing ON-8304">
-          <result value="FAILED">
-            <verdict>Measuring backlog: recv() failed with errno RPC-ECONNRESET</verdict>
-            <verdict>Measured backlog is more than expected</verdict>
-          </result>
-        </results>
-      </iter>
-      <iter result="PASSED">
-        <arg name="backlog">150</arg>
-        <arg name="env">VAR.env.peer2peer_lo</arg>
-        <notes/>
-        <results tags="v5&amp;((ool_loop=1|ool_loop=4)&amp;reuse_stack|ool_loop=2|ool_loop=3)" key="ON-4312">
-          <result value="FAILED">
-            <verdict>Measured backlog is more than expected</verdict>
-          </result>
-        </results>
-        <results tags="v5&amp;ool_loop=0" key="ON-8297">
-          <result value="FAILED">
-            <verdict>Measured backlog is a bit more than expected</verdict>
-          </result>
-        </results>
-        <results tags="v5&amp;ool_loop=4&amp;!reuse_stack" key="ON-8297" notes="Verdict about ECONNRESET is expected after fixing ON-8304">
-          <result value="FAILED">
-            <verdict>Measuring backlog: recv() failed with errno RPC-ECONNRESET</verdict>
-            <verdict>Measured backlog is more than expected</verdict>
-          </result>
-        </results>
-      </iter>
-      <iter result="PASSED">
-        <arg name="backlog">0</arg>
-        <arg name="env">VAR.env.peer2peer_lo</arg>
-        <notes/>
-        <results tags="v5&amp;((ool_loop=1|ool_loop=4)&amp;reuse_stack|ool_loop=2|ool_loop=3)" key="ON-4312">
-          <result value="FAILED">
-            <verdict>Measured backlog is more than expected</verdict>
-          </result>
-          <result value="FAILED">
-            <verdict>Measured backlog is a bit more than expected</verdict>
-          </result>
-        </results>
-        <results tags="v5&amp;ool_loop=0" key="ON-8297">
-          <result value="FAILED">
-            <verdict>Measured backlog is a bit more than expected</verdict>
-          </result>
-        </results>
-        <results tags="v5&amp;ool_loop=4&amp;!reuse_stack" key="ON-8297" notes="Verdict about ECONNRESET is expected after fixing ON-8304">
-          <result value="FAILED">
-            <verdict>Measuring backlog: recv() failed with errno RPC-ECONNRESET</verdict>
-            <verdict>Measured backlog is more than expected</verdict>
-          </result>
-          <result value="FAILED">
-            <verdict>Measuring backlog: recv() failed with errno RPC-ECONNRESET</verdict>
-            <verdict>Measured backlog is a bit more than expected</verdict>
-          </result>
-        </results>
-      </iter>
-      <iter result="PASSED">
-        <arg name="backlog">-1</arg>
-        <arg name="env">VAR.env.peer2peer_lo</arg>
-        <notes/>
-        <results tags="v5&amp;!(ool_loop=4&amp;!reuse_stack)" key="ON-8297">
-          <result value="FAILED">
-            <verdict>Measured backlog is a bit more than expected</verdict>
           </result>
         </results>
         <results tags="v5&amp;ool_loop=4&amp;!reuse_stack" key="ON-8297" notes="Verdict about ECONNRESET is expected after fixing ON-8304">
@@ -3877,37 +3712,67 @@
         <arg name="backlog">1</arg>
         <arg name="env">VAR.env.peer2peer</arg>
         <notes/>
+        <results tags="linux&amp;!v5" notes="Default Linux behavior">
+          <result value="FAILED">
+            <verdict>Measured backlog is a bit more than expected</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="backlog">10</arg>
         <arg name="env">VAR.env.peer2peer</arg>
         <notes/>
+        <results tags="linux&amp;!v5" notes="Default Linux behavior">
+          <result value="FAILED">
+            <verdict>Measured backlog is a bit more than expected</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="backlog">150</arg>
         <arg name="env">VAR.env.peer2peer</arg>
         <notes/>
+        <results tags="linux&amp;!v5" notes="Default Linux behavior">
+          <result value="FAILED">
+            <verdict>Measured backlog is a bit more than expected</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="backlog">1</arg>
         <arg name="env">VAR.env.peer2peer_ipv6</arg>
         <notes/>
+        <results tags="linux&amp;!v5" notes="Default Linux behavior">
+          <result value="FAILED">
+            <verdict>Measured backlog is a bit more than expected</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="backlog">10</arg>
         <arg name="env">VAR.env.peer2peer_ipv6</arg>
         <notes/>
+        <results tags="linux&amp;!v5" notes="Default Linux behavior">
+          <result value="FAILED">
+            <verdict>Measured backlog is a bit more than expected</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="backlog">150</arg>
         <arg name="env">VAR.env.peer2peer_ipv6</arg>
         <notes/>
+        <results tags="linux&amp;!v5" notes="Default Linux behavior">
+          <result value="FAILED">
+            <verdict>Measured backlog is a bit more than expected</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="backlog">0</arg>
         <arg name="env">VAR.env.peer2peer</arg>
         <notes/>
-        <results tags="v5" key="ON-8297">
+        <results tags="linux" notes="Default Linux behavior">
           <result value="FAILED">
             <verdict>Measured backlog is a bit more than expected</verdict>
           </result>
@@ -3917,7 +3782,7 @@
         <arg name="backlog"/>
         <arg name="env">VAR.env.peer2peer_tst</arg>
         <notes/>
-        <results tags="v5" key="ON-8297">
+        <results tags="linux" notes="Default Linux behavior">
           <result value="FAILED">
             <verdict>Measured backlog is a bit more than expected</verdict>
           </result>
@@ -3927,47 +3792,17 @@
         <arg name="backlog">0</arg>
         <arg name="env">VAR.env.peer2peer_ipv6</arg>
         <notes/>
-        <results tags="v5" key="ON-8297">
+        <results tags="linux" notes="Default Linux behavior">
           <result value="FAILED">
             <verdict>Measured backlog is a bit more than expected</verdict>
           </result>
         </results>
       </iter>
       <iter result="PASSED">
-        <arg name="backlog">0</arg>
+        <arg name="backlog"/>
         <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
         <notes/>
-        <results tags="v5" key="ON-8297">
-          <result value="FAILED">
-            <verdict>Measured backlog is a bit more than expected</verdict>
-          </result>
-        </results>
-      </iter>
-      <iter result="PASSED">
-        <arg name="backlog">1</arg>
-        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
-        <notes/>
-        <results tags="v5" key="ON-8297">
-          <result value="FAILED">
-            <verdict>Measured backlog is a bit more than expected</verdict>
-          </result>
-        </results>
-      </iter>
-      <iter result="PASSED">
-        <arg name="backlog">10</arg>
-        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
-        <notes/>
-        <results tags="v5" key="ON-8297">
-          <result value="FAILED">
-            <verdict>Measured backlog is a bit more than expected</verdict>
-          </result>
-        </results>
-      </iter>
-      <iter result="PASSED">
-        <arg name="backlog">150</arg>
-        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
-        <notes/>
-        <results tags="v5" key="ON-8297">
+        <results tags="linux" notes="Default Linux behavior">
           <result value="FAILED">
             <verdict>Measured backlog is a bit more than expected</verdict>
           </result>
@@ -3977,24 +3812,19 @@
         <arg name="backlog">-1</arg>
         <arg name="env">VAR.env.peer2peer</arg>
         <notes/>
-      </iter>
-      <iter result="PASSED">
-        <arg name="backlog">-1</arg>
-        <arg name="env">VAR.env.peer2peer_ipv6</arg>
-        <notes/>
-        <results tags="v5" key="ON-8297">
+        <results tags="linux&amp;!v5" notes="Default Linux behavior">
           <result value="FAILED">
-            <verdict>Measured backlog is more than expected</verdict>
+            <verdict>Measured backlog is a bit more than expected</verdict>
           </result>
         </results>
       </iter>
       <iter result="PASSED">
         <arg name="backlog">-1</arg>
-        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
         <notes/>
-        <results tags="v5" key="ON-8297">
+        <results tags="linux&amp;!v5" notes="Default Linux behavior">
           <result value="FAILED">
-            <verdict>Measured backlog is more than expected</verdict>
+            <verdict>Measured backlog is a bit more than expected</verdict>
           </result>
         </results>
       </iter>
