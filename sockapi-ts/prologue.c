@@ -804,6 +804,66 @@ out:
 }
 
 /**
+ * Set maximum amount stacks possible on the interface based on
+ * combined channels if it's required.
+ *
+ * @return Status code.
+ */
+static te_errno
+set_max_stacks_possible(rcf_rpc_server *rpcs, const char *ifname)
+{
+    te_errno             rc = 0;
+    int                  max_stacks = 0;
+    char                *stacks_limited = getenv("SOCKTS_MAX_STACKS_LIMITED");
+    int                  imp_stacks = 0;
+    te_string            max_stacks_s = TE_STRING_INIT_STATIC(256);
+
+    /* Max amount of stacks should be set only when stacks are limited */
+    if (stacks_limited == NULL || strcmp(stacks_limited, "yes") != 0)
+        return 0;
+
+    rc = cfg_get_int32(&max_stacks,
+                       "/agent:%s/interface:%s/channels:/combined:/current:",
+                       rpcs->ta, ifname);
+    if (rc != 0)
+    {
+        ERROR("Failed to get combined channels: %r", rc);
+        return rc;
+    }
+    if (max_stacks <= 0)
+    {
+        RING_VERDICT("The stack number is expected to be limited by "
+                     "combined channels amount, but combined channels are "
+                     "not supported on this interface or its amount is 0");
+        return 0;
+    }
+
+    rc = te_string_append(&max_stacks_s, "%d", max_stacks);
+    if (rc != 0)
+    {
+        ERROR("Failed to convert max_stack value "
+              "to its string representation: %r", rc);
+        return rc;
+    }
+
+    rc = tapi_sh_env_get_int(rpcs, "SOCKTS_MAX_STACKS", &imp_stacks);
+    if (rc != 0 || imp_stacks > max_stacks)
+    {
+        rc = tapi_sh_env_set(rpcs, "SOCKTS_MAX_STACKS",
+                             max_stacks_s.ptr, TRUE, FALSE);
+
+        if (rc != 0)
+        {
+            ERROR("Failed to set SOCKTS_MAX_STACKS instance %s: %r",
+                  rpcs->ta, rc);
+            return rc;
+        }
+    }
+
+    return 0;
+}
+
+/**
  * Set Socket API library names for Test Agents in accordance
  * with configuration in configurator.conf.
  *
@@ -915,6 +975,9 @@ main(int argc, char **argv)
     TEST_GET_PCO(pco_iut);
     TEST_GET_PCO(pco_tst);
     TEST_GET_IF(iut_if);
+
+    CHECK_RC(set_max_stacks_possible(pco_iut, iut_if->if_name));
+
     pco_gw = tapi_env_get_pco(&env, "pco_gw");
     if (pco_gw == NULL)
         TEST_GET_ADDR(pco_tst, tst_addr);
