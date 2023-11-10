@@ -3300,7 +3300,7 @@
             <arg name="send_func" type="send_func"/>
             <arg name="retrans_fail_way">
                 <value reqs="NO_REUSE_PCO">rto</value>
-                <value>user_timeout</value>
+                <value reqs="TCP_USER_TIMEOUT">user_timeout</value>
                 <value>rst</value>
             </arg>
         </run>
