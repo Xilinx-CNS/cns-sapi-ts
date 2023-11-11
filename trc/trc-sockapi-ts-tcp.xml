@@ -9200,6 +9200,11 @@
         <arg name="env"/>
         <arg name="send_func">template_send</arg>
         <arg name="retrans_fail_way">rst</arg>
+        <results tags="v5" notes="Onload extension call onload_msg_template_alloc fails in its special way">
+          <result value="FAILED">
+            <verdict>send_func() returns -1, but: errno is set to ENOTCONN instead of ECONNRESET</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
