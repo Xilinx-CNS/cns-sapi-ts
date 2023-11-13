@@ -8492,7 +8492,7 @@
         <arg name="vlan1"/>
         <arg name="vlan2"/>
         <notes/>
-        <results tags="(v5|zf_shim)&amp;x3" key="ON-14776">
+        <results tags="(v5|zf_shim)&amp;(x3|no_hw_tx_mcast_loop)" key="ON-1295, ON-14776">
           <result value="FAILED">
             <verdict>Socket 'iut_s' is not expected to be readable, but it is</verdict>
           </result>
