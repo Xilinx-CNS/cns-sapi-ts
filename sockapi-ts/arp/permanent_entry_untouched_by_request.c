@@ -142,6 +142,8 @@ main(int argc, char *argv[])
                      0,
                      eth_filter_handle2);
 
+    TAPI_WAIT_NETWORK;
+
     TEST_STEP("Send some data from IUT socket.");
     if (sock_type == SOCKTS_SOCK_UDP_NOTCONN)
         RPC_SENDTO(rc, pco_iut, iut_s, tx_buf, buf_len, 0, tst_addr);
