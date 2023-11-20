@@ -159,7 +159,16 @@ main(int argc, char *argv[])
     TEST_STEP("Send some data from IUT socket and check tcpi_info fields");
     RPC_SEND(rc, pco_iut, iut_s, tx_buf, data_buf_len, 0);
 
-    TAPI_WAIT_NETWORK;
+    /*
+     * `tcp_early_retrans` is not counted as a real retransmit,
+     * so we see 1 early retransmit after rto, then a real retransmit
+     * after another rto, and it this point it is counted and rto is
+     * doubled.  So we wait for 3*rto and expect tcpi_retransmits=1,
+     * tcpi_rto to be doubled.
+     */
+    RING("Sleeping %d * 3 = %d usec, catching retransmit after %d usec",
+         rto_first, rto_first * 3, rto_first);
+    usleep(rto_first * 3);
 
     check_fields(pco_iut, iut_s, tcpi_fields, tcpi_fields_num, FALSE,
                  &rto_first, FALSE, "After connectivity break");
