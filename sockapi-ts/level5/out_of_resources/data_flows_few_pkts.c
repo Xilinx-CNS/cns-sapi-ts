@@ -281,13 +281,16 @@ cleanup:
          * much time, so instead main RPC servers are restarted.
          */
 
-        for (i = 0; i < TEST_CONNS; i++)
+        for (i = 0; i < TEST_CONNS && conns[i].rpcs_sender != NULL; i++)
         {
             CLEANUP_CHECK_RC(
                         rcf_rpc_server_finished(conns[i].rpcs_sender));
             CLEANUP_CHECK_RC(
                         rcf_rpc_server_destroy(conns[i].rpcs_sender));
+        }
 
+        for (i = 0; i < TEST_CONNS && conns[i].rpcs_receiver != NULL; i++)
+        {
             CLEANUP_CHECK_RC(
                         rcf_rpc_server_finished(conns[i].rpcs_receiver));
             CLEANUP_CHECK_RC(
