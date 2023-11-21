@@ -34,6 +34,9 @@
 @table_2c_first TCP_SUBPART
 @table_2c_second          This test req marks some part of tests in tcp
                           package to split this package in night testing
+@table_2c_first TCP_SUBPART2
+@table_2c_second          This test req marks another part of tests in tcp
+                          package to split this package in night testing
 
 @table_2c_section Network interfaces configuration requirements:
 @table_2c_first NO_VLAN

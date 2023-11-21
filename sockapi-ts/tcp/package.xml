@@ -2685,6 +2685,7 @@
              with IPv4 and IPv6 gateway environments -->
         <run>
           <session track_conf="silent">
+            <req id="TCP_SUBPART2" sticky="true"/>
             <!-- Look for values after the end of session, Tester does not
                  allow to specify them before its beginning. Values should be
                  specified outside of session so that it is iterated as a
@@ -3075,6 +3076,7 @@
 
         <run>
           <session>
+            <req id="TCP_SUBPART2" sticky="true"/>
             <arg name="env">
               <value ref="env.peer2peer_lo"/>
               <value ref="env.peer2peer_lo_ipv6"/>
