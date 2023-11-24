@@ -121,9 +121,9 @@ main(int argc, char *argv[])
     CHECK_RC(tsa_iut_set(&ss, pco_iut, iut_if, iut_addr));
     CHECK_RC(tsa_tst_set(&ss, pco_tst, tst_if, tst_addr,
                          ((struct sockaddr *)alien_link_addr)->sa_data));
-    CFG_WAIT_CHANGES;
 
     CHECK_RC(tsa_create_session(&ss, 0));
+    CFG_WAIT_CHANGES;
 
     TEST_STEP("Emulate an established TCP connection between IUT and TST.");
     tcp_move_to_state(&ss, RPC_TCP_ESTABLISHED, OL_ACTIVE, FALSE);
