@@ -3068,6 +3068,7 @@
                 <req id="SOCK_DGRAM"/>
                 <req id="NO_VLAN"/>
                 <req id="NO_IPVLAN"/>
+                <req id="NO_MACVLAN"/>
                 <req id="CREATE_NET_IF"/>
             </script>
             <arg name="env">
