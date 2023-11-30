@@ -817,14 +817,20 @@ set_max_stacks_possible(rcf_rpc_server *rpcs, const char *ifname)
     char                *stacks_limited = getenv("SOCKTS_MAX_STACKS_LIMITED");
     int                  imp_stacks = 0;
     te_string            max_stacks_s = TE_STRING_INIT_STATIC(256);
+    tqe_string          *phys_iface;
+    tqh_strings          phys_ifaces = TAILQ_HEAD_INITIALIZER(phys_ifaces);
+    const char          *ta = sockts_get_used_agt_name(rpcs, ifname);
 
     /* Max amount of stacks should be set only when stacks are limited */
     if (stacks_limited == NULL || strcmp(stacks_limited, "yes") != 0)
         return 0;
 
+    sockts_find_parent_if(rpcs, ifname, &phys_ifaces);
+    phys_iface = TAILQ_FIRST(&phys_ifaces);
+
     rc = cfg_get_int32(&max_stacks,
                        "/agent:%s/interface:%s/channels:/combined:/current:",
-                       rpcs->ta, ifname);
+                       ta, phys_iface->v);
     if (rc != 0)
     {
         ERROR("Failed to get combined channels: %r", rc);
