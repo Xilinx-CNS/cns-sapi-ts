@@ -19956,7 +19956,7 @@
             <verdict>ACKs are sent too often.</verdict>
           </result>
         </results>
-        <results tags="v5&amp;ef100_soc&amp;(ool_spin|tiny_spin)&amp;!(int_spin|ool_int_driven)" key="ON-13767">
+        <results tags="v5&amp;(ef100_soc|x3)&amp;(ool_spin|tiny_spin)&amp;!(int_spin|ool_int_driven)" key="ON-13767">
           <result value="FAILED">
             <verdict>ACKs are not sent immediately.</verdict>
           </result>
