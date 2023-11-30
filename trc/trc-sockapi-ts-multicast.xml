@@ -7890,6 +7890,11 @@
             <verdict>IUT has received a packet from TESTER parent interface</verdict>
           </result>
         </results>
+        <results tags="v5&amp;x3" key="ON-14776">
+          <result value="PASSED">
+            <verdict>IUT has received a packet from TESTER parent interface</verdict>
+          </result>
+        </results>
       </iter>
     </test>
     <test name="mcast_non_joined_socket" type="script">
