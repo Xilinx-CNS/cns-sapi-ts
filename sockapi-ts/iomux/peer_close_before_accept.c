@@ -158,7 +158,7 @@ main(int argc, char *argv[])
 
     rpc_closesocket(pco_aux, tst_s);
     tst_s = -1;
-    MSLEEP(100);
+    TAPI_WAIT_NETWORK;
 
     RPC_AWAIT_IUT_ERROR(pco_iut);
     accept_s = rpc_accept(pco_iut, iut_s, NULL, NULL);
