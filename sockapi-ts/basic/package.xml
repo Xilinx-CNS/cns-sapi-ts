@@ -3075,7 +3075,10 @@
                 <value ref="env.peer2peer"/>
             </arg>
             <arg name="use_macvlan" type="boolean"/>
-            <arg name="use_netns" type="boolean"/>
+            <arg name="use_netns" type="boolean">
+                <value>FALSE</value>
+                <value reqs="NETNS">TRUE</value>
+            </arg>
         </run>
 
         <run>
@@ -3089,7 +3092,10 @@
             <arg name="env">
                 <value ref="env.peer2peer"/>
             </arg>
-            <arg name="use_netns" type="boolean"/>
+            <arg name="use_netns" type="boolean">
+                <value>FALSE</value>
+                <value reqs="NETNS">TRUE</value>
+            </arg>
             <arg name="vlan1">
                 <value>999</value>
             </arg>
