@@ -428,7 +428,7 @@ main(int argc, char *argv[])
                        "{ arg-sets { simple-for:{begin 1,end %u} }, "
                        "  pdus  { udp:{},                           "
                        "          ip4:{                             "
-                       "                dst-addr plain:'%X'H        "
+                       "                dst-addr plain:'%08X'H      "
                        "              },                            "
                        "          eth:{}                            "
                        "        },                                  "
