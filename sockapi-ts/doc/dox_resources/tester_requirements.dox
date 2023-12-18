@@ -45,6 +45,8 @@
                             raw ethernet packets or creating VLANs)
 @table_2c_first TEAM,BOND
 @table_2c_second The test creates teaming or bonding interface
+@table_2c_first VLAN
+@table_2c_second The test creates VLAN interface on IUT
 @table_2c_first MACVLAN
 @table_2c_second The test creates MAC VLAN interface on IUT
 @table_2c_first IPVLAN
