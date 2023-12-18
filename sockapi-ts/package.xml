@@ -1003,7 +1003,7 @@ Sending and receiving functions
         </enum>
 
         <enum name="created_interface_type">
-            <value reqs="NO_TWO_IF_LEVELS">vlan</value>
+            <value reqs="NO_TWO_IF_LEVELS,VLAN">vlan</value>
             <value reqs="NO_MACVLAN,MACVLAN,NO_IPVLAN">macvlan</value>
             <value reqs="NO_MACVLAN,NO_IPVLAN,IPVLAN">ipvlan</value>
         </enum>
