@@ -64,6 +64,12 @@
 
 #include "sendfile_common.h"
 
+/**
+ * TCP can increase SO_SNDBUF and SO_RCVBUF while running (see man 7 tcp) so we
+ * are using a big enough constant for the file size.
+ * For now 16 MiB is enough to fill send and recv buffers.
+ */
+#define FILE_LENGTH (1<<24)
 
 #define SENDFILE_NONBLOCKING \
     do {                                                                \
@@ -150,7 +156,6 @@ main(int argc, char *argv[])
     te_bool                 created_iut = FALSE;
     te_bool                 created_tst = FALSE;
     te_bool                 created_ret = FALSE;
-    int                     file_length;
     size_t                  to_send;
     long                    sent;
     long                    received;
@@ -184,9 +189,7 @@ main(int argc, char *argv[])
 
     rpc_getsockopt(pco_tst, tst_s, RPC_SO_RCVBUF, &rcv_len);
 
-    file_length = (snd_len + rcv_len) * 2;
-
-    PREPARE_REMOTE_FILE(pco_iut->ta, file_length, 'X', file_tpl, file_iut);
+    PREPARE_REMOTE_FILE(pco_iut->ta, FILE_LENGTH, 'X', file_tpl, file_iut);
     created_tpl = created_iut = TRUE;
 
     RPC_FOPEN_D(src, pco_iut, file_iut, RPC_O_RDONLY, 0);
@@ -195,11 +198,17 @@ main(int argc, char *argv[])
     rpc_ioctl(pco_iut, iut_s, RPC_FIONBIO, &req_val);
 
     INFO("lowat_len=%d, snd_len=%d, rcv_len=%d, file_length=%d\n",
-         lowat_len, snd_len, rcv_len, file_length);
+         lowat_len, snd_len, rcv_len, FILE_LENGTH);
 
-    to_send = file_length;
+    to_send = FILE_LENGTH;
     offset = 0;
     SENDFILE_NONBLOCKING;
+
+    if (to_send == 0)
+    {
+        ERROR("The file length is %d bytes", FILE_LENGTH);
+        TEST_VERDICT("The file is too small for the test");
+    }
 
     pco_tst->op = RCF_RPC_CALL;
     RPC_SOCKET_TO_FILE(received, pco_tst, tst_s, file_tst, time2run);
