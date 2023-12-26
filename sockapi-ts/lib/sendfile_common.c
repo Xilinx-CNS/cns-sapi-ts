@@ -21,6 +21,7 @@ prepare_remote_file(const char *ta, int length, char pattern,
     int     rc;
     FILE   *file;
     int     len = 0;
+    int     length_bkp = length;
     char    buffer[SFTST_BUFFER];
     char    path_tmpl[RCF_MAX_PATH];
     char    path_rem[RCF_MAX_PATH];
@@ -75,6 +76,10 @@ prepare_remote_file(const char *ta, int length, char pattern,
 
         return -1;
     }
+
+    RING("File '%s' of size %d was prepared on ta '%s'",
+         path_rem, length_bkp, ta);
+
     return 0;
 }
 
