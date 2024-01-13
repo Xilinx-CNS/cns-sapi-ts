@@ -4,4 +4,6 @@
 
 [ -e "./scripts/guess.sh" ] && source "./scripts/guess.sh"
 
-. $TE_BASE/scripts/log.sh --txt-timeout=300
+. $TE_BASE/scripts/guess.sh
+
+$TE_BASE/scripts/log.sh --txt-timeout=300 "$@"
