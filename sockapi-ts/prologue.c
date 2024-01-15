@@ -122,13 +122,13 @@ configure_ip_transparent(rcf_rpc_server *pco_iut)
         TEST_VERDICT("IUT doesn't have interfaces");
     free(interfaces);
 
-    CHECK_RC(tapi_cfg_iptables_chain_add(pco_iut->ta, if_name, "mangle",
+    CHECK_RC(tapi_cfg_iptables_chain_add(pco_iut->ta, if_name, AF_INET, "mangle",
                                          "DIVERT", FALSE));
-    CHECK_RC(tapi_cfg_iptables_cmd(pco_iut->ta, if_name, "mangle", "DIVERT",
+    CHECK_RC(tapi_cfg_iptables_cmd(pco_iut->ta, if_name, AF_INET, "mangle", "DIVERT",
                                    "-A PREROUTING -p tcp -m socket -j"));
-    CHECK_RC(tapi_cfg_iptables_cmd(pco_iut->ta, if_name, "mangle", "DIVERT",
+    CHECK_RC(tapi_cfg_iptables_cmd(pco_iut->ta, if_name, AF_INET, "mangle", "DIVERT",
                                    "-A -j MARK --set-mark 1"));
-    CHECK_RC(tapi_cfg_iptables_cmd(pco_iut->ta, if_name, "mangle", "DIVERT",
+    CHECK_RC(tapi_cfg_iptables_cmd(pco_iut->ta, if_name, AF_INET, "mangle", "DIVERT",
                                    "-A -j ACCEPT"));
 
     CHECK_RC(te_conf_ip_rule_from_str("fwmark=1,table=100", &required,
@@ -168,11 +168,11 @@ configure_nfqueue_tst(rcf_rpc_server *pco)
     ifname_1 = getenv("TE_TST1_IUT");
     if (ifname_1 != NULL)
     {
-        CHECK_RC(tapi_cfg_iptables_chain_add(pco->ta, ifname_1, "mangle",
+        CHECK_RC(tapi_cfg_iptables_chain_add(pco->ta, ifname_1, AF_INET, "mangle",
                                              "NFQ_A", FALSE));
-        CHECK_RC(tapi_cfg_iptables_cmd_fmt(pco->ta, ifname_1, "mangle", "NFQ_A",
+        CHECK_RC(tapi_cfg_iptables_cmd_fmt(pco->ta, ifname_1, AF_INET, "mangle", "NFQ_A",
                                            "-A OUTPUT -o %s -j", ifname_1));
-        CHECK_RC(tapi_cfg_iptables_cmd(pco->ta, ifname_1, "mangle", "NFQ_A",
+        CHECK_RC(tapi_cfg_iptables_cmd(pco->ta, ifname_1, AF_INET, "mangle", "NFQ_A",
                                        "-A -j NFQUEUE --queue-num 0"));
     }
     else
@@ -185,11 +185,11 @@ configure_nfqueue_tst(rcf_rpc_server *pco)
 
     if (!te_str_is_null_or_empty(ifname_2))
     {
-        CHECK_RC(tapi_cfg_iptables_chain_add(pco->ta, ifname_2, "mangle",
+        CHECK_RC(tapi_cfg_iptables_chain_add(pco->ta, ifname_2, AF_INET, "mangle",
                                              "NFQ_B", FALSE));
-        CHECK_RC(tapi_cfg_iptables_cmd_fmt(pco->ta, ifname_2, "mangle", "NFQ_B",
+        CHECK_RC(tapi_cfg_iptables_cmd_fmt(pco->ta, ifname_2, AF_INET, "mangle", "NFQ_B",
                                            "-A OUTPUT -o %s -j", ifname_2));
-        CHECK_RC(tapi_cfg_iptables_cmd(pco->ta, ifname_2, "mangle", "NFQ_B",
+        CHECK_RC(tapi_cfg_iptables_cmd(pco->ta, ifname_2, AF_INET, "mangle", "NFQ_B",
                                        "-A -j NFQUEUE --queue-num 0"));
     }
     else
