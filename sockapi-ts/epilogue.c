@@ -72,14 +72,14 @@ stop_nfqueue(rcf_rpc_server *pco)
     ifname_1 = getenv("TE_TST1_IUT");
     if (ifname_1 != NULL)
     {
-        CHECK_RC(tapi_cfg_iptables_chain_del(pco->ta, ifname_1,
+        CHECK_RC(tapi_cfg_iptables_chain_del(pco->ta, ifname_1, AF_INET,
                                              "mangle", "NFQ_A"));
         ifname_2 = getenv("TE_TST1_IUT_IUT");
     }
 
     if (!te_str_is_null_or_empty(ifname_2))
     {
-        CHECK_RC(tapi_cfg_iptables_chain_del(pco->ta, ifname_2,
+        CHECK_RC(tapi_cfg_iptables_chain_del(pco->ta, ifname_2, AF_INET,
                                              "mangle", "NFQ_B"));
     }
 }
