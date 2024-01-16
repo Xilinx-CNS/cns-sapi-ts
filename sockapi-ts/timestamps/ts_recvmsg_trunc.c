@@ -197,6 +197,7 @@ main(int argc, char *argv[])
     int         control_len;
     te_bool     vlan = FALSE;
     te_bool     test_failed = FALSE;
+    char       *disable_timestamps = getenv("DISABLE_TIMESTAMPS");
 
     TEST_START;
     TEST_GET_PCO(pco_iut);
@@ -240,6 +241,20 @@ main(int argc, char *argv[])
             (sock_type == RPC_SOCK_STREAM || tapi_onload_run()))
         {
             hlen += 4;
+        }
+
+        /*
+         * If timestamps are enabled, tcp header will be longer
+         * by 12 bytes, because such header contains Options field.
+         * Options field uses 10 bytes to store timestamps info and
+         * 2 bytes are reserved for other options. If timestamps are
+         * disabled, no options field will be present.
+         */
+        if (disable_timestamps != NULL &&
+            strcmp(disable_timestamps, "yes") == 0 &&
+            sock_type == RPC_SOCK_STREAM && tx)
+        {
+            hlen -= TCP_TIMESTAMPS_HSIZE;
         }
     }
 
