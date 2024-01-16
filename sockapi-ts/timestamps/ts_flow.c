@@ -108,6 +108,7 @@ retrieve_ts_tx(rpc_msghdr *msg, int iut_s, char *sndbuf, int len,
     int rc;
     int i;
     struct timespec ts_aux;
+    char           *disable_timestamps = getenv("DISABLE_TIMESTAMPS");
 
     te_bool zero_reported = FALSE;
     te_bool no_reported = FALSE;
@@ -124,6 +125,20 @@ retrieve_ts_tx(rpc_msghdr *msg, int iut_s, char *sndbuf, int len,
     {
         hsize += 4;
         mtu += 4;
+    }
+
+    /*
+     * If timestamps are enabled, tcp header will be longer
+     * by 12 bytes, because such header contains Options field.
+     * Options field uses 10 bytes to store timestamps info and
+     * 2 bytes are reserved for other options. If timestamps are
+     * disabled, no options field will be present.
+     */
+    if (disable_timestamps != NULL &&
+        strcmp(disable_timestamps, "yes") == 0 &&
+        sock_type == RPC_SOCK_STREAM)
+    {
+        hsize -= TCP_TIMESTAMPS_HSIZE;
     }
 
     memset(&ts_rx, 0, sizeof(ts_rx));
