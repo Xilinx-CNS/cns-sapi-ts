@@ -6696,41 +6696,38 @@
         <notes/>
       </iter>
       <iter result="PASSED">
-        <arg name="env">VAR.env.peer2peer_tst_gw</arg>
+        <arg name="env"/>
         <arg name="first_nonblock">FALSE</arg>
         <arg name="rst">TRUE</arg>
         <arg name="second_nonblock"/>
-        <arg name="cache_socket"/>
+        <arg name="cache_socket">FALSE</arg>
         <notes/>
+        <results tags="linux" key="ON-15188" notes="shutdown() changed behaviour on Linux: it returns EBUSY while connect() is hanging on another thread">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>shutdown() returned -1 with EBUSY, while connect() is hanging in another thread.</verdict>
+            <verdict>RST was not sent from IUT</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
-        <arg name="env">VAR.env.peer2peer_tst_gw</arg>
+        <arg name="env"/>
         <arg name="first_nonblock">FALSE</arg>
         <arg name="rst">FALSE</arg>
         <arg name="second_nonblock"/>
-        <arg name="cache_socket"/>
+        <arg name="cache_socket">FALSE</arg>
         <notes/>
+        <results tags="linux" key="ON-15188" notes="shutdown() changed behaviour on Linux: it returns EBUSY while connect() is hanging on another thread">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>shutdown() returned -1 with EBUSY, while connect() is hanging in another thread.</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_tst_gw_ipv6</arg>
         <arg name="first_nonblock">TRUE</arg>
         <arg name="rst"/>
-        <arg name="second_nonblock"/>
-        <arg name="cache_socket"/>
-        <notes/>
-      </iter>
-      <iter result="PASSED">
-        <arg name="env">VAR.env.peer2peer_tst_gw_ipv6</arg>
-        <arg name="first_nonblock">FALSE</arg>
-        <arg name="rst">TRUE</arg>
-        <arg name="second_nonblock"/>
-        <arg name="cache_socket"/>
-        <notes/>
-      </iter>
-      <iter result="PASSED">
-        <arg name="env">VAR.env.peer2peer_tst_gw_ipv6</arg>
-        <arg name="first_nonblock">FALSE</arg>
-        <arg name="rst">FALSE</arg>
         <arg name="second_nonblock"/>
         <arg name="cache_socket"/>
         <notes/>
@@ -6740,7 +6737,20 @@
         <arg name="first_nonblock">TRUE</arg>
         <arg name="rst"/>
         <arg name="second_nonblock">TRUE</arg>
-        <arg name="cache_socket"/>
+        <arg name="cache_socket">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-6874">
+          <result value="FAILED">
+            <verdict>The second connect() returned unexpected errno RPC-ECONNRESET</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="first_nonblock">TRUE</arg>
+        <arg name="rst"/>
+        <arg name="second_nonblock">TRUE</arg>
+        <arg name="cache_socket">TRUE</arg>
         <notes/>
         <results tags="v5" key="ON-6874">
           <result value="FAILED">
@@ -6753,7 +6763,7 @@
         <arg name="first_nonblock">TRUE</arg>
         <arg name="rst"/>
         <arg name="second_nonblock">FALSE</arg>
-        <arg name="cache_socket"/>
+        <arg name="cache_socket">FALSE</arg>
         <notes/>
         <results tags="v5" key="ON-6874">
           <result value="FAILED">
@@ -6762,11 +6772,24 @@
         </results>
       </iter>
       <iter result="PASSED">
-        <arg name="env">VAR.env.peer2peer_gw</arg>
+        <arg name="env"/>
+        <arg name="first_nonblock">TRUE</arg>
+        <arg name="rst"/>
+        <arg name="second_nonblock">FALSE</arg>
+        <arg name="cache_socket">TRUE</arg>
+        <notes/>
+        <results tags="v5" key="ON-6874">
+          <result value="FAILED">
+            <verdict>The final connect() failed with errno RPC-ECONNRESET</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
         <arg name="first_nonblock">FALSE</arg>
         <arg name="rst"/>
         <arg name="second_nonblock"/>
-        <arg name="cache_socket"/>
+        <arg name="cache_socket">TRUE</arg>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -6774,7 +6797,7 @@
         <arg name="first_nonblock">TRUE</arg>
         <arg name="rst"/>
         <arg name="second_nonblock">TRUE</arg>
-        <arg name="cache_socket"/>
+        <arg name="cache_socket">FALSE</arg>
         <notes/>
         <results tags="v5" key="ON-6874">
           <result value="FAILED">
@@ -6787,21 +6810,13 @@
         <arg name="first_nonblock">TRUE</arg>
         <arg name="rst"/>
         <arg name="second_nonblock">FALSE</arg>
-        <arg name="cache_socket"/>
+        <arg name="cache_socket">FALSE</arg>
         <notes/>
         <results tags="v5" key="ON-6874">
           <result value="FAILED">
             <verdict>The final connect() failed with errno RPC-ECONNRESET</verdict>
           </result>
         </results>
-      </iter>
-      <iter result="PASSED">
-        <arg name="env">VAR.env.peer2peer_gw_ipv6</arg>
-        <arg name="first_nonblock">FALSE</arg>
-        <arg name="rst"/>
-        <arg name="second_nonblock"/>
-        <arg name="cache_socket"/>
-        <notes/>
       </iter>
     </test>
     <test name="many_listeners" type="script">

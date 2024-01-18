@@ -29,6 +29,7 @@
  * @author Dmitry Izbitsky <Dmitry.Izbitsky@oktetlabs.ru>
  */
 
+#include <linux/ethtool.h>
 #define TE_TEST_NAME "tcp/connect_shutdown_connect"
 
 #include "sockapi-test.h"
@@ -62,6 +63,7 @@ main(int argc, char *argv[])
     te_bool rst;
     te_bool test_fail = FALSE;
     te_bool cache_socket;
+    te_bool shut_busy = FALSE;
 
     tsa_packets_counter     ctx;
 
@@ -160,9 +162,22 @@ main(int argc, char *argv[])
     rc = rpc_shutdown(pco_iut, iut_s, RPC_SHUT_WR);
     if (rc < 0)
     {
-        ERROR_VERDICT("shutdown(WR) unexpectedly failed with errno %r",
-                      RPC_ERRNO(pco_iut));
-        test_fail = TRUE;
+        CHECK_RPC_ERRNO_NOEXIT(pco_iut, RPC_EBUSY, test_fail,
+                               "shutdown(WR) returned -1");
+        if (!test_fail)
+        {
+            if (first_nonblock)
+            {
+                RING_VERDICT("shutdown() unexpectedly returned -1 with EBUSY");
+                test_fail = TRUE;
+            }
+            else
+            {
+                shut_busy = TRUE;
+                RING_VERDICT("shutdown() returned -1 with EBUSY, while "
+                             "connect() is hanging in another thread.");
+            }
+        }
     }
 
     TEST_STEP("Repair network connection.");
@@ -217,12 +232,19 @@ main(int argc, char *argv[])
         RPC_AWAIT_ERROR(pco_iut_aux);
         rc = rpc_connect(pco_iut_aux, iut_s, tst_addr);
         if (rc >= 0)
-            TEST_VERDICT("The first connect() succeeded unexpectedly "
-                         "after calling shutdown()");
+        {
+            if (!shut_busy)
+            {
+                TEST_VERDICT("The first connect() succeeded unexpectedly "
+                             "after calling shutdown()");
+            }
+        }
         else if (RPC_ERRNO(pco_iut_aux) != RPC_ECONNRESET)
+        {
             TEST_VERDICT("The first connect() returned unexpected errno %r "
                          "after calling shutdown()",
                          RPC_ERRNO(pco_iut_aux));
+        }
     }
 
     TEST_STEP("If @p second_nonblock is @c TRUE, make IUT socket non-blocking; "
@@ -242,27 +264,49 @@ main(int argc, char *argv[])
     if (second_nonblock)
     {
         TEST_STEP("If @p second_nonblock is @c TRUE, call connect() on IUT and "
-                  "check that it fails with @c EINPROGRESS. Wait for a while to "
+                  "check that it fails with @c EINPROGRESS or @c EISCONN if "
+                  "first @b shutdown() returned @c EBUSY. Wait for a while to "
                   "let connection be established.");
 
         RPC_AWAIT_ERROR(pco_iut);
         rc = rpc_connect(pco_iut, iut_s, tst_addr);
         if (rc >= 0)
+        {
             TEST_VERDICT("The second connect() succeeded unexpectedly");
-        else if (RPC_ERRNO(pco_iut) != RPC_EINPROGRESS)
-            TEST_VERDICT("The second connect() returned unexpected "
-                         "errno %r",
-                         RPC_ERRNO(pco_iut));
+        }
+        else
+        {
+            if ((RPC_ERRNO(pco_iut) != RPC_EINPROGRESS && !shut_busy) ||
+                (RPC_ERRNO(pco_iut) != RPC_EISCONN && shut_busy))
+            {
+                TEST_VERDICT("The second connect() returned unexpected "
+                             "errno %r",
+                             RPC_ERRNO(pco_iut));
+            }
+        }
 
         TAPI_WAIT_NETWORK;
     }
 
-    TEST_STEP("Call connect() on IUT again, check that it succeeds.");
-    RPC_AWAIT_ERROR(pco_iut);
-    rc = rpc_connect(pco_iut, iut_s, tst_addr);
-    if (rc < 0)
-        TEST_VERDICT("The final connect() failed with errno %r",
-                     RPC_ERRNO(pco_iut));
+    if (!second_nonblock || !shut_busy)
+    {
+        TEST_STEP("Call connect() on IUT again, check that it succeeds.");
+        RPC_AWAIT_ERROR(pco_iut);
+        rc = rpc_connect(pco_iut, iut_s, tst_addr);
+        if (rc < 0)
+        {
+            if (shut_busy)
+            {
+                CHECK_RPC_ERRNO(pco_iut, RPC_EISCONN,
+                                "connect() returend -1");
+            }
+            else
+            {
+                TEST_VERDICT("The final connect() failed with errno %r",
+                             RPC_ERRNO(pco_iut));
+            }
+        }
+    }
 
     TEST_STEP("Accept the connection on Tester.");
     tst_s = rpc_accept(pco_tst, tst_s_listener, NULL, NULL);
