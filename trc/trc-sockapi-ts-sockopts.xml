@@ -17269,7 +17269,7 @@
       <objective>Check that the value of SO_ERROR socket option can be updated on retriving error message from error queue containg incoming ICMP messages.</objective>
       <notes/>
       <iter result="PASSED">
-        <arg name="env"/>
+        <arg name="env">VAR.env.peer2peer</arg>
         <arg name="icmp_msgs">type:12,code:0,errno:EPROTO</arg>
         <arg name="iomux"/>
         <arg name="select_err_queue"/>
@@ -17277,7 +17277,15 @@
         <notes/>
       </iter>
       <iter result="PASSED">
-        <arg name="env"/>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="icmp_msgs"/>
+        <arg name="iomux"/>
+        <arg name="select_err_queue"/>
+        <arg name="set_msg_peek"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
         <arg name="icmp_msgs">type:11,code:0,errno:EHOSTUNREACH</arg>
         <arg name="iomux"/>
         <arg name="select_err_queue"/>
@@ -17285,7 +17293,7 @@
         <notes/>
       </iter>
       <iter result="PASSED">
-        <arg name="env"/>
+        <arg name="env">VAR.env.peer2peer</arg>
         <arg name="icmp_msgs">type:3,code:0,errno:ENETUNREACH</arg>
         <arg name="iomux"/>
         <arg name="select_err_queue"/>
@@ -17293,7 +17301,7 @@
         <notes/>
       </iter>
       <iter result="PASSED">
-        <arg name="env"/>
+        <arg name="env">VAR.env.peer2peer</arg>
         <arg name="icmp_msgs">type:3,code:3,errno:ECONNREFUSED</arg>
         <arg name="iomux"/>
         <arg name="select_err_queue"/>
@@ -17301,7 +17309,7 @@
         <notes/>
       </iter>
       <iter result="PASSED">
-        <arg name="env"/>
+        <arg name="env">VAR.env.peer2peer</arg>
         <arg name="icmp_msgs">
                     type:3,code:3,errno:ECONNREFUSED/
                     type:3,code:3,errno:ECONNREFUSED/
@@ -17312,9 +17320,16 @@
         <arg name="select_err_queue"/>
         <arg name="set_msg_peek"/>
         <notes/>
+        <results tags="ef100_soc" key="ST-2584" notes="Specific EF100+aarch64 behaviour on pure Linux and with Onload">
+          <result value="PASSED">
+            <verdict>After extracting ICMP error message (number 1) from error queue SO_ERROR socket option is set to ENOENT, but it is expected to be ECONNREFUSED</verdict>
+            <verdict>After extracting ICMP error message (number 2) from error queue SO_ERROR socket option is set to ENOENT, but it is expected to be ECONNREFUSED</verdict>
+            <verdict>After extracting ICMP error message (number 3) from error queue SO_ERROR socket option is set to ENOENT, but it is expected to be EHOSTUNREACH</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
-        <arg name="env"/>
+        <arg name="env">VAR.env.peer2peer</arg>
         <arg name="icmp_msgs">
                     type:3,code:0,errno:ENETUNREACH/
                     type:3,code:3,errno:ECONNREFUSED/
@@ -17324,9 +17339,15 @@
         <arg name="select_err_queue"/>
         <arg name="set_msg_peek"/>
         <notes/>
+        <results tags="ef100_soc" key="ST-2584" notes="Specific EF100+aarch64 behaviour on pure Linux and with Onload">
+          <result value="PASSED">
+            <verdict>After extracting ICMP error message (number 1) from error queue SO_ERROR socket option is set to ENOENT, but it is expected to be ECONNREFUSED</verdict>
+            <verdict>After extracting ICMP error message (number 2) from error queue SO_ERROR socket option is set to ENOENT, but it is expected to be EHOSTUNREACH</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
-        <arg name="env"/>
+        <arg name="env">VAR.env.peer2peer</arg>
         <arg name="icmp_msgs">
                     type:11,code:0,errno:EHOSTUNREACH/
                     type:12,code:0,errno:EPROTO
@@ -17335,6 +17356,11 @@
         <arg name="select_err_queue"/>
         <arg name="set_msg_peek"/>
         <notes/>
+        <results tags="ef100_soc" key="ST-2584" notes="Specific EF100+aarch64 behaviour on pure Linux and with Onload">
+          <result value="PASSED">
+            <verdict>After extracting ICMP error message (number 1) from error queue SO_ERROR socket option is set to ENOENT, but it is expected to be EPROTO</verdict>
+          </result>
+        </results>
       </iter>
     </test>
     <test name="error_errqueue_flush" type="script">
