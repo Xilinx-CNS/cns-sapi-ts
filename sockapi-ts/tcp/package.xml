@@ -744,6 +744,8 @@
                 <req id="ONLOAD_ONLY"/>
                 <req id="TIME_CONSUMING"/>
                 <req id="SETUID"/>
+                <!-- ST-2736: AF_XDP is not compatible with non-root users -->
+                <req id="NO_AF_XDP"/>
             </script>
             <arg name="env">
                 <value ref="env.p2p_lo"/>
