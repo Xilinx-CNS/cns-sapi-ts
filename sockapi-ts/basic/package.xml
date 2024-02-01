@@ -2213,6 +2213,8 @@
         <run>
             <script name="tcp_udp_two_threads">
                 <req id="THREADS"/>
+                <!-- See ST-2707 -->
+                <req id="NO_SCALABLE_ACTIVE_PASSIVE"/>
             </script>
             <arg name="env" list="">
                 <value>IUT{{{'pco_iut':IUT,'pco_iut_aux':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,addr:'tst_addr_aux':inet:unicast}}</value>
