@@ -53,6 +53,18 @@
         </run>
 
         <run>
+            <script name="frag_need">
+                <req id="ICMP_FLOOD"/>
+                <req id="L2_TS"/>
+                <!-- The test reduce PMTU and it affects other tests with zf_shim, see Bug 71608 -->
+                <req id="ZF_INCOMPATIBLE"/>
+            </script>
+            <arg name="limit_mtu" type="boolean"/>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+        </run>
+
+
+        <run>
             <script name="icmp_pmtu">
                 <req id="L2_TS"/>
                 <!-- The test reduce PMTU and it affects other tests with zf_shim, see Bug 71608 -->

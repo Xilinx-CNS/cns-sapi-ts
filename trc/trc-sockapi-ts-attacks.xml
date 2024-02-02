@@ -287,6 +287,16 @@
             <arg name="env">IUT{'H0'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},'H1'{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast,if:'tst1_if'}},tester{'H0'{addr:'iut_addr2':inet:unicast},'H2'{{'pco_tst2':tester},addr:'tst2_addr':inet:unicast,if:'tst2_if'}}</arg>
           </iter>
         </test>
+        <test name="frag_need" type="script">
+          <objective>Check that flood of ICMP fragmentation needed packets with different next-hop MTU does not lead to denial of service.</objective>
+          <notes/>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="limit_mtu"/>
+            <arg name="sock_type"/>
+            <notes/>
+          </iter>
+        </test>
       </iter>
     </test>
     <test name="udp" type="package">

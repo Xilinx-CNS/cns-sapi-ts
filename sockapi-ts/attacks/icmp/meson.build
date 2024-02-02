@@ -5,6 +5,7 @@ tests = [
     'tcp_break',
     'icmp_pmtu',
     'icmp_flood',
+    'frag_need',
     'tcp_degrade',
     'icmp_forged_acknum',
     'icmp_forged_seqnum',
