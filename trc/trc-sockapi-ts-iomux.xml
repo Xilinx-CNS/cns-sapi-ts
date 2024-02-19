@@ -4433,7 +4433,7 @@
       </iter>
     </test>
     <test name="pollpri" type="script">
-      <objective>Check that poll()/ ppoll/ epoll_wait() / epoll_pwait() functions returns POLLPRI (EPOLLPRI) event when there is available OOB data on the socket.</objective>
+      <objective>Check that poll()/ ppoll/ epoll_wait() / epoll_pwait() functions returns POLLPRI ( EPOLLPRI) event when there is available OOB data on the socket.</objective>
       <notes/>
       <iter result="PASSED">
         <arg name="add_flags">epolloneshot</arg>
@@ -4442,7 +4442,7 @@
         <arg name="read_after_oob"/>
         <arg name="timeout">2000</arg>
         <notes/>
-        <results tags="v5&amp;(small_spin|tiny_spin)&amp;(ool_loop=0)&amp;!epoll_mt_safe&amp;(ool_epoll=3|ool_sleep_spin)" key="ON-5898">
+        <results tags="v5&amp;(small_spin|tiny_spin)&amp;(ool_loop=0)&amp;!epoll_mt_safe&amp;(ool_epoll=3|ool_sleep_spin)&amp;!urg_allow" key="ON-5898">
           <result value="PASSED">
             <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
             <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
@@ -4478,11 +4478,68 @@
       <iter result="PASSED">
         <arg name="add_flags">epollet</arg>
         <arg name="env">VAR.env.peer2peer_lo</arg>
-        <arg name="iomux"/>
+        <arg name="iomux">epoll</arg>
         <arg name="read_after_oob"/>
         <arg name="timeout">2000</arg>
         <notes/>
-        <results tags="v5&amp;(small_spin|tiny_spin)&amp;(ool_loop=0)&amp;!epoll_mt_safe&amp;(ool_epoll=3|ool_sleep_spin)" key="ON-5898">
+        <results tags="v5&amp;(small_spin|tiny_spin)&amp;(ool_loop=0)&amp;!epoll_mt_safe&amp;(ool_epoll=3|ool_sleep_spin)&amp;!urg_allow" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=3&amp;(ool_loop=0)&amp;!ool_spin&amp;!ool_sleep_spin&amp;!epoll_mt_safe" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;!(ool_loop=0)&amp;(ool_epoll=1|ool_epoll=3)" key="ON-929">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags">epollet</arg>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="read_after_oob">TRUE</arg>
+        <arg name="timeout">2000</arg>
+        <notes/>
+        <results tags="v5&amp;(small_spin|tiny_spin)&amp;(ool_loop=0)&amp;!epoll_mt_safe&amp;(ool_epoll=3|ool_sleep_spin)&amp;!urg_allow" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=3&amp;(ool_loop=0)&amp;!ool_spin&amp;!ool_sleep_spin&amp;!epoll_mt_safe" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;!(ool_loop=0)&amp;(ool_epoll=1|ool_epoll=3)" key="ON-929">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags">epollet</arg>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="read_after_oob">FALSE</arg>
+        <arg name="timeout">2000</arg>
+        <notes/>
+        <results tags="v5&amp;tiny_spin&amp;!ool_epoll=3&amp;ool_sleep_spin&amp;urg_allow">
+          <result value="PASSED"/>
+        </results>
+        <results tags="v5&amp;(small_spin|tiny_spin)&amp;(ool_loop=0)&amp;!epoll_mt_safe&amp;(ool_epoll=3|ool_sleep_spin)&amp;!urg_allow" key="ON-5898">
           <result value="PASSED">
             <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
             <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
@@ -4532,11 +4589,89 @@
       <iter result="PASSED">
         <arg name="add_flags">epollet</arg>
         <arg name="env">VAR.env.peer2peer_tst</arg>
-        <arg name="iomux"/>
-        <arg name="read_after_oob"/>
+        <arg name="iomux">epoll</arg>
+        <arg name="read_after_oob">FALSE</arg>
         <arg name="timeout">2000</arg>
         <notes/>
-        <results tags="v5&amp;(small_spin|tiny_spin)&amp;!epoll_mt_safe&amp;(ool_epoll=3|ool_sleep_spin)" key="ON-5898">
+        <results tags="v5&amp;sleep_spin&amp;tiny_spin&amp;urg_allow">
+          <result value="PASSED"/>
+        </results>
+        <results tags="v5&amp;(small_spin|tiny_spin)&amp;!epoll_mt_safe&amp;(ool_epoll=3|ool_sleep_spin)&amp;!urg_allow" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=3&amp;!ool_spin&amp;!ool_sleep_spin&amp;!epoll_mt_safe" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags">epollet</arg>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">epoll</arg>
+        <arg name="read_after_oob">TRUE</arg>
+        <arg name="timeout">2000</arg>
+        <notes/>
+        <results tags="v5&amp;tiny_spin&amp;sleep_spin&amp;urg_allow">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;(small_spin|tiny_spin)&amp;!epoll_mt_safe&amp;(ool_epoll=3|ool_sleep_spin)&amp;!urg_allow" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=3&amp;!ool_spin&amp;!ool_sleep_spin&amp;!epoll_mt_safe" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags">epollet</arg>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="read_after_oob">FALSE</arg>
+        <arg name="timeout">2000</arg>
+        <notes/>
+        <results tags="v5&amp;tiny_spin&amp;sleep_spin&amp;urg_allow">
+          <result value="PASSED"/>
+        </results>
+        <results tags="v5&amp;(small_spin|tiny_spin)&amp;!epoll_mt_safe&amp;(ool_epoll=3|ool_sleep_spin)&amp;!urg_allow" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=3&amp;!ool_spin&amp;!ool_sleep_spin&amp;!epoll_mt_safe" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags">epollet</arg>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">epoll_pwait</arg>
+        <arg name="read_after_oob">TRUE</arg>
+        <arg name="timeout">2000</arg>
+        <notes/>
+        <results tags="v5&amp;tiny_spin&amp;ool_epoll=3&amp;urg_allow">
+          <result value="PASSED"/>
+        </results>
+        <results tags="v5&amp;tiny_spin&amp;sleep_spin&amp;urg_allow">
+          <result value="PASSED"/>
+        </results>
+        <results tags="v5&amp;(small_spin|tiny_spin)&amp;!epoll_mt_safe&amp;(ool_epoll=3|ool_sleep_spin)&amp;!urg_allow" key="ON-5898">
           <result value="PASSED">
             <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
             <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
@@ -4552,11 +4687,63 @@
       <iter result="PASSED">
         <arg name="add_flags">epolloneshot</arg>
         <arg name="env">VAR.env.peer2peer_tst</arg>
-        <arg name="iomux"/>
+        <arg name="iomux">epoll</arg>
+        <arg name="read_after_oob">FALSE</arg>
+        <arg name="timeout">2000</arg>
+        <notes/>
+        <results tags="v5&amp;tiny_spin&amp;sleep_spin&amp;urg_allow">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;(small_spin|tiny_spin)&amp;!epoll_mt_safe&amp;(ool_epoll=3|ool_sleep_spin)&amp;!urg_allow" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=3&amp;!ool_spin&amp;!ool_sleep_spin&amp;!epoll_mt_safe" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags">epolloneshot</arg>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">epoll</arg>
+        <arg name="read_after_oob">TRUE</arg>
+        <arg name="timeout">2000</arg>
+        <notes/>
+        <results tags="v5&amp;tiny_spin&amp;sleep_spin&amp;urg_allow">
+          <result value="PASSED"/>
+        </results>
+        <results tags="v5&amp;(small_spin|tiny_spin)&amp;!epoll_mt_safe&amp;(ool_epoll=3|ool_sleep_spin)&amp;!urg_allow" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=3&amp;!ool_spin&amp;!ool_sleep_spin&amp;!epoll_mt_safe" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags">epolloneshot</arg>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">epoll_pwait</arg>
         <arg name="read_after_oob"/>
         <arg name="timeout">2000</arg>
         <notes/>
-        <results tags="v5&amp;(small_spin|tiny_spin)&amp;!epoll_mt_safe&amp;(ool_epoll=3|ool_sleep_spin)" key="ON-5898">
+        <results tags="v5&amp;tiny_spin&amp;sleep_spin&amp;urg_allow">
+          <result value="PASSED"/>
+        </results>
+        <results tags="v5&amp;(small_spin|tiny_spin)&amp;!epoll_mt_safe&amp;(ool_epoll=3|ool_sleep_spin)&amp;!urg_allow" key="ON-5898">
           <result value="PASSED">
             <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
             <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
