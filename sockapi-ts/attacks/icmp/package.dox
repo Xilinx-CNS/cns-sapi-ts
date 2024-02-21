@@ -85,6 +85,7 @@ ICMP messages.
 -# @ref icmp-tcp_break
 -# @ref icmp-tcp_degrade
 -# @ref icmp-icmp_flood
+-# @ref icmp-frag_need
 -# @ref icmp-icmp_pmtu
 -# @ref icmp-icmp_forged_acknum
 -# @ref icmp-icmp_reduced_mtu

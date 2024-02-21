@@ -286,6 +286,9 @@ groups:
       - test: icmp_flood
         summary: Flood of ICMP packets
 
+      - test: frag_need
+        summary: ICMP fragmentation needed DOS attack
+
       - test: icmp_forged_acknum
         summary: Send ICMP packet with forged ack number
 
