@@ -190,7 +190,11 @@ main(int argc, char *argv[])
                                         length1);
 
     RPC_AWAIT_IUT_ERROR(pco_iut2);
-    pco_iut2->timeout = pco_iut2->def_timeout + (length1 + length2) / 10000;
+    /*
+     * sendfile() call hangs more time on some hosts, so timeout was increased.
+     * See ST-2733
+     */
+    pco_iut2->timeout = (pco_iut2->def_timeout + (length1 + length2) / 10000) * 2;
     if (use_sendfile)
         sent2 = rpc_sendfile(pco_iut2, iut2_s, src2, &offset, length2,
                              FALSE);
