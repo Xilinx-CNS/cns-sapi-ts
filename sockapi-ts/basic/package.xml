@@ -2754,7 +2754,8 @@
                         <value reqs="POLL">poll</value>
                         <value reqs="EPOLL,EPOLL_NON_MT_SAFE">epoll</value>
                         <value reqs="SELECT">select</value>
-                        <value>recv</value>
+                        <!-- OL bug 11794, GH-Onload 180 -->
+                        <value reqs="BROKEN">recv</value>
                         <value>send</value>
                     </arg>
                     <arg name="connect" type="boolean"/>
@@ -2780,7 +2781,8 @@
                     </arg>
                     <arg name="func" type="iomux">
                         <value reqs="POLL">poll</value>
-                        <value reqs="EPOLL,EPOLL_NON_MT_SAFE">epoll</value>
+                        <!-- OL bug 11794, GH-Onload 180 -->
+                        <value reqs="BROKEN,EPOLL,EPOLL_NON_MT_SAFE">epoll</value>
                         <value reqs="SELECT">select</value>
                     </arg>
                     <arg name="sock_type" type="sock_stream_dgram" list="bind">
@@ -2874,7 +2876,8 @@
                     </arg>
                     <arg name="func" type="iomux">
                         <value>poll</value>
-                        <value>epoll</value>
+                        <!-- OL bug 11794, GH-Onload 180 -->
+                        <value reqs="BROKEN">epoll</value>
                         <value>select</value>
                     </arg>
                     <arg name="threads_num">
