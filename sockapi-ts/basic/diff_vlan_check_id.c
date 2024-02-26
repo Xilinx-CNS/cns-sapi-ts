@@ -13,6 +13,7 @@
  *
  * @param env           Testing environment:
  *                      - @ref arg_types_env_peer2peer
+ *                      - @ref arg_types_env_peer2peer_ipv6
  * @param use_netns     Whether to create netns and add VLAN interface
  *                      to it:
  *                      - @c FALSE
@@ -102,6 +103,7 @@ main(int argc, char *argv[])
     char                  *iut_vlan2_if_name = NULL;
     cfg_val_type           val_type;
     unsigned int           net_prefix;
+    unsigned int           ip_version;
 
     csap_handle_t          csap = CSAP_INVALID_HANDLE;
     int                    sid = -1;
@@ -130,7 +132,11 @@ main(int argc, char *argv[])
     TEST_GET_INT_PARAM(vlan2);
 
     TEST_STEP("Create two VLAN interfaces on IUT.");
-    CHECK_RC(tapi_cfg_alloc_ip4_net(&vlan_net_handle));
+    if (iut_addr->sa_family == AF_INET)
+        CHECK_RC(tapi_cfg_alloc_ip4_net(&vlan_net_handle));
+    else
+        CHECK_RC(tapi_cfg_alloc_ip6_net(&vlan_net_handle));
+
     CHECK_RC(cfg_get_oid_str(vlan_net_handle, &net_oid));
     val_type = CVT_INTEGER;
 
@@ -140,16 +146,26 @@ main(int argc, char *argv[])
      * of rp_filter should be changed to 2, and in case of net namespace
      * to 0.
      */
-    if (use_netns)
+    if (iut_addr->sa_family == AF_INET)
     {
-        CHECK_RC(tapi_cfg_sys_set_int(pco_iut->ta, 0, NULL,
-                                      "net/ipv4/conf:all/rp_filter"));
+        if (use_netns)
+        {
+            CHECK_RC(tapi_cfg_sys_set_int(pco_iut->ta, 0, NULL,
+                                          "net/ipv4/conf:all/rp_filter"));
+        }
+        else
+        {
+            CHECK_RC(tapi_cfg_sys_set_int(pco_iut->ta, 2, NULL,
+                                          "net/ipv4/conf:all/rp_filter"));
+        }
     }
-    else
-    {
-        CHECK_RC(tapi_cfg_sys_set_int(pco_iut->ta, 2, NULL,
-                                      "net/ipv4/conf:all/rp_filter"));
-    }
+
+    /*
+     * Two calls cfg_synchronize() are needed to successfully delete
+     * net namespace in cleanup: otherwise, the configurator tree node
+     * /agent:Agt_aux_netns/dns: could not be deleted.
+     */
+    CHECK_RC(cfg_synchronize("/:", TRUE));
 
     CHECK_RC(cfg_get_instance_fmt(&val_type, &net_prefix, "%s/prefix:",
                                   net_oid));
@@ -162,6 +178,7 @@ main(int argc, char *argv[])
                               net_prefix, iut_if, vlan2, iut_vlan2_if_name,
                               iut_vlan2_configured, TRUE);
     CFG_WAIT_CHANGES;
+    CHECK_RC(cfg_synchronize("/:", TRUE));
 
     if (!use_netns)
     {
@@ -200,9 +217,12 @@ main(int argc, char *argv[])
          * of rp_filter should be changed. Value 2 doesn't work here well,
          * so 0 should be used.
          */
-        CHECK_RC(tapi_cfg_sys_set_int(rpcs_ns->ta, 0, NULL,
-                                      "net/ipv4/conf:%s/rp_filter",
-                                      iut_vlan1_if_name));
+        if (iut_addr->sa_family == AF_INET)
+        {
+            CHECK_RC(tapi_cfg_sys_set_int(rpcs_ns->ta, 0, NULL,
+                                          "net/ipv4/conf:%s/rp_filter",
+                                          iut_vlan1_if_name));
+        }
     }
 
     TEST_STEP("Bind the socket to wildcard address and some new port.");
@@ -223,15 +243,30 @@ main(int argc, char *argv[])
     TEST_STEP("Create CSAP to send packets from TST to the first IUT "
               "VLAN interface.");
     CHECK_RC(rcf_ta_create_session(pco_tst->ta, &sid));
-    CHECK_RC(tapi_udp_ip4_eth_csap_create(pco_tst->ta, sid, tst_if->if_name,
-                                          TAD_ETH_RECV_DEF |
-                                          TAD_ETH_RECV_NO_PROMISC,
-                                          mac_tst, mac_iut,
-                                          SIN(tst_addr)->sin_addr.s_addr,
-                                          SIN(send_addr)->sin_addr.s_addr,
-                                          SIN(tst_addr)->sin_port,
-                                          te_sockaddr_get_port(&bind_addr),
-                                          &csap));
+    if (iut_addr->sa_family == AF_INET)
+    {
+        CHECK_RC(tapi_udp_ip4_eth_csap_create(pco_tst->ta, sid, tst_if->if_name,
+                                              TAD_ETH_RECV_DEF |
+                                              TAD_ETH_RECV_NO_PROMISC,
+                                              mac_tst, mac_iut,
+                                              SIN(tst_addr)->sin_addr.s_addr,
+                                              SIN(send_addr)->sin_addr.s_addr,
+                                              SIN(tst_addr)->sin_port,
+                                              te_sockaddr_get_port(&bind_addr),
+                                              &csap));
+    }
+    else
+    {
+        CHECK_RC(tapi_udp_ip6_eth_csap_create(pco_tst->ta, sid, tst_if->if_name,
+                                             TAD_ETH_RECV_DEF |
+                                             TAD_ETH_RECV_NO_PROMISC,
+                                             mac_tst, mac_iut,
+                                             SIN6(tst_addr)->sin6_addr.s6_addr,
+                                             SIN6(send_addr)->sin6_addr.s6_addr,
+                                             SIN6(tst_addr)->sin6_port,
+                                             te_sockaddr_get_port(&bind_addr),
+                                             &csap));
+    }
 
     TEST_STEP("Using CSAP, send @c PKT_NUM packets with:\n"
               "1) correct VLAN tag,\n"
@@ -241,6 +276,7 @@ main(int argc, char *argv[])
               "5) without VLAN tag.");
     vlan_tags_sent[0] = vlan1;
     vlan_tags_sent[1] = vlan2;
+    ip_version = (iut_addr->sa_family == AF_INET ? 4 : 6);
 
     for (i = 0; i < (unsigned int)TE_ARRAY_LEN(vlan_tags_sent); i++)
     {
@@ -251,7 +287,7 @@ main(int argc, char *argv[])
             TE_SPRINTF(buf,
                        "{ arg-sets { simple-for:{begin 1,end %u} }, "
                        "  pdus  { udp:{},                           "
-                       "          ip4:{},                           "
+                       "          ip%u:{},                          "
                        "          eth:{                             "
                        "                tagged tagged:{             "
                        "                  vlan-id plain:%u          "
@@ -259,16 +295,16 @@ main(int argc, char *argv[])
                        "              }                             "
                        "        },                                  "
                        "  payload length:%u }                       ",
-                       PKT_NUM, vlan_tags_sent[i], PAYLOAD_LEN);
+                       PKT_NUM, ip_version, vlan_tags_sent[i], PAYLOAD_LEN);
         }
         else
         {
             RING("Send %u packets without VLAN tag.", PKT_NUM);
             TE_SPRINTF(buf,
                        "{ arg-sets { simple-for:{begin 1,end %u} }, "
-                       "  pdus  { udp:{}, ip4:{}, eth:{} },         "
+                       "  pdus  { udp:{}, ip%u:{}, eth:{} },        "
                        "  payload length:%u }                       ",
-                       PKT_NUM, PAYLOAD_LEN);
+                       PKT_NUM, ip_version, PAYLOAD_LEN);
         }
         CHECK_RC(asn_parse_value_text(buf, ndn_traffic_template, &pkt, &num));
         CHECK_RC(tapi_tad_trsend_start(pco_tst->ta, sid, csap, pkt,
@@ -282,7 +318,7 @@ main(int argc, char *argv[])
                   "has received packets;\n"
                   " - number of received bytes for each packet in case of "
                   "correct VLAN tag.");
-        if (num != PKT_NUM * (i + 1))
+        if (num != (int)(PKT_NUM * (i + 1)))
         {
             ERROR("CSAP on TST has sent %d packets instead of %d to IUT VLAN",
                   num, PKT_NUM * (i + 1));

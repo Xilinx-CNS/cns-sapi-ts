@@ -3075,6 +3075,7 @@
             </script>
             <arg name="env">
                 <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
             </arg>
             <arg name="use_macvlan" type="boolean"/>
             <arg name="use_netns" type="boolean">
@@ -3093,6 +3094,7 @@
             </script>
             <arg name="env">
                 <value ref="env.peer2peer"/>
+                <value ref="env.peer2peer_ipv6"/>
             </arg>
             <arg name="use_netns" type="boolean">
                 <value>FALSE</value>
