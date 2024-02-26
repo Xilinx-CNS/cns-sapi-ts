@@ -8,11 +8,13 @@
 /** @page basic-diff_vlan_check_id Check that received packets have correct destination IP/MAC address
  *
  * @objective The test should check that IP VLAN/MAC VLAN interface receives
- *            packets with correct destination IP/MAC, and check that the
- *            interface does not receive packets with a wrong destination IP.
+ *            packets with correct destination IP/MAC address, and check that
+ *            the interface does not receive packets with a wrong destination
+ *            address.
  *
  * @param env           Testing environment:
  *                      - @ref arg_types_env_peer2peer
+ *                      - @ref arg_types_env_peer2peer_ipv6
  * @param use_netns     Whether to create netns and add IP VLAN/MAC VLAN
  *                      interface to it:
  *                      - @c FALSE
@@ -219,6 +221,8 @@ main(int argc, char *argv[])
     char                  *iut_vlan2_if_name = NULL;
     cfg_val_type           val_type;
     unsigned int           net_prefix;
+    unsigned int           ip_version;
+
 
     csap_handle_t          csap = CSAP_INVALID_HANDLE;
     int                    sid = -1;
@@ -231,7 +235,7 @@ main(int argc, char *argv[])
                                                   iut_addr};
     uint8_t               *destination_macs[] = {mac_vlan1, mac_vlan2,
                                                  mac_iut};
-    uint8_t               *mac;
+    uint8_t               *addr;
 
     int                    rcv;
     unsigned int           i;
@@ -251,7 +255,10 @@ main(int argc, char *argv[])
 
     TEST_STEP("Create two IP VLAN/MAC VLAN interfaces on IUT; allocate IP "
               "addresses for them from a new subnet.");
-    CHECK_RC(tapi_cfg_alloc_ip4_net(&vlan_net_handle));
+    if (iut_addr->sa_family == AF_INET)
+        CHECK_RC(tapi_cfg_alloc_ip4_net(&vlan_net_handle));
+    else
+        CHECK_RC(tapi_cfg_alloc_ip6_net(&vlan_net_handle));
     CHECK_RC(cfg_get_oid_str(vlan_net_handle, &net_oid));
     val_type = CVT_INTEGER;
     CHECK_RC(cfg_get_instance_fmt(&val_type, &net_prefix, "%s/prefix:",
@@ -269,7 +276,7 @@ main(int argc, char *argv[])
                                        &iut_vlan2_addr_handle,
                                        &iut_vlan2_configured);
     /* This is needed for packets to reach the VLAN interface */
-    if (use_macvlan)
+    if (iut_addr->sa_family == AF_INET && use_macvlan)
     {
         CHECK_RC(tapi_cfg_sys_set_int(pco_iut->ta, 2, &iut_if_rp_filter,
                                       "net/ipv4/conf:%s/rp_filter",
@@ -336,9 +343,12 @@ main(int argc, char *argv[])
          * of rp_filter should be changed. Value 2 doesn't work here well,
          * so 0 should be used.
          */
-        CHECK_RC(tapi_cfg_sys_set_int(rpcs_ns->ta, 0, NULL,
-                                      "net/ipv4/conf:%s/rp_filter",
-                                      iut_vlan1_if_name));
+        if (iut_addr->sa_family == AF_INET)
+        {
+            CHECK_RC(tapi_cfg_sys_set_int(rpcs_ns->ta, 0, NULL,
+                                          "net/ipv4/conf:%s/rp_filter",
+                                          iut_vlan1_if_name));
+        }
     }
 
     TEST_STEP("Bind the socket to wildcard address and some new port.");
@@ -369,15 +379,31 @@ main(int argc, char *argv[])
     TEST_STEP("Create CSAP to send packets from TST to the first IUT "
               "VLAN interface.");
     CHECK_RC(rcf_ta_create_session(pco_tst->ta, &sid));
-    CHECK_RC(tapi_udp_ip4_eth_csap_create(pco_tst->ta, sid, tst_if->if_name,
+    if (iut_addr->sa_family == AF_INET)
+    {
+        CHECK_RC(tapi_udp_ip4_eth_csap_create(pco_tst->ta, sid, tst_if->if_name,
+                                             TAD_ETH_RECV_DEF |
+                                             TAD_ETH_RECV_NO_PROMISC,
+                                             mac_tst, mac_vlan1,
+                                             SIN(tst_new_addr)->sin_addr.s_addr,
+                                             SIN(send_addr)->sin_addr.s_addr,
+                                             SIN(tst_new_addr)->sin_port,
+                                             te_sockaddr_get_port(&bind_addr),
+                                             &csap));
+    }
+    else
+    {
+        CHECK_RC(tapi_udp_ip6_eth_csap_create(pco_tst->ta, sid, tst_if->if_name,
                                           TAD_ETH_RECV_DEF |
                                           TAD_ETH_RECV_NO_PROMISC,
                                           mac_tst, mac_vlan1,
-                                          SIN(tst_new_addr)->sin_addr.s_addr,
-                                          SIN(send_addr)->sin_addr.s_addr,
-                                          SIN(tst_new_addr)->sin_port,
+                                          SIN6(tst_new_addr)->sin6_addr.s6_addr,
+                                          SIN6(send_addr)->sin6_addr.s6_addr,
+                                          SIN6(tst_new_addr)->sin6_port,
                                           te_sockaddr_get_port(&bind_addr),
                                           &csap));
+
+    }
 
     TEST_STEP("Using CSAP, send @c PKT_NUM packets with IP address (in case IP "
               "VLAN) or MAC address (in case MAC VLAN):\n"
@@ -398,44 +424,67 @@ main(int argc, char *argv[])
         destination_addrs[1] = iut_vlan2_addr;
         destination_addrs[2] = iut_addr;
     }
+    ip_version = (iut_addr->sa_family == AF_INET ? 4 : 6);
 
     for (i = 0; i < (unsigned int)TE_ARRAY_LEN(destination_addrs); i++)
     {
         if (use_macvlan)
         {
-            mac = destination_macs[i];
+            addr = destination_macs[i];
             RING("Send %u packets to MAC address %02X %02X %02X %02X %02X "
-                 "%02X.", PKT_NUM, mac[0], mac[1], mac[2], mac[3], mac[4],
-                 mac[5]);
+                 "%02X.", PKT_NUM, addr[0], addr[1], addr[2], addr[3], addr[4],
+                 addr[5]);
             TE_SPRINTF(buf,
                        "{ arg-sets { simple-for:{begin 1,end %u} }, "
                        "  pdus  { udp:{},                           "
-                       "          ip4:{},                           "
+                       "          ip%u:{},                          "
                        "          eth:{                             "
                        "                dst-addr plain:'%02X %02X   "
                        "%02X %02X %02X %02X'H                       "
                        "              }                             "
                        "        },                                  "
                        "  payload length:%u }                       ",
-                       PKT_NUM, mac[0], mac[1], mac[2], mac[3], mac[4], mac[5],
-                       PAYLOAD_LEN);
+                       PKT_NUM, ip_version, addr[0], addr[1], addr[2], addr[3],
+                       addr[4], addr[5], PAYLOAD_LEN);
         }
         else
         {
             RING("Send %u packets to IP address %s.", PKT_NUM,
                  te_sockaddr_get_ipstr(destination_addrs[i]));
-            TE_SPRINTF(buf,
-                       "{ arg-sets { simple-for:{begin 1,end %u} }, "
-                       "  pdus  { udp:{},                           "
-                       "          ip4:{                             "
-                       "                dst-addr plain:'%08X'H      "
-                       "              },                            "
-                       "          eth:{}                            "
-                       "        },                                  "
-                       "  payload length:%u }                       ",
-                       PKT_NUM,
-                       ntohl(SIN(destination_addrs[i])->sin_addr.s_addr),
-                       PAYLOAD_LEN);
+            if (ip_version == 4)
+            {
+                TE_SPRINTF(buf,
+                           "{ arg-sets { simple-for:{begin 1,end %u} }, "
+                           "  pdus  { udp:{},                           "
+                           "          ip4:{                             "
+                           "                dst-addr plain:'%08X'H      "
+                           "               },                           "
+                           "          eth:{}                            "
+                           "        },                                  "
+                           "  payload length:%u }                       ",
+                           PKT_NUM,
+                           ntohl(SIN(destination_addrs[i])->sin_addr.s_addr),
+                           PAYLOAD_LEN);
+            }
+            else
+            {
+                addr = SIN6(destination_addrs[i])->sin6_addr.s6_addr;
+                TE_SPRINTF(buf,
+                           "{ arg-sets { simple-for:{begin 1,end %u} }, "
+                           "  pdus  { udp:{},                           "
+                           "          ip6:{                             "
+                           "                dst-addr plain:'%02X %02X   "
+                           "%02X %02X %02X %02X %02X %02X %02X %02X     "
+                           "%02X %02X %02X %02X %02X %02X'H             "
+                           "               },                           "
+                           "          eth:{}                            "
+                           "        },                                  "
+                           "  payload length:%u }                       ",
+                           PKT_NUM, addr[0], addr[1], addr[2], addr[3], addr[4],
+                           addr[5], addr[6], addr[7], addr[8], addr[9],
+                           addr[10], addr[11], addr[12], addr[13], addr[14],
+                           addr[15], PAYLOAD_LEN);
+            }
         }
         CHECK_RC(asn_parse_value_text(buf, ndn_traffic_template, &pkt, &num));
         CHECK_RC(tapi_tad_trsend_start(pco_tst->ta, sid, csap, pkt,
@@ -449,7 +498,7 @@ main(int argc, char *argv[])
                   "VLAN interface has received packets;\n"
                   " - number of received bytes for each packet in case of "
                   "correct IP/MAC address.");
-        if (num != PKT_NUM * (i + 1))
+        if (num != (int)(PKT_NUM * (i + 1)))
         {
             ERROR("CSAP on TST has sent %d packets instead of %d",
                   num, PKT_NUM * (i + 1));
