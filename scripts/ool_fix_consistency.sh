@@ -499,6 +499,25 @@ function epoll_fix()
     fi
 }
 
+function epoll_spin_fix()
+{
+    # Replace "spin + epoll0" option with a "epoll0 + int_spin" option.
+    # spin+epoll0 effectively disables both interrupts and spinning.
+    # As a result Onload does not handle incoming events in time.
+    # Events from different stacks get reordered.
+    # Add to "any spin + epoll0" option int_driven
+
+    local info="epoll_spin_fix"
+
+    # epoll0 and spin can be replaced with one int_spin ool
+    if ool_contains "epoll0" && ool_contains "spin" ; then
+        ool_replace "spin" "int_spin" "$info"
+    elif ool_contains "epoll0" && ool_contains "*spin" \
+        && ! ool_contains "int_driven" ; then
+        ool_add "int_driven"
+    fi
+}
+
 # ool/config/disable_timestamps can be switched off in scripts/lib.netns
 # script so should be called after ool/config/netns*
 function disable_timestamps_fix()
@@ -718,6 +737,7 @@ cplane_default_fix
 safe_epoll_fix
 # epoll_fix should be at the end but before branch_order_fix
 epoll_fix
+epoll_spin_fix
 defaults_fix
 branch_order_fix
 cplane_server_grace_timeout_zero_fix
