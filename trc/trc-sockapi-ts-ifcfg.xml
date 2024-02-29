@@ -180,6 +180,8 @@
           <result value="FAILED">
             <verdict>Socket 'acc_s[i]' is not expected to be readable, but it is</verdict>
           </result>
+          <!-- OL bug 11852: AF_XDP allows to receive packets to a removed IP address -->
+          <result value="PASSED"/>
         </results>
         <results tags="x3" key="ON-13769">
           <result value="FAILED">
