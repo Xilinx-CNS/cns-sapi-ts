@@ -7862,31 +7862,21 @@ sighandler_createfile(int signo)
     int   fd;
 
     fd = open(filename, O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
-    free(filename);
     if (fd < 0)
     {
         ERROR("Signal handler failed to create file %s", filename);
+        free(filename);
         return;
     }
+    free(filename);
     close(fd);
 }
 
 void
 sighandler_createfile_siginfo(int signo, siginfo_t *info, void *context)
 {
-    char *filename = sighandler_get_filename(signo);
-    int fd;
-
     signal_registrar_siginfo(signo, info, context);
-
-    fd = open(filename, O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
-    free(filename);
-    if (fd < 0)
-    {
-        ERROR("Signal handler failed to create file %s", filename);
-        return;
-    }
-    close(fd);
+    sighandler_createfile(signo);
 }
 
 /*---------- sighandlers for sigaction flags testing -----------*/
