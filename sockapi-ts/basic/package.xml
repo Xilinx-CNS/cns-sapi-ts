@@ -2287,6 +2287,10 @@
         <run>
             <script name="many_listen_connect_lo" track_conf="silent">
                 <req id="MEMORY_HOG"/>
+                <!-- There is no sense to test many sockets with socket caching,
+                     because close() does not release fds in presense of
+                     caching -->
+                <req id="FD_CACHE_INCOMPATIBLE"/>
             </script>
             <arg name="env">
                 <value ref="env.peer2peer_lo"/>
