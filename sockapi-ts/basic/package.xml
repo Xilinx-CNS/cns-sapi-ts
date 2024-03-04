@@ -3098,6 +3098,7 @@
                 <!-- Linux doesn't support vlan over ipvlan. ST-2001-->
                 <req id="NO_IPVLAN"/>
                 <req id="CREATE_NET_IF"/>
+                <req id="VLAN"/>
             </script>
             <arg name="env">
                 <value ref="env.peer2peer"/>
