@@ -195,13 +195,16 @@
                 </arg>
                 <arg name="retry" list="limit">
                     <value>-</value>
-                    <value>close</value>
+                    <!-- There is no sense to test many sockets with socket
+                         caching, because close() does not release fds in
+                         presense of caching -->
+                    <value reqs="FD_CACHE_INCOMPATIBLE">close</value>
                     <value>-</value>
                     <value reqs="BUG_45334">rlim</value>
-                    <value reqs="BUG_45334">close</value>
+                    <value reqs="BUG_45334,FD_CACHE_INCOMPATIBLE">close</value>
                     <value>-</value>
                     <value reqs="BUG_45334">rlim</value>
-                    <value reqs="BUG_45334">close</value>
+                    <value reqs="BUG_45334,FD_CACHE_INCOMPATIBLE">close</value>
                 </arg>
 
                 <run>
