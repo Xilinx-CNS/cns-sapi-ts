@@ -61,7 +61,7 @@ static peer_name_t peer_names[] = { { &tst_addr1,
                                     { &tst_addr2,
                                       "the second Tester address" },
                                     { &tst_addr3,
-                                      "the third Tester interface" },
+                                      "the third Tester address" },
                                     { NULL, NULL } };
 
 /* Socket descriptors. */
