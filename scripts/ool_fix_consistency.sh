@@ -237,6 +237,7 @@ function x3_fix()
                 "X3/ST-2641: avoid creating too much stacks"
         fi
         ool_remove "scooby" "ON-15354: scooby doesn't work with X3"
+        ool_remove "pkt_nocomp" "ST-2638: pkt_nocomp doesn't work with X3"
     fi
 }
 
