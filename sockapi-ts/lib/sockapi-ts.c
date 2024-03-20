@@ -1909,6 +1909,9 @@ sockts_get_kill_zombie_stacks(rcf_rpc_server *rpcs, te_bool check_only)
 {
     char    *onload_gnu = getenv("SFC_ONLOAD_GNU");
 
+    if (sockts_zf_shim_run())
+        return;
+
     if (onload_gnu != NULL && strcmp(onload_gnu, "") != 0)
     {
         if (check_only)
