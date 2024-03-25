@@ -3086,7 +3086,7 @@
             </arg>
             <arg name="use_macvlan" type="boolean"/>
             <arg name="use_netns" type="boolean">
-                <value>FALSE</value>
+                <value reqs="SO_BINDTODEVICE">FALSE</value>
                 <value reqs="NETNS">TRUE</value>
             </arg>
         </run>
@@ -3105,7 +3105,7 @@
                 <value ref="env.peer2peer_ipv6"/>
             </arg>
             <arg name="use_netns" type="boolean">
-                <value>FALSE</value>
+                <value reqs="SO_BINDTODEVICE">FALSE</value>
                 <value reqs="NETNS">TRUE</value>
             </arg>
             <arg name="vlan1">
