@@ -3279,6 +3279,7 @@
                 <value>any</value>
                 <value>ipv4</value>
                 <value>ipv4_mapped</value>
+                <value>ipv4_mapped_new</value>
                 <value>ipv4_mapped_any</value>
                 <value>ipv6</value>
             </arg>

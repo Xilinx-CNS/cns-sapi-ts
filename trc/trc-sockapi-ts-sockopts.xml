@@ -23089,11 +23089,157 @@
       <notes/>
       <iter result="PASSED">
         <arg name="env"/>
-        <arg name="ipv4_bind"/>
+        <arg name="ipv4_bind">ipv4</arg>
+        <arg name="ipv6_bind">ipv4_mapped</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="v6only">TRUE</arg>
+        <arg name="v6only_after">TRUE</arg>
+        <notes/>
+        <results tags="linux&lt;6|linux-6&lt;1" notes="On earlier kernels behaviour may differ">
+          <result value="PASSED">
+            <verdict>Binding IPv4 socket failed unexpectedly with errno RPC-EADDRINUSE</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="ipv4_bind">ipv4</arg>
+        <arg name="ipv6_bind">ipv4_mapped</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="v6only">FALSE</arg>
+        <arg name="v6only_after">FALSE</arg>
+        <notes/>
+        <results tags="linux&lt;6|linux-6&lt;1" notes="On earlier kernels behaviour may differ">
+          <result value="PASSED">
+            <verdict>Binding IPv4 socket failed unexpectedly with errno RPC-EADDRINUSE</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="ipv4_bind">ipv4</arg>
+        <arg name="ipv6_bind">ipv4_mapped_any</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="v6only">FALSE</arg>
+        <arg name="v6only_after">FALSE</arg>
+        <notes/>
+        <results tags="linux&lt;6|linux-6&lt;1" notes="On earlier kernels behaviour may differ">
+          <result value="PASSED">
+            <verdict>Binding IPv4 socket failed unexpectedly with errno RPC-EADDRINUSE</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="ipv4_bind">ipv4</arg>
+        <arg name="ipv6_bind">ipv4_mapped_any</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="v6only">TRUE</arg>
+        <arg name="v6only_after">TRUE</arg>
+        <notes/>
+        <results tags="linux&lt;6|linux-6&lt;1" notes="On earlier kernels behaviour may differ">
+          <result value="PASSED">
+            <verdict>Binding IPv4 socket failed unexpectedly with errno RPC-EADDRINUSE</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="ipv4_bind">any</arg>
         <arg name="ipv6_bind"/>
         <arg name="sock_type"/>
         <arg name="v6only"/>
         <arg name="v6only_after"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="ipv4_bind">ipv4</arg>
+        <arg name="ipv6_bind">any</arg>
+        <arg name="sock_type"/>
+        <arg name="v6only"/>
+        <arg name="v6only_after"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="ipv4_bind">ipv4</arg>
+        <arg name="ipv6_bind">ipv4</arg>
+        <arg name="sock_type"/>
+        <arg name="v6only"/>
+        <arg name="v6only_after"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="ipv4_bind">ipv4</arg>
+        <arg name="ipv6_bind">ipv6</arg>
+        <arg name="sock_type"/>
+        <arg name="v6only"/>
+        <arg name="v6only_after"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="ipv4_bind">ipv4</arg>
+        <arg name="ipv6_bind">ipv4_mapped_new</arg>
+        <arg name="sock_type"/>
+        <arg name="v6only"/>
+        <arg name="v6only_after"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="ipv4_bind">ipv4</arg>
+        <arg name="ipv6_bind">ipv4_mapped</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="v6only"/>
+        <arg name="v6only_after"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="ipv4_bind">ipv4</arg>
+        <arg name="ipv6_bind">ipv4_mapped_any</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="v6only"/>
+        <arg name="v6only_after"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="ipv4_bind">ipv4</arg>
+        <arg name="ipv6_bind">ipv4_mapped</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="v6only">TRUE</arg>
+        <arg name="v6only_after">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="ipv4_bind">ipv4</arg>
+        <arg name="ipv6_bind">ipv4_mapped</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="v6only">FALSE</arg>
+        <arg name="v6only_after">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="ipv4_bind">ipv4</arg>
+        <arg name="ipv6_bind">ipv4_mapped_any</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="v6only">TRUE</arg>
+        <arg name="v6only_after">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="ipv4_bind">ipv4</arg>
+        <arg name="ipv6_bind">ipv4_mapped_any</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="v6only">FALSE</arg>
+        <arg name="v6only_after">TRUE</arg>
         <notes/>
       </iter>
     </test>
