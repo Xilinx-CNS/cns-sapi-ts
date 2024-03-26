@@ -6705,12 +6705,19 @@
       </iter>
     </test>
     <test name="sock_exec_many" type="script">
-      <objective>Check that in case of sequence socket-exec-socket-exec the number of new socket has number N+C, but not 2*N+C.</objective>
+      <objective>Check that in case of sequence socket-exec-socket-exec the number of new sockets is N+C, but not 2*N+C.</objective>
+      <notes/>
       <iter result="PASSED">
         <arg name="env"/>
         <arg name="iter_num"/>
         <arg name="read_socket"/>
         <notes/>
+        <results tags="v5&amp;pkt_nocomp&amp;!reuse_stack" key="ST-2698" notes="Because of small amount of stacks on medford2 with pkt_nocomp not all sockets can be accelerated">
+          <result value="PASSED">
+            <verdict>Some created sockets were not accelerated</verdict>
+            <verdict>Test caught the SIGUSR2 signal</verdict>
+          </result>
+        </results>
         <results tags="x3&amp;!reuse_stack" key="ST-2698" notes="Because of small amount of stacks on X3 not all sockets can be accelerated">
           <result value="PASSED">
             <verdict>Some created sockets were not accelerated</verdict>
