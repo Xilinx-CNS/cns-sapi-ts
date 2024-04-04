@@ -3117,13 +3117,9 @@ sockts_check_blocking(rcf_rpc_server *pco_iut, rcf_rpc_server *pco_tst,
     {
         if (is_send)
         {
-            void *buf = NULL;
-            size_t num = 0;
+            uint64_t num = 0;
 
-            rpc_read_fd(pco_tst, tst_fd, TAPI_WAIT_NETWORK_DELAY, 0, &buf,
-                        &num);
-
-            free(buf);
+            rpc_drain_fd_simple(pco_tst, tst_fd, &num);
         }
         else
             rpc_write(pco_tst, tst_fd, data_buf, data_size);
