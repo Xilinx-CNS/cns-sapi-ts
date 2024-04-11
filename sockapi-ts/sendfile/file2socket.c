@@ -144,8 +144,12 @@ main(int argc, char *argv[])
     }
     nb_receiver_started = TRUE;
 
-    /* It is assumed here that speed is at least 100Mbits/sec */
-    pco_iut->timeout = pco_iut->def_timeout + send_length / 10000;
+    /*
+     * It is assumed here that speed is at least 100Mbits/sec
+     * Double the timeout to account for connection problems that rarely occur
+     * See ST-2733
+     */
+    pco_iut->timeout = (pco_iut->def_timeout + send_length / 10000) * 2;
 
     RPC_AWAIT_IUT_ERROR(pco_iut);
     off = offset;
