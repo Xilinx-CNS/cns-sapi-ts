@@ -66,7 +66,7 @@ The summary line should:
  - start with the imperative of a verb, for example:
 
    ```
-   tpc/tcp_close_timeout: replace verdicts containig numbers
+   tcp/tcp_close_timeout: replace verdicts containig numbers
    ```
 
    ```
