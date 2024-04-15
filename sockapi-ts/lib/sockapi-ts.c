@@ -3117,9 +3117,31 @@ sockts_check_blocking(rcf_rpc_server *pco_iut, rcf_rpc_server *pco_tst,
     {
         if (is_send)
         {
-            uint64_t num = 0;
+            int optval;
+            int rc;
 
-            rpc_drain_fd_simple(pco_tst, tst_fd, &num);
+            RPC_AWAIT_IUT_ERROR(pco_tst);
+            rc = rpc_getsockopt(pco_tst, tst_fd, RPC_SO_TYPE, &optval);
+            if (rc == -1)
+            {
+                void *buf = NULL;
+                size_t num = 0;
+
+                if (RPC_ERRNO(pco_tst) != RPC_ENOTSOCK)
+                {
+                    TEST_VERDICT("getsockopt(SO_TYPE) returned -1, but set "
+                                 "errno to %r", RPC_ERRNO(pco_tst));
+                }
+                rpc_read_fd(pco_tst, tst_fd, TAPI_WAIT_NETWORK_DELAY, 0, &buf,
+                            &num);
+                free(buf);
+            }
+            else
+            {
+                uint64_t num = 0;
+
+                rpc_drain_fd_simple(pco_tst, tst_fd, &num);
+            }
         }
         else
             rpc_write(pco_tst, tst_fd, data_buf, data_size);
