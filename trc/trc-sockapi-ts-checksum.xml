@@ -220,7 +220,13 @@
             <verdict>recv() on IUT was unblocked unexpectedly after receiving RST with invalid checksum</verdict>
           </result>
         </results>
-        <results tags="zf_shim" notes="There is no 'netstat' option in zf_stackdump and 'dump' shows TCP_CLOSE sockets too">
+        <results tags="zf_shim&amp;!x3" notes="There is no 'netstat' option in zf_stackdump and 'dump' shows TCP_CLOSE sockets too">
+          <result value="FAILED">
+            <verdict>IUT socket moved to unexpected state TCP_CLOSE</verdict>
+          </result>
+        </results>
+        <results tags="zf_shim&amp;x3" key="ON-15693" notes="There is no 'netstat' option in zf_stackdump and 'dump' shows TCP_CLOSE sockets too">
+          <result value="PASSED"/>
           <result value="FAILED">
             <verdict>IUT socket moved to unexpected state TCP_CLOSE</verdict>
           </result>
