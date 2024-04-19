@@ -156,9 +156,11 @@ main(int argc, char *argv[])
 
     te_bool disable_caching;
 
-    const char     *ef_poll_usec = getenv("EF_POLL_USEC");
-    const char     *ef_int_driven = getenv("EF_INT_DRIVEN");
-    te_bool         int_or_non_spin = FALSE;
+    const char         *ef_poll_usec = getenv("EF_POLL_USEC");
+    const char         *ef_int_driven = getenv("EF_INT_DRIVEN");
+    te_bool             int_or_non_spin = FALSE;
+    tarpc_onload_stat   ostat;
+    char                logcmd[128];
 
     TEST_START;
     TEST_GET_PCO(pco_iut);
@@ -346,6 +348,10 @@ main(int argc, char *argv[])
         rpc_connect(client[0].rpcs, aux_s, server[0].addr);
         aux_acc_s = rpc_accept(server[0].rpcs, server[0].listener, NULL, NULL);
 
+        if (rpc_onload_fd_stat(active ? client[0].rpcs : server[0].rpcs,
+                               active ? aux_s : aux_acc_s, &ostat) == 0)
+            TEST_FAIL("Auxiliary socket is not accelerated.");
+
         if (active)
         {
             rpc_close(client[0].rpcs, aux_s);
@@ -363,14 +369,10 @@ main(int argc, char *argv[])
             RING_VERDICT("New socket is cached, but all cached sockets still "
                          "must be in the TIME_WAIT state");
 
-        /* FIXME: Remove logging after debug. */
-        rpc_system(pco_iut2, "te_onload_stdump lots | grep cache");
-        usleep(20000);
-
+        snprintf(logcmd, sizeof(logcmd),
+                 "te_onload_stdump %d lots | grep cache", ostat.stack_id);
+        rpc_system(pco_iut2, logcmd);
         SLEEP(msl_timeout * 2 + 1);
-        /* FIXME: Remove logging after debug. */
-        rpc_system(pco_iut2, "te_onload_stdump lots | grep cache");
-        usleep(20000);
     }
 
     RING("Total opened sockets number %d, cached %d",
