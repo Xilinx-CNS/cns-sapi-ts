@@ -156,6 +156,10 @@ main(int argc, char *argv[])
 
     te_bool disable_caching;
 
+    const char     *ef_poll_usec = getenv("EF_POLL_USEC");
+    const char     *ef_int_driven = getenv("EF_INT_DRIVEN");
+    te_bool         int_or_non_spin = FALSE;
+
     TEST_START;
     TEST_GET_PCO(pco_iut);
     TEST_GET_PCO(pco_iut2);
@@ -172,11 +176,25 @@ main(int argc, char *argv[])
 
     domain = rpc_socket_domain_by_addr(iut_addr);
 
+    if (ef_poll_usec == NULL)
+        int_or_non_spin = TRUE;
+    else if (ef_int_driven != NULL && strcmp(ef_int_driven, "1") == 0)
+        int_or_non_spin = TRUE;
+
     if (active)
         limit = ef_socket_cache_max;
     else
         limit = get_low_value(ef_socket_cache_max, ef_per_socket_cache_max);
-    num = limit + 100;
+    /*
+     * In case of int-driven Onload it may fail to cache sockets because of
+     * stack lock contention, see sockcache_contention value in stackdump.
+     * It is OK from the test's point of view, so we create more sockets to
+     * occupy all the available cache entries.
+     */
+    if (int_or_non_spin)
+        num = limit * 5;
+    else
+        num = limit + 100;
 
     client = te_calloc_fill(listener_num, sizeof(*client), 0);
     server = te_calloc_fill(listener_num, sizeof(*server), 0);
