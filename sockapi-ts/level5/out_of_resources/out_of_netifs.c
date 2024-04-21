@@ -52,6 +52,7 @@ main(int argc, char *argv[])
     int               num;
     int               acc;
     int               loglevel = -1;
+    int               stacks_available = 0;
 
     TEST_START;
     TEST_GET_PCO(pco_iut);
@@ -67,8 +68,11 @@ main(int argc, char *argv[])
     rpc_out_of_netifs(pco_iut, netifs_max, sock_type, &num, &acc);
     RING("Sockets number %d/%d", acc, num);
 
-    if (acc < MIN_STACKS_NUM)
-        TEST_VERDICT("Stacks number should not be less %d", MIN_STACKS_NUM);
+    stacks_available = sockts_get_limited_stacks(pco_iut);
+    if (stacks_available == 0)
+        stacks_available = MIN_STACKS_NUM;
+    if (acc < stacks_available)
+        TEST_VERDICT("Too small number of stacks");
 
     if (ef_no_fail && acc == num)
         TEST_VERDICT("Total created sockets number should be more then "
