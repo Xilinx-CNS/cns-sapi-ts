@@ -62,6 +62,8 @@
 #define RECEIVED_DATA_SIZE 32000
 #define SENT_DATA_SIZE 256
 #define MAX_NAME_LEN 100
+/* Minimum amount of accelerated sockets. See ST-2728 */
+#define MIN_ACCEL_SOCKS 5
 
 /**
  * Call iomux with RCF_RPC_CALL and check rc.
@@ -162,6 +164,7 @@ main (int argc, char *argv[])
     int                     stack_interval;
     int                     next_stack_point;
     int                     i;
+    int                     accel_sockets = 0;
     int                     last_proc_number;
     int                     iut_socket_to_test = 0;
     char                    chld_name[MAX_NAME_LEN];
@@ -221,6 +224,11 @@ main (int argc, char *argv[])
                             rpc_socket_domain_by_addr(iut_addr),
                             sock_type, RPC_PROTO_DEF);
 
+        if (tapi_onload_is_onload_fd(all_proc[last_proc_number], sks[i]))
+            accel_sockets += 1;
+        else
+            break;
+
         if (i == iut_socket_to_test)
         {
             assert(sizeof(wildcard_addr) >= te_sockaddr_get_size(iut_addr));
@@ -264,6 +272,14 @@ main (int argc, char *argv[])
 
             next_stack_point += stack_interval;
         }
+    }
+    if (accel_sockets != sockets_number)
+    {
+        if (accel_sockets < MIN_ACCEL_SOCKS)
+            TEST_FAIL("Failed to create enough accelerated sockets");
+
+        RING("%d accelerated sockets were created", accel_sockets);
+        RING_VERDICT("Some created sockets were not accelerated");
     }
 
     pco_iomux = all_proc[last_proc_number];
