@@ -63,7 +63,6 @@ main(int argc, char **argv)
     size_t                           tx_buf_len = SEND_BUF_LEN;
     size_t                           rx_buf_len = RECV_BUF_LEN;
     uint64_t                         sent;
-    ssize_t                          received;
     
     TEST_START;
     TEST_GET_PCO(pco_iut);
@@ -111,9 +110,7 @@ main(int argc, char **argv)
         CHECK_RPC_ERRNO(pco_iut_thread, RPC_EAGAIN,
                         "send() on non-blocking socket failed");
         
-        do {
-                received = rpc_recv(pco_tst, acc_s, rx_buf, rx_buf_len, 0);
-        } while (received - RECV_BUF_LEN >= 0);
+        rpc_drain_fd_simple(pco_tst, acc_s, NULL);
         
         TAPI_WAIT_NETWORK;
 
@@ -149,7 +146,6 @@ main(int argc, char **argv)
     TEST_SUCCESS;
 
 cleanup:
-    
     
     CLEANUP_RPC_CLOSE(pco_iut, iut_s);
     CLEANUP_RPC_CLOSE(pco_tst, tst_s);
