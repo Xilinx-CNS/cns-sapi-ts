@@ -1894,12 +1894,20 @@ sockts_share_socket_2proc(rcf_rpc_server *rpcs1, rcf_rpc_server *rpcs2,
 int
 sockts_get_limited_stacks(rcf_rpc_server *rpcs)
 {
-    int              max_stacks = 0;
-    te_errno         rc = 0;
+    int          max_stacks = 0;
+    te_errno     rc = 0;
+    char        *strval;
 
-    rc = tapi_sh_env_get_int(rpcs, "SOCKTS_MAX_STACKS", &max_stacks);
+    rc = cfg_get_instance_string_fmt(&strval, "/agent:%s/env:SOCKTS_MAX_STACKS",
+                                     rpcs->ta);
     if (rc != 0)
-        ERROR("Failed to get SOCKTS_MAX_STACKS: %r", rc);
+    {
+        if (TE_RC_GET_ERROR(rc) != TE_ENOENT)
+            ERROR("Failed to get SOCKTS_MAX_STACKS: %r", rc);
+        return 0;
+    }
+    CHECK_RC(te_strtoi(strval, 10, &max_stacks));
+    free(strval);
 
     return max_stacks;
 }
