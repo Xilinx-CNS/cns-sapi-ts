@@ -7,6 +7,7 @@
 #
 . ${SF_TS_CONFDIR}/scripts/sfc_onload_gnu
 source "${TE_BASE}/scripts/lib"
+source "${TE_BASE}/engine/builder/te_ta_ssh_helper"
 
 # Include the file if it really exists - this allows sapi-ts not to break.
 # It seems that the following functions may become unavailable on some
