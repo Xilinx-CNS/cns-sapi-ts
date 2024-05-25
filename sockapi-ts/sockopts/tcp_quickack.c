@@ -149,6 +149,7 @@ main(int argc, char *argv[])
         rpc_recv(pco_iut, iut_s, rx_buf, packet_num, RPC_MSG_WAITALL);
     }
 
+    TAPI_WAIT_NETWORK;
     CHECK_RC(tapi_tad_trrecv_stop(pco_tst->ta, sid, csap_ack, NULL, &num));
 
     RING("Number of sent packets: %d, number of recieved ACKs: %d", packet_num, num);
