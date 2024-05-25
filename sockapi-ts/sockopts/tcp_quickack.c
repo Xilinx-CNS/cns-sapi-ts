@@ -59,6 +59,7 @@ main(int argc, char *argv[])
     const struct sockaddr *tst_addr = NULL;
     int                    sent;
     int                    opt_val;
+    int                    opt_val_nodelay = 1;
     int                    opt_get;
     unsigned char          tx_buf[1] = { 234 };
     unsigned char          rx_buf[100];
@@ -86,6 +87,8 @@ main(int argc, char *argv[])
 
     GEN_CONNECTION(pco_iut, pco_tst, RPC_SOCK_STREAM, RPC_PROTO_DEF,
                    iut_addr, tst_addr, &iut_s, &tst_s);
+
+    rpc_setsockopt(pco_tst, tst_s, RPC_TCP_NODELAY, &opt_val_nodelay);
 
     /* Open congestion window, drop linux neighbour cached values. */
     {
