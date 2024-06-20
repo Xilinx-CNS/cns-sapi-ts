@@ -19896,11 +19896,6 @@
         <arg name="check_sndbuf"/>
         <arg name="max_value_change"/>
         <notes/>
-        <results tags="v5" key="ON-12805">
-          <result value="FAILED">
-            <verdict>After setting the buffer size to more than maximum value, the returned size is unexpectedly set to the (fixed) set value</verdict>
-          </result>
-        </results>
       </iter>
     </test>
     <test name="error_rst" type="script">
