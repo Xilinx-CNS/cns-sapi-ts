@@ -6763,7 +6763,7 @@ TARPC_FUNC(send_traffic, {},
     out->common._errno = 0;
     for (i = 0; i < in->num; i++)
     {
-        PREPARE_ADDR_GEN(to, in->to.to_val[i], 0, FALSE, TRUE);
+        PREPARE_ADDR_GEN(to, in->to.to_val[i], 0, false, true);
         addr_arr[i] = to_dup;
         addr_len[i] = tolen;
     }
