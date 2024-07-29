@@ -885,6 +885,7 @@
     <arg name="diff_stacks"/>
     <arg name="pipe_size"/>
     <arg name="use_fcntl"/>
+    <arg name="sock_type"/>
     <notes/>
   </iter>
   <iter result="PASSED">
@@ -899,6 +900,7 @@
     <arg name="diff_stacks"/>
     <arg name="pipe_size"/>
     <arg name="use_fcntl"/>
+    <arg name="sock_type"/>
     <notes/>
   </iter>
   <iter result="PASSED">
@@ -913,6 +915,7 @@
     <arg name="diff_stacks"/>
     <arg name="pipe_size"/>
     <arg name="use_fcntl"/>
+    <arg name="sock_type"/>
     <notes/>
   </iter>
   <iter result="PASSED">
@@ -927,6 +930,7 @@
     <arg name="diff_stacks"/>
     <arg name="pipe_size"/>
     <arg name="use_fcntl"/>
+    <arg name="sock_type"/>
     <notes/>
   </iter>
   <iter result="PASSED">
@@ -941,6 +945,7 @@
     <arg name="diff_stacks"/>
     <arg name="pipe_size"/>
     <arg name="use_fcntl"/>
+    <arg name="sock_type"/>
     <notes/>
   </iter>
   <iter result="PASSED">
@@ -955,6 +960,7 @@
     <arg name="diff_stacks"/>
     <arg name="pipe_size"/>
     <arg name="use_fcntl"/>
+    <arg name="sock_type"/>
     <notes/>
   </iter>
   <iter result="PASSED">
@@ -969,6 +975,7 @@
     <arg name="diff_stacks"/>
     <arg name="pipe_size"/>
     <arg name="use_fcntl"/>
+    <arg name="sock_type"/>
     <notes/>
   </iter>
   <iter result="PASSED">
@@ -983,6 +990,7 @@
     <arg name="diff_stacks"/>
     <arg name="pipe_size"/>
     <arg name="use_fcntl"/>
+    <arg name="sock_type"/>
     <notes/>
   </iter>
   <iter result="PASSED">
@@ -997,6 +1005,7 @@
     <arg name="diff_stacks"/>
     <arg name="pipe_size"/>
     <arg name="use_fcntl"/>
+    <arg name="sock_type"/>
     <notes/>
   </iter>
   <iter result="PASSED">
@@ -1011,6 +1020,7 @@
     <arg name="diff_stacks"/>
     <arg name="pipe_size"/>
     <arg name="use_fcntl"/>
+    <arg name="sock_type"/>
     <notes/>
   </iter>
   <iter result="PASSED">
@@ -1025,6 +1035,7 @@
     <arg name="diff_stacks"/>
     <arg name="pipe_size"/>
     <arg name="use_fcntl"/>
+    <arg name="sock_type"/>
     <notes/>
   </iter>
   <iter result="PASSED">
@@ -1039,6 +1050,7 @@
     <arg name="diff_stacks"/>
     <arg name="pipe_size"/>
     <arg name="use_fcntl"/>
+    <arg name="sock_type"/>
     <notes/>
   </iter>
   <iter result="PASSED">
@@ -1053,6 +1065,7 @@
     <arg name="diff_stacks"/>
     <arg name="pipe_size"/>
     <arg name="use_fcntl"/>
+    <arg name="sock_type"/>
     <notes/>
   </iter>
   <iter result="PASSED">
@@ -1067,6 +1080,7 @@
     <arg name="diff_stacks"/>
     <arg name="pipe_size"/>
     <arg name="use_fcntl"/>
+    <arg name="sock_type"/>
     <notes/>
   </iter>
   <iter result="PASSED">
@@ -1081,6 +1095,7 @@
     <arg name="diff_stacks"/>
     <arg name="pipe_size"/>
     <arg name="use_fcntl"/>
+    <arg name="sock_type"/>
     <notes/>
   </iter>
   <iter result="PASSED">
@@ -1095,6 +1110,7 @@
     <arg name="diff_stacks"/>
     <arg name="pipe_size"/>
     <arg name="use_fcntl"/>
+    <arg name="sock_type"/>
     <notes/>
   </iter>
   <iter result="PASSED">
@@ -1109,6 +1125,7 @@
     <arg name="diff_stacks"/>
     <arg name="pipe_size"/>
     <arg name="use_fcntl"/>
+    <arg name="sock_type"/>
     <notes/>
   </iter>
   <iter result="PASSED">
@@ -1123,6 +1140,7 @@
     <arg name="diff_stacks"/>
     <arg name="pipe_size"/>
     <arg name="use_fcntl"/>
+    <arg name="sock_type"/>
     <notes/>
   </iter>
   <iter result="PASSED">
@@ -1137,6 +1155,7 @@
     <arg name="diff_stacks"/>
     <arg name="pipe_size"/>
     <arg name="use_fcntl"/>
+    <arg name="sock_type"/>
     <notes/>
   </iter>
 </test>

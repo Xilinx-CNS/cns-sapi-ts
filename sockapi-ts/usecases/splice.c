@@ -44,6 +44,10 @@
  *                              - 4096
  *                              - 8192
  * @param use_fcntl             Whether set pipe size using fcntl or not.
+ * @param sock_type             Socket type.
+ *                              Value:
+ *                              - @c SOCK_STREAM
+ *                              - @c SOCK_DGRAM
  *
  * @par Scenario:
  *
@@ -121,7 +125,9 @@ main(int argc, char *argv[])
     te_bool         use_fcntl = FALSE;
     const char     *pipe_size;
     char           *old_pipe_size = NULL;
-     cfg_handle     ef_pipe_size_h = CFG_HANDLE_INVALID;
+    cfg_handle     ef_pipe_size_h = CFG_HANDLE_INVALID;
+
+    rpc_socket_type sock_type;
 
     int i;
 
@@ -146,6 +152,7 @@ main(int argc, char *argv[])
     TEST_GET_BOOL_PARAM(diff_stacks);
     TEST_GET_BOOL_PARAM(use_fcntl);
     TEST_GET_STRING_PARAM(pipe_size);
+    TEST_GET_SOCK_TYPE(sock_type);
 
     if (strcmp(pipe_size, "unchanged") != 0 && !use_fcntl)
         ef_pipe_size_h = sockts_set_env_gen(pco_iut, "EF_PIPE_SIZE",
@@ -168,16 +175,16 @@ main(int argc, char *argv[])
         flags |= RPC_SPLICE_F_NONBLOCK;
 
     TEST_STEP("Generate connection between @p pco_iut and @p pco_tst1: @p iut_s1 "
-              "and @p tst_s1 sockets");
-    GEN_CONNECTION(pco_tst1, pco_iut, RPC_SOCK_STREAM, RPC_PROTO_DEF,
+              "and @p tst_s1 sockets according to @p sock_type");
+    GEN_CONNECTION(pco_tst1, pco_iut, sock_type, RPC_PROTO_DEF,
                    tst1_addr, iut_addr1, &tst_s1, &iut_s1);
     TEST_STEP("Change stack according to @p diff_stacks parameter");
     if (diff_stacks)
         rpc_onload_set_stackname(pco_iut, ONLOAD_ALL_THREADS,
                                  ONLOAD_SCOPE_GLOBAL, "test1");
     TEST_STEP("Generate connection between @p pco_iut and @p pco_tst2: @p iut_s2 "
-              "and @p tst_s2 sockets");
-    GEN_CONNECTION(pco_tst2, pco_iut, RPC_SOCK_STREAM, RPC_PROTO_DEF,
+              "and @p tst_s2 sockets according to @p sock_type");
+    GEN_CONNECTION(pco_tst2, pco_iut, sock_type, RPC_PROTO_DEF,
                    tst2_addr, iut_addr2, &tst_s2, &iut_s2);
     for (i = 0; i < extra_pipes + 1; i++)
         fds[i][0] = fds[i][1] = -1;
