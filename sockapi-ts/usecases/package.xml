@@ -523,10 +523,7 @@ Set of environments dedicated to TCP server test.
               <value>{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast}},'pco_tst2'='pco_tst1','iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</value>
               <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast}},'pco_tst2'='pco_tst1','iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</value>
             </arg>
-            <arg name="sock_type">
-                <value reqs="SOCK_STREAM">SOCK_STREAM</value>
-                <value reqs="SOCK_STREAM">SOCK_DGRAM</value>
-            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
             <arg name="splice_before_data" type="boolean"/>
             <arg name="set_move" type="boolean"/>
             <arg name="set_nonblock" type="boolean"/>
@@ -576,10 +573,7 @@ Set of environments dedicated to TCP server test.
               <value>{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast}},'pco_tst2'='pco_tst1','iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</value>
               <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast}},'pco_tst2'='pco_tst1','iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</value>
             </arg>
-            <arg name="sock_type">
-                <value reqs="SOCK_STREAM">SOCK_STREAM</value>
-                <value reqs="SOCK_STREAM">SOCK_DGRAM</value>
-            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
             <arg name="splice_before_data" type="boolean"/>
             <arg name="set_move" type="boolean"/>
             <arg name="set_nonblock" type="boolean"/>
@@ -624,10 +618,7 @@ Set of environments dedicated to TCP server test.
               <value>{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast}},'pco_tst2'='pco_tst1','iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</value>
               <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast}},'pco_tst2'='pco_tst1','iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</value>
             </arg>
-            <arg name="sock_type">
-                <value reqs="SOCK_STREAM">SOCK_STREAM</value>
-                <value reqs="SOCK_STREAM">SOCK_DGRAM</value>
-            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
             <arg name="splice_before_data" type="boolean"/>
             <arg name="set_move" type="boolean"/>
             <arg name="set_nonblock" type="boolean"/>
@@ -674,10 +665,7 @@ Set of environments dedicated to TCP server test.
               <value>{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast}},'pco_tst2'='pco_tst1','iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</value>
               <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast}},'pco_tst2'='pco_tst1','iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</value>
             </arg>
-            <arg name="sock_type">
-                <value reqs="SOCK_STREAM">SOCK_STREAM</value>
-                <value reqs="SOCK_STREAM">SOCK_DGRAM</value>
-            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
             <arg name="splice_before_data" type="boolean"/>
             <arg name="set_move" type="boolean"/>
             <arg name="set_nonblock" type="boolean"/>
@@ -726,10 +714,7 @@ Set of environments dedicated to TCP server test.
               <value>{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast}},'pco_tst2'='pco_tst1','iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</value>
               <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast}},'pco_tst2'='pco_tst1','iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</value>
             </arg>
-            <arg name="sock_type">
-                <value reqs="SOCK_STREAM">SOCK_STREAM</value>
-                <value reqs="SOCK_STREAM">SOCK_DGRAM</value>
-            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
             <arg name="splice_before_data" type="boolean"/>
             <arg name="set_move" type="boolean"/>
             <arg name="set_nonblock" type="boolean"/>
@@ -780,10 +765,7 @@ Set of environments dedicated to TCP server test.
               <value>{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet:unicast}},'pco_tst2'='pco_tst1','iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</value>
               <value reqs="IP6,IP6_ONLOAD">{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast}},'pco_tst2'='pco_tst1','iut_addr2'='iut_addr1','tst2_addr'='tst1_addr'</value>
             </arg>
-            <arg name="sock_type">
-                <value reqs="SOCK_STREAM">SOCK_STREAM</value>
-                <value reqs="SOCK_STREAM">SOCK_DGRAM</value>
-            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
             <arg name="splice_before_data" type="boolean"/>
             <arg name="set_move" type="boolean"/>
             <arg name="set_nonblock" type="boolean"/>
@@ -849,10 +831,7 @@ Set of environments dedicated to TCP server test.
               <value reqs="ENV-TST-LINK,IP6,IP6_ONLOAD">tester{{{'pco_iut':IUT},{'pco_tst2':IUT},addr:'iut_addr1':inet6:unicast},{{'pco_tst1':tester},addr:'tst1_addr':inet6:unicast}},'iut_addr2'='iut_addr1','tst2_addr'='iut_addr1'</value>
               <value reqs="ENV-TST-LINK,IP6,IP6_ONLOAD">tester{{{'pco_iut':IUT},{'pco_tst1':IUT},addr:'iut_addr1':inet6:unicast},{{'pco_tst2':tester},addr:'tst2_addr':inet6:unicast}},'iut_addr2'='iut_addr1','tst1_addr'='iut_addr1'</value>
             </arg>
-            <arg name="sock_type">
-                <value reqs="SOCK_STREAM">SOCK_STREAM</value>
-                <value reqs="SOCK_STREAM">SOCK_DGRAM</value>
-            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
             <arg name="extra_pipes">
                 <value>0</value>
                 <value>5</value>
