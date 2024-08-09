@@ -12,6 +12,7 @@ tests = [
 	'listen_move_fd',
 	'move_epoll_fd',
 	'move_fd_other_user',
+	'move_fd_same_udp',
 	'move_unsupp_fd',
 	'pipe_move_fd',
 	'problematic_rxq_move_fd',

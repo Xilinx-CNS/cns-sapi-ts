@@ -46,6 +46,7 @@
 -# @ref ext_stackname-close_init_stack_after_fork
 -# @ref ext_stackname-unsupp_socket_move_fd
 -# @ref ext_stackname-linger_move_fd
+-# @ref ext_stackname-move_fd_same_udp
 
 @}
 */
