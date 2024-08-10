@@ -601,5 +601,26 @@
           <value>1</value>
         </arg>
       </run>
+
+      <run>
+        <script name="move_fd_same_udp"/>
+        <arg name="env" ref="env.peer2peer"/>
+        <!-- Avoid bind_before=FALSE, connect_socket=before -->
+        <arg name="bind_before" type="boolean" list="">
+          <value>TRUE</value>
+          <value>TRUE</value>
+          <value>TRUE</value>
+          <value>FALSE</value>
+          <value>FALSE</value>
+        </arg>
+        <arg name="connect_socket" list="">
+          <value>before</value>
+          <value>after</value>
+          <value>none</value>
+          <value>after</value>
+          <value>none</value>
+        </arg>
+      </run>
+
     </session>
 </package>

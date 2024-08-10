@@ -932,5 +932,15 @@
         <notes/>
       </iter>
     </test>
+    <test name="move_fd_same_udp" type="script">
+      <objective>Move UDP socket to the same stack (@b onload_move_fd()).</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="bind_before"/>
+        <arg name="connect_socket"/>
+        <notes/>
+      </iter>
+    </test>
   </iter>
 </test>
