@@ -415,6 +415,12 @@ main(int argc, char *argv[])
         ERROR_VERDICT("TCP send() was blocked, not UDP one");
 
     TEST_STEP("Read all the available data on the first IUT socket.");
+    /*
+     * Set time2wait big enough to get all the retransmits from tester for the
+     * packets which might have been dropped due to "memory pressure" state in
+     * Onload.
+     */
+    iut_receiver_ctx.time2wait = 60000;
     check_pattern_receiver(pco_iut, iut_s1, &iut_receiver_ctx,
                            &tst_sender_ctx);
 
