@@ -145,6 +145,11 @@ iomux_call_epoll_internal(iomux_call_type call_type, rcf_rpc_server *rpcs,
                                  epoll_timeout, sigmask);
         break;
 
+        case IC_EPOLL_PWAIT2:
+            rc = rpc_epoll_pwait2(rpcs, cur_st_p->epfd, p_events, n_evts,
+                                  timeout, sigmask);
+        break;
+
         case IC_OO_EPOLL:
         {
             rpc_onload_ordered_epoll_event *oo_events;
@@ -358,7 +363,7 @@ iomux_call_gen(iomux_call_type call_type, rcf_rpc_server *rpcs,
         return rc;
     }
     else if (call_type == IC_EPOLL || call_type == IC_EPOLL_PWAIT ||
-             call_type == IC_OO_EPOLL)
+             call_type == IC_EPOLL_PWAIT2 || call_type == IC_OO_EPOLL)
     {
         rc = iomux_call_epoll_internal(call_type, rpcs, events, n_evts,
                                        timeout, sigmask, save_op);
@@ -835,6 +840,9 @@ int
 iomux_epoll_call(iomux_call_type call_type, rcf_rpc_server *rpcs, int epfd,
                  struct rpc_epoll_event *events, int maxevents, int timeout)
 {
+    struct tarpc_timespec  tv;
+    struct tarpc_timespec *tv_ptr = &tv;
+
     if (call_type == IC_DEFAULT)
         call_type = iomux_call_get_default();
 
@@ -844,6 +852,7 @@ iomux_epoll_call(iomux_call_type call_type, rcf_rpc_server *rpcs, int epfd,
             return rpc_epoll_wait(rpcs, epfd, events, maxevents, timeout);
 
         case IC_EPOLL_PWAIT:
+        case IC_EPOLL_PWAIT2:
         {
             int rc = 0;
             rcf_rpc_op save_op = rpcs->op;
@@ -872,8 +881,20 @@ iomux_epoll_call(iomux_call_type call_type, rcf_rpc_server *rpcs, int epfd,
                 rpcs->iut_err_jump = iut_err_jump;
             }
 
-            rc = rpc_epoll_pwait(rpcs, epfd, events, maxevents, timeout,
-                                 cur_st_p->iomux_call_sigmask);
+            if (call_type == IC_EPOLL_PWAIT)
+            {
+                rc = rpc_epoll_pwait(rpcs, epfd, events, maxevents, timeout,
+                                     cur_st_p->iomux_call_sigmask);
+            }
+            else
+            {
+                if (timeout < 0)
+                    tv_ptr = NULL;
+                else
+                    TE_NS2TS(TE_MS2NS(timeout), &tv);
+                rc = rpc_epoll_pwait2(rpcs, epfd, events, maxevents, tv_ptr,
+                                      cur_st_p->iomux_call_sigmask);
+            }
             duration = rpcs->duration;
             rpc_errno = rpcs->_errno;
             if (save_op != RCF_RPC_CALL &&
