@@ -939,6 +939,7 @@ iomux_init_rd_error(iomux_evt_fd *event, int iut_s, iomux_call_type iomux,
         case IC_PPOLL:
         case IC_EPOLL:
         case IC_EPOLL_PWAIT:
+        case IC_EPOLL_PWAIT2:
         case IC_OO_EPOLL:
             exp = EVT_EXC | EVT_ERR;
             if (select_err_queue)
