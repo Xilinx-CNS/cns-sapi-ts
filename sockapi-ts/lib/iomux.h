@@ -39,18 +39,20 @@
     { "ppoll", (int)IC_PPOLL }, \
     { "epoll", (int)IC_EPOLL }, \
     { "epoll_pwait", (int)IC_EPOLL_PWAIT }, \
+    { "epoll_pwait2", (int)IC_EPOLL_PWAIT2 }, \
     { "oo_epoll", (int)IC_OO_EPOLL }
 
 /* Poll and select differ.  Let's find what kind of iomux it is. */
 #define IOMUX_IS_POLL_LIKE(iomux) \
     ((iomux) == IC_POLL || (iomux) == IC_PPOLL || (iomux) == IC_EPOLL || \
-     (iomux) == IC_EPOLL_PWAIT || (iomux) == IC_OO_EPOLL)
+     (iomux) == IC_EPOLL_PWAIT || (iomux) == IC_EPOLL_PWAIT2 || \
+     (iomux) == IC_OO_EPOLL)
 #define IOMUX_IS_SELECT_LIKE(iomux) \
     ((iomux) == IC_SELECT || (iomux) == IC_PSELECT)
-/* Check for pselect, ppoll, epoll_pwait. */
+/* Check for pselect, ppoll, epoll_pwait, epoll_pwait2. */
 #define IOMUX_IS_P_IOMUX(iomux) \
     ((iomux) == IC_PSELECT || (iomux) == IC_PPOLL || \
-     (iomux) == IC_EPOLL_PWAIT)
+     (iomux) == IC_EPOLL_PWAIT || (iomux) == IC_EPOLL_PWAIT2)
 
 /**
  * Get the value of parameter of type 'tapi_iomux_type'
@@ -119,8 +121,8 @@ typedef struct {
 } iomux_evt_fd;
 
 /** 
- * Call 'iomux' function - select, pselect, poll, ppoll, epoll_wait and
- * epoll_pwait - with specified events, timeout and signal
+ * Call 'iomux' function - select, pselect, poll, ppoll, epoll_wait, epoll_pwait
+ * and epoll_pwait2 - with specified events, timeout and signal
  * This function does not process quantity of events greater then
  * standard system macro FD_SETSIZE.
  *
@@ -193,6 +195,7 @@ typedef enum function_type_e {
     FUNCTION_TYPE_PPOLL = TAPI_IOMUX_PPOLL,
     FUNCTION_TYPE_EPOLL = TAPI_IOMUX_EPOLL,
     FUNCTION_TYPE_EPOLL_PWAIT = TAPI_IOMUX_EPOLL_PWAIT,
+    FUNCTION_TYPE_EPOLL_PWAIT2 = TAPI_IOMUX_EPOLL_PWAIT2,
     FUNCTION_TYPE_OO_EPOLL = TAPI_IOMUX_OO_EPOLL,
     FUNCTION_TYPE_RECV
 } function_type_t;
@@ -200,14 +203,15 @@ typedef enum function_type_e {
 /**
  * The list of values allowed for parameter of type 'function_type_t'
  */
-#define FUNCTION_TYPE_MAPPING_LIST              \
-    {"select", FUNCTION_TYPE_SELECT},           \
-    {"pselect", FUNCTION_TYPE_PSELECT},         \
-    {"poll", FUNCTION_TYPE_POLL},               \
-    {"ppoll", FUNCTION_TYPE_PPOLL},             \
-    {"epoll", FUNCTION_TYPE_EPOLL},             \
-    {"epoll_pwait", FUNCTION_TYPE_EPOLL_PWAIT}, \
-    {"oo_epoll", FUNCTION_TYPE_OO_EPOLL},       \
+#define FUNCTION_TYPE_MAPPING_LIST                    \
+    {"select", FUNCTION_TYPE_SELECT},                 \
+    {"pselect", FUNCTION_TYPE_PSELECT},               \
+    {"poll", FUNCTION_TYPE_POLL},                     \
+    {"ppoll", FUNCTION_TYPE_PPOLL},                   \
+    {"epoll", FUNCTION_TYPE_EPOLL},                   \
+    {"epoll_pwait", FUNCTION_TYPE_EPOLL_PWAIT},       \
+    {"epoll_pwait2", FUNCTION_TYPE_EPOLL_PWAIT2}, \
+    {"oo_epoll", FUNCTION_TYPE_OO_EPOLL},             \
     {"recv", FUNCTION_TYPE_RECV}
 
 /**
@@ -316,8 +320,8 @@ iomux_common_steps(iomux_call_type iomux, rcf_rpc_server *iut, int iut_s,
            te_bool fill_buffer, rcf_rpc_server *tst, int tst_s,
            rpc_shut_how how, int *iomux_ret_val);
 
-/* Call epoll_wait() or epoll_pwait() function. All arguments as in
- * epoll_wait() function.
+/* Call epoll_wait(), epoll_pwait() or epoll_pwait2() function. All
+ * arguments as in epoll_wait() function.
  */
 extern int
 iomux_epoll_call(iomux_call_type call_type, rcf_rpc_server *rpcs, int epfd,
