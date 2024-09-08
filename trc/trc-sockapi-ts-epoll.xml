@@ -857,6 +857,30 @@
         <arg name="data_size"/>
         <arg name="early_ctl"/>
         <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="evts"/>
+        <arg name="get_ev_before"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data">TRUE</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="timeout"/>
+        <arg name="use_et">TRUE</arg>
+        <arg name="use_one_shot"/>
+        <notes/>
+        <results tags="v5&amp;(ool_epoll=1|ool_epoll3)&amp;udp_connect_no_handover" key="ON-929">
+          <result value="PASSED">
+            <verdict>Event is reported twice</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;udp_connect_no_handover&amp;ool_epoll=1&amp;ool_spin&amp;!small_spin" key="ON-4998">
+          <result value="FAILED">
+            <verdict>epoll_wait() returned 0 instead of 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
         <arg name="evts">inout</arg>
         <arg name="get_ev_before"/>
         <arg name="iomux">select</arg>
@@ -1001,6 +1025,30 @@
         <arg name="data_size"/>
         <arg name="early_ctl"/>
         <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="evts">inout</arg>
+        <arg name="get_ev_before"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="timeout"/>
+        <arg name="use_et">TRUE</arg>
+        <arg name="use_one_shot"/>
+        <notes/>
+        <results tags="v5&amp;(ool_epoll=1|ool_epoll3)&amp;udp_connect_no_handover" key="ON-929">
+          <result value="PASSED">
+            <verdict>Event is reported twice</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;udp_connect_no_handover&amp;ool_epoll=1&amp;ool_spin&amp;!small_spin" key="ON-4998">
+          <result value="FAILED">
+            <verdict>epoll_wait() returned 0 instead of 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
         <arg name="evts">out</arg>
         <arg name="get_ev_before"/>
         <arg name="iomux">select</arg>
@@ -1124,6 +1172,30 @@
         <arg name="evts">out</arg>
         <arg name="get_ev_before"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="send_data"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="timeout"/>
+        <arg name="use_et">TRUE</arg>
+        <arg name="use_one_shot"/>
+        <notes/>
+        <results tags="v5&amp;(ool_epoll=1|ool_epoll3)&amp;udp_connect_no_handover" key="ON-929">
+          <result value="PASSED">
+            <verdict>Event is reported twice</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;udp_connect_no_handover&amp;ool_epoll=1&amp;ool_spin&amp;!small_spin" key="ON-4998">
+          <result value="FAILED">
+            <verdict>epoll_wait() returned 0 instead of 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="evts">out</arg>
+        <arg name="get_ev_before"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="send_data"/>
         <arg name="sock_type">SOCK_DGRAM</arg>
         <arg name="timeout"/>
@@ -1451,6 +1523,30 @@
         <arg name="data_size"/>
         <arg name="early_ctl"/>
         <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="evts"/>
+        <arg name="get_ev_before"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data">TRUE</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="timeout"/>
+        <arg name="use_et">TRUE</arg>
+        <arg name="use_one_shot"/>
+        <notes/>
+        <results tags="v5&amp;udp_connect_no_handover&amp;ool_epoll=1" key="ON-4998">
+          <result value="PASSED">
+            <verdict>Event is reported twice</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;udp_connect_no_handover&amp;ool_epoll=1&amp;ool_spin&amp;!small_spin" key="ON-4998">
+          <result value="FAILED">
+            <verdict>epoll_wait() returned 0 instead of 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="evts">inout</arg>
         <arg name="get_ev_before"/>
         <arg name="iomux">select</arg>
@@ -1595,6 +1691,30 @@
         <arg name="data_size"/>
         <arg name="early_ctl"/>
         <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="evts">inout</arg>
+        <arg name="get_ev_before"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="timeout"/>
+        <arg name="use_et">TRUE</arg>
+        <arg name="use_one_shot"/>
+        <notes/>
+        <results tags="v5&amp;udp_connect_no_handover&amp;ool_epoll=1" key="ON-4998">
+          <result value="PASSED">
+            <verdict>Event is reported twice</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;udp_connect_no_handover&amp;ool_epoll=1&amp;ool_spin&amp;!small_spin" key="ON-4998">
+          <result value="FAILED">
+            <verdict>epoll_wait() returned 0 instead of 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="evts">out</arg>
         <arg name="get_ev_before"/>
         <arg name="iomux">select</arg>
@@ -1718,6 +1838,30 @@
         <arg name="evts">out</arg>
         <arg name="get_ev_before"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="send_data"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="timeout"/>
+        <arg name="use_et">TRUE</arg>
+        <arg name="use_one_shot"/>
+        <notes/>
+        <results tags="v5&amp;udp_connect_no_handover&amp;ool_epoll=1" key="ON-4998">
+          <result value="PASSED">
+            <verdict>Event is reported twice</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;udp_connect_no_handover&amp;ool_epoll=1&amp;ool_spin&amp;!small_spin" key="ON-4998">
+          <result value="FAILED">
+            <verdict>epoll_wait() returned 0 instead of 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="evts">out</arg>
+        <arg name="get_ev_before"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="send_data"/>
         <arg name="sock_type">SOCK_DGRAM</arg>
         <arg name="timeout"/>
@@ -1919,6 +2063,25 @@
         <arg name="data_size"/>
         <arg name="early_ctl"/>
         <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="evts"/>
+        <arg name="get_ev_before"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data">TRUE</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="timeout"/>
+        <arg name="use_et">TRUE</arg>
+        <arg name="use_one_shot"/>
+        <notes/>
+        <results tags="v5&amp;udp_connect_no_handover&amp;ool_spin&amp;laddr_all&amp;ool_epoll=1" key="ON-4998">
+          <result value="FAILED">
+            <verdict>epoll_wait() returned 0 instead of 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
         <arg name="evts">inout</arg>
         <arg name="get_ev_before"/>
         <arg name="iomux">select</arg>
@@ -2033,6 +2196,25 @@
         <arg name="data_size"/>
         <arg name="early_ctl"/>
         <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="evts">inout</arg>
+        <arg name="get_ev_before"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="timeout"/>
+        <arg name="use_et">TRUE</arg>
+        <arg name="use_one_shot"/>
+        <notes/>
+        <results tags="v5&amp;udp_connect_no_handover&amp;ool_spin&amp;laddr_all&amp;ool_epoll=1" key="ON-4998">
+          <result value="FAILED">
+            <verdict>epoll_wait() returned 0 instead of 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
         <arg name="evts">out</arg>
         <arg name="get_ev_before"/>
         <arg name="iomux">select</arg>
@@ -2131,6 +2313,25 @@
         <arg name="evts">out</arg>
         <arg name="get_ev_before"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="send_data"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="timeout"/>
+        <arg name="use_et">TRUE</arg>
+        <arg name="use_one_shot"/>
+        <notes/>
+        <results tags="v5&amp;udp_connect_no_handover&amp;ool_spin&amp;laddr_all&amp;ool_epoll=1" key="ON-4998">
+          <result value="FAILED">
+            <verdict>epoll_wait() returned 0 instead of 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="evts">out</arg>
+        <arg name="get_ev_before"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="send_data"/>
         <arg name="sock_type">SOCK_DGRAM</arg>
         <arg name="timeout"/>
@@ -2452,6 +2653,30 @@
       <iter result="PASSED">
         <arg name="data_size"/>
         <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="evts">in</arg>
+        <arg name="get_ev_before"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data">TRUE</arg>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_et">TRUE</arg>
+        <arg name="use_one_shot"/>
+        <notes/>
+        <results tags="v5&amp;ool_epoll=1&amp;(!ool_spin|small_spin)" key="ON-929">
+          <result value="PASSED">
+            <verdict>Event is reported twice</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=1&amp;ool_spin&amp;!small_spin" key="ON-4998">
+          <result value="FAILED">
+            <verdict>epoll_wait() returned 0 instead of 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
         <arg name="env">VAR.env.peer2peer_ipv6</arg>
         <arg name="evts">in</arg>
         <arg name="get_ev_before"/>
@@ -2596,6 +2821,30 @@
       <iter result="PASSED">
         <arg name="data_size"/>
         <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="evts">in</arg>
+        <arg name="get_ev_before"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data">TRUE</arg>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_et">TRUE</arg>
+        <arg name="use_one_shot"/>
+        <notes/>
+        <results tags="v5&amp;ool_epoll=1&amp;(!ool_spin|small_spin)" key="ON-929">
+          <result value="PASSED">
+            <verdict>Event is reported twice</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=1&amp;ool_spin&amp;!small_spin" key="ON-4998">
+          <result value="FAILED">
+            <verdict>epoll_wait() returned 0 instead of 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
         <arg name="env">VAR.env.peer2peer</arg>
         <arg name="evts">inout</arg>
         <arg name="get_ev_before"/>
@@ -2741,6 +2990,30 @@
         <arg name="data_size"/>
         <arg name="early_ctl"/>
         <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="evts">inout</arg>
+        <arg name="get_ev_before"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_et">TRUE</arg>
+        <arg name="use_one_shot"/>
+        <notes/>
+        <results tags="v5&amp;ool_epoll=1&amp;(!ool_spin|small_spin)" key="ON-929">
+          <result value="PASSED">
+            <verdict>Event is reported twice</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=1&amp;ool_spin&amp;!small_spin" key="ON-4998">
+          <result value="FAILED">
+            <verdict>epoll_wait() returned 0 instead of 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer</arg>
         <arg name="evts">out</arg>
         <arg name="get_ev_before"/>
         <arg name="iomux">select</arg>
@@ -2884,6 +3157,30 @@
       <iter result="PASSED">
         <arg name="data_size"/>
         <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="evts">out</arg>
+        <arg name="get_ev_before"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_et">TRUE</arg>
+        <arg name="use_one_shot"/>
+        <notes/>
+        <results tags="v5&amp;ool_epoll=1&amp;(!ool_spin|small_spin)" key="ON-929">
+          <result value="PASSED">
+            <verdict>Event is reported twice</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=1&amp;ool_spin&amp;!small_spin" key="ON-4998">
+          <result value="FAILED">
+            <verdict>epoll_wait() returned 0 instead of 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
         <arg name="env">VAR.env.peer2peer_ipv6</arg>
         <arg name="evts">inout</arg>
         <arg name="get_ev_before"/>
@@ -3029,6 +3326,30 @@
         <arg name="data_size"/>
         <arg name="early_ctl"/>
         <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="evts">inout</arg>
+        <arg name="get_ev_before"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_et">TRUE</arg>
+        <arg name="use_one_shot"/>
+        <notes/>
+        <results tags="v5&amp;ool_epoll=1&amp;(!ool_spin|small_spin)" key="ON-929">
+          <result value="PASSED">
+            <verdict>Event is reported twice</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=1&amp;ool_spin&amp;!small_spin" key="ON-4998">
+          <result value="FAILED">
+            <verdict>epoll_wait() returned 0 instead of 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
         <arg name="evts">out</arg>
         <arg name="get_ev_before"/>
         <arg name="iomux">select</arg>
@@ -3152,6 +3473,30 @@
         <arg name="evts">out</arg>
         <arg name="get_ev_before"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="send_data"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_et">TRUE</arg>
+        <arg name="use_one_shot"/>
+        <notes/>
+        <results tags="v5&amp;ool_epoll=1&amp;(!ool_spin|small_spin)" key="ON-929">
+          <result value="PASSED">
+            <verdict>Event is reported twice</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=1&amp;ool_spin&amp;!small_spin" key="ON-4998">
+          <result value="FAILED">
+            <verdict>epoll_wait() returned 0 instead of 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="evts">out</arg>
+        <arg name="get_ev_before"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="send_data"/>
         <arg name="sock_type"/>
         <arg name="timeout"/>
@@ -3528,6 +3873,20 @@
       <iter result="PASSED">
         <arg name="data_size"/>
         <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="evts">in</arg>
+        <arg name="get_ev_before"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data">FALSE</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="timeout"/>
+        <arg name="use_et">TRUE</arg>
+        <arg name="use_one_shot"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
         <arg name="env">VAR.env.peer2peer</arg>
         <arg name="evts">in</arg>
         <arg name="get_ev_before"/>
@@ -3612,6 +3971,20 @@
       <iter result="PASSED">
         <arg name="data_size"/>
         <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="evts">in</arg>
+        <arg name="get_ev_before"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data">FALSE</arg>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_et">TRUE</arg>
+        <arg name="use_one_shot"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
         <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="evts">in</arg>
         <arg name="get_ev_before"/>
@@ -3696,6 +4069,20 @@
       <iter result="PASSED">
         <arg name="data_size"/>
         <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="evts">in</arg>
+        <arg name="get_ev_before"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data">FALSE</arg>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_et">TRUE</arg>
+        <arg name="use_one_shot"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
         <arg name="env">VAR.env.peer2peer_ipv6</arg>
         <arg name="evts">in</arg>
         <arg name="get_ev_before"/>
@@ -3780,6 +4167,20 @@
       <iter result="PASSED">
         <arg name="data_size"/>
         <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="evts">in</arg>
+        <arg name="get_ev_before"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data">FALSE</arg>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_et">TRUE</arg>
+        <arg name="use_one_shot"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
         <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
         <arg name="evts">in</arg>
         <arg name="get_ev_before"/>
@@ -3854,6 +4255,20 @@
         <arg name="evts">in</arg>
         <arg name="get_ev_before"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="send_data">FALSE</arg>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_et">TRUE</arg>
+        <arg name="use_one_shot"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="evts">in</arg>
+        <arg name="get_ev_before"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="send_data">FALSE</arg>
         <arg name="sock_type"/>
         <arg name="timeout"/>
@@ -3950,6 +4365,20 @@
         <arg name="early_ctl"/>
         <arg name="env">VAR.env.peer2peer_tst</arg>
         <arg name="evts"/>
+        <arg name="get_ev_before"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="timeout"/>
+        <arg name="use_et"/>
+        <arg name="use_one_shot">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="evts"/>
         <arg name="get_ev_before">FALSE</arg>
         <arg name="iomux">select</arg>
         <arg name="send_data"/>
@@ -4032,6 +4461,20 @@
       <iter result="PASSED">
         <arg name="data_size"/>
         <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="evts"/>
+        <arg name="get_ev_before">FALSE</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="timeout"/>
+        <arg name="use_et"/>
+        <arg name="use_one_shot"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
         <arg name="env">VAR.env.peer2peer</arg>
         <arg name="evts"/>
         <arg name="get_ev_before"/>
@@ -4116,6 +4559,20 @@
       <iter result="PASSED">
         <arg name="data_size"/>
         <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="evts"/>
+        <arg name="get_ev_before"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_et"/>
+        <arg name="use_one_shot">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
         <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="evts"/>
         <arg name="get_ev_before"/>
@@ -4200,6 +4657,20 @@
       <iter result="PASSED">
         <arg name="data_size"/>
         <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="evts"/>
+        <arg name="get_ev_before"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_et"/>
+        <arg name="use_one_shot">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
         <arg name="env">VAR.env.peer2peer_ipv6</arg>
         <arg name="evts"/>
         <arg name="get_ev_before"/>
@@ -4284,6 +4755,20 @@
       <iter result="PASSED">
         <arg name="data_size"/>
         <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="evts"/>
+        <arg name="get_ev_before"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_et"/>
+        <arg name="use_one_shot">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
         <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
         <arg name="evts"/>
         <arg name="get_ev_before"/>
@@ -4358,6 +4843,20 @@
         <arg name="evts"/>
         <arg name="get_ev_before"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="send_data"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_et"/>
+        <arg name="use_one_shot">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="evts"/>
+        <arg name="get_ev_before"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="send_data"/>
         <arg name="sock_type"/>
         <arg name="timeout"/>
@@ -4452,6 +4951,20 @@
       <iter result="PASSED">
         <arg name="data_size"/>
         <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="evts"/>
+        <arg name="get_ev_before">FALSE</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_et"/>
+        <arg name="use_one_shot"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
         <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="evts"/>
         <arg name="get_ev_before">FALSE</arg>
@@ -4536,6 +5049,20 @@
       <iter result="PASSED">
         <arg name="data_size"/>
         <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="evts"/>
+        <arg name="get_ev_before">FALSE</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_et"/>
+        <arg name="use_one_shot"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
         <arg name="env">VAR.env.peer2peer_ipv6</arg>
         <arg name="evts"/>
         <arg name="get_ev_before">FALSE</arg>
@@ -4620,6 +5147,20 @@
       <iter result="PASSED">
         <arg name="data_size"/>
         <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="evts"/>
+        <arg name="get_ev_before">FALSE</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_et"/>
+        <arg name="use_one_shot"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
         <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
         <arg name="evts"/>
         <arg name="get_ev_before">FALSE</arg>
@@ -4694,6 +5235,20 @@
         <arg name="evts"/>
         <arg name="get_ev_before">FALSE</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="send_data"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_et"/>
+        <arg name="use_one_shot"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="evts"/>
+        <arg name="get_ev_before">FALSE</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="send_data"/>
         <arg name="sock_type"/>
         <arg name="timeout"/>
@@ -4792,6 +5347,20 @@
         <arg name="evts"/>
         <arg name="get_ev_before"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="send_data"/>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <arg name="use_et"/>
+        <arg name="use_one_shot"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="evts"/>
+        <arg name="get_ev_before"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="send_data"/>
         <arg name="sock_type"/>
         <arg name="timeout"/>
@@ -5111,10 +5680,44 @@
       </iter>
       <iter result="PASSED">
         <arg name="data_size"/>
+        <arg name="duplication">dup</arg>
+        <arg name="early_ctl"/>
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast}},'tst_addr1'='iut_addr1','tst_addr2'='iut_addr2'</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="non_blocking">TRUE</arg>
+        <arg name="sock_type1">SOCK_DGRAM</arg>
+        <arg name="sock_type2"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="v5&amp;udp_connect_no_handover&amp;!(ool_epoll=2|ool_epoll=0)" key="ON-12472">
+          <result value="FAILED">
+            <verdict>epoll waiting function returned 0 instead of 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
         <arg name="duplication">fork</arg>
         <arg name="early_ctl"/>
         <arg name="env">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast}},'tst_addr1'='iut_addr1','tst_addr2'='iut_addr2'</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="non_blocking">TRUE</arg>
+        <arg name="sock_type1">SOCK_DGRAM</arg>
+        <arg name="sock_type2"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="v5&amp;udp_connect_no_handover&amp;!(ool_epoll=2|ool_epoll=0)" key="ON-12472">
+          <result value="FAILED">
+            <verdict>epoll waiting function returned 0 instead of 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="duplication">fork</arg>
+        <arg name="early_ctl"/>
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast}},'tst_addr1'='iut_addr1','tst_addr2'='iut_addr2'</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="non_blocking">TRUE</arg>
         <arg name="sock_type1">SOCK_DGRAM</arg>
         <arg name="sock_type2"/>
@@ -5147,6 +5750,23 @@
         <arg name="data_size"/>
         <arg name="duplication">dup</arg>
         <arg name="early_ctl"/>
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast}},'tst_addr1'='iut_addr1','tst_addr2'='iut_addr2'</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="non_blocking">TRUE</arg>
+        <arg name="sock_type1">SOCK_DGRAM</arg>
+        <arg name="sock_type2"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="v5&amp;udp_connect_no_handover&amp;!(ool_epoll=2|ool_epoll=0)" key="ON-12472">
+          <result value="FAILED">
+            <verdict>epoll waiting function returned 0 instead of 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="duplication">dup</arg>
+        <arg name="early_ctl"/>
         <arg name="env">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast}},'tst_addr1'='iut_addr1','tst_addr2'='iut_addr2'</arg>
         <arg name="iomux">oo_epoll</arg>
         <arg name="non_blocking">FALSE</arg>
@@ -5298,10 +5918,44 @@
       </iter>
       <iter result="PASSED">
         <arg name="data_size"/>
+        <arg name="duplication">dup</arg>
+        <arg name="early_ctl"/>
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast}},'tst_addr1'='iut_addr1','tst_addr2'='iut_addr2'</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="non_blocking">FALSE</arg>
+        <arg name="sock_type1">SOCK_DGRAM</arg>
+        <arg name="sock_type2"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="v5&amp;udp_connect_no_handover&amp;((ool_epoll=1&amp;ool_spin)|ool_epoll=3)" key="ON-12472">
+          <result value="FAILED">
+            <verdict>epoll waiting function returned incorrect socket</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
         <arg name="duplication">fork</arg>
         <arg name="early_ctl"/>
         <arg name="env">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast}},'tst_addr1'='iut_addr1','tst_addr2'='iut_addr2'</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="non_blocking">FALSE</arg>
+        <arg name="sock_type1">SOCK_DGRAM</arg>
+        <arg name="sock_type2"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="v5&amp;udp_connect_no_handover&amp;((ool_epoll=1&amp;ool_spin)|ool_epoll=3)" key="ON-12472">
+          <result value="FAILED">
+            <verdict>epoll waiting function returned incorrect socket</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="duplication">fork</arg>
+        <arg name="early_ctl"/>
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast}},'tst_addr1'='iut_addr1','tst_addr2'='iut_addr2'</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="non_blocking">FALSE</arg>
         <arg name="sock_type1">SOCK_DGRAM</arg>
         <arg name="sock_type2"/>
@@ -5332,10 +5986,44 @@
       </iter>
       <iter result="PASSED">
         <arg name="data_size"/>
+        <arg name="duplication">dup</arg>
+        <arg name="early_ctl"/>
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast}},'tst_addr1'='iut_addr1','tst_addr2'='iut_addr2'</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="non_blocking">FALSE</arg>
+        <arg name="sock_type1">SOCK_DGRAM</arg>
+        <arg name="sock_type2"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="v5&amp;udp_connect_no_handover&amp;((ool_epoll=1&amp;ool_spin)|ool_epoll=3)" key="ON-12472">
+          <result value="FAILED">
+            <verdict>epoll waiting function returned incorrect socket</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
         <arg name="duplication">fork</arg>
         <arg name="early_ctl"/>
         <arg name="env">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast}},'tst_addr1'='iut_addr1','tst_addr2'='iut_addr2'</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="non_blocking">FALSE</arg>
+        <arg name="sock_type1">SOCK_DGRAM</arg>
+        <arg name="sock_type2"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="v5&amp;udp_connect_no_handover&amp;((ool_epoll=1&amp;ool_spin)|ool_epoll=3)" key="ON-12472">
+          <result value="FAILED">
+            <verdict>epoll waiting function returned incorrect socket</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="duplication">fork</arg>
+        <arg name="early_ctl"/>
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst':tester},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast}},'tst_addr1'='iut_addr1','tst_addr2'='iut_addr2'</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="non_blocking">FALSE</arg>
         <arg name="sock_type1">SOCK_DGRAM</arg>
         <arg name="sock_type2"/>
@@ -5473,8 +6161,44 @@
         <arg name="data_size"/>
         <arg name="duplication">none</arg>
         <arg name="early_ctl"/>
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast},{{'pco_tst':tester},addr:'tst_addr1':inet:unicast,addr:'tst_addr2':inet:unicast}}</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="non_blocking"/>
+        <arg name="sock_type1">SOCK_STREAM</arg>
+        <arg name="sock_type2">SOCK_DGRAM</arg>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="v5&amp;scooby" key="ON-8602">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>epoll waiting function returned 0 instead of 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="duplication">none</arg>
+        <arg name="early_ctl"/>
         <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr1':inet6:unicast,addr:'tst_addr2':inet6:unicast}}</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="non_blocking"/>
+        <arg name="sock_type1">SOCK_STREAM</arg>
+        <arg name="sock_type2">SOCK_DGRAM</arg>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="v5&amp;scooby" key="ON-8602">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>epoll waiting function returned 0 instead of 1</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="duplication">none</arg>
+        <arg name="early_ctl"/>
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr1':inet6:unicast,addr:'tst_addr2':inet6:unicast}}</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="non_blocking"/>
         <arg name="sock_type1">SOCK_STREAM</arg>
         <arg name="sock_type2">SOCK_DGRAM</arg>
@@ -5523,6 +6247,23 @@
       </iter>
       <iter result="PASSED">
         <arg name="data_size"/>
+        <arg name="duplication">fork</arg>
+        <arg name="early_ctl"/>
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr1':inet6:unicast,addr:'tst_addr2':inet6:unicast}}</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="non_blocking">FALSE</arg>
+        <arg name="sock_type1"/>
+        <arg name="sock_type2"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="v5&amp;(ool_epoll=1|ool_epoll=3)&amp;ool_spin" key="ON-12472">
+          <result value="FAILED">
+            <verdict>epoll waiting function returned incorrect socket</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
         <arg name="duplication">dup</arg>
         <arg name="early_ctl"/>
         <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast},{{'pco_tst':tester},addr:'tst_addr1':inet:unicast,addr:'tst_addr2':inet:unicast}}</arg>
@@ -5659,6 +6400,23 @@
       </iter>
       <iter result="PASSED">
         <arg name="data_size"/>
+        <arg name="duplication">dup</arg>
+        <arg name="early_ctl"/>
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast},{{'pco_tst':tester},addr:'tst_addr1':inet:unicast,addr:'tst_addr2':inet:unicast}}</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="non_blocking">FALSE</arg>
+        <arg name="sock_type1"/>
+        <arg name="sock_type2"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="v5&amp;((ool_epoll=1&amp;ool_spin)|ool_epoll=3)" key="ON-12472">
+          <result value="FAILED">
+            <verdict>epoll waiting function returned incorrect socket</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
         <arg name="duplication">fork</arg>
         <arg name="early_ctl"/>
         <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast},{{'pco_tst':tester},addr:'tst_addr1':inet:unicast,addr:'tst_addr2':inet:unicast}}</arg>
@@ -5676,10 +6434,44 @@
       </iter>
       <iter result="PASSED">
         <arg name="data_size"/>
+        <arg name="duplication">fork</arg>
+        <arg name="early_ctl"/>
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast},{{'pco_tst':tester},addr:'tst_addr1':inet:unicast,addr:'tst_addr2':inet:unicast}}</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="non_blocking">FALSE</arg>
+        <arg name="sock_type1"/>
+        <arg name="sock_type2"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="v5&amp;((ool_epoll=1&amp;ool_spin)|ool_epoll=3)" key="ON-12472">
+          <result value="FAILED">
+            <verdict>epoll waiting function returned incorrect socket</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
         <arg name="duplication">dup</arg>
         <arg name="early_ctl"/>
         <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr1':inet6:unicast,addr:'tst_addr2':inet6:unicast}}</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="non_blocking">FALSE</arg>
+        <arg name="sock_type1"/>
+        <arg name="sock_type2"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="v5&amp;((ool_epoll=1&amp;ool_spin)|ool_epoll=3)" key="ON-12472">
+          <result value="FAILED">
+            <verdict>epoll waiting function returned incorrect socket</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="duplication">dup</arg>
+        <arg name="early_ctl"/>
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr1':inet6:unicast,addr:'tst_addr2':inet6:unicast}}</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="non_blocking">FALSE</arg>
         <arg name="sock_type1"/>
         <arg name="sock_type2"/>
@@ -5731,8 +6523,32 @@
         <arg name="data_size"/>
         <arg name="duplication">none</arg>
         <arg name="early_ctl"/>
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast},{{'pco_tst':tester},addr:'tst_addr1':inet:unicast,addr:'tst_addr2':inet:unicast}}</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="non_blocking"/>
+        <arg name="sock_type1">SOCK_STREAM</arg>
+        <arg name="sock_type2">SOCK_STREAM</arg>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="duplication">none</arg>
+        <arg name="early_ctl"/>
         <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr1':inet6:unicast,addr:'tst_addr2':inet6:unicast}}</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="non_blocking"/>
+        <arg name="sock_type1">SOCK_STREAM</arg>
+        <arg name="sock_type2">SOCK_STREAM</arg>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="duplication">none</arg>
+        <arg name="early_ctl"/>
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr1':inet6:unicast,addr:'tst_addr2':inet6:unicast}}</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="non_blocking"/>
         <arg name="sock_type1">SOCK_STREAM</arg>
         <arg name="sock_type2">SOCK_STREAM</arg>
@@ -5779,8 +6595,32 @@
         <arg name="data_size"/>
         <arg name="duplication">none</arg>
         <arg name="early_ctl"/>
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr1':inet:unicast,addr:'iut_addr2':inet:unicast},{{'pco_tst':tester},addr:'tst_addr1':inet:unicast,addr:'tst_addr2':inet:unicast}}</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="non_blocking"/>
+        <arg name="sock_type1">SOCK_DGRAM</arg>
+        <arg name="sock_type2"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="duplication">none</arg>
+        <arg name="early_ctl"/>
         <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr1':inet6:unicast,addr:'tst_addr2':inet6:unicast}}</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="non_blocking"/>
+        <arg name="sock_type1">SOCK_DGRAM</arg>
+        <arg name="sock_type2"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="duplication">none</arg>
+        <arg name="early_ctl"/>
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr1':inet6:unicast,addr:'iut_addr2':inet6:unicast},{{'pco_tst':tester},addr:'tst_addr1':inet6:unicast,addr:'tst_addr2':inet6:unicast}}</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="non_blocking"/>
         <arg name="sock_type1">SOCK_DGRAM</arg>
         <arg name="sock_type2"/>
@@ -5982,6 +6822,24 @@
         <arg name="early_ctl"/>
         <arg name="env"/>
         <arg name="evts"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="is_pipe"/>
+        <arg name="non_blocking"/>
+        <arg name="timeout1"/>
+        <arg name="timeout2">1</arg>
+        <notes/>
+        <results tags="v5&amp;(ool_epoll=1|ool_epoll=3)&amp;!ool_spin" key="ON-929">
+          <result value="PASSED">
+            <verdict>epoll_pwait2 returned the same events for the second call</verdict>
+            <verdict>epoll_pwait2 returned the same events for the second call after refreshing</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
+        <arg name="env"/>
+        <arg name="evts"/>
         <arg name="iomux">epoll</arg>
         <arg name="is_pipe"/>
         <arg name="non_blocking"/>
@@ -6036,6 +6894,44 @@
       <iter result="PASSED">
         <arg name="data_size"/>
         <arg name="early_ctl">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="evts"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="is_pipe"/>
+        <arg name="non_blocking"/>
+        <arg name="sock_state"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="timeout1"/>
+        <arg name="timeout2">1</arg>
+        <notes/>
+        <results tags="v5&amp;ool_epoll=1&amp;!ool_spin&amp;!(tiny_spin&amp;ool_sleep_spin)&amp;(ool_loop=3|ool_loop=4)&amp;ool_epoll_ctl_fast" key="ON-929">
+          <result value="PASSED">
+            <verdict>epoll_pwait2 returned the same events for the second call</verdict>
+            <verdict>epoll_pwait2 returned the same events for the second call after refreshing</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=1&amp;!ool_spin&amp;!(tiny_spin&amp;ool_sleep_spin)&amp;(ool_loop=1|ool_loop=2)" key="ON-929">
+          <result value="PASSED">
+            <verdict>epoll_pwait2 returned the same events for the second call</verdict>
+            <verdict>epoll_pwait2 returned the same events for the second call after refreshing</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=3&amp;(ool_loop=3|ool_loop=4)&amp;!ool_spin&amp;!(tiny_spin&amp;ool_sleep_spin)" key="ON-5898, ON-1153">
+          <result value="PASSED">
+            <verdict>epoll_pwait2 returned the same events for the second call</verdict>
+            <verdict>epoll_pwait2 returned the same events for the second call after refreshing</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=3&amp;ool_loop=0&amp;!ool_spin&amp;!epoll_mt_safe" key="ON-5898, ON-1153">
+          <result value="PASSED">
+            <verdict>epoll_pwait2 returned the same events for the second call</verdict>
+            <verdict>epoll_pwait2 returned the same events for the second call after refreshing</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl">TRUE</arg>
         <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
         <arg name="evts"/>
         <arg name="iomux">epoll_pwait</arg>
@@ -6068,6 +6964,44 @@
           <result value="PASSED">
             <verdict>epoll_pwait returned the same events for the second call</verdict>
             <verdict>epoll_pwait returned the same events for the second call after refreshing</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="evts"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="is_pipe"/>
+        <arg name="non_blocking"/>
+        <arg name="sock_state"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="timeout1"/>
+        <arg name="timeout2">1</arg>
+        <notes/>
+        <results tags="v5&amp;ool_epoll=1&amp;!ool_spin&amp;!(tiny_spin&amp;ool_sleep_spin)&amp;(ool_loop=3|ool_loop=4)&amp;ool_epoll_ctl_fast" key="ON-929">
+          <result value="PASSED">
+            <verdict>epoll_pwait2 returned the same events for the second call</verdict>
+            <verdict>epoll_pwait2 returned the same events for the second call after refreshing</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=1&amp;!ool_spin&amp;!(tiny_spin&amp;ool_sleep_spin)&amp;(ool_loop=1|ool_loop=2)" key="ON-929">
+          <result value="PASSED">
+            <verdict>epoll_pwait2 returned the same events for the second call</verdict>
+            <verdict>epoll_pwait2 returned the same events for the second call after refreshing</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=3&amp;(ool_loop=3|ool_loop=4)&amp;!ool_spin&amp;!(tiny_spin&amp;ool_sleep_spin)" key="ON-5898, ON-1153">
+          <result value="PASSED">
+            <verdict>epoll_pwait2 returned the same events for the second call</verdict>
+            <verdict>epoll_pwait2 returned the same events for the second call after refreshing</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=3&amp;ool_loop=0&amp;!ool_spin&amp;!epoll_mt_safe" key="ON-5898, ON-1153">
+          <result value="PASSED">
+            <verdict>epoll_pwait2 returned the same events for the second call</verdict>
+            <verdict>epoll_pwait2 returned the same events for the second call after refreshing</verdict>
           </result>
         </results>
       </iter>
@@ -6178,6 +7112,32 @@
         <arg name="early_ctl"/>
         <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
         <arg name="evts"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="is_pipe"/>
+        <arg name="non_blocking"/>
+        <arg name="sock_state"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="timeout1"/>
+        <arg name="timeout2">1</arg>
+        <notes/>
+        <results tags="v5&amp;ool_epoll=3&amp;!ool_spin&amp;!(tiny_spin&amp;ool_sleep_spin)&amp;!epoll_mt_safe&amp;!udp_connect_no_handover" key="ON-5898">
+          <result value="PASSED">
+            <verdict>epoll_pwait2 returned the same events for the second call</verdict>
+            <verdict>epoll_pwait2 returned the same events for the second call after refreshing</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=1&amp;udp_connect_no_handover" key="ON-929">
+          <result value="PASSED">
+            <verdict>epoll_pwait2 returned the same events for the second call</verdict>
+            <verdict>epoll_pwait2 returned the same events for the second call after refreshing</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="evts"/>
         <arg name="iomux">epoll</arg>
         <arg name="is_pipe"/>
         <arg name="non_blocking"/>
@@ -6230,6 +7190,32 @@
         <arg name="early_ctl"/>
         <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="evts"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="is_pipe"/>
+        <arg name="non_blocking"/>
+        <arg name="sock_state"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="timeout1"/>
+        <arg name="timeout2">1</arg>
+        <notes/>
+        <results tags="v5&amp;ool_epoll=3&amp;!ool_spin&amp;!(tiny_spin&amp;ool_sleep_spin)&amp;!epoll_mt_safe&amp;!udp_connect_no_handover" key="ON-5898">
+          <result value="PASSED">
+            <verdict>epoll_pwait2 returned the same events for the second call</verdict>
+            <verdict>epoll_pwait2 returned the same events for the second call after refreshing</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;udp_connect_no_handover&amp;!ool_spin&amp;ool_epoll=1" key="ON-5898">
+          <result value="PASSED">
+            <verdict>epoll_pwait2 returned the same events for the second call</verdict>
+            <verdict>epoll_pwait2 returned the same events for the second call after refreshing</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="evts"/>
         <arg name="iomux">epoll</arg>
         <arg name="is_pipe"/>
         <arg name="non_blocking"/>
@@ -6273,6 +7259,26 @@
       </iter>
       <iter result="PASSED">
         <arg name="data_size"/>
+        <arg name="early_ctl">FALSE</arg>
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="evts"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="is_pipe"/>
+        <arg name="non_blocking"/>
+        <arg name="sock_state">connected</arg>
+        <arg name="sock_type"/>
+        <arg name="timeout1"/>
+        <arg name="timeout2">1</arg>
+        <notes/>
+        <results tags="v5&amp;ool_epoll=3&amp;!ool_spin&amp;!(tiny_spin&amp;ool_sleep_spin)&amp;!epoll_mt_safe" key="ON-5898">
+          <result value="PASSED">
+            <verdict>epoll_pwait2 returned the same events for the second call</verdict>
+            <verdict>epoll_pwait2 returned the same events for the second call after refreshing</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
         <arg name="early_ctl">TRUE</arg>
         <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
         <arg name="evts"/>
@@ -6288,6 +7294,26 @@
           <result value="PASSED">
             <verdict>epoll_pwait returned the same events for the second call</verdict>
             <verdict>epoll_pwait returned the same events for the second call after refreshing</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="evts"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="is_pipe"/>
+        <arg name="non_blocking"/>
+        <arg name="sock_state"/>
+        <arg name="sock_type"/>
+        <arg name="timeout1"/>
+        <arg name="timeout2">1</arg>
+        <notes/>
+        <results tags="v5&amp;ool_epoll=3&amp;!ool_spin&amp;!(tiny_spin&amp;ool_sleep_spin)&amp;!epoll_mt_safe" key="ON-5898">
+          <result value="PASSED">
+            <verdict>epoll_pwait2 returned the same events for the second call</verdict>
+            <verdict>epoll_pwait2 returned the same events for the second call after refreshing</verdict>
           </result>
         </results>
       </iter>
@@ -6360,6 +7386,32 @@
       <iter result="PASSED">
         <arg name="data_size"/>
         <arg name="early_ctl">FALSE</arg>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="evts"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="is_pipe"/>
+        <arg name="non_blocking"/>
+        <arg name="sock_state">connected</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="timeout1"/>
+        <arg name="timeout2">1</arg>
+        <notes/>
+        <results tags="v5&amp;ool_epoll=1&amp;!ool_spin&amp;!(tiny_spin&amp;ool_sleep_spin)&amp;!(ool_loop=0)" key="ON-929">
+          <result value="PASSED">
+            <verdict>epoll_pwait2 returned the same events for the second call</verdict>
+            <verdict>epoll_pwait2 returned the same events for the second call after refreshing</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=3&amp;ool_loop=0&amp;!epoll_mt_safe&amp;!ool_spin" key="ON-5898, ST-1309">
+          <result value="PASSED">
+            <verdict>epoll_pwait2 returned the same events for the second call</verdict>
+            <verdict>epoll_pwait2 returned the same events for the second call after refreshing</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl">FALSE</arg>
         <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
         <arg name="evts"/>
         <arg name="iomux">epoll_pwait</arg>
@@ -6380,6 +7432,32 @@
           <result value="PASSED">
             <verdict>epoll_pwait returned the same events for the second call</verdict>
             <verdict>epoll_pwait returned the same events for the second call after refreshing</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl">FALSE</arg>
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="evts"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="is_pipe"/>
+        <arg name="non_blocking"/>
+        <arg name="sock_state">connected</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="timeout1"/>
+        <arg name="timeout2">1</arg>
+        <notes/>
+        <results tags="v5&amp;ool_epoll=1&amp;!ool_spin&amp;!(tiny_spin&amp;ool_sleep_spin)&amp;!(ool_loop=0)" key="ON-929">
+          <result value="PASSED">
+            <verdict>epoll_pwait2 returned the same events for the second call</verdict>
+            <verdict>epoll_pwait2 returned the same events for the second call after refreshing</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=3&amp;ool_loop=0&amp;!epoll_mt_safe&amp;!ool_spin" key="ON-5898, ST-1309">
+          <result value="PASSED">
+            <verdict>epoll_pwait2 returned the same events for the second call</verdict>
+            <verdict>epoll_pwait2 returned the same events for the second call after refreshing</verdict>
           </result>
         </results>
       </iter>
@@ -6457,6 +7535,26 @@
       </iter>
       <iter result="PASSED">
         <arg name="data_size"/>
+        <arg name="early_ctl">FALSE</arg>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="evts"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="is_pipe"/>
+        <arg name="non_blocking"/>
+        <arg name="sock_state">connected</arg>
+        <arg name="sock_type"/>
+        <arg name="timeout1"/>
+        <arg name="timeout2">1</arg>
+        <notes/>
+        <results tags="v5&amp;ool_epoll=3&amp;!ool_spin&amp;!epoll_mt_safe" key="ON-5898">
+          <result value="PASSED">
+            <verdict>epoll_pwait2 returned the same events for the second call</verdict>
+            <verdict>epoll_pwait2 returned the same events for the second call after refreshing</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
         <arg name="early_ctl">TRUE</arg>
         <arg name="env">VAR.env.peer2peer_tst</arg>
         <arg name="evts"/>
@@ -6472,6 +7570,26 @@
           <result value="PASSED">
             <verdict>epoll_pwait returned the same events for the second call</verdict>
             <verdict>epoll_pwait returned the same events for the second call after refreshing</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="evts"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="is_pipe"/>
+        <arg name="non_blocking"/>
+        <arg name="sock_state"/>
+        <arg name="sock_type"/>
+        <arg name="timeout1"/>
+        <arg name="timeout2">1</arg>
+        <notes/>
+        <results tags="v5&amp;ool_epoll=3&amp;!ool_spin&amp;!epoll_mt_safe" key="ON-5898">
+          <result value="PASSED">
+            <verdict>epoll_pwait2 returned the same events for the second call</verdict>
+            <verdict>epoll_pwait2 returned the same events for the second call after refreshing</verdict>
           </result>
         </results>
       </iter>
@@ -6538,6 +7656,26 @@
       <iter result="PASSED">
         <arg name="data_size"/>
         <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="evts"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="is_pipe"/>
+        <arg name="non_blocking"/>
+        <arg name="sock_state">just_created</arg>
+        <arg name="sock_type"/>
+        <arg name="timeout1"/>
+        <arg name="timeout2">1</arg>
+        <notes/>
+        <results tags="v5&amp;ool_epoll=1&amp;!ool_spin" key="ON-929">
+          <result value="PASSED">
+            <verdict>epoll_pwait2 returned the same events for the second call</verdict>
+            <verdict>epoll_pwait2 returned the same events for the second call after refreshing</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
         <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="evts"/>
         <arg name="iomux">epoll_pwait</arg>
@@ -6552,6 +7690,26 @@
           <result value="PASSED">
             <verdict>epoll_pwait returned the same events for the second call</verdict>
             <verdict>epoll_pwait returned the same events for the second call after refreshing</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="evts"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="is_pipe"/>
+        <arg name="non_blocking"/>
+        <arg name="sock_state">just_created</arg>
+        <arg name="sock_type"/>
+        <arg name="timeout1"/>
+        <arg name="timeout2">1</arg>
+        <notes/>
+        <results tags="v5&amp;ool_epoll=1&amp;!ool_spin" key="ON-929">
+          <result value="PASSED">
+            <verdict>epoll_pwait2 returned the same events for the second call</verdict>
+            <verdict>epoll_pwait2 returned the same events for the second call after refreshing</verdict>
           </result>
         </results>
       </iter>
@@ -6578,6 +7736,26 @@
       <iter result="PASSED">
         <arg name="data_size"/>
         <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="evts"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="is_pipe"/>
+        <arg name="non_blocking"/>
+        <arg name="sock_state">just_created</arg>
+        <arg name="sock_type"/>
+        <arg name="timeout1"/>
+        <arg name="timeout2">1</arg>
+        <notes/>
+        <results tags="v5&amp;ool_epoll=1&amp;!ool_spin" key="ON-929">
+          <result value="PASSED">
+            <verdict>epoll_pwait2 returned the same events for the second call</verdict>
+            <verdict>epoll_pwait2 returned the same events for the second call after refreshing</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
         <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
         <arg name="evts"/>
         <arg name="iomux">epoll_pwait</arg>
@@ -6592,6 +7770,26 @@
           <result value="PASSED">
             <verdict>epoll_pwait returned the same events for the second call</verdict>
             <verdict>epoll_pwait returned the same events for the second call after refreshing</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="evts"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="is_pipe"/>
+        <arg name="non_blocking"/>
+        <arg name="sock_state">just_created</arg>
+        <arg name="sock_type"/>
+        <arg name="timeout1"/>
+        <arg name="timeout2">1</arg>
+        <notes/>
+        <results tags="v5&amp;ool_epoll=1&amp;!ool_spin" key="ON-929">
+          <result value="PASSED">
+            <verdict>epoll_pwait2 returned the same events for the second call</verdict>
+            <verdict>epoll_pwait2 returned the same events for the second call after refreshing</verdict>
           </result>
         </results>
       </iter>
@@ -6618,6 +7816,26 @@
       <iter result="PASSED">
         <arg name="data_size"/>
         <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="evts"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="is_pipe"/>
+        <arg name="non_blocking"/>
+        <arg name="sock_state"/>
+        <arg name="sock_type"/>
+        <arg name="timeout1"/>
+        <arg name="timeout2">1</arg>
+        <notes/>
+        <results tags="v5&amp;ool_epoll=1&amp;!ool_spin" key="ON-929">
+          <result value="PASSED">
+            <verdict>epoll_pwait2 returned the same events for the second call</verdict>
+            <verdict>epoll_pwait2 returned the same events for the second call after refreshing</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
         <arg name="env">VAR.env.peer2peer_ipv6</arg>
         <arg name="evts"/>
         <arg name="iomux">epoll_pwait</arg>
@@ -6632,6 +7850,26 @@
           <result value="PASSED">
             <verdict>epoll_pwait returned the same events for the second call</verdict>
             <verdict>epoll_pwait returned the same events for the second call after refreshing</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="early_ctl"/>
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="evts"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="is_pipe"/>
+        <arg name="non_blocking"/>
+        <arg name="sock_state"/>
+        <arg name="sock_type"/>
+        <arg name="timeout1"/>
+        <arg name="timeout2">1</arg>
+        <notes/>
+        <results tags="v5&amp;ool_epoll=1&amp;!ool_spin" key="ON-929">
+          <result value="PASSED">
+            <verdict>epoll_pwait2 returned the same events for the second call</verdict>
+            <verdict>epoll_pwait2 returned the same events for the second call after refreshing</verdict>
           </result>
         </results>
       </iter>
@@ -6977,6 +8215,33 @@
         <arg name="early_ctl">TRUE</arg>
         <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="epfd_num"/>
+        <arg name="evts">in</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data">TRUE</arg>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="v5&amp;(reuse_stack&amp;(ool_loop=0)|!reuse_stack&amp;!(ool_loop=2))&amp;(ool_epoll=1|ool_epoll=3)" key="ON-4344, ON-5722">
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+            <verdict>FD is not closed.</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+            <verdict>FD is not closed.</verdict>
+            <verdict>FD is not closed.</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_num"/>
+        <arg name="close_num"/>
+        <arg name="data_size"/>
+        <arg name="early_ctl">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="epfd_num"/>
         <arg name="evts">inout</arg>
         <arg name="iomux">epoll</arg>
         <arg name="send_data"/>
@@ -7031,6 +8296,33 @@
         <arg name="early_ctl">TRUE</arg>
         <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="epfd_num"/>
+        <arg name="evts">inout</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="v5&amp;(reuse_stack&amp;(ool_loop=0)|!reuse_stack&amp;!(ool_loop=2))&amp;(ool_epoll=1|ool_epoll=3)" key="ON-4344, ON-5722">
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+            <verdict>FD is not closed.</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+            <verdict>FD is not closed.</verdict>
+            <verdict>FD is not closed.</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_num"/>
+        <arg name="close_num"/>
+        <arg name="data_size"/>
+        <arg name="early_ctl">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="epfd_num"/>
         <arg name="evts">out</arg>
         <arg name="iomux">epoll</arg>
         <arg name="send_data"/>
@@ -7060,6 +8352,33 @@
         <arg name="epfd_num"/>
         <arg name="evts">out</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="send_data"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="v5&amp;(reuse_stack&amp;(ool_loop=0)|!reuse_stack&amp;!(ool_loop=2))&amp;(ool_epoll=1|ool_epoll=3)" key="ON-4344, ON-5722">
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+            <verdict>FD is not closed.</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+            <verdict>FD is not closed.</verdict>
+            <verdict>FD is not closed.</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_num"/>
+        <arg name="close_num"/>
+        <arg name="data_size"/>
+        <arg name="early_ctl">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="epfd_num"/>
+        <arg name="evts">out</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="send_data"/>
         <arg name="timeout"/>
         <notes/>
@@ -7262,6 +8581,33 @@
         <arg name="early_ctl">TRUE</arg>
         <arg name="env">VAR.env.peer2peer_tst</arg>
         <arg name="epfd_num"/>
+        <arg name="evts">in</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data">TRUE</arg>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="v5&amp;(ool_epoll=1|ool_epoll=3)" key="ON-4344, ON-5722">
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+            <verdict>FD is not closed.</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+            <verdict>FD is not closed.</verdict>
+            <verdict>FD is not closed.</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_num"/>
+        <arg name="close_num"/>
+        <arg name="data_size"/>
+        <arg name="early_ctl">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="epfd_num"/>
         <arg name="evts">inout</arg>
         <arg name="iomux">epoll</arg>
         <arg name="send_data"/>
@@ -7291,6 +8637,33 @@
         <arg name="epfd_num"/>
         <arg name="evts">inout</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="send_data"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="v5&amp;(ool_epoll=1|ool_epoll=3)" key="ON-4344, ON-5722">
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+            <verdict>FD is not closed.</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+            <verdict>FD is not closed.</verdict>
+            <verdict>FD is not closed.</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_num"/>
+        <arg name="close_num"/>
+        <arg name="data_size"/>
+        <arg name="early_ctl">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="epfd_num"/>
+        <arg name="evts">inout</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="send_data"/>
         <arg name="timeout"/>
         <notes/>
@@ -7370,6 +8743,33 @@
         <arg name="early_ctl">TRUE</arg>
         <arg name="env">VAR.env.peer2peer_tst</arg>
         <arg name="epfd_num"/>
+        <arg name="evts">out</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="v5&amp;(ool_epoll=1|ool_epoll=3)" key="ON-4344, ON-5722">
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+            <verdict>FD is not closed.</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+            <verdict>FD is not closed.</verdict>
+            <verdict>FD is not closed.</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_num"/>
+        <arg name="close_num"/>
+        <arg name="data_size"/>
+        <arg name="early_ctl">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="epfd_num"/>
         <arg name="evts">in</arg>
         <arg name="iomux">oo_epoll</arg>
         <arg name="send_data">FALSE</arg>
@@ -7458,6 +8858,19 @@
         <arg name="close_num"/>
         <arg name="data_size"/>
         <arg name="early_ctl">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="epfd_num"/>
+        <arg name="evts">in</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data">FALSE</arg>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_num"/>
+        <arg name="close_num"/>
+        <arg name="data_size"/>
+        <arg name="early_ctl">TRUE</arg>
         <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="epfd_num"/>
         <arg name="evts">in</arg>
@@ -7475,6 +8888,19 @@
         <arg name="epfd_num"/>
         <arg name="evts">in</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="send_data">FALSE</arg>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_num"/>
+        <arg name="close_num"/>
+        <arg name="data_size"/>
+        <arg name="early_ctl">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="epfd_num"/>
+        <arg name="evts">in</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="send_data">FALSE</arg>
         <arg name="timeout"/>
         <notes/>
@@ -7509,6 +8935,19 @@
         <arg name="call_num"/>
         <arg name="close_num"/>
         <arg name="data_size"/>
+        <arg name="early_ctl">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="epfd_num"/>
+        <arg name="evts"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_num"/>
+        <arg name="close_num"/>
+        <arg name="data_size"/>
         <arg name="early_ctl">FALSE</arg>
         <arg name="env"/>
         <arg name="epfd_num"/>
@@ -7527,6 +8966,19 @@
         <arg name="epfd_num"/>
         <arg name="evts"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="send_data"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_num"/>
+        <arg name="close_num"/>
+        <arg name="data_size"/>
+        <arg name="early_ctl">FALSE</arg>
+        <arg name="env"/>
+        <arg name="epfd_num"/>
+        <arg name="evts"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="send_data"/>
         <arg name="timeout"/>
         <notes/>
@@ -7682,6 +9134,33 @@
         <arg name="early_ctl">TRUE</arg>
         <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
         <arg name="epfd_num"/>
+        <arg name="evts">in</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data">TRUE</arg>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="v5&amp;(reuse_stack&amp;(ool_loop=0)|!reuse_stack&amp;!(ool_loop=2))&amp;(ool_epoll=1|ool_epoll=3)" key="ON-4344, ON-5722">
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+            <verdict>FD is not closed.</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+            <verdict>FD is not closed.</verdict>
+            <verdict>FD is not closed.</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_num"/>
+        <arg name="close_num"/>
+        <arg name="data_size"/>
+        <arg name="early_ctl">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="epfd_num"/>
         <arg name="evts">inout</arg>
         <arg name="iomux">epoll</arg>
         <arg name="send_data"/>
@@ -7736,6 +9215,33 @@
         <arg name="early_ctl">TRUE</arg>
         <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
         <arg name="epfd_num"/>
+        <arg name="evts">inout</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="v5&amp;(reuse_stack&amp;(ool_loop=0)|!reuse_stack&amp;!(ool_loop=2))&amp;(ool_epoll=1|ool_epoll=3)" key="ON-4344, ON-5722">
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+            <verdict>FD is not closed.</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+            <verdict>FD is not closed.</verdict>
+            <verdict>FD is not closed.</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_num"/>
+        <arg name="close_num"/>
+        <arg name="data_size"/>
+        <arg name="early_ctl">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="epfd_num"/>
         <arg name="evts">out</arg>
         <arg name="iomux">epoll</arg>
         <arg name="send_data"/>
@@ -7765,6 +9271,33 @@
         <arg name="epfd_num"/>
         <arg name="evts">out</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="send_data"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="v5&amp;(reuse_stack&amp;(ool_loop=0)|!reuse_stack&amp;!(ool_loop=2))&amp;(ool_epoll=1|ool_epoll=3)" key="ON-4344, ON-5722">
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+            <verdict>FD is not closed.</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+            <verdict>FD is not closed.</verdict>
+            <verdict>FD is not closed.</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_num"/>
+        <arg name="close_num"/>
+        <arg name="data_size"/>
+        <arg name="early_ctl">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="epfd_num"/>
+        <arg name="evts">out</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="send_data"/>
         <arg name="timeout"/>
         <notes/>
@@ -7967,6 +9500,33 @@
         <arg name="early_ctl">TRUE</arg>
         <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
         <arg name="epfd_num"/>
+        <arg name="evts">in</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data">TRUE</arg>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="v5&amp;(ool_epoll=1|ool_epoll=3)" key="ON-4344, ON-5722">
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+            <verdict>FD is not closed.</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+            <verdict>FD is not closed.</verdict>
+            <verdict>FD is not closed.</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_num"/>
+        <arg name="close_num"/>
+        <arg name="data_size"/>
+        <arg name="early_ctl">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="epfd_num"/>
         <arg name="evts">inout</arg>
         <arg name="iomux">epoll</arg>
         <arg name="send_data"/>
@@ -7996,6 +9556,33 @@
         <arg name="epfd_num"/>
         <arg name="evts">inout</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="send_data"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="v5&amp;(ool_epoll=1|ool_epoll=3)" key="ON-4344, ON-5722">
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+            <verdict>FD is not closed.</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+            <verdict>FD is not closed.</verdict>
+            <verdict>FD is not closed.</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_num"/>
+        <arg name="close_num"/>
+        <arg name="data_size"/>
+        <arg name="early_ctl">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="epfd_num"/>
+        <arg name="evts">inout</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="send_data"/>
         <arg name="timeout"/>
         <notes/>
@@ -8075,6 +9662,33 @@
         <arg name="early_ctl">TRUE</arg>
         <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
         <arg name="epfd_num"/>
+        <arg name="evts">out</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data"/>
+        <arg name="timeout"/>
+        <notes/>
+        <results tags="v5&amp;(ool_epoll=1|ool_epoll=3)" key="ON-4344, ON-5722">
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+            <verdict>FD is not closed.</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>epoll_wait returned 0 instead of 1</verdict>
+            <verdict>FD is not closed.</verdict>
+            <verdict>FD is not closed.</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_num"/>
+        <arg name="close_num"/>
+        <arg name="data_size"/>
+        <arg name="early_ctl">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="epfd_num"/>
         <arg name="evts">in</arg>
         <arg name="iomux">oo_epoll</arg>
         <arg name="send_data">FALSE</arg>
@@ -8147,6 +9761,19 @@
         <arg name="close_num"/>
         <arg name="data_size"/>
         <arg name="early_ctl">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="epfd_num"/>
+        <arg name="evts">in</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="send_data">FALSE</arg>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_num"/>
+        <arg name="close_num"/>
+        <arg name="data_size"/>
+        <arg name="early_ctl">TRUE</arg>
         <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
         <arg name="epfd_num"/>
         <arg name="evts">in</arg>
@@ -8164,6 +9791,19 @@
         <arg name="epfd_num"/>
         <arg name="evts">in</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="send_data">FALSE</arg>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_num"/>
+        <arg name="close_num"/>
+        <arg name="data_size"/>
+        <arg name="early_ctl">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="epfd_num"/>
+        <arg name="evts">in</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="send_data">FALSE</arg>
         <arg name="timeout"/>
         <notes/>
@@ -8190,6 +9830,19 @@
         <arg name="epfd_num"/>
         <arg name="evts"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="send_data"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_num"/>
+        <arg name="close_num"/>
+        <arg name="data_size"/>
+        <arg name="early_ctl">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="epfd_num"/>
+        <arg name="evts"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="send_data"/>
         <arg name="timeout"/>
         <notes/>
@@ -19427,6 +21080,15 @@
         <arg name="sock_type"/>
         <notes/>
       </iter>
+      <iter result="PASSED">
+        <arg name="blocking"/>
+        <arg name="destroy_stack"/>
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="multithread"/>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
     </test>
     <test name="epoll_dead_circle" type="script">
       <objective>Check that potentially infinite loop which can take place after an event occurs on some fd in epfd of one of epoll_wait() functions having epfd of each other in their epfds doesn't cause any error.</objective>
@@ -19564,6 +21226,12 @@
       <iter result="PASSED">
         <arg name="env"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="timeout"/>
         <notes/>
       </iter>
@@ -21797,6 +23465,16 @@
         <arg name="bind_to">tst</arg>
         <arg name="blocking_iomux">TRUE</arg>
         <arg name="env"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="listening"/>
+        <arg name="peer">iut</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bind_to">tst</arg>
+        <arg name="blocking_iomux">TRUE</arg>
+        <arg name="env"/>
         <arg name="iomux">epoll</arg>
         <arg name="listening"/>
         <arg name="peer">iut</arg>
@@ -22240,6 +23918,16 @@
         <arg name="blocking_iomux">FALSE</arg>
         <arg name="env"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="listening"/>
+        <arg name="peer"/>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bind_to">tst</arg>
+        <arg name="blocking_iomux">FALSE</arg>
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="listening"/>
         <arg name="peer"/>
         <arg name="sock_type"/>
@@ -22358,8 +24046,62 @@
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="first_group">more</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="maxevents"/>
+        <notes/>
+        <results tags="v5&amp;ool_epoll=3" key="ON-12997">
+          <result value="PASSED">
+            <verdict>More than two epoll_pwait2() calls were required to get events for all IUT sockets</verdict>
+            <verdict>Events are reported not in order of receiving data on the related sockets</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=1" key="ON-12997">
+          <result value="PASSED">
+            <verdict>Events are reported not in order of receiving data on the related sockets</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;(ool_epoll_ctl_fast|ool_spin|tiny_spin)&amp;ool_epoll=2" key="ON-4410, ON-13204">
+          <result value="PASSED">
+            <verdict>Events are reported not in order of receiving data on the related sockets</verdict>
+          </result>
+          <result value="PASSED"/>
+        </results>
+        <results tags="v5&amp;(ool_epoll=0&amp;(ool_spin|tiny_spin))" key="ON-13090">
+          <result value="PASSED">
+            <verdict>Events are reported not in order of receiving data on the related sockets</verdict>
+          </result>
+          <result value="PASSED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
         <arg name="first_group">less</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="maxevents"/>
+        <notes/>
+        <results tags="v5&amp;(ool_epoll=1|ool_epoll=3)" key="ON-12997">
+          <result value="PASSED">
+            <verdict>Events are reported not in order of receiving data on the related sockets</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=2" key="ON-4410, ON-13204">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>Events are reported not in order of receiving data on the related sockets</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;(ool_epoll=0&amp;(ool_spin|tiny_spin))" key="ON-13090">
+          <result value="PASSED">
+            <verdict>Events are reported not in order of receiving data on the related sockets</verdict>
+          </result>
+          <result value="PASSED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="first_group">less</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="maxevents"/>
         <notes/>
         <results tags="v5&amp;(ool_epoll=1|ool_epoll=3)" key="ON-12997">
@@ -22442,6 +24184,36 @@
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="first_group">more</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="maxevents"/>
+        <notes/>
+        <results tags="v5&amp;ool_epoll=3" key="ON-12997, ON-929">
+          <result value="PASSED">
+            <verdict>More than two epoll_pwait2() calls were required to get events for all IUT sockets</verdict>
+            <verdict>Events are reported not in order of receiving data on the related sockets</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=1" key="ON-12997">
+          <result value="PASSED">
+            <verdict>Events are reported not in order of receiving data on the related sockets</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;(ool_epoll_ctl_fast|ool_spin|tiny_spin)&amp;ool_epoll=2" key="ON-4410, ON-13204">
+          <result value="PASSED">
+            <verdict>Events are reported not in order of receiving data on the related sockets</verdict>
+          </result>
+          <result value="PASSED"/>
+        </results>
+        <results tags="v5&amp;(ool_epoll=0&amp;(ool_spin|tiny_spin))" key="ON-13090">
+          <result value="PASSED">
+            <verdict>Events are reported not in order of receiving data on the related sockets</verdict>
+          </result>
+          <result value="PASSED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
         <arg name="first_group">less</arg>
         <arg name="iomux">epoll_pwait</arg>
         <arg name="maxevents"/>
@@ -22466,8 +24238,56 @@
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="first_group">less</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="maxevents"/>
+        <notes/>
+        <results tags="v5&amp;(ool_epoll=1|ool_epoll=3)" key="ON-12997">
+          <result value="PASSED">
+            <verdict>Events are reported not in order of receiving data on the related sockets</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;(ool_epoll_ctl_fast|ool_spin|tiny_spin)&amp;ool_epoll=2" key="ON-4410, ON-13204">
+          <result value="PASSED">
+            <verdict>Events are reported not in order of receiving data on the related sockets</verdict>
+          </result>
+          <result value="PASSED"/>
+        </results>
+        <results tags="v5&amp;(ool_epoll=0&amp;(ool_spin|tiny_spin))" key="ON-13090">
+          <result value="PASSED">
+            <verdict>Events are reported not in order of receiving data on the related sockets</verdict>
+          </result>
+          <result value="PASSED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
         <arg name="first_group">equal</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="maxevents"/>
+        <notes/>
+        <results tags="v5&amp;(ool_epoll=1|ool_epoll=3)" key="ON-12997">
+          <result value="PASSED">
+            <verdict>Events are reported not in order of receiving data on the related sockets</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;(ool_epoll_ctl_fast|ool_spin|tiny_spin)&amp;ool_epoll=2" key="ON-4410, ON-13204">
+          <result value="PASSED">
+            <verdict>Events are reported not in order of receiving data on the related sockets</verdict>
+          </result>
+          <result value="PASSED"/>
+        </results>
+        <results tags="v5&amp;(ool_epoll=0&amp;(ool_spin|tiny_spin))" key="ON-13090">
+          <result value="PASSED">
+            <verdict>Events are reported not in order of receiving data on the related sockets</verdict>
+          </result>
+          <result value="PASSED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="first_group">equal</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="maxevents"/>
         <notes/>
         <results tags="v5&amp;(ool_epoll=1|ool_epoll=3)" key="ON-12997">
