@@ -89,6 +89,8 @@ launch_epoll_wait(void *args)
     int                     maxevents = epw_args->maxevents;
     int                     timeout = epw_args->timeout;
     rpc_sigset_p            sigmask = epw_args->sigmask;
+    struct tarpc_timespec   tv;
+    struct tarpc_timespec  *tv_ptr = &tv;
 
     if (epw_args->iomux == IC_OO_EPOLL)
     {
@@ -101,10 +103,19 @@ launch_epoll_wait(void *args)
     {
         rc = rpc_epoll_wait(pco, epfd, events, maxevents, timeout);
     }
-    else
+    else if (epw_args->iomux == IC_EPOLL_PWAIT)
     {
         rc = rpc_epoll_pwait(pco, epfd, events, maxevents, timeout,
                              sigmask);
+    }
+    else
+    {
+        if (timeout < 0)
+            tv_ptr = NULL;
+        else
+            TE_NS2TS(TE_MS2NS(timeout), &tv);
+        rc = rpc_epoll_pwait2(pco, epfd, events, maxevents, tv_ptr,
+                              sigmask);
     }
 
     return (void *)rc;

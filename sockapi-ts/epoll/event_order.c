@@ -17,6 +17,7 @@
  * @param iomux                 Which iomux function to test:
  *                              - @b epoll_wait()
  *                              - @b epoll_pwait()
+ *                              - @b epoll_pwait2()
  * @param maxevents             Value of maxevents parameter:
  *                              - @c 1
  *                              - @c 2

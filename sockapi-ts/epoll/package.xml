@@ -23,6 +23,7 @@
             <arg name="iomux" type="epoll_wait_calls">
               <value reqs="EPOLL">epoll</value>
               <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+              <value reqs="EPOLL,EPOLL_PWAIT2">epoll_pwait2</value>
             </arg>
             <arg name="env">
                 <value type="env.peer2peer_all_ipv4_ipv6"/>
@@ -113,6 +114,7 @@
             <arg name="iomux" type="epoll_wait_calls">
               <value reqs="EPOLL">epoll</value>
               <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+              <value reqs="EPOLL,EPOLL_PWAIT2">epoll_pwait2</value>
             </arg>
             <arg name="env">
                 <value type="env.peer2peer_all_ipv4_ipv6"/>
@@ -178,6 +180,7 @@
                 <arg name="iomux" type="epoll_wait_calls">
                   <value reqs="EPOLL">epoll</value>
                   <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+                  <value reqs="EPOLL,EPOLL_PWAIT2">epoll_pwait2</value>
                 </arg>
                 <arg name="evts">
                     <value>in</value>
@@ -535,6 +538,7 @@
             <arg name="iomux" type="epoll_wait_calls">
                 <value>epoll</value>
                 <value reqs="EPOLL_PWAIT">epoll_pwait</value>
+                <value reqs="EPOLL_PWAIT2">epoll_pwait2</value>
             </arg>
             <arg name="data_size">
                 <value>512</value>
@@ -567,6 +571,7 @@
             <arg name="iomux" type="epoll_wait_calls">
                 <value>epoll</value>
                 <value reqs="EPOLL_PWAIT">epoll_pwait</value>
+                <value reqs="EPOLL_PWAIT2">epoll_pwait2</value>
             </arg>
             <arg name="data_size">
                 <value>512</value>
@@ -681,6 +686,7 @@
             <arg name="iomux" type="epoll_wait_calls">
                 <value reqs="EPOLL">epoll</value>
                 <value reqs="EPOLL">epoll_pwait</value>
+                <value reqs="EPOLL">epoll_pwait2</value>
                 <!-- Do not run this test with oo_epoll according to bug
                      71811 -->
             </arg>
@@ -1639,6 +1645,7 @@
             <arg name="iomux" type="epoll_wait_calls">
               <value>epoll</value>
               <value>epoll_pwait</value>
+              <value>epoll_pwait2</value>
             </arg>
             <arg name="timeout">
                 <value>0</value>
@@ -1737,6 +1744,7 @@
             <arg name="iomux" type="epoll_wait_calls">
                 <value>epoll</value>
                 <value>epoll_pwait</value>
+                <value>epoll_pwait2</value>
             </arg>
             <arg name="sock_type" type="sock_stream_dgram">
                 <value>SOCK_STREAM</value>
@@ -1770,6 +1778,7 @@
             <arg name="iomux" type="epoll_wait_calls">
                 <value>epoll</value>
                 <value>epoll_pwait</value>
+                <value>epoll_pwait2</value>
             </arg>
             <arg name="sock_type" type="sock_stream_dgram">
                 <value>SOCK_STREAM</value>
@@ -1800,6 +1809,7 @@
             <arg name="iomux" type="epoll_wait_calls">
                 <value>epoll</value>
                 <value>epoll_pwait</value>
+                <value>epoll_pwait2</value>
             </arg>
             <arg name="sock_type" type="sock_stream_dgram">
                 <value>SOCK_STREAM</value>
@@ -1832,6 +1842,7 @@
             <arg name="iomux" type="epoll_wait_calls">
                 <value>epoll</value>
                 <value>epoll_pwait</value>
+                <value>epoll_pwait2</value>
             </arg>
             <arg name="sock_type" type="sock_stream_dgram">
                 <value>SOCK_STREAM</value>
@@ -1862,6 +1873,7 @@
             <arg name="iomux" type="epoll_wait_calls">
                 <value>epoll</value>
                 <value>epoll_pwait</value>
+                <value>epoll_pwait2</value>
             </arg>
             <arg name="sock_type" type="sock_stream_dgram">
                 <value>SOCK_DGRAM</value>
@@ -1939,6 +1951,7 @@
             <arg name="iomux" type="epoll_wait_calls">
                 <value>epoll</value>
                 <value>epoll_pwait</value>
+                <value>epoll_pwait2</value>
             </arg>
             <arg name="sock_type1" type="sock_stream_dgram"/>
             <arg name="sock_type2" type="sock_stream_dgram"/>
@@ -2011,6 +2024,7 @@
             <arg name="iomux" type="epoll_wait_calls">
                 <value reqs="EPOLL">epoll</value>
                 <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+                <value reqs="EPOLL,EPOLL_PWAIT2">epoll_pwait2</value>
             </arg>
             <arg name="maxevents">
                 <value>5</value>
@@ -2033,6 +2047,7 @@
             <arg name="iomux" type="epoll_wait_calls">
                 <value reqs="EPOLL">epoll</value>
                 <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+                <value reqs="EPOLL,EPOLL_PWAIT2">epoll_pwait2</value>
             </arg>
             <arg name="maxevents">
                 <value>1</value>
@@ -2065,6 +2080,7 @@
             <arg name="iomux" type="epoll_wait_calls">
                 <value reqs="EPOLL">epoll</value>
                 <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+                <value reqs="EPOLL,EPOLL_PWAIT2">epoll_pwait2</value>
             </arg>
             <arg name="maxevents">
                 <value>3</value>

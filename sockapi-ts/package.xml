@@ -97,6 +97,7 @@ Definition and description of argument types.
         <enum name="epoll_wait_calls">
           <value reqs="EPOLL">epoll</value>
           <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+          <value reqs="EPOLL,EPOLL_PWAIT2">epoll_pwait2</value>
           <value reqs="ONLOAD_ONLY,EPOLL,SF_WODA,NO_EF_UL_EPOLL_ZERO,NO_EF_UL_EPOLL_TWO">oo_epoll</value>
         </enum>
         <enum name="epoll_wait_ext">
