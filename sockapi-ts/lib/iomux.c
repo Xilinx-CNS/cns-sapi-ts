@@ -607,7 +607,7 @@ iomux_call(iomux_call_type call_type, rcf_rpc_server *rpcs,
         call_type = iomux_call_get_default();
 
     if (call_type == IC_PSELECT || call_type == IC_PPOLL ||
-        call_type == IC_EPOLL_PWAIT)
+        call_type == IC_EPOLL_PWAIT || call_type == IC_EPOLL_PWAIT2)
         signal_call = 1;
 
     if (signal_call && rpcs->op != RCF_RPC_WAIT)
@@ -840,9 +840,6 @@ int
 iomux_epoll_call(iomux_call_type call_type, rcf_rpc_server *rpcs, int epfd,
                  struct rpc_epoll_event *events, int maxevents, int timeout)
 {
-    struct tarpc_timespec  tv;
-    struct tarpc_timespec *tv_ptr = &tv;
-
     if (call_type == IC_DEFAULT)
         call_type = iomux_call_get_default();
 
@@ -854,6 +851,8 @@ iomux_epoll_call(iomux_call_type call_type, rcf_rpc_server *rpcs, int epfd,
         case IC_EPOLL_PWAIT:
         case IC_EPOLL_PWAIT2:
         {
+            struct tarpc_timespec  tv;
+            struct tarpc_timespec *tv_ptr = &tv;
             int rc = 0;
             rcf_rpc_op save_op = rpcs->op;
             uint64_t duration;
@@ -891,7 +890,7 @@ iomux_epoll_call(iomux_call_type call_type, rcf_rpc_server *rpcs, int epfd,
                 if (timeout < 0)
                     tv_ptr = NULL;
                 else
-                    TE_NS2TS(TE_MS2NS(timeout), &tv);
+                    TE_NS2TS(TE_MS2NS(timeout), tv_ptr);
                 rc = rpc_epoll_pwait2(rpcs, epfd, events, maxevents, tv_ptr,
                                       cur_st_p->iomux_call_sigmask);
             }
