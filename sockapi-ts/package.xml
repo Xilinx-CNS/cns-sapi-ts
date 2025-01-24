@@ -69,6 +69,7 @@ Definition and description of argument types.
           <value reqs="POLL,PPOLL">ppoll</value>
           <value reqs="EPOLL">epoll</value>
           <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+          <value reqs="EPOLL,EPOLL_PWAIT2">epoll_pwait2</value>
         </enum>
         <enum name="iomux_with_oo_epoll">
           <value reqs="SELECT">select</value>

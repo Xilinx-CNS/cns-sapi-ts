@@ -1365,6 +1365,18 @@
         <arg name="env"/>
         <arg name="failures"/>
         <arg name="howto"/>
+        <arg name="inuse"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="recv_check"/>
+        <arg name="send_check"/>
+        <arg name="success"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="another_peer"/>
+        <arg name="env"/>
+        <arg name="failures"/>
+        <arg name="howto"/>
         <arg name="inuse">TRUE</arg>
         <arg name="iomux"/>
         <arg name="recv_check"/>

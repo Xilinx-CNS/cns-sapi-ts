@@ -63,6 +63,7 @@
                     <arg name="iomux" type="iomux">
                       <value reqs="EPOLL">epoll</value>
                       <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+                      <value reqs="EPOLL,EPOLL_PWAIT2">epoll_pwait2</value>
                     </arg>
                     <arg name="timeout">
                       <value>0</value>

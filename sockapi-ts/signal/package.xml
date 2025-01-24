@@ -471,10 +471,14 @@
                 <value reqs="POLL,PPOLL">ppoll</value>
                 <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
                 <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+                <value reqs="EPOLL,EPOLL_PWAIT2">epoll_pwait2</value>
+                <value reqs="EPOLL,EPOLL_PWAIT2">epoll_pwait2</value>
             </arg>
             <arg name="use_epollet" list="et">
                 <value>FALSE</value>
                 <value>FALSE</value>
+                <value>FALSE</value>
+                <value>TRUE</value>
                 <value>FALSE</value>
                 <value>TRUE</value>
             </arg>

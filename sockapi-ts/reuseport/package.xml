@@ -305,6 +305,7 @@
               <arg name="iomux" type="iomux">
                 <value>epoll</value>
                 <value>epoll_pwait</value>
+                <value>epoll_pwait2</value>
               </arg>
               <arg name="late_iomux" type="boolean">
                 <value>TRUE</value>

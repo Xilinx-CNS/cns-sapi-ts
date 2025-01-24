@@ -2496,6 +2496,10 @@
             <verdict>The second epoll_pwait() call returned 0 instead of -1</verdict>
             <verdict>Signal unblocked when calling epoll_pwait() was not handled</verdict>
           </result>
+          <result value="FAILED">
+            <verdict>The second epoll_pwait2() call returned 0 instead of -1</verdict>
+            <verdict>Signal unblocked when calling epoll_pwait2() was not handled</verdict>
+          </result>
         </results>
         <results tags="v5&amp;ool_epoll=1" key="ON-929">
           <result value="FAILED">
@@ -2504,8 +2508,17 @@
             <verdict>Signal unblocked when calling epoll_pwait() was not handled</verdict>
           </result>
           <result value="FAILED">
+            <verdict>The second epoll_pwait2() call returned 1 instead of -1</verdict>
+            <verdict>The third epoll_pwait2() call returned 0 instead of -1</verdict>
+            <verdict>Signal unblocked when calling epoll_pwait2() was not handled</verdict>
+          </result>
+          <result value="FAILED">
             <verdict>The second epoll_pwait() call returned 0 instead of -1</verdict>
             <verdict>Signal unblocked when calling epoll_pwait() was not handled</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>The second epoll_pwait2() call returned 0 instead of -1</verdict>
+            <verdict>Signal unblocked when calling epoll_pwait2() was not handled</verdict>
           </result>
         </results>
       </iter>
@@ -2524,6 +2537,10 @@
             <verdict>The second epoll_pwait() call returned 0 instead of -1</verdict>
             <verdict>Signal unblocked when calling epoll_pwait() was not handled</verdict>
           </result>
+          <result value="FAILED">
+            <verdict>The second epoll_pwait2() call returned 0 instead of -1</verdict>
+            <verdict>Signal unblocked when calling epoll_pwait2() was not handled</verdict>
+          </result>
         </results>
         <results tags="v5&amp;ool_epoll=1" key="ON-929">
           <result value="FAILED">
@@ -2532,8 +2549,17 @@
             <verdict>Signal unblocked when calling epoll_pwait() was not handled</verdict>
           </result>
           <result value="FAILED">
+            <verdict>The second epoll_pwait2() call returned 1 instead of -1</verdict>
+            <verdict>The third epoll_pwait2() call returned 0 instead of -1</verdict>
+            <verdict>Signal unblocked when calling epoll_pwait2() was not handled</verdict>
+          </result>
+          <result value="FAILED">
             <verdict>The second epoll_pwait() call returned 0 instead of -1</verdict>
             <verdict>Signal unblocked when calling epoll_pwait() was not handled</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>The second epoll_pwait2() call returned 0 instead of -1</verdict>
+            <verdict>Signal unblocked when calling epoll_pwait2() was not handled</verdict>
           </result>
         </results>
       </iter>
@@ -2555,6 +2581,23 @@
         </results>
       </iter>
       <iter result="PASSED">
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="sig_to_send"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="timeout">0</arg>
+        <arg name="use_epollet">FALSE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>The second epoll_pwait2() call returned 0 instead of -1</verdict>
+            <verdict>Signal unblocked when calling epoll_pwait2() was not handled</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
         <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
         <arg name="func_sig">sigaction_siginfo</arg>
         <arg name="iomux">epoll_pwait</arg>
@@ -2568,6 +2611,23 @@
           <result value="FAILED">
             <verdict>The second epoll_pwait() call returned 0 instead of -1</verdict>
             <verdict>Signal unblocked when calling epoll_pwait() was not handled</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig">sigaction_siginfo</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="sig_to_send"/>
+        <arg name="sock_type"/>
+        <arg name="timeout">0</arg>
+        <arg name="use_epollet">FALSE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>The second epoll_pwait2() call returned 0 instead of -1</verdict>
+            <verdict>Signal unblocked when calling epoll_pwait2() was not handled</verdict>
           </result>
         </results>
       </iter>
@@ -2589,6 +2649,23 @@
         </results>
       </iter>
       <iter result="PASSED">
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="sig_to_send"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="timeout">0</arg>
+        <arg name="use_epollet"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>The second epoll_pwait2() call returned 0 instead of -1</verdict>
+            <verdict>Signal unblocked when calling epoll_pwait2() was not handled</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
         <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
         <arg name="func_sig">sigaction</arg>
         <arg name="iomux">epoll_pwait</arg>
@@ -2606,6 +2683,23 @@
         </results>
       </iter>
       <iter result="PASSED">
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig">sigaction</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="sig_to_send"/>
+        <arg name="sock_type"/>
+        <arg name="timeout">0</arg>
+        <arg name="use_epollet"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>The second epoll_pwait2() call returned 0 instead of -1</verdict>
+            <verdict>Signal unblocked when calling epoll_pwait2() was not handled</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
         <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
         <arg name="func_sig"/>
         <arg name="iomux">epoll_pwait</arg>
@@ -2619,6 +2713,23 @@
           <result value="FAILED">
             <verdict>The second epoll_pwait() call returned 0 instead of -1</verdict>
             <verdict>Signal unblocked when calling epoll_pwait() was not handled</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="sig_to_send"/>
+        <arg name="sock_type"/>
+        <arg name="timeout">0</arg>
+        <arg name="use_epollet"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>The second epoll_pwait2() call returned 0 instead of -1</verdict>
+            <verdict>Signal unblocked when calling epoll_pwait2() was not handled</verdict>
           </result>
         </results>
       </iter>
@@ -2670,6 +2781,17 @@
         <arg name="env"/>
         <arg name="func_sig"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="sig_to_send"/>
+        <arg name="sock_type"/>
+        <arg name="timeout">1</arg>
+        <arg name="use_epollet">FALSE</arg>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func_sig"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="sig_to_send"/>
         <arg name="sock_type"/>
         <arg name="timeout">1</arg>
