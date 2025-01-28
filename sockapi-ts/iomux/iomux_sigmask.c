@@ -7,10 +7,11 @@
  * $Id$
  */
 
-/** @page iomux-iomux_sigmask Support of sigmask in pselect()/ppoll()/epoll_pwait()
+/**
+ * @page iomux-iomux_sigmask Support of sigmask in pselect()/ ppoll()/ epoll_pwait()/ epoll_pwait2()
  *
  * @objective Check support of @a sigmask parameter in
- *            @b pselect()/ @b ppoll()/ @b epoll_pwait()
+ *            @b pselect()/ @b ppoll()/ @b epoll_pwait()/ @b epoll_pwait2()
  *            implementation.
  *
  * @type conformance
@@ -23,7 +24,11 @@
  * @param pco_killer    PCO on the same host as @p pco_iut
  * @param sig1          The first test signal
  * @param sig2          The second test signal
- * @param iomux         Use @b pselect, @b ppoll() or @b epoll_pwait()
+ * @param iomux         iomux function to use:
+ *                      - @b pselect
+ *                      - @b ppoll()
+ *                      - @b epoll_pwait()
+ *                      - @b epoll_pwait2()
  *
  * -# Set test signal handler which just registers the last delivered
  *    signal for @p sig1 and @p sig2;
@@ -240,8 +245,10 @@ main(int argc, char *argv[])
     CHECK_MASK("second");
     MSLEEP(100);
 
-    /* Signal should be delivered when pselect()/ppoll()/epoll_pwait()
-     * restores original mask */
+    /*
+     * Signal should be delivered when pselect()/ ppoll()/ epoll_pwait()/
+     * epoll_pwait2() restores original mask
+    */
     rc = rpc_sigismember(pco_iut, received_set, sig1);
     if (rc != TRUE)
     {
