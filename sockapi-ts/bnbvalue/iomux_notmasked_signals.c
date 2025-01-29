@@ -15,8 +15,11 @@
  * @reference @ref XNS5 section 8.1
  *
  * @param pco_iut   PCO on IUT
- * @param iomux     Use @b pselect(), @b ppoll() or @b epoll_pwait()
- *                  function
+ * @param iomux     iomux function to use:
+ *                  - @b pselect
+ *                  - @b ppoll()
+ *                  - @b epoll_pwait()
+ *                  - @b epoll_pwait2()
  *
  * @note The test is run on @p pco_iut
  *

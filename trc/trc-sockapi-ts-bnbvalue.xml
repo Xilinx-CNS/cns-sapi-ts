@@ -12523,6 +12523,11 @@
         <arg name="iomux">epoll_pwait</arg>
         <notes/>
       </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.iut_only</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <notes/>
+      </iter>
     </test>
     <test name="func_recvmsg_ctrunc" type="script">
       <objective>Check that recvmsg() function sets MSG_CTRUNC flag in msg_flags field of msghdr structure if ancillary data was truncated: the kernel has more ancillary data to return than the process has allocated room for (msg_controllen).</objective>
