@@ -20,10 +20,12 @@
  *      - ppoll
  *      - epoll
  *      - epoll_pwait
+ *      - epoll_pwait2
  *      - oo_epoll
  *      - recv
  * @param epoll_flags     Set edge-triggered or oneshot epoll flags, iterating
- *                        makes sense only for @p function={epoll,epoll_pwait}:
+ *                        makes sense only for
+ *                        @p function={epoll,epoll_pwait,epoll_pwait2}:
  *      - et (set @c EPOLLET)
  *      - oneshot (set @c EPOLLONESHOT)
  *      - none

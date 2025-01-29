@@ -1137,6 +1137,7 @@
               <arg name="function" type="iomux_with_recv">
                 <value>epoll</value>
                 <value>epoll_pwait</value>
+                <value>epoll_pwait2</value>
               </arg>
               <arg name="epoll_flags" type="epoll_flags"/>
               <arg name="blocking_func" type="boolean"/>
