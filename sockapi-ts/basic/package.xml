@@ -263,6 +263,7 @@
                 <value reqs="POLL,PPOLL">ppoll</value> 
                 <value reqs="EPOLL">epoll</value> 
                 <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value> 
+                <value reqs="EPOLL,EPOLL_PWAIT2">epoll_pwait2</value>
             </arg>
             <arg name="accept_before" type="boolean"/>
             <!--- @page basic-threads_shutdown_listening
