@@ -39,6 +39,8 @@
                 <value>none</value>
                 <value>before</value>
                 <value>before</value>
+                <value>before</value>
+                <value>after</value>
                 <value>after</value>
                 <value>after</value>
             </arg>
@@ -46,8 +48,10 @@
                 <value>none</value>
                 <value reqs="EPOLL">epoll</value>
                 <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+                <value reqs="EPOLL,EPOLL_PWAIT2">epoll_pwait2</value>
                 <value reqs="EPOLL">epoll</value>
                 <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+                <value reqs="EPOLL,EPOLL_PWAIT2">epoll_pwait2</value>
             </arg>
         </run>
 

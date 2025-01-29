@@ -35,14 +35,18 @@
  *                    - none
  *                    - before
  *                    - before
+ *                    - before
+ *                    - after
  *                    - after
  *                    - after
  * @param epoll_func  Tested epoll function:
  *                    - none
  *                    - epoll
  *                    - epoll_pwait
+ *                    - epoll_pwait2
  *                    - epoll
  *                    - epoll_pwait
+ *                    - epoll_pwait2
  *
  * @par Test sequence:
  *
