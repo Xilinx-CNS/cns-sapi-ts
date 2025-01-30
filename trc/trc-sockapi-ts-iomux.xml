@@ -801,6 +801,12 @@
         <arg name="type"/>
         <notes/>
       </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="type"/>
+        <notes/>
+      </iter>
     </test>
     <test name="sock_shut_rd" type="script">
       <objective>Check I/O multiplexing functions behaviour when socket was shut down for reading.</objective>
