@@ -2913,6 +2913,7 @@
             <arg name="iomux">
                 <value reqs="EPOLL">epoll</value>
                 <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+                <value reqs="EPOLL,EPOLL_PWAIT2">epoll_pwait2</value>
             </arg>
             <arg name="sock_type" list="">
                 <value>SOCK_UNSPEC</value>

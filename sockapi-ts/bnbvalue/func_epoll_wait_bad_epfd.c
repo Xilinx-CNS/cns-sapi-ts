@@ -5,9 +5,11 @@
  * Bad Parameters and Boundary Values
  */
 
-/** @page bnbvalue-func_epoll_wait_bad_epfd Using epoll_wait() function with bad epfd
+/**
+ * @page bnbvalue-func_epoll_wait_bad_epfd Using epoll_wait()/epoll_pwait()/epoll_pwait2() function with bad epfd
  *
- * @objective Check that @b epoll_wait() function correctly reports an
+ * @objective Check that @b epoll_wait()/ @b epoll_pwait()/ @b epoll_pwait2()
+ *            function correctly reports an
  *            error when it is called with bad epfd value.
  *
  * @type conformance, robustness
@@ -27,7 +29,8 @@
  * -# Call @b epoll_wait() function according to @p epfd:
  *        - if @p epfd is @c invalid use @c -1 as epoll descriptor;
  *        - if @p epfd is @c socket use @p iut_s as epoll descriptor;
- * -# Check that @b epoll_wait() function returns @c -1 and sets
+ * -# Check that @b epoll_wait()/ @b epoll_pwait()/ @b epoll_pwait2()
+ *    function returns @c -1 and sets
  *    errno to @c EINVAL in case of 'socket' value of @p epfd or
  *    @c EBADF in all other cases.
  * -# If @p create is @c TRUE close @p epoll_fd.
@@ -87,8 +90,9 @@ main(int argc, char *argv[])
             break;
 
         case TAPI_IOMUX_EPOLL_PWAIT:
-            rc = rpc_epoll_pwait(pco_iut, tmp_epfd, events, maxevents,
-                                 timeout, RPC_NULL);
+        case TAPI_IOMUX_EPOLL_PWAIT2:
+            rc = iomux_epoll_pwait_call(iomux, pco_iut, tmp_epfd, events,
+                                        maxevents, timeout, RPC_NULL);
             break;
 
         default:
@@ -100,9 +104,15 @@ main(int argc, char *argv[])
         TEST_FAIL("epoll_wait() returned %d instead -1.", rc);
     }
     if (strcmp(epfd, "socket") == 0)
-        CHECK_RPC_ERRNO(pco_iut, RPC_EINVAL, "epoll_wait() returns %d", rc);
+    {
+        CHECK_RPC_ERRNO(pco_iut, RPC_EINVAL, "%s() returns %d",
+                        iomux_call_en2str(iomux), rc);
+    }
     else
-        CHECK_RPC_ERRNO(pco_iut, RPC_EBADF, "epoll_wait() returns %d", rc);
+    {
+        CHECK_RPC_ERRNO(pco_iut, RPC_EBADF, "%s() returns %d",
+                        iomux_call_en2str(iomux), rc);
+    }
 
     TEST_SUCCESS;
 
