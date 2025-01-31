@@ -55,7 +55,8 @@ main(int argc, char *argv[])
     int                     maxevents = 2;
     int                     timeout;
     te_bool                 create;
-    const char             *iomux;
+
+    iomux_call_type iomux;
 
     TEST_START;
     TEST_GET_PCO(pco_iut);
@@ -64,7 +65,7 @@ main(int argc, char *argv[])
     TEST_GET_STRING_PARAM(epfd);
     TEST_GET_BOOL_PARAM(create);
     TEST_GET_SOCK_TYPE(sock_type);
-    TEST_GET_STRING_PARAM(iomux);
+    TEST_GET_IOMUX_FUNC(iomux);
 
     if (strcmp(epfd, "socket") == 0 || create)
         iut_s = rpc_socket(pco_iut, rpc_socket_domain_by_addr(iut_addr),
@@ -79,13 +80,20 @@ main(int argc, char *argv[])
 
     RPC_AWAIT_IUT_ERROR(pco_iut);
     tmp_epfd = (strcmp(epfd, "socket") == 0) ? iut_s : -1;
-    if (strcmp(iomux, "epoll") == 0)
-        rc = rpc_epoll_wait(pco_iut, tmp_epfd, events, maxevents, timeout);
-    else if (strcmp(iomux, "epoll_pwait") == 0)
-        rc = rpc_epoll_pwait(pco_iut, tmp_epfd, events, maxevents,
-                             timeout, RPC_NULL);
-    else
-        TEST_FAIL("Incorrect value of 'iomux' parameter");
+    switch (iomux)
+    {
+        case TAPI_IOMUX_EPOLL:
+            rc = rpc_epoll_wait(pco_iut, tmp_epfd, events, maxevents, timeout);
+            break;
+
+        case TAPI_IOMUX_EPOLL_PWAIT:
+            rc = rpc_epoll_pwait(pco_iut, tmp_epfd, events, maxevents,
+                                 timeout, RPC_NULL);
+            break;
+
+        default:
+            TEST_FAIL("Incorrect value of 'iomux' parameter");
+    }
 
     if (rc != -1)
     {
