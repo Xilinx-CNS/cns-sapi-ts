@@ -53,10 +53,26 @@
         <notes/>
       </iter>
       <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_WR</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="ready">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
         <arg name="check_event">EVT_RDWR</arg>
         <arg name="env"/>
         <arg name="howto">SHUT_WR</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="ready">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_WR</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="ready">TRUE</arg>
         <notes/>
       </iter>
@@ -69,10 +85,26 @@
         <notes/>
       </iter>
       <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_WR</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="ready">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
         <arg name="check_event">EVT_RDWR</arg>
         <arg name="env"/>
         <arg name="howto">SHUT_WR</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="ready">FALSE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_WR</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="ready">FALSE</arg>
         <notes/>
       </iter>
@@ -89,6 +121,14 @@
         <arg name="env"/>
         <arg name="howto">SHUT_RDWR</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="ready">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RDWR</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="ready">TRUE</arg>
         <notes/>
       </iter>
@@ -123,6 +163,21 @@
         </results>
       </iter>
       <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RDWR</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="ready">FALSE</arg>
+        <notes/>
+        <results tags="v5&amp;ool_spin" key="ON-1119" notes="Expected behaviour">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>POLLHUP is not returned when shutdown(SHUT_RDWR) is called</verdict>
+            <verdict>The first iomux call after shutdown(RDWR) returned only EVT_WR event</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
         <arg name="check_event">EVT_WR</arg>
         <arg name="env"/>
         <arg name="howto">SHUT_RDWR</arg>
@@ -135,6 +190,14 @@
         <arg name="env"/>
         <arg name="howto">SHUT_RDWR</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="ready">TRUE</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RDWR</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="ready">TRUE</arg>
         <notes/>
       </iter>
@@ -157,6 +220,20 @@
         <arg name="env"/>
         <arg name="howto">SHUT_RDWR</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="ready">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-1183">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>POLLHUP is not returned when shutdown(SHUT_RDWR) is called</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RDWR</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="ready">FALSE</arg>
         <notes/>
         <results tags="v5" key="ON-1183">
@@ -593,10 +670,26 @@
         <notes/>
       </iter>
       <iter result="PASSED">
+        <arg name="check_event">EVT_WR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RD</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="ready"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
         <arg name="check_event">EVT_RDWR</arg>
         <arg name="env"/>
         <arg name="howto">SHUT_RD</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="ready"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RDWR</arg>
+        <arg name="env"/>
+        <arg name="howto">SHUT_RD</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="ready"/>
         <notes/>
       </iter>
@@ -621,6 +714,14 @@
         <arg name="env"/>
         <arg name="howto"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="ready"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_event">EVT_RD</arg>
+        <arg name="env"/>
+        <arg name="howto"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="ready"/>
         <notes/>
       </iter>
@@ -752,6 +853,11 @@
         <arg name="iomux">epoll_pwait</arg>
         <notes/>
       </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <notes/>
+      </iter>
     </test>
     <test name="ret_count_rd_wr" type="script">
       <objective>Check that I/O Multiplexing functions correctly counts events in return value when the same socket is waited for reading and writing.</objective>
@@ -829,6 +935,12 @@
       <iter result="PASSED">
         <arg name="env"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="type"/>
         <notes/>
       </iter>
@@ -968,6 +1080,17 @@
         </results>
       </iter>
       <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>No SIGPIPE signal has been recieved.</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer</arg>
         <arg name="iomux">select</arg>
         <arg name="type">SOCK_STREAM</arg>
@@ -1004,6 +1127,12 @@
         <notes/>
       </iter>
       <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_tst</arg>
         <arg name="iomux">select</arg>
         <arg name="type">SOCK_STREAM</arg>
@@ -1040,6 +1169,12 @@
         <notes/>
       </iter>
       <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="iomux">select</arg>
         <arg name="type">SOCK_STREAM</arg>
@@ -1072,6 +1207,12 @@
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="type">SOCK_STREAM</arg>
         <notes/>
       </iter>
@@ -1205,6 +1346,17 @@
         </results>
       </iter>
       <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="type">SOCK_DGRAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>No SIGPIPE signal has been recieved</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer</arg>
         <arg name="iomux">select</arg>
         <arg name="type">SOCK_STREAM</arg>
@@ -1241,6 +1393,12 @@
         <notes/>
       </iter>
       <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_tst</arg>
         <arg name="iomux">select</arg>
         <arg name="type">SOCK_STREAM</arg>
@@ -1277,6 +1435,12 @@
         <notes/>
       </iter>
       <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="iomux">select</arg>
         <arg name="type">SOCK_STREAM</arg>
@@ -1309,6 +1473,12 @@
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="type">SOCK_STREAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="type">SOCK_STREAM</arg>
         <notes/>
       </iter>
@@ -1359,6 +1529,20 @@
           </result>
           <result value="FAILED">
             <verdict>Peer has closed its socket, epoll_pwait() returns 1 with (EVT_EXC | EVT_ERR | EVT_HUP) event(s) instead of 1 with (EVT_RDWR | EVT_EXC | EVT_HUP | EVT_ERR) events</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <notes/>
+        <results tags="(linux&lt;4|linux-4&lt;12)&amp;v5&amp;ool_spin&amp;ool_epoll=3" key="ON-8231" notes="Race condition in Linux">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>Peer has closed its socket, epoll_pwait2() returns 1 with (EVT_EXC | EVT_ERR) event(s) instead of 1 with (EVT_RDWR | EVT_EXC | EVT_HUP | EVT_ERR) events</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>Peer has closed its socket, epoll_pwait2() returns 1 with (EVT_EXC | EVT_ERR | EVT_HUP) event(s) instead of 1 with (EVT_RDWR | EVT_EXC | EVT_HUP | EVT_ERR) events</verdict>
           </result>
         </results>
       </iter>
@@ -1440,6 +1624,11 @@
         <arg name="iomux">epoll_pwait</arg>
         <notes/>
       </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <notes/>
+      </iter>
     </test>
     <test name="peer_shut_rd" type="script">
       <objective>Check I/O multiplexing functions behaviour when peer shuts down connection for reading.</objective>
@@ -1480,6 +1669,11 @@
       <iter result="PASSED">
         <arg name="env"/>
         <arg name="iomux">epoll_pwait</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <notes/>
       </iter>
     </test>
@@ -1524,6 +1718,11 @@
         <arg name="iomux">epoll_pwait</arg>
         <notes/>
       </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <notes/>
+      </iter>
     </test>
     <test name="peer_shut_rdwr" type="script">
       <objective>Check I/O multiplexing functions behaviour when peer shuts down connection for reading and writing.</objective>
@@ -1564,6 +1763,11 @@
       <iter result="PASSED">
         <arg name="env"/>
         <arg name="iomux">epoll_pwait</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <notes/>
       </iter>
     </test>
@@ -1607,6 +1811,16 @@
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <notes/>
+        <results tags="v5&amp;urg_ignore" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, epoll_pwait2() returns (EVT_RD | EVT_RD_NORM) event(s) instead of (EVT_PRI)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
         <arg name="iomux">epoll</arg>
         <notes/>
         <results tags="v5&amp;urg_ignore" key="ST-2477">
@@ -1679,12 +1893,32 @@
         </results>
       </iter>
       <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <notes/>
+        <results tags="v5&amp;urg_ignore&amp;!(ool_loop=0)" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, epoll_pwait2() returns (EVT_RD | EVT_RD_NORM) event(s) instead of (EVT_PRI)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
         <arg name="iomux">epoll_pwait</arg>
         <notes/>
         <results tags="v5&amp;urg_ignore&amp;!(ool_loop=0)" key="ST-2477">
           <result value="FAILED">
             <verdict>OOB data was sent to a socket, epoll_pwait() returns (EVT_RD | EVT_RD_NORM) event(s) instead of (EVT_PRI)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <notes/>
+        <results tags="v5&amp;urg_ignore&amp;!(ool_loop=0)" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, epoll_pwait2() returns (EVT_RD | EVT_RD_NORM) event(s) instead of (EVT_PRI)</verdict>
           </result>
         </results>
       </iter>
@@ -1824,6 +2058,11 @@
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_tst</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -1849,6 +2088,19 @@
         <results tags="v5&amp;urg_ignore" key="ST-2477">
           <result value="FAILED">
             <verdict>OOB data was sent to a socket, epoll_pwait() returns (EVT_RD | EVT_RD_NORM) event(s) instead of (EVT_PRI)</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <notes/>
+        <results tags="v5&amp;linux">
+          <result value="PASSED"/>
+        </results>
+        <results tags="v5&amp;urg_ignore" key="ST-2477">
+          <result value="FAILED">
+            <verdict>OOB data was sent to a socket, epoll_pwait2() returns (EVT_RD | EVT_RD_NORM) event(s) instead of (EVT_PRI)</verdict>
           </result>
         </results>
       </iter>
@@ -2028,6 +2280,13 @@
         <arg name="linger"/>
         <notes/>
       </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="linger"/>
+        <notes/>
+      </iter>
     </test>
     <test name="mix_fds" type="script">
       <objective>Check that I/O multiplexing functions correctly handles mixture of file descriptors.</objective>
@@ -2052,6 +2311,12 @@
       <iter result="PASSED">
         <arg name="env"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="n_fds"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="n_fds"/>
         <notes/>
       </iter>
@@ -2772,6 +3037,17 @@
         <arg name="use_wildcard"/>
         <notes/>
       </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="how"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="ready"/>
+        <arg name="ret_val"/>
+        <arg name="sock_type"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
     </test>
     
     <test name="notconn" type="script">
@@ -2862,6 +3138,20 @@
         <arg name="domain"/>
         <arg name="env"/>
         <arg name="evt">EVT_WR</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>epoll_pwait2() called on not connected SOCK_STREAM socket to wait for EVT_WR event returns 1 and sets events to EVT_WR | EVT_EXC | EVT_HUP instead of 0 with empty events or 1 with EVT_HUP|EVT_EXC</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound"/>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt">EVT_WR</arg>
         <arg name="iomux">epoll</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
         <notes/>
@@ -2891,6 +3181,20 @@
         <arg name="env"/>
         <arg name="evt">EVT_RD</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED">
+            <verdict>EVT_HUP | EVT_EXC event is set</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound"/>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt">EVT_RD</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
         <notes/>
         <results tags="linux">
@@ -3079,6 +3383,15 @@
         <notes/>
       </iter>
       <iter result="PASSED">
+        <arg name="bound">FALSE</arg>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
         <arg name="bound">TRUE</arg>
         <arg name="domain"/>
         <arg name="env"/>
@@ -3102,6 +3415,15 @@
         <arg name="env"/>
         <arg name="evt"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="bound">TRUE</arg>
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="evt"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="sock_type"/>
         <notes/>
       </iter>
@@ -3786,8 +4108,18 @@
         <notes/>
       </iter>
       <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst1'='pco_tst'</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
         <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -3796,11 +4128,21 @@
         <notes/>
       </iter>
       <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iut_addr':inet6:ip4mapped_uc},{{'pco_tst':tester},addr:'host2_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
         <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
         <arg name="iomux">epoll_pwait</arg>
         <notes/>
       </iter>
       <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet6:ip4mapped_uc}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
         <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet:unicast}},'pco_tst1'='pco_tst'</arg>
         <arg name="iomux">select</arg>
         <notes/>
@@ -3906,8 +4248,18 @@
         <notes/>
       </iter>
       <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},{'pco_tst2':tester},addr:'host2_addr':inet:unicast}},'pco_tst1'='pco_tst'</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
         <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'host2_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT},{'pco_tst1':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'host2_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -3916,8 +4268,18 @@
         <notes/>
       </iter>
       <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'host2_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
         <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">{{{'pco_iut':IUT,'pco_tst1':IUT},{'pco_tst':tester},addr:'iut_addr':inet:unicast}},'pco_tst2'='pco_tst'</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -3943,7 +4305,7 @@
     </test>
 
     <test name="iomux_sigmask" type="script">
-      <objective>Check support of sigmask parameter in pselect()/ ppoll()/ epoll_pwait() implementation.</objective>
+      <objective>Check support of sigmask parameter in pselect()/ ppoll()/ epoll_pwait()/ epoll_pwait2() implementation.</objective>
       <notes/>
       <iter result="PASSED">
         <arg name="env"/>
@@ -3993,6 +4355,13 @@
         <arg name="data_size"/>
         <arg name="env"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="sock_type"/>
         <notes/>
       </iter>
@@ -4266,6 +4635,17 @@
         <arg name="timeout"/>
         <notes/>
       </iter>
+      <iter result="PASSED">
+        <arg name="action"/>
+        <arg name="data_size"/>
+        <arg name="env"/>
+        <arg name="evts"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="pipe_end"/>
+        <arg name="pr_ev"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
     </test>
     <test name="peer_close" type="script">
       <objective>Check that calling of iomux functions on connected TCP socket with closed peer socket doesn't lead to failures.</objective>
@@ -4318,6 +4698,14 @@
       <iter result="PASSED">
         <arg name="call_shutdown">TRUE</arg>
         <arg name="env"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="passive"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_shutdown">TRUE</arg>
+        <arg name="env"/>
         <arg name="iomux">select</arg>
         <arg name="passive"/>
         <arg name="timeout"/>
@@ -4375,6 +4763,14 @@
         <arg name="call_shutdown">FALSE</arg>
         <arg name="env"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="passive"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="call_shutdown">FALSE</arg>
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="passive"/>
         <arg name="timeout"/>
         <notes/>
@@ -4437,6 +4833,13 @@
         <arg name="timeout"/>
         <notes/>
       </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="iomux_before"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
     </test>
     <test name="multiple_iomux_nonblock_sock" type="script">
       <objective>Check behaviour of iomux function when it is called multiple times on a nonblocking socket</objective>
@@ -4450,7 +4853,7 @@
       </iter>
     </test>
     <test name="pollpri" type="script">
-      <objective>Check that poll()/ ppoll/ epoll_wait() / epoll_pwait() functions returns POLLPRI ( EPOLLPRI) event when there is available OOB data on the socket.</objective>
+      <objective>Check that poll()/ ppoll/ epoll_wait() / epoll_pwait()/ epoll_pwait2() functions returns POLLPRI ( EPOLLPRI) event when there is available OOB data on the socket.</objective>
       <notes/>
       <iter result="PASSED">
         <arg name="add_flags">epolloneshot</arg>
@@ -4549,6 +4952,33 @@
       <iter result="PASSED">
         <arg name="add_flags">epollet</arg>
         <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="read_after_oob">TRUE</arg>
+        <arg name="timeout">2000</arg>
+        <notes/>
+        <results tags="v5&amp;(small_spin|tiny_spin)&amp;(ool_loop=0)&amp;!epoll_mt_safe&amp;(ool_epoll=3|ool_sleep_spin)&amp;!urg_allow" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=3&amp;(ool_loop=0)&amp;!ool_spin&amp;!ool_sleep_spin&amp;!epoll_mt_safe" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;!(ool_loop=0)&amp;(ool_epoll=1|ool_epoll=3)" key="ON-929">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags">epollet</arg>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="iomux">epoll_pwait</arg>
         <arg name="read_after_oob">FALSE</arg>
         <arg name="timeout">2000</arg>
@@ -4610,6 +5040,33 @@
         <arg name="add_flags">epollet</arg>
         <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="read_after_oob">TRUE</arg>
+        <arg name="timeout">2000</arg>
+        <notes/>
+        <results tags="v5&amp;(small_spin|tiny_spin)&amp;(ool_loop=0)&amp;!epoll_mt_safe&amp;(ool_epoll=3|ool_sleep_spin)&amp;!urg_allow" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ool_epoll=3&amp;(ool_loop=0)&amp;!ool_spin&amp;!ool_sleep_spin&amp;!epoll_mt_safe" key="ON-5898">
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;!(ool_loop=0)&amp;(ool_epoll=1|ool_epoll=3)" key="ON-929">
+          <result value="PASSED"/>
+          <result value="PASSED">
+            <verdict>iomux function returned the same events in case of oob data on socket on the second call</verdict>
+            <verdict>iomux function returned the same events in case of normal data on socket on the second call</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="add_flags">epollet</arg>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="read_after_oob">TRUE</arg>
         <arg name="timeout">2000</arg>
         <notes/>
@@ -5067,6 +5524,13 @@
         <notes/>
       </iter>
       <iter result="PASSED">
+        <arg name="add_flags">none</arg>
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="sock_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
         <arg name="add_flags"/>
         <arg name="env"/>
         <arg name="iomux">select</arg>
@@ -5270,6 +5734,16 @@
         <arg name="event1"/>
         <arg name="event2"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="sock_type"/>
+        <arg name="timeout"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="before"/>
+        <arg name="env"/>
+        <arg name="event1"/>
+        <arg name="event2"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="sock_type"/>
         <arg name="timeout"/>
         <notes/>
