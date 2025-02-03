@@ -6143,6 +6143,19 @@
         </results>
       </iter>
       <iter result="PASSED">
+        <arg name="blocking">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="error_code"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="select_err_queue"/>
+        <notes/>
+        <results tags="v5|(linux&lt;3|linux=3&amp;linux-3&lt;17)" key="ON-5444">
+          <result value="PASSED">
+            <verdict>recvmsg() failed with unexpected errno RPC-ENOTCONN</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
         <arg name="blocking">FALSE</arg>
         <arg name="env">VAR.env.peer2peer_ipv6</arg>
         <arg name="error_code"/>
@@ -6242,6 +6255,25 @@
         <arg name="env">VAR.env.peer2peer_ipv6</arg>
         <arg name="error_code"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="select_err_queue"/>
+        <notes/>
+        <results tags="v5|(linux&lt;3|linux=3&amp;linux-3&lt;17)" key="ON-5444">
+          <result value="FAILED">
+            <verdict>recvmsg() failed with ICMP errno</verdict>
+            <verdict>send(): unexpected errno RPC-EPIPE was reported</verdict>
+          </result>
+        </results>
+        <results tags="!v5&amp;(linux=3&amp;linux-3&gt;=17|linux=4&amp;linux-4&lt;11)">
+          <result value="FAILED">
+            <verdict>send(): unexpected errno RPC-EPIPE was reported</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="blocking">FALSE</arg>
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="error_code"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="select_err_queue"/>
         <notes/>
         <results tags="v5|(linux&lt;3|linux=3&amp;linux-3&lt;17)" key="ON-5444">
@@ -6362,6 +6394,19 @@
         </results>
       </iter>
       <iter result="PASSED">
+        <arg name="blocking">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="error_code"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="select_err_queue"/>
+        <notes/>
+        <results tags="v5|(linux&lt;3|linux=3&amp;linux-3&lt;17)" key="ON-5444">
+          <result value="PASSED">
+            <verdict>recvmsg() failed with unexpected errno RPC-ENOTCONN</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
         <arg name="blocking">FALSE</arg>
         <arg name="env">VAR.env.peer2peer</arg>
         <arg name="error_code"/>
@@ -6461,6 +6506,25 @@
         <arg name="env">VAR.env.peer2peer</arg>
         <arg name="error_code"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="select_err_queue"/>
+        <notes/>
+        <results tags="v5|(linux&lt;3|linux=3&amp;linux-3&lt;17)" key="ON-5444">
+          <result value="FAILED">
+            <verdict>recvmsg() failed with ICMP errno</verdict>
+            <verdict>send(): unexpected errno RPC-EPIPE was reported</verdict>
+          </result>
+        </results>
+        <results tags="!v5&amp;(linux=3&amp;linux-3&gt;=17|linux=4&amp;linux-4&lt;11)">
+          <result value="FAILED">
+            <verdict>send(): unexpected errno RPC-EPIPE was reported</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="blocking">FALSE</arg>
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="error_code"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="select_err_queue"/>
         <notes/>
         <results tags="v5|(linux&lt;3|linux=3&amp;linux-3&lt;17)" key="ON-5444">
@@ -6638,6 +6702,24 @@
         <arg name="block_read">FALSE</arg>
         <arg name="env"/>
         <arg name="iomux_type">epoll_pwait</arg>
+        <arg name="out"/>
+        <arg name="sock_type"/>
+        <arg name="tst_packet"/>
+        <notes/>
+        <results tags="v5&amp;ool_spin" key="ON-8231" notes="Race condition, see also ST-2354.">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>Unexpected events EVT_RD instead of EVT_RD | EVT_EXC | EVT_HUP after connection repair</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>Unexpected events EVT_WR instead of EVT_RD | EVT_WR | EVT_EXC | EVT_HUP after connection repair</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="block_read">FALSE</arg>
+        <arg name="env"/>
+        <arg name="iomux_type">epoll_pwait2</arg>
         <arg name="out"/>
         <arg name="sock_type"/>
         <arg name="tst_packet"/>
