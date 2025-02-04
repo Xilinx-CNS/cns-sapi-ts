@@ -909,6 +909,7 @@
             <arg name="iomux" type="iomux_with_oo_epoll">
               <value>epoll</value>
               <value>epoll_pwait</value>
+              <value>epoll_pwait2</value>
             </arg>
             <arg name="add_flags">
               <value reqs="EPOLLET">epollet</value>

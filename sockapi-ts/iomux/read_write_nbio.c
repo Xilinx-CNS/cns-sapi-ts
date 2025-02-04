@@ -87,7 +87,7 @@ static void
 test_fds_add(rcf_rpc_server *rpcs, test_fds_ctx_t *fdctx, int sock)
 {
     if (fdctx->iomux == IC_EPOLL || fdctx->iomux == IC_EPOLL_PWAIT ||
-        fdctx->iomux == IC_OO_EPOLL)
+        fdctx->iomux == IC_EPOLL_PWAIT2 || fdctx->iomux == IC_OO_EPOLL)
         rpc_epoll_ctl_simple(rpcs, fdctx->epfd, RPC_EPOLL_CTL_ADD, sock,
                              fdctx->event);
     else if (fdctx->iomux == IC_POLL || fdctx->iomux == IC_PPOLL)
@@ -121,7 +121,7 @@ test_init_fds(rcf_rpc_server *rpcs, iomux_call_type iomux,
 {
     fdctx->iomux = iomux;
     if (iomux == IC_EPOLL || iomux == IC_EPOLL_PWAIT ||
-        iomux == IC_OO_EPOLL)
+        iomux == IC_EPOLL_PWAIT2 || iomux == IC_OO_EPOLL)
     {
         fdctx->epfd = rpc_epoll_create(rpcs, 1);
         fdctx->event = RPC_EPOLLIN | RPC_EPOLLOUT;
@@ -165,9 +165,10 @@ test_iomux_call(rcf_rpc_server *rpcs, iomux_call_type iomux,
             break;
 
         case IC_EPOLL_PWAIT:
+        case IC_EPOLL_PWAIT2:
             memset(fdctx->events, 0, sizeof(fdctx->events));
-            rpc_epoll_pwait(rpcs, fdctx->epfd, fdctx->events,
-                            TEST_MAXEVENTS, timeout, RPC_NULL);
+            iomux_epoll_pwait_call(iomux, rpcs, fdctx->epfd, fdctx->events,
+                                   TEST_MAXEVENTS, timeout, RPC_NULL);
             break;
 
         case IC_OO_EPOLL:
@@ -367,7 +368,7 @@ do {                                                                       \
 
 cleanup:
     if (fdctx.iomux == IC_EPOLL || fdctx.iomux == IC_EPOLL_PWAIT ||
-        fdctx.iomux == IC_OO_EPOLL)
+        fdctx.iomux == IC_EPOLL_PWAIT2 || fdctx.iomux == IC_OO_EPOLL)
     {
         CLEANUP_RPC_CLOSE(pco_iut, fdctx.epfd);
     }
