@@ -49,7 +49,8 @@ main(int argc, char *argv[])
     int                     maxevents;
     int                     timeout;
     const char             *events;
-    const char             *iomux;
+
+    iomux_call_type iomux;
 
     TEST_START;
     TEST_GET_PCO(pco_iut);
@@ -58,7 +59,7 @@ main(int argc, char *argv[])
     TEST_GET_INT_PARAM(maxevents);
     TEST_GET_INT_PARAM(timeout);
     TEST_GET_STRING_PARAM(events);
-    TEST_GET_STRING_PARAM(iomux);
+    TEST_GET_IOMUX_FUNC(iomux);
 
     iut_s = rpc_socket(pco_iut, rpc_socket_domain_by_addr(iut_addr),
                        sock_type, RPC_PROTO_DEF);
@@ -69,23 +70,31 @@ main(int argc, char *argv[])
 
     RPC_AWAIT_IUT_ERROR(pco_iut);
     rmaxev = (strcmp(events, "invalid") == 0) ? 0 : rmaxev;
-    if (strcmp(iomux, "epoll") == 0)
-        rc = rpc_epoll_wait_gen(pco_iut, epfd,
-                                (strcmp(events, "invalid") == 0) ?
-                                NULL : evs_arr, rmaxev, maxevents, timeout);
-    else if (strcmp(iomux, "epoll_pwait") == 0)
-        rc = rpc_epoll_pwait_gen(pco_iut, epfd,
-                                 (strcmp(events, "invalid") == 0) ?
-                                 NULL : evs_arr, rmaxev, maxevents,
-                                 timeout, RPC_NULL);
-    else
-        TEST_FAIL("Incorrect value of 'iomux' parameter");
+    switch (iomux)
+    {
+        case TAPI_IOMUX_EPOLL:
+            rc = rpc_epoll_wait_gen(pco_iut, epfd,
+                                    (strcmp(events, "invalid") == 0) ?
+                                    NULL : evs_arr, rmaxev, maxevents, timeout);
+            break;
+
+        case TAPI_IOMUX_EPOLL_PWAIT:
+            rc = rpc_epoll_pwait_gen(pco_iut, epfd,
+                                     (strcmp(events, "invalid") == 0) ?
+                                     NULL : evs_arr, rmaxev, maxevents,
+                                     timeout, RPC_NULL);
+            break;
+
+        default:
+            TEST_FAIL("Incorrect value of 'iomux' parameter");
+    }
 
     if (rc != -1)
     {
         TEST_FAIL("%s() returned %d instead -1.", iomux, rc);
     }
-    CHECK_RPC_ERRNO(pco_iut, RPC_EINVAL, "%s() returns %d", iomux, rc);
+    CHECK_RPC_ERRNO(pco_iut, RPC_EINVAL, "%s() returns %d",
+                    iomux_call_en2str(iomux), rc);
 
     TEST_SUCCESS;
 
