@@ -5,27 +5,33 @@
  * Bad Parameters and Boundary Values
  */
 
-/** @page bnbvalue-func_epoll_wait_bad_maxevents Using epoll_wait() with non-positive maxevents
+/**
+* @page bnbvalue-func_epoll_wait_bad_maxevents Using epoll_wait()/epoll_pwait()/epoll_pwait2() with non-positive maxevents
  *
- * @objective Check that @b epoll_wait() function correctly reports the
+ * @objective Check that @b epoll_wait()/ @b epoll_pwait()/ @b epoll_pwait2()
+ *            function correctly reports the
  *            error when it is called with non-positive maxevents.
  *
  * @type conformance, robustness
  *
  * @param pco_iut   PCO on IUT
  * @param sock_type Type of sockets using in the test
- * @param events    The value of @p events argument for @b epoll_wait()
+ * @param events    The value of @p events argument for
+ *                  @b epoll_wait()/ @b epoll_pwait()/ @b epoll_pwait2()
  *                  function. It can be @c valid or @c invalid
  * @param maxevents Number of max events. It should be non-positive
- * @param timeout   Timeout for @b epoll_wait() function
+ * @param timeout   Timeout for @b epoll_wait()/ @b epoll_pwait()/
+ *                  @b epoll_pwait2() function
  *
  * @par Scenario:
  * -# Create @c sock_type socket @p iut_s on @p pco_iut.
  * -# Call @b epoll_create() function to create @p epfd.
  * -# Call @p epoll_ctl(@c EPOLL_CTL_ADD) with @p iut_s and
  *    @c POLLIN event.
- * -# Call @b epoll_wait() with @p events, @p maxevents and @p timeout.
- * -# Check that @b epoll_wait() returns @c -1 and sets errno to @c EINVAL.
+ * -# Call @b epoll_wait()/ @b epoll_pwait()/ @b epoll_pwait2()
+ *    with @p events, @p maxevents and @p timeout.
+ * -# Check that @b epoll_wait()/ @b epoll_pwait()/ @b epoll_pwait2()
+ *    returns @c -1 and sets errno to @c EINVAL.
  * -# Close @p epfd and @p iut_s.
  *
  * @author Yurij Plotnikov <Yurij.Plotnikov@oktetlabs.ru>
@@ -51,6 +57,8 @@ main(int argc, char *argv[])
     const char             *events;
 
     iomux_call_type iomux;
+    struct tarpc_timespec tv;
+    struct tarpc_timespec *tv_ptr = &tv;
 
     TEST_START;
     TEST_GET_PCO(pco_iut);
@@ -83,6 +91,17 @@ main(int argc, char *argv[])
                                      (strcmp(events, "invalid") == 0) ?
                                      NULL : evs_arr, rmaxev, maxevents,
                                      timeout, RPC_NULL);
+            break;
+
+        case TAPI_IOMUX_EPOLL_PWAIT2:
+            if (timeout < 0)
+                tv_ptr = NULL;
+            else
+                TE_NS2TS(TE_MS2NS(timeout), tv_ptr);
+            rc = rpc_epoll_pwait2_gen(pco_iut, epfd,
+                                      (strcmp(events, "invalid") == 0) ?
+                                       NULL : evs_arr, rmaxev, maxevents,
+                                       tv_ptr, RPC_NULL);
             break;
 
         default:
