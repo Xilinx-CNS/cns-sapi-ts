@@ -3042,7 +3042,7 @@
             <arg name="env">
                 <value ref="env.peer2peer"/>
                 <value ref="env.peer2peer_ipv6"/>
-            </arg>>
+            </arg>
             <arg name="func">
                 <value>accept</value>
                 <value>accept4</value>

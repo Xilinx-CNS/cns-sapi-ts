@@ -1117,7 +1117,7 @@
                         <value reqs="FORK,FORK_EPOLL">fork</value>
                         <value reqs="FORK,EXEC,FORK_EPOLL">fork_exec</value>
                         <value reqs="DUP,THREADS,EPOLL_NON_MT_SAFE">dup</value>
-                    </arg>>
+                    </arg>
                 </run>
                 <run>
 
@@ -1134,7 +1134,7 @@
                     <arg name="func">
                         <value reqs="FORK,FORK_EPOLL">fork</value>
                         <value reqs="DUP,THREADS,EPOLL_NON_MT_SAFE">dup</value>
-                    </arg>>
+                    </arg>
                 </run>
             </session>
         </run>
