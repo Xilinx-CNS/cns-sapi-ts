@@ -3093,7 +3093,7 @@
         <arg name="env"/>
         <arg name="set_flag">FALSE</arg>
         <arg name="sig_to_send"/>
-        <arg name="socket_after_sigaction" type="boolean"/>
+        <arg name="socket_after_sigaction"/>
         <arg name="drop_stack"/>
         <notes/>
         <results tags="ul-64&amp;!ppc64&amp;!aarch64">
@@ -3106,7 +3106,7 @@
         <arg name="env"/>
         <arg name="set_flag">TRUE</arg>
         <arg name="sig_to_send"/>
-        <arg name="socket_after_sigaction" type="boolean"/>
+        <arg name="socket_after_sigaction"/>
         <arg name="drop_stack"/>
         <notes/>
         <results tags="ul-64&amp;!ppc64&amp;!aarch64">

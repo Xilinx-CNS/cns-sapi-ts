@@ -326,7 +326,7 @@
         <arg name="env"/>
         <arg name="sock_type">tcp_passive</arg>
         <notes/>
-        <results tags="v5" key="ON-3214, Bug-12992" note="Accept any result regardless of the parameters">
+        <results tags="v5" key="ON-3214, Bug-12992" notes="Accept any result regardless of the parameters">
           <result value="PASSED"/>
           <result value="FAILED">
             <verdict>IUT socket is readable after receiving packet with a wrong Ethernet address</verdict>
@@ -337,7 +337,7 @@
         <arg name="env"/>
         <arg name="sock_type">tcp_passive_close</arg>
         <notes/>
-        <results tags="v5" key="ON-3214, Bug-12992" note="Accept any result regardless of the parameters">
+        <results tags="v5" key="ON-3214, Bug-12992" notes="Accept any result regardless of the parameters">
           <result value="PASSED"/>
           <result value="FAILED">
             <verdict>IUT socket is readable after receiving packet with a wrong Ethernet address</verdict>
@@ -348,7 +348,7 @@
         <arg name="env"/>
         <arg name="sock_type">udp</arg>
         <notes/>
-        <results tags="v5" key="ON-3214, Bug-12992" note="Accept any result regardless of the parameters">
+        <results tags="v5" key="ON-3214, Bug-12992" notes="Accept any result regardless of the parameters">
           <result value="PASSED"/>
           <result value="FAILED">
             <verdict>IUT socket is readable after receiving packet with a wrong Ethernet address</verdict>
@@ -359,7 +359,7 @@
         <arg name="env"/>
         <arg name="sock_type">tcp_active</arg>
         <notes/>
-        <results tags="v5" key="ON-3214, Bug-12992" note="Accept any result regardless of the parameters">
+        <results tags="v5" key="ON-3214, Bug-12992" notes="Accept any result regardless of the parameters">
           <result value="PASSED"/>
           <result value="FAILED">
             <verdict>IUT socket is readable after receiving packet with a wrong Ethernet address</verdict>
