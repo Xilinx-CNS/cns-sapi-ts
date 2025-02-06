@@ -2359,6 +2359,16 @@
         <notes/>
       </iter>
       <iter result="PASSED">
+        <arg name="close_aux">FALSE</arg>
+        <arg name="close_func"/>
+        <arg name="env"/>
+        <arg name="func">epoll_pwait2</arg>
+        <arg name="restart"/>
+        <arg name="sig_func"/>
+        <arg name="test_pipe"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
         <arg name="close_aux">TRUE</arg>
         <arg name="close_func"/>
         <arg name="env"/>

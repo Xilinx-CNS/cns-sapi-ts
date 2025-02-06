@@ -637,6 +637,7 @@
                 <value reqs="POLL,PPOLL">ppoll</value>
                 <value reqs="EPOLL">epoll</value>
                 <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+                <value reqs="EPOLL,EPOLL_PWAIT2">epoll_pwait2</value>
                 <value reqs="SO_LINGER">close</value>
                 <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND">onload_zc_send</value>
                 <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND,ONLOAD_ZC_SEND_USER_BUF">onload_zc_send_user_buf</value>
@@ -663,6 +664,7 @@
                 <value reqs="POLL,PPOLL">ppoll</value>
                 <value reqs="EPOLL">epoll</value>
                 <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+                <value reqs="EPOLL,EPOLL_PWAIT2">epoll_pwait2</value>
             </arg>
             <arg name="test_pipe">
                 <value>TRUE</value>
@@ -724,6 +726,7 @@
                 <value reqs="POLL,PPOLL">ppoll</value>
                 <value reqs="EPOLL">epoll</value>
                 <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+                <value reqs="EPOLL,EPOLL_PWAIT2">epoll_pwait2</value>
                 <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND">onload_zc_send</value>
                 <value reqs="ONLOAD_ONLY,SEND_FLAG,SEND_ADDR,SEND_CTL,SEND_IOV,ONLOAD_ZC_SEND,ONLOAD_ZC_SEND_USER_BUF">onload_zc_send_user_buf</value>
               </arg>
@@ -783,6 +786,7 @@
                   <value reqs="POLL,PPOLL">ppoll</value>
                   <value reqs="EPOLL">epoll</value>
                   <value reqs="EPOLL,EPOLL_PWAIT">epoll_pwait</value>
+                  <value reqs="EPOLL,EPOLL_PWAIT2">epoll_pwait2</value>
               </arg>
               <arg name="sig_func">
                 <value>sigaction</value>

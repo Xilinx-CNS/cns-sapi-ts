@@ -24,7 +24,8 @@
  * @param func          @b connect(), @b send(), @b write(), @b writev(),
  *                      @b sendfile(), @b recv(), @b read(), @b readv(),
  *                      @b accept(), @b close(), @b select(), @b pselect(),
- *                      @b poll() or @b epoll() function
+ *                      @b poll(), @b epoll(), @b epoll_pwait() or
+ *                      @b epoll_pwait2() function
  * @param sig_func      @b sigaction(), @b signal(), @b sysv_signal() or @b
  *                      bsd_signal() function
  * @param restart       Set or not @c SA_RESTART flag
@@ -67,7 +68,8 @@
  *      - If @p func is @c accept call @b connect() on @p tst_fd socket;
  *      - If @p func is @c send read all data from @p tst_fd;
  *      - If @p func is @c recv, @c select, @c pselect, @c poll or @c
- *        epoll, and @p close_aux is @c TRUE or sockets are tested,
+ *        epoll, @c epoll_pwait, @c epoll_pwait2, and @p close_aux
+ *        is @c TRUE or sockets are tested,
  *        send some data from @p tst_fd to @p iut_fd.
  *    \n @htmlonly &nbsp; @endhtmlonly
  * -# Call @b pthread_join() to get @p func return value.
@@ -126,6 +128,7 @@ typedef enum tst_function {
     tst_ppoll,
     tst_epoll,
     tst_epoll_pwait,
+    tst_epoll_pwait2,
     tst_close,
 } tst_function;
 
@@ -315,6 +318,7 @@ launch_func(void *data)
         case tst_ppoll:
         case tst_epoll:
         case tst_epoll_pwait:
+        case tst_epoll_pwait2:
             {
                 tarpc_timeval           tv = {3, 0};
                 rc = iomux_call_signal(args->iomux, args->pco,
@@ -360,6 +364,7 @@ resolve_func(const char *name)
     else IF_CASE(ppoll);
     else IF_CASE(epoll);
     else IF_CASE(epoll_pwait);
+    else IF_CASE(epoll_pwait2);
     else IF_CASE(close);
     else
         TEST_FAIL("Unexpected func parameter value, %s", name);
@@ -564,7 +569,7 @@ main(int argc, char *argv[])
     }
 
     if (function == tst_ppoll || function == tst_pselect ||
-        function == tst_epoll_pwait)
+        function == tst_epoll_pwait || function == tst_epoll_pwait2)
     {
         iomux_sigmask = rpc_sigset_new(pco_iut);
         rpc_sigemptyset(pco_iut, iomux_sigmask);
@@ -678,6 +683,7 @@ main(int argc, char *argv[])
         case tst_ppoll:
         case tst_epoll:
         case tst_epoll_pwait:
+        case tst_epoll_pwait2:
             iomux = iomux_call_str2en(func);
             event.fd = iut_fd;
             event.events = EVT_RD;
@@ -915,6 +921,7 @@ main(int argc, char *argv[])
             case tst_ppoll:
             case tst_epoll:
             case tst_epoll_pwait:
+            case tst_epoll_pwait2:
                 CHECK_RC_ERRNO(-1, RPC_EINTR);
                 break;
         }
@@ -958,6 +965,7 @@ main(int argc, char *argv[])
             case tst_ppoll:
             case tst_epoll:
             case tst_epoll_pwait:
+            case tst_epoll_pwait2:
                 CHECK_RC_ERRNO(-1, RPC_EINTR);
                 break;
         }
@@ -998,6 +1006,7 @@ main(int argc, char *argv[])
             case tst_ppoll:
             case tst_epoll:
             case tst_epoll_pwait:
+            case tst_epoll_pwait2:
                 CHECK_RC_ERRNO(-1, RPC_EINTR);
                 break;
         }
@@ -1102,7 +1111,7 @@ main(int argc, char *argv[])
 cleanup:
 
     if (function == tst_ppoll || function == tst_pselect ||
-        function == tst_epoll_pwait)
+        function == tst_epoll_pwait || function == tst_epoll_pwait2)
         rpc_sigset_delete(pco_iut, iomux_sigmask);
 
     if (function == tst_connect)
