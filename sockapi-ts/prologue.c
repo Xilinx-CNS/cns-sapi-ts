@@ -1054,7 +1054,7 @@ main(int argc, char **argv)
     if (ef_name != NULL && strcmp(ef_name, "") != 0)
     {
 
-        CHECK_RC(rcf_rpc_server_create(pco_iut->ta, "pco_reuse_stack",
+        CHECK_RC(rcf_rpc_server_create(pco_iut->ta, PCO_REUSE_STACK,
                                        &pco_reuse_stack));
         rcf_rpc_setlibname(pco_reuse_stack, pco_iut->nv_lib);
         rpc_socket(pco_reuse_stack, RPC_AF_INET, RPC_SOCK_STREAM,

@@ -150,6 +150,9 @@
 /* Name of the pco server for killing Onload zombie stacks on. */
 #define PCO_KILL_ZOMBIE "pco_kill_zombie"
 
+/* Name of the pco server to reuse the stack. */
+#define PCO_REUSE_STACK "pco_reuse_stack"
+
 /**
  * Check the function executing time and report if not success.
  * All time intervals are measured in microseconds.
