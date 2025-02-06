@@ -9,7 +9,8 @@
 
 /** @page signal-iomux_pending_signal Check iomux behaviour when both an event and a signal are ready before the call.
  *
- * @objective Check that @b pselect(), @b ppoll() and @b epoll_pwait()
+ * @objective Check that @b pselect(), @b ppoll(), @b epoll_pwait() and
+ *            @b epoll_pwait2()
  *            behave correctly when their signal mask unblocks some pending
  *            signal and also an event is ready by the time of a call.
  *
@@ -23,7 +24,7 @@
  * @param sock_type     Socket type used in the test
  * @param iomux         I/O multiplexer to use
  * @param use_epollet   Set @c EPOLLET flag (makes sense for
- *                      @b epoll_pwait() only)
+ *                      @b epoll_pwait() and @b epoll_pwait2() only)
  * @param func_sig      Function used to register a signal handler
  * @param sig_to_send   Signal to be sent
  * @param timeout       Timeout for @p iomux (in seconds; -1 means
@@ -190,8 +191,8 @@ main(int argc, char *argv[])
                                iomux_sigmask);
     else
     {
-        rc = rpc_epoll_pwait(pco_iut, epfd, &epoll_evt, 1, timeout * 1000,
-                             iomux_sigmask);
+        rc = iomux_epoll_pwait_call(iomux, pco_iut, epfd, &epoll_evt, 1,
+                                    TE_SEC2MS(timeout), iomux_sigmask);
         if (rc == 1)
             evt.revents = tapi_iomux_epoll_to_evt(epoll_evt.events);
     }
@@ -256,8 +257,8 @@ main(int argc, char *argv[])
                 rc = iomux_call_signal(iomux, pco_iut, &evt, 1, &timeval,
                                        iomux_sigmask);
             else
-                rc = rpc_epoll_pwait(pco_iut, epfd, &epoll_evt, 1,
-                                     timeout * 1000, iomux_sigmask);
+                rc = iomux_epoll_pwait_call(iomux, pco_iut, epfd, &epoll_evt, 1,
+                                            TE_SEC2MS(timeout), iomux_sigmask);
 
             iut_errno = RPC_ERRNO(pco_iut);
             snprintf(msg, MSG_LEN, "The second %s() call: ",
@@ -271,8 +272,8 @@ main(int argc, char *argv[])
                               "instead of -1",
                               iomux_call_en2str(iomux), rc);
                 RPC_AWAIT_IUT_ERROR(pco_iut);
-                rc = rpc_epoll_pwait(pco_iut, epfd, &epoll_evt, 1,
-                                     timeout * 1000, iomux_sigmask);
+                rc = iomux_epoll_pwait_call(iomux, pco_iut, epfd, &epoll_evt, 1,
+                                            TE_SEC2MS(timeout), iomux_sigmask);
                 iut_errno = RPC_ERRNO(pco_iut);
             }
             if (rc != -1)
