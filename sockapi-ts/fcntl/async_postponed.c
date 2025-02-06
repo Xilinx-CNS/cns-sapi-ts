@@ -37,18 +37,34 @@
 
 #define CALL_IOMUX \
     do {                                                                \
+        int timeout;                                                    \
+                                                                        \
         tv.tv_sec = 5;                                                  \
         tv.tv_usec = 0;                                                 \
+        timeout = TE_SEC2MS(tv.tv_sec) + TE_US2MS(tv.tv_usec);          \
                                                                         \
         RPC_AWAIT_IUT_ERROR(pco_iut);                                   \
         if (!use_epollet)                                               \
+        {                                                               \
             iomux_rc = iomux_call_signal(iomux, pco_iut, &evt, 1, &tv,  \
                                          iomux_sigmask);                \
+        }                                                               \
         else                                                            \
-            iomux_rc = rpc_epoll_pwait(pco_iut, epfd, &epoll_evt, 1,    \
-                                       tv.tv_sec * 1000 +               \
-                                                    tv.tv_usec / 1000,  \
-                                       iomux_sigmask);                  \
+        {                                                               \
+            switch (iomux)                                              \
+            {                                                           \
+                case TAPI_IOMUX_EPOLL_PWAIT:                            \
+                case TAPI_IOMUX_EPOLL_PWAIT2:                           \
+                    iomux_rc = iomux_epoll_pwait_call(                  \
+                                  iomux, pco_iut, epfd, &epoll_evt, 1,  \
+                                  timeout, iomux_sigmask);              \
+                    break;                                              \
+                                                                        \
+                default:                                                \
+                    TEST_FAIL("Incorrect value of 'iomux' parameter "   \
+                              "for EPOLLET flag");                      \
+            }                                                           \
+        }                                                               \
         iomux_errno = RPC_ERRNO(pco_iut);                               \
     } while (0)
 
