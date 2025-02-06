@@ -2315,7 +2315,7 @@ sockts_kill_check_zombie_stack(rcf_rpc_server *rpcs, te_bool reboot)
     {
         ef_name = rpc_getenv(rpcs, "EF_NAME");
         if (ef_name != NULL && strcmp(ef_name, "") != 0)
-            CHECK_RC(rcf_rpc_server_create(rpcs->ta, "pco_reuse_stack",
+            CHECK_RC(rcf_rpc_server_create(rpcs->ta, PCO_REUSE_STACK,
                                            NULL));
     }
 
@@ -2405,7 +2405,7 @@ sockts_recreate_onload_stack(rcf_rpc_server *pco_iut)
     ef_name = rpc_getenv(pco_iut, "EF_NAME");
     if (ef_name != NULL && strcmp(ef_name, "") != 0)
     {
-        CHECK_RC(rcf_rpc_server_get(pco_iut->ta, "pco_reuse_stack", NULL,
+        CHECK_RC(rcf_rpc_server_get(pco_iut->ta, PCO_REUSE_STACK, NULL,
                                     RCF_RPC_SERVER_GET_EXISTING,
                                     &pco_reuse_stack));
 

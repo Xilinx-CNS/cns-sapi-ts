@@ -96,7 +96,7 @@ sockts_check_zombie_stack(rcf_rpc_server *rpcs)
 
     ef_name = rpc_getenv(rpcs, "EF_NAME");
     if (ef_name != NULL && strcmp(ef_name, "") != 0)
-        CHECK_RC(rcf_rpc_server_create(rpcs->ta, "pco_reuse_stack",
+        CHECK_RC(rcf_rpc_server_create(rpcs->ta, PCO_REUSE_STACK,
                                        NULL));
 
     rpc_shell_get_all(rpcs, &out_str, "cat /proc/driver/onload/stacks", -1);
