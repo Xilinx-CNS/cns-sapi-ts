@@ -153,6 +153,25 @@
         <arg name="blocking"/>
         <arg name="env"/>
         <arg name="func">onload_zc_recv</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="length"/>
+        <arg name="num"/>
+        <arg name="onload_ext"/>
+        <arg name="select_err_queue"/>
+        <arg name="sock_type"/>
+        <arg name="tx">TRUE</arg>
+        <arg name="opt_before_bind"/>
+        <notes/>
+        <results tags="v5" key="ON-4169">
+          <result value="FAILED">
+            <verdict>Receive function failed with unexpected error RPC-EINVAL instead of RPC_EAGAIN before events were generated</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="blocking"/>
+        <arg name="env"/>
+        <arg name="func">onload_zc_recv</arg>
         <arg name="iomux">oo_epoll</arg>
         <arg name="length"/>
         <arg name="num"/>
@@ -243,6 +262,20 @@
         <arg name="env"/>
         <arg name="func">onload_zc_recv</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="length"/>
+        <arg name="num"/>
+        <arg name="onload_ext"/>
+        <arg name="select_err_queue"/>
+        <arg name="sock_type"/>
+        <arg name="tx">FALSE</arg>
+        <arg name="opt_before_bind"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="blocking"/>
+        <arg name="env"/>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="length"/>
         <arg name="num"/>
         <arg name="onload_ext"/>
@@ -1035,6 +1068,34 @@
       <iter result="PASSED">
         <arg name="enable_ts"/>
         <arg name="env"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="length_max">9000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="total"/>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ipvlan" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>msg_controllen is zero, but tstamps are enabled</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
         <arg name="iomux">select</arg>
         <arg name="length_max">40000</arg>
         <arg name="length_min"/>
@@ -1176,6 +1237,34 @@
         <arg name="enable_ts"/>
         <arg name="env"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="length_max">40000</arg>
+        <arg name="length_min"/>
+        <arg name="mtu"/>
+        <arg name="onload_ext"/>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="total"/>
+        <arg name="tx">FALSE</arg>
+        <notes/>
+        <results tags="v5" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+        </results>
+        <results tags="v5&amp;ipvlan" key="ON-4114" notes="Fragmented datagrams are received though kernel, i.e. ts retrieving depends on kernel version">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>HW transformed timestamp is zero</verdict>
+          </result>
+          <result value="FAILED">
+            <verdict>msg_controllen is zero, but tstamps are enabled</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="enable_ts"/>
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="length_max">40000</arg>
         <arg name="length_min"/>
         <arg name="mtu"/>
