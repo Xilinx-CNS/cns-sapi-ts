@@ -10,7 +10,8 @@
 /** @page sendrecv-pollpri Behavior of iomux functions when out-of-band data is received
  *
  * @objective Check that @b poll()/ @b ppoll/ @b epoll_wait() /
- *            @b epoll_pwait() functions returns @c POLLPRI (@c EPOLLPRI)
+ *            @b epoll_pwait()/ @b epoll_pwait2() functions returns
+ *            @c POLLPRI (@c EPOLLPRI)
  *            event when there is available OOB data on the socket.
  *
  * @type conformance
@@ -42,6 +43,15 @@
 #include "iomux.h"
 
 #define TST_BUF_SIZE            100
+
+static void
+set_tv_ptr_from_timeout(struct tarpc_timespec *tv_ptr, int timeout)
+{
+    if (timeout < 0)
+        tv_ptr = NULL;
+    else
+        TE_NS2TS(TE_MS2NS(timeout), tv_ptr);
+}
 
 int
 main(int argc, char *argv[])
@@ -108,6 +118,10 @@ main(int argc, char *argv[])
             TE_NS2TS(TE_MS2NS(timeout), &ts);
             break;
 
+        case TAPI_IOMUX_EPOLL_PWAIT2:
+            set_tv_ptr_from_timeout(&ts, timeout);
+            /*@fallthrough@*/
+
         case TAPI_IOMUX_EPOLL:
         case TAPI_IOMUX_EPOLL_PWAIT:
             epfd = rpc_epoll_create(pco_iut, 1);
@@ -140,6 +154,11 @@ main(int argc, char *argv[])
                                  RPC_NULL);
             break;
 
+        case TAPI_IOMUX_EPOLL_PWAIT2:
+            rc = rpc_epoll_pwait2(pco_iut, epfd, events, maxevents, &ts,
+                                  RPC_NULL);
+            break;
+
        default:
             TEST_FAIL("Incorrect value of 'iomux' parameter");
     }
@@ -158,6 +177,10 @@ main(int argc, char *argv[])
             ts.tv_nsec = 0;
             exp_event = RPC_POLLPRI;
             break;
+
+        case TAPI_IOMUX_EPOLL_PWAIT2:
+            set_tv_ptr_from_timeout(&ts, timeout);
+            /*@fallthrough@*/
 
         case TAPI_IOMUX_EPOLL:
         case TAPI_IOMUX_EPOLL_PWAIT:
@@ -188,6 +211,12 @@ main(int argc, char *argv[])
         case TAPI_IOMUX_EPOLL_PWAIT:
             rc = rpc_epoll_pwait(pco_iut, epfd, events, maxevents, timeout,
                                  RPC_NULL);
+            got_event = events[0].events;
+            break;
+
+        case TAPI_IOMUX_EPOLL_PWAIT2:
+            rc = rpc_epoll_pwait2(pco_iut, epfd, events, maxevents, &ts,
+                                  RPC_NULL);
             got_event = events[0].events;
             break;
 
@@ -234,6 +263,22 @@ main(int argc, char *argv[])
                 }
                 break;
 
+            case TAPI_IOMUX_EPOLL_PWAIT2:
+                set_tv_ptr_from_timeout(&ts, timeout);
+                rc = rpc_epoll_pwait2(pco_iut, epfd, events, maxevents, &ts,
+                                      RPC_NULL);
+                if (rc == 1 && events[0].events == RPC_EPOLLPRI)
+                {
+                    second_call = FALSE;
+                    RING_VERDICT("iomux function returned the same events in "
+                                 "case of oob data on socket on the second "
+                                 "call");
+                    set_tv_ptr_from_timeout(&ts, timeout);
+                    rc = rpc_epoll_pwait2(pco_iut, epfd, events, maxevents,
+                                          &ts, RPC_NULL);
+                }
+                break;
+
             default:
                 TEST_FAIL("Incorrect value of 'iomux' parameter "
                           "when flags are added");
@@ -259,6 +304,10 @@ main(int argc, char *argv[])
             exp_event = read_after_oob ? RPC_POLLIN :
                                          RPC_POLLPRI | RPC_POLLIN;
             break;
+
+        case TAPI_IOMUX_EPOLL_PWAIT2:
+            set_tv_ptr_from_timeout(&ts, timeout);
+            /*@fallthrough@*/
 
         case TAPI_IOMUX_EPOLL:
         case TAPI_IOMUX_EPOLL_PWAIT:
@@ -299,6 +348,12 @@ main(int argc, char *argv[])
             got_event = events[0].events;
             break;
 
+        case TAPI_IOMUX_EPOLL_PWAIT2:
+            rc = rpc_epoll_pwait2(pco_iut, epfd, events, maxevents, &ts,
+                                  RPC_NULL);
+            got_event = events[0].events;
+            break;
+
         default:
             TEST_FAIL("Incorrect value of 'iomux' parameter");
     }
@@ -341,6 +396,22 @@ main(int argc, char *argv[])
                                  "call");
                     rc = rpc_epoll_pwait(pco_iut, epfd, events, maxevents,
                                          timeout, RPC_NULL);
+                }
+                break;
+
+            case TAPI_IOMUX_EPOLL_PWAIT2:
+                set_tv_ptr_from_timeout(&ts, timeout);
+                rc = rpc_epoll_pwait2(pco_iut, epfd, events, maxevents, &ts,
+                                      RPC_NULL);
+                if (rc == 1 && events[0].events == exp_event)
+                {
+                    second_call = FALSE;
+                    RING_VERDICT("iomux function returned the same events in "
+                                 "case of normal data on socket on the second "
+                                 "call");
+                    set_tv_ptr_from_timeout(&ts, timeout);
+                    rc = rpc_epoll_pwait2(pco_iut, epfd, events, maxevents,
+                                          &ts, RPC_NULL);
                 }
                 break;
 
