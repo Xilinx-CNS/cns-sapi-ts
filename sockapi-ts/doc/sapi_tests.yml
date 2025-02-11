@@ -1516,7 +1516,7 @@ groups:
       summary: Check iomux function with one pipe
 
     - test: iomux_sigmask
-      summary: Support of sigmask in pselect()/ppoll()/epoll_pwait()
+      summary: Support of sigmask in pselect()/ppoll()/epoll_pwait()/epoll_pwait2()
 
     - test: iomux_splice_rd
       summary: The splice() operation and iomux function on pipe read end
