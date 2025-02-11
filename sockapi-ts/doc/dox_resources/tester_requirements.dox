@@ -195,6 +195,8 @@ should be fixed):
 @table_2c_second               Tests on epoll functions
 @table_2c_first EPOLL_PWAIT
 @table_2c_second         epoll_pwait(); EPOLL req is mandatory
+@table_2c_first EPOLL_PWAIT2
+@table_2c_second         epoll_pwait2(); EPOLL req is mandatory
 @table_2c_first EPOLL_CREATE1
 @table_2c_second       epoll_create1()
 @table_2c_first EPOLL_MULTI_LEVEL
