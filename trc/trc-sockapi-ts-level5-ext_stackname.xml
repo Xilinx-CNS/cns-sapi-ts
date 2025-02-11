@@ -690,6 +690,17 @@
       <iter result="PASSED">
         <arg name="env"/>
         <arg name="existing_stack"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <notes/>
+        <results tags="v5">
+          <result value="FAILED" notes="This is expected for epoll() after fixing L5 bug 41152">
+            <verdict>onload_move_fd() failed unexpectedly</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="existing_stack"/>
         <arg name="iomux">poll</arg>
         <notes/>
         <results tags="v5">
@@ -813,6 +824,12 @@
       <iter result="PASSED">
         <arg name="env"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="system_fd"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="system_fd"/>
         <notes/>
       </iter>
