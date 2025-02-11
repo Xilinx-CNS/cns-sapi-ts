@@ -8479,6 +8479,18 @@
       </iter>
       <iter result="PASSED">
         <arg name="blocking"/>
+        <arg name="env">VAR.env.peer2peer_mcast_lo</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="method"/>
+        <arg name="packet_number"/>
+        <arg name="sock_func"/>
+        <notes/>
+        <results tags="v5&amp;reuse_stack&amp;(ool_mcast_send=0|ool_mcast_send=2)" key="ST-2511">
+          <result value="FAILED"/>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="blocking"/>
         <arg name="env">VAR.env.peer2peer_mcast</arg>
         <arg name="iomux"/>
         <arg name="method"/>
