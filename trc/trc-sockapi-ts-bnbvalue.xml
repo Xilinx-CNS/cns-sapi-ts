@@ -16862,6 +16862,15 @@
         <arg name="sys_call"/>
         <notes/>
       </iter>
+      <iter result="PASSED">
+        <arg name="domain"/>
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="is_iomux"/>
+        <arg name="sock_type"/>
+        <arg name="sys_call"/>
+        <notes/>
+      </iter>
     </test>
     <test name="func_recvmmsg_negative_timeout" type="script">
       <objective>Check that recvmmsg() function reports an error while using with negative timeout.</objective>
