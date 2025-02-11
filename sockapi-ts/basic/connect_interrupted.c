@@ -38,6 +38,7 @@
  *                      - ppoll
  *                      - epoll
  *                      - epoll_pwait
+ *                      - epoll_pwait2
  * @param send_check    Try to send data before successfull @b connect() if
  *                      @c TRUE
  * @param recv_check    Try to receive data before successfull @b connect()if
