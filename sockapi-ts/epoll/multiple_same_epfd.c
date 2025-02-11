@@ -223,7 +223,8 @@ main(int argc, char *argv[])
         epw_args.events = events[i];
         epw_args.timeout = timeout;
         epw_args.iomux = iomux;
-        if (epw_args.iomux == TAPI_IOMUX_EPOLL_PWAIT)
+        if (epw_args.iomux == TAPI_IOMUX_EPOLL_PWAIT ||
+            epw_args.iomux == TAPI_IOMUX_EPOLL_PWAIT2)
         {
             sigmask_arr[i] = rpc_sigset_new(pco_arr[i]);
             epw_args.sigmask = sigmask_arr[i];
@@ -289,8 +290,11 @@ cleanup:
 
     for (i = 0; i < epfd_num; i++)
     {
-        if (epw_args.iomux == TAPI_IOMUX_EPOLL_PWAIT)
+        if (epw_args.iomux == TAPI_IOMUX_EPOLL_PWAIT ||
+            epw_args.iomux == TAPI_IOMUX_EPOLL_PWAIT2)
+        {
             rpc_sigset_delete(pco_arr[i], sigmask_arr[i]);
+        }
         CLEANUP_RPC_CLOSE(pco_iut, epfd_arr[i]);
     }
     CLEANUP_RPC_CLOSE(pco_iut, iut_s);
