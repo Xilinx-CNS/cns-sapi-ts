@@ -27,6 +27,7 @@
  *      - ppoll
  *      - epoll
  *      - epoll_pwait
+ *      - epoll_pwait2
  *      - oo_epoll
  * @param event1     Type of tested event iomux is waiting for:
  *      - EVT_RD
