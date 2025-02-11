@@ -25,13 +25,14 @@
  *                      - @b ppoll
  *                      - @b epoll
  *                      - @b epoll_pwait
+ *                      - @b epoll_pwait2
  *                      - @b oo_epoll
  * @param timeout       Iomux timeout in milliseconds:
  *                      - @c 1
  *                      - @c 5000
  *
- * @note When @b pselect() / @b ppoll() / @b epoll_pwait() functions are
- *       tested, @c NULL is passed as @a sigmask parameter.
+ * @note When @b pselect() / @b ppoll() / @b epoll_pwait() / @b epoll_pwait2()
+ *       functions are tested, @c NULL is passed as @a sigmask parameter.
  *
  * @par Scenario:
  *
