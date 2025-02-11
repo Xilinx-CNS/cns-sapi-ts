@@ -94,7 +94,7 @@ launch_epoll_wait(void *args)
 
     switch (epw_args->iomux)
     {
-        case IC_OO_EPOLL:
+        case TAPI_IOMUX_OO_EPOLL:
         {
             rpc_onload_ordered_epoll_event  oo_events[maxevents];
 
@@ -103,16 +103,16 @@ launch_epoll_wait(void *args)
             break;
         }
 
-        case IC_EPOLL:
+        case TAPI_IOMUX_EPOLL:
             rc = rpc_epoll_wait(pco, epfd, events, maxevents, timeout);
             break;
 
-        case IC_EPOLL_PWAIT:
+        case TAPI_IOMUX_EPOLL_PWAIT:
             rc = rpc_epoll_pwait(pco, epfd, events, maxevents, timeout,
                                  sigmask);
             break;
 
-        case IC_EPOLL_PWAIT2:
+        case TAPI_IOMUX_EPOLL_PWAIT2:
             if (timeout < 0)
                 tv_ptr = NULL;
             else
@@ -231,7 +231,7 @@ main(int argc, char *argv[])
         epw_args.events = events[i];
         epw_args.timeout = timeout;
         epw_args.iomux = iomux;
-        if (epw_args.iomux == IC_EPOLL_PWAIT)
+        if (epw_args.iomux == TAPI_IOMUX_EPOLL_PWAIT)
         {
             sigmask_arr[i] = rpc_sigset_new(pco_arr[i]);
             epw_args.sigmask = sigmask_arr[i];
@@ -297,7 +297,7 @@ cleanup:
 
     for (i = 0; i < epfd_num; i++)
     {
-        if (epw_args.iomux == IC_EPOLL_PWAIT)
+        if (epw_args.iomux == TAPI_IOMUX_EPOLL_PWAIT)
             rpc_sigset_delete(pco_arr[i], sigmask_arr[i]);
         CLEANUP_RPC_CLOSE(pco_iut, epfd_arr[i]);
     }
