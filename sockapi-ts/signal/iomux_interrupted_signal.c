@@ -68,9 +68,10 @@ do_call_iomux(void *arg)
         }
 
         case IC_EPOLL_PWAIT:
-            params->rc = rpc_epoll_pwait(params->pco, params->epfd,
-                                         &params->epevt, 1, -1,
-                                         params->sigmask);
+        case IC_EPOLL_PWAIT2:
+            params->rc = iomux_epoll_pwait_call(
+                             params->iomux, params->pco, params->epfd,
+                             &params->epevt, 1, -1, params->sigmask);
             break;
 
         default:
@@ -188,7 +189,7 @@ main(int argc, char *argv[])
     params.iomux = iomux;
     params.sigmask = iomux_sigmask;
     if (iomux == IC_EPOLL || iomux == IC_EPOLL_PWAIT ||
-        iomux == IC_OO_EPOLL)
+        iomux == IC_EPOLL_PWAIT2 || iomux == IC_OO_EPOLL)
     {
         params.epfd = rpc_epoll_create(pco_iut, 1);
         rpc_epoll_ctl_simple(pco_iut, params.epfd, RPC_EPOLL_CTL_ADD,
@@ -263,7 +264,7 @@ main(int argc, char *argv[])
 
 cleanup:
     CLEANUP_RPC_CLOSE(pco_iut, params.epfd);
-    if (iomux == IC_PSELECT || iomux == IC_PPOLL || iomux == IC_EPOLL_PWAIT)
+    if (IOMUX_IS_P_IOMUX(iomux))
         rpc_sigset_delete(pco_iut, iomux_sigmask);
     if (thread_started)
         pthread_join(thread, NULL);

@@ -1564,9 +1564,29 @@
         <notes/>
       </iter>
       <iter result="PASSED">
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="restart"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
         <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
         <arg name="func_sig"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="restart"/>
+        <arg name="sock_type"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">IUT{{{'pco_iut':IUT},{'pco_tst':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast,addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="restart"/>
         <arg name="sock_type"/>
         <arg name="test_pipe"/>
@@ -1661,6 +1681,17 @@
         <notes/>
       </iter>
       <iter result="PASSED">
+        <arg name="env">tester{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
+        <arg name="func_sig"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="restart"/>
+        <arg name="sock_type"/>
+        <arg name="sock_type_add"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
         <arg name="env">IUT{{{'pco_iut':IUT},{'pco_killer':tester},addr:'iut_addr':inet:unicast},{{'pco_tst':tester},addr:'tst_addr':inet:unicast}}</arg>
         <arg name="func_sig"/>
         <arg name="iomux"/>
@@ -1731,6 +1762,15 @@
         <arg name="env"/>
         <arg name="func_sig"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="restart"/>
+        <arg name="test_pipe"/>
+        <arg name="use_wildcard"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func_sig"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="restart"/>
         <arg name="test_pipe"/>
         <arg name="use_wildcard"/>
