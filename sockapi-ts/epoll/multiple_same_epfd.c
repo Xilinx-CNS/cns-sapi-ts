@@ -92,30 +92,37 @@ launch_epoll_wait(void *args)
     struct tarpc_timespec   tv;
     struct tarpc_timespec  *tv_ptr = &tv;
 
-    if (epw_args->iomux == IC_OO_EPOLL)
+    switch (epw_args->iomux)
     {
-        rpc_onload_ordered_epoll_event  oo_events[maxevents];
+        case IC_OO_EPOLL:
+        {
+            rpc_onload_ordered_epoll_event  oo_events[maxevents];
 
-        rc = rpc_onload_ordered_epoll_wait(pco, epfd, events, oo_events,
-                                           maxevents, timeout);
-    }
-    else if (epw_args->iomux == IC_EPOLL)
-    {
-        rc = rpc_epoll_wait(pco, epfd, events, maxevents, timeout);
-    }
-    else if (epw_args->iomux == IC_EPOLL_PWAIT)
-    {
-        rc = rpc_epoll_pwait(pco, epfd, events, maxevents, timeout,
-                             sigmask);
-    }
-    else
-    {
-        if (timeout < 0)
-            tv_ptr = NULL;
-        else
-            TE_NS2TS(TE_MS2NS(timeout), &tv);
-        rc = rpc_epoll_pwait2(pco, epfd, events, maxevents, tv_ptr,
-                              sigmask);
+            rc = rpc_onload_ordered_epoll_wait(pco, epfd, events, oo_events,
+                                               maxevents, timeout);
+            break;
+        }
+
+        case IC_EPOLL:
+            rc = rpc_epoll_wait(pco, epfd, events, maxevents, timeout);
+            break;
+
+        case IC_EPOLL_PWAIT:
+            rc = rpc_epoll_pwait(pco, epfd, events, maxevents, timeout,
+                                 sigmask);
+            break;
+
+        case IC_EPOLL_PWAIT2:
+            if (timeout < 0)
+                tv_ptr = NULL;
+            else
+                TE_NS2TS(TE_MS2NS(timeout), &tv);
+            rc = rpc_epoll_pwait2(pco, epfd, events, maxevents, tv_ptr,
+                                  sigmask);
+            break;
+
+        default:
+            TEST_FAIL("Incorrect value of 'iomux' parameter");
     }
 
     return (void *)rc;
