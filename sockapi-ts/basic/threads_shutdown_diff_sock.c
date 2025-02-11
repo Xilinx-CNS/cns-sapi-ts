@@ -36,6 +36,7 @@
  *                      - ppoll
  *                      - epoll
  *                      - epoll_pwait
+ *                      - epoll_pwait2
  * @param other_func    Other tested functions:
  *                      - connect()
  *                      - accept()
