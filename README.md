@@ -10,7 +10,7 @@ Sapi TS API allow to test the following functions:
 * read() / recv() / recvfrom() / recvmsg() / recvmmsg()
 * write() / send() / sendto() / sendmsg() / sendmmsg()
 * select() / pselect() / poll() / ppoll()
-* epoll_create() / epoll_ctl() / epoll_wait() / epoll_pwait()
+* epoll_create() / epoll_ctl() / epoll_wait() / epoll_pwait() / epoll_pwait2()
 * getpeername() / getsockname()
 * ioctl()
 * getsockopts() / setsockopts()
