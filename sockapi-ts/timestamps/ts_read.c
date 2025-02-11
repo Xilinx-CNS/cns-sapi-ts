@@ -37,6 +37,7 @@
  *                          - @b ppoll()
  *                          - @b epoll()
  *                          - @b epoll_pwait()
+ *                          - @b epoll_pwait2()
  *                          - @b oo_epoll()
  * @param onload_ext        If @c TRUE, check Onload extension TCP
  *                          timestamps
