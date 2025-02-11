@@ -65,6 +65,7 @@
     { "ppoll",         FUNC_PPOLL },        \
     { "epoll",         FUNC_EPOLL },        \
     { "epoll_pwait",   FUNC_EPOLL_PWAIT },  \
+    { "epoll_pwait2",  FUNC_EPOLL_PWAIT2 }, \
     { "default_iomux", FUNC_DEFAULT_IOMUX },\
     { "no_iomux",      FUNC_NO_IOMUX }
 
