@@ -767,6 +767,18 @@
           </iter>
           <iter result="PASSED">
             <arg name="env"/>
+            <arg name="iomux">epoll_pwait2</arg>
+            <arg name="sock_type"/>
+            <arg name="syscall_method">interrupt</arg>
+            <notes/>
+            <results tags="linux">
+              <result value="PASSED">
+                <verdict>epoll_pwait2() has not noticed that subject file descriptor was closed from another thread during the call</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env"/>
             <arg name="iomux">epoll</arg>
             <arg name="sock_type"/>
             <arg name="syscall_method">interrupt</arg>
@@ -847,6 +859,18 @@
             <results tags="linux">
               <result value="PASSED">
                 <verdict>epoll_pwait() has not noticed that subject file descriptor was closed from another thread during the call</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="iomux">epoll_pwait2</arg>
+            <arg name="sock_type"/>
+            <arg name="syscall_method">libc</arg>
+            <notes/>
+            <results tags="linux">
+              <result value="PASSED">
+                <verdict>epoll_pwait2() has not noticed that subject file descriptor was closed from another thread during the call</verdict>
               </result>
             </results>
           </iter>
