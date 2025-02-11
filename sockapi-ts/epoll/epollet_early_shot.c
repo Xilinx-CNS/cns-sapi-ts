@@ -20,6 +20,7 @@
  * @param iomux     A kind of epoll_wait() call (enum @c epoll_wait_calls):
  *      - epoll
  *      - epoll_pwait
+ *      - epoll_pwait2
  * @param sock_type Type of sockets:
  *      - SOCK_STREAM
  *      - SOCK_DGRAM
