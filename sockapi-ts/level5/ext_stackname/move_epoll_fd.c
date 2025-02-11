@@ -18,7 +18,8 @@
  * @param system_fd            Whether we should to call
  *                             @b onload_move_fd() on an Onload
  *                             epoll fd or system one
- * @param iomux                @b epoll() or @b epoll_pwait()
+ * @param iomux                @b epoll(), @b epoll_pwait()
+ *                             or @b epoll_pwait2()
  *
  * @par Scenario:
  *
@@ -99,7 +100,7 @@ main(int argc, char *argv[])
         test_failed = TRUE;
 
     TEST_STEP("Send some data to @p iut_s and check that @b epoll_wait() (or "
-              "@b epoll_pwait() returns correct result.");
+              "@b epoll_pwait() / @b epoll_pwait2() returns correct result.");
     rpc_send(pco_tst, tst_s, buf, DATA_SIZE, 0);
     rc = iomux_epoll_call(iomux, pco_iut, epoll_fd, events, 1, -1);
     if (rc != 1 || events[0].events != RPC_EPOLLIN ||
