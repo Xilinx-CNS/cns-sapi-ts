@@ -8174,6 +8174,14 @@
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="n1">0</arg>
+        <arg name="n2"/>
+        <arg name="rcvlowat"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
         <arg name="iomux">epoll</arg>
         <arg name="n1">10</arg>
         <arg name="n2"/>
@@ -8183,6 +8191,14 @@
       <iter result="PASSED">
         <arg name="env"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="n1">10</arg>
+        <arg name="n2"/>
+        <arg name="rcvlowat"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="n1">10</arg>
         <arg name="n2"/>
         <arg name="rcvlowat"/>
@@ -8277,6 +8293,20 @@
       <iter result="PASSED">
         <arg name="env"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="n1">19</arg>
+        <arg name="n2"/>
+        <arg name="rcvlowat"/>
+        <notes/>
+        <results tags="linux">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>Socket is readable when too few data is sent</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="n1">19</arg>
         <arg name="n2"/>
         <arg name="rcvlowat"/>
@@ -12791,6 +12821,22 @@
         <arg name="exp_errno">EHOSTUNREACH</arg>
         <arg name="icmp_code">1</arg>
         <arg name="icmp_type">11</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="ip_recverr"/>
+        <arg name="is_iomux"/>
+        <arg name="pending_err">TRUE</arg>
+        <notes/>
+        <results tags="(linux-4.9|linux-4&gt;=14)&amp;!(linux-4.9.0-0.bpo.5|linux-4.9.0-4)" key="ST-1152">
+          <result value="FAILED">
+            <verdict>Iomux function didn't notice an error on the socket</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="exp_errno">EHOSTUNREACH</arg>
+        <arg name="icmp_code">1</arg>
+        <arg name="icmp_type">11</arg>
         <arg name="iomux">select</arg>
         <arg name="ip_recverr"/>
         <arg name="is_iomux"/>
@@ -13112,6 +13158,22 @@
         </results>
       </iter>
       <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="exp_errno">EHOSTUNREACH</arg>
+        <arg name="icmp_code">1</arg>
+        <arg name="icmp_type">11</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="ip_recverr"/>
+        <arg name="is_iomux"/>
+        <arg name="pending_err">FALSE</arg>
+        <notes/>
+        <results tags="(linux-4.9|linux-4&gt;=14)&amp;!(linux-4.9.0-0.bpo.5|linux-4.9.0-4)" key="ST-1152">
+          <result value="FAILED">
+            <verdict>ICMP error (11,1) does not unblock iomux function</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer</arg>
         <arg name="exp_errno">EHOSTUNREACH</arg>
         <arg name="icmp_code"/>
@@ -13178,6 +13240,17 @@
         <notes/>
       </iter>
       <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="exp_errno">EHOSTUNREACH</arg>
+        <arg name="icmp_code"/>
+        <arg name="icmp_type">3</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="ip_recverr"/>
+        <arg name="is_iomux"/>
+        <arg name="pending_err"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_tst</arg>
         <arg name="exp_errno">EHOSTUNREACH</arg>
         <arg name="icmp_code"/>
@@ -13244,6 +13317,17 @@
         <notes/>
       </iter>
       <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="exp_errno">EHOSTUNREACH</arg>
+        <arg name="icmp_code"/>
+        <arg name="icmp_type">3</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="ip_recverr"/>
+        <arg name="is_iomux"/>
+        <arg name="pending_err"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer</arg>
         <arg name="exp_errno">EHOSTUNREACH</arg>
         <arg name="icmp_code">0</arg>
@@ -13310,6 +13394,17 @@
         <notes/>
       </iter>
       <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="exp_errno">EHOSTUNREACH</arg>
+        <arg name="icmp_code">0</arg>
+        <arg name="icmp_type"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="ip_recverr"/>
+        <arg name="is_iomux"/>
+        <arg name="pending_err"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_tst</arg>
         <arg name="exp_errno">EHOSTUNREACH</arg>
         <arg name="icmp_code">0</arg>
@@ -13376,6 +13471,17 @@
         <notes/>
       </iter>
       <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="exp_errno">EHOSTUNREACH</arg>
+        <arg name="icmp_code">0</arg>
+        <arg name="icmp_type"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="ip_recverr"/>
+        <arg name="is_iomux"/>
+        <arg name="pending_err"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer</arg>
         <arg name="exp_errno">ENETUNREACH</arg>
         <arg name="icmp_code"/>
@@ -13498,10 +13604,32 @@
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="exp_errno">ENETUNREACH</arg>
+        <arg name="icmp_code"/>
+        <arg name="icmp_type"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="ip_recverr"/>
+        <arg name="is_iomux"/>
+        <arg name="pending_err"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
         <arg name="exp_errno">ECONNREFUSED</arg>
         <arg name="icmp_code"/>
         <arg name="icmp_type"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="ip_recverr"/>
+        <arg name="is_iomux"/>
+        <arg name="pending_err"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="exp_errno">ECONNREFUSED</arg>
+        <arg name="icmp_code"/>
+        <arg name="icmp_type"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="ip_recverr"/>
         <arg name="is_iomux"/>
         <arg name="pending_err"/>
@@ -13630,6 +13758,17 @@
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="exp_errno">ENETUNREACH</arg>
+        <arg name="icmp_code"/>
+        <arg name="icmp_type"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="ip_recverr"/>
+        <arg name="is_iomux"/>
+        <arg name="pending_err"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
         <arg name="exp_errno">ECONNREFUSED</arg>
         <arg name="icmp_code"/>
         <arg name="icmp_type"/>
@@ -13640,6 +13779,17 @@
         <notes/>
       </iter>
       <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="exp_errno">ECONNREFUSED</arg>
+        <arg name="icmp_code"/>
+        <arg name="icmp_type"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="ip_recverr"/>
+        <arg name="is_iomux"/>
+        <arg name="pending_err"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer</arg>
         <arg name="exp_errno">0</arg>
         <arg name="icmp_code"/>
@@ -13706,6 +13856,17 @@
         <notes/>
       </iter>
       <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="exp_errno">0</arg>
+        <arg name="icmp_code"/>
+        <arg name="icmp_type"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="ip_recverr"/>
+        <arg name="is_iomux"/>
+        <arg name="pending_err"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_tst</arg>
         <arg name="exp_errno">0</arg>
         <arg name="icmp_code"/>
@@ -13766,6 +13927,17 @@
         <arg name="icmp_code"/>
         <arg name="icmp_type"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="ip_recverr"/>
+        <arg name="is_iomux"/>
+        <arg name="pending_err"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="exp_errno">0</arg>
+        <arg name="icmp_code"/>
+        <arg name="icmp_type"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="ip_recverr"/>
         <arg name="is_iomux"/>
         <arg name="pending_err"/>
@@ -13832,6 +14004,17 @@
         <arg name="icmp_code"/>
         <arg name="icmp_type">12</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="ip_recverr"/>
+        <arg name="is_iomux"/>
+        <arg name="pending_err"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="exp_errno"/>
+        <arg name="icmp_code"/>
+        <arg name="icmp_type">12</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="ip_recverr"/>
         <arg name="is_iomux"/>
         <arg name="pending_err"/>
@@ -13960,6 +14143,17 @@
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
+        <arg name="exp_errno">ENOPROTOOPT</arg>
+        <arg name="icmp_code"/>
+        <arg name="icmp_type"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="ip_recverr"/>
+        <arg name="is_iomux"/>
+        <arg name="pending_err"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
         <arg name="exp_errno">EOPNOTSUPP</arg>
         <arg name="icmp_code"/>
         <arg name="icmp_type"/>
@@ -13970,6 +14164,17 @@
         <notes/>
       </iter>
       <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="exp_errno">EOPNOTSUPP</arg>
+        <arg name="icmp_code"/>
+        <arg name="icmp_type"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="ip_recverr"/>
+        <arg name="is_iomux"/>
+        <arg name="pending_err"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_ipv6</arg>
         <arg name="exp_errno"/>
         <arg name="icmp_code"/>
@@ -14036,6 +14241,17 @@
         <notes/>
       </iter>
       <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="exp_errno"/>
+        <arg name="icmp_code"/>
+        <arg name="icmp_type"/>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="ip_recverr"/>
+        <arg name="is_iomux"/>
+        <arg name="pending_err"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
         <arg name="exp_errno"/>
         <arg name="icmp_code"/>
@@ -14096,6 +14312,17 @@
         <arg name="icmp_code"/>
         <arg name="icmp_type"/>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="ip_recverr"/>
+        <arg name="is_iomux"/>
+        <arg name="pending_err"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="exp_errno"/>
+        <arg name="icmp_code"/>
+        <arg name="icmp_type"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="ip_recverr"/>
         <arg name="is_iomux"/>
         <arg name="pending_err"/>
@@ -20144,6 +20371,23 @@
       <iter result="PASSED">
         <arg name="check_writable"/>
         <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">epoll_pwait2</arg>
+        <arg name="is_blocking"/>
+        <arg name="overfill_buffers">FALSE</arg>
+        <arg name="peer_close"/>
+        <arg name="swap_pco"/>
+        <arg name="use_shutdown"/>
+        <notes/>
+        <results tags="v5&amp;(ool_loop=2|ool_loop=4)&amp;!reuse_stack" key="ON-1617">
+          <result value="FAILED">
+            <verdict>iomux() returned unexpected event(s) EVT_RD | EVT_EXC | EVT_ERR | EVT_HUP</verdict>
+            <verdict>send() failed but returned unexpected errno: errno is set to ECONNRESET instead of EPIPE</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_writable"/>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="iomux">oo_epoll</arg>
         <arg name="is_blocking"/>
         <arg name="overfill_buffers">FALSE</arg>
@@ -20228,6 +20472,17 @@
         <arg name="check_writable">TRUE</arg>
         <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="iomux">epoll_pwait</arg>
+        <arg name="is_blocking"/>
+        <arg name="overfill_buffers"/>
+        <arg name="peer_close"/>
+        <arg name="swap_pco"/>
+        <arg name="use_shutdown"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="check_writable">TRUE</arg>
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="iomux">epoll_pwait2</arg>
         <arg name="is_blocking"/>
         <arg name="overfill_buffers"/>
         <arg name="peer_close"/>
