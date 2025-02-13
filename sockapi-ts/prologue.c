@@ -747,15 +747,7 @@ set_onload_module_params(void)
             break;                                                            \
         }                                                                     \
                                                                               \
-        rc = te_string_replace_all_substrings(&dev_info_str_, "-", " ");      \
-        if (rc != 0)                                                          \
-        {                                                                     \
-            ERROR("te_string_replace_all_substrings() failed to replace "     \
-                  "spaces on hyphens in %s: %r", dev_info_str_.ptr, rc);      \
-            te_string_free(&dev_info_str_);                                   \
-            free(dev_info_);                                                  \
-            goto out;                                                         \
-        }                                                                     \
+        te_string_replace_all_substrings(&dev_info_str_, "-", " ");           \
                                                                               \
         rc = tapi_tags_add_tag(dev_info_str_.ptr, NULL);                      \
         if (rc != 0)                                                          \
