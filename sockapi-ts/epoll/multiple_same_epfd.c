@@ -108,17 +108,9 @@ launch_epoll_wait(void *args)
             break;
 
         case TAPI_IOMUX_EPOLL_PWAIT:
-            rc = rpc_epoll_pwait(pco, epfd, events, maxevents, timeout,
-                                 sigmask);
-            break;
-
         case TAPI_IOMUX_EPOLL_PWAIT2:
-            if (timeout < 0)
-                tv_ptr = NULL;
-            else
-                TE_NS2TS(TE_MS2NS(timeout), &tv);
-            rc = rpc_epoll_pwait2(pco, epfd, events, maxevents, tv_ptr,
-                                  sigmask);
+            rc = iomux_epoll_pwait_call(epw_args->iomux, pco, epfd, events,
+                                        maxevents, timeout, sigmask);
             break;
 
         default:
