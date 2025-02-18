@@ -1068,3 +1068,33 @@ sockts_iomux_create(rcf_rpc_server *rpcs, tapi_iomux_type type)
 
     return iomux;
 }
+
+int
+iomux_epoll_pwait_call(iomux_call_type iomux, rcf_rpc_server *rpcs, int epfd,
+                       struct rpc_epoll_event *events, int maxevents,
+                       int timeout_ms, const rpc_sigset_p sigmask)
+{
+    switch (iomux)
+    {
+        case TAPI_IOMUX_EPOLL_PWAIT:
+            return rpc_epoll_pwait(rpcs, epfd, events, maxevents, timeout_ms,
+                                   sigmask);
+
+        case TAPI_IOMUX_EPOLL_PWAIT2:
+        {
+            struct tarpc_timespec tv;
+            struct tarpc_timespec *tv_ptr = &tv;
+
+            if (timeout_ms < 0)
+                tv_ptr = NULL;
+            else
+                TE_NS2TS(TE_MS2NS(timeout_ms), tv_ptr);
+            return rpc_epoll_pwait2(rpcs, epfd, events, maxevents, tv_ptr,
+                                    sigmask);
+        }
+
+        default:
+            TEST_FAIL("Incorrect value of 'iomux' parameter. "
+                      "It should be either EPOLL_PWAIT or EPOLL_PWAIT2.");
+    }
+}

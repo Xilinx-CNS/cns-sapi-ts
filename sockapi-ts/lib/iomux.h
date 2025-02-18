@@ -453,4 +453,22 @@ extern int iomux_init_rd_error(iomux_evt_fd *event, int iut_s,
 extern tapi_iomux_handle * sockts_iomux_create(rcf_rpc_server *rpcs,
                                                tapi_iomux_type type);
 
+/**
+ * Common RPC wrapper for @b epoll_pwait and @b epoll_pwait2.
+ *
+ * @param[in]  iomux        Type of iomux function.
+ * @param[in]  rpcs         RPC server.
+ * @param[out] epfd         Value for epoll file descriptor.
+ * @param[in]  events       Epoll events.
+ * @param[in]  maxevents    Value of maxevents parameter.
+ * @param[in]  timeout_ms   Time to wait for events in milliseconds.
+ * @param[in]  sigmask      Signal mask.
+ *
+ * @return Status Code.
+ */
+extern int iomux_epoll_pwait_call(iomux_call_type iomux, rcf_rpc_server *rpcs,
+                                  int epfd, struct rpc_epoll_event *events,
+                                  int maxevents, int timeout_ms,
+                                  const rpc_sigset_p sigmask);
+
 #endif
