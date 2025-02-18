@@ -2,13 +2,12 @@
 /* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
 /** @file
  * @brief Socket API Test Suite
- * 
- * Function, that is used in a group of tests from I/O Multiplexing
- * package. Some structures used in it.
- *  
+ *
+ * Definitions of functions and auxiliary structures used for I/O Multiplexing.
+ *
  * @author Konstantin Ushakov <Konstantin.Ushakov@oktetlabs.ru>
  * @author Konstantin Abramenko <Konstantin.Abramenko@oktetlabs.ru>
- * 
+ *
  * $Id$
  */
 

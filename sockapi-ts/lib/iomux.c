@@ -3,12 +3,11 @@
 /** @file
  *
  * @brief Socket API Test Suite
- * 
- * Function, that is used in a group of tests from I/O Multiplexing
- * package.
- *  
+ *
+ * Implementation of functions used for I/O Multiplexing.
+ *
  * @author Konstantin Ushakov <Konstantin.Ushakov@oktetlabs.ru>
- * 
+ *
  * $Id$
  */
 
