@@ -1,9 +1,9 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 /* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
-/* 
+/*
  * Socket API Test Suite
  * I/O Multiplexing
- * 
+ *
  * $Id$
  */
 
@@ -24,7 +24,7 @@
  * @param tst_addr  Address/port to be used to connect to @p pco_tst
  * @param iomux     IO multiplexing function to be tested
  *
- * @note POSIX.1g specifies the @b const qualifier for @b timeout 
+ * @note POSIX.1g specifies the @b const qualifier for @b timeout
  *       parameter. Current Linux systems modify the @b timeval
  *       structure.
  *
@@ -88,15 +88,15 @@ main(int argc, char *argv[])
 
     const struct sockaddr *iut_addr = NULL;
     const struct sockaddr *tst_addr = NULL;
-    
+
     tarpc_timeval   timeout, timeout_cp;
     tarpc_timespec  ts_timeout, ts_timeout_cp;
     unsigned char   buffer[1];
 
     rpc_fd_set_p        readfds = RPC_NULL;
-    struct rpc_pollfd   pollfd[1]; 
+    struct rpc_pollfd   pollfd[1];
     iomux_call_type     iomux;
-    
+
     long int    sec;
     long int    nsec;
     long int    cp_sec;
@@ -114,7 +114,7 @@ main(int argc, char *argv[])
     iut_s = rpc_create_and_bind_socket(pco_iut, RPC_SOCK_DGRAM,
                                        RPC_PROTO_DEF, TRUE, FALSE,
                                        iut_addr);
-    tst_s = rpc_socket(pco_tst, rpc_socket_domain_by_addr(tst_addr), 
+    tst_s = rpc_socket(pco_tst, rpc_socket_domain_by_addr(tst_addr),
                        RPC_SOCK_DGRAM, RPC_PROTO_DEF);
 
     if (iomux == IC_SELECT || iomux == IC_PSELECT)
@@ -157,15 +157,15 @@ main(int argc, char *argv[])
 
     if (rc != 1)
     {
-        TEST_FAIL("%s() function called on IUT returned %d instead of 1", 
+        TEST_FAIL("%s() function called on IUT returned %d instead of 1",
                   iomux_call_en2str(iomux), rc);
     }
 
     if (((iomux == IC_SELECT || iomux == IC_PSELECT) &&
          !rpc_do_fd_isset(pco_iut, iut_s, readfds)) ||
-        (iomux == IC_PPOLL && !(pollfd->revents & RPC_POLLIN)))  
+        (iomux == IC_PPOLL && !(pollfd->revents & RPC_POLLIN)))
         TEST_FAIL("%s() didn't return iut_s socket as ready for reading",
-                  iomux_call_en2str(iomux));      
+                  iomux_call_en2str(iomux));
 
     if (iomux == IC_SELECT)
     {
@@ -220,7 +220,7 @@ cleanup:
     CLEANUP_RPC_CLOSE(pco_tst, tst_s);
 
     if (iomux == IC_SELECT || iomux == IC_PSELECT)
-        rpc_fd_set_delete(pco_iut, readfds); 
+        rpc_fd_set_delete(pco_iut, readfds);
 
     TEST_END;
 }
