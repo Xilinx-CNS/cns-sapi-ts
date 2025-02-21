@@ -54,18 +54,18 @@
     do {                                                        \
         switch (iomux)                                          \
         {                                                       \
-            case IC_SELECT:                                     \
+            case TAPI_IOMUX_SELECT:                             \
                 rc = rpc_select(pco_iut, iut_s + 1, readfds,    \
                                 RPC_NULL, RPC_NULL, &timeout);  \
                 break;                                          \
                                                                 \
-            case IC_PSELECT:                                    \
+            case TAPI_IOMUX_PSELECT:                            \
                 rc = rpc_pselect(pco_iut, iut_s + 1, readfds,   \
                                  RPC_NULL, RPC_NULL,            \
                                  &ts_timeout, RPC_NULL);        \
                 break;                                          \
                                                                 \
-            case IC_PPOLL:                                      \
+            case TAPI_IOMUX_PPOLL:                              \
                 rc = rpc_ppoll(pco_iut, pollfd, 1,              \
                                &ts_timeout, RPC_NULL);          \
                 break;                                          \
@@ -103,6 +103,7 @@ main(int argc, char *argv[])
     long int    cp_nsec;
 
     struct timespec ts_start, ts_stop;
+    bool ready_for_reading;
 
     TEST_START;
     TEST_GET_PCO(pco_iut);
@@ -117,30 +118,42 @@ main(int argc, char *argv[])
     tst_s = rpc_socket(pco_tst, rpc_socket_domain_by_addr(tst_addr),
                        RPC_SOCK_DGRAM, RPC_PROTO_DEF);
 
-    if (iomux == IC_SELECT || iomux == IC_PSELECT)
+    switch (iomux)
     {
-        readfds = rpc_fd_set_new(pco_iut);
-        rpc_do_fd_zero(pco_iut, readfds);
-        rpc_do_fd_set(pco_iut, iut_s, readfds);
-    }
-    else
-    {
-        memset(pollfd, 0, sizeof(pollfd));
-        pollfd->fd = iut_s;
-        pollfd->events = RPC_POLLIN;
+        case TAPI_IOMUX_SELECT:
+        case TAPI_IOMUX_PSELECT:
+            readfds = rpc_fd_set_new(pco_iut);
+            rpc_do_fd_zero(pco_iut, readfds);
+            rpc_do_fd_set(pco_iut, iut_s, readfds);
+            break;
+
+        case TAPI_IOMUX_PPOLL:
+            memset(pollfd, 0, sizeof(pollfd));
+            pollfd->fd = iut_s;
+            pollfd->events = RPC_POLLIN;
+            break;
+
+        default:
+            TEST_FAIL("Incorrect function was specified to the test");
     }
 
-    if (iomux == IC_SELECT)
+    switch (iomux)
     {
-        timeout.tv_usec = 0;
-        timeout.tv_sec = rand_range(10, 20);
-        timeout_cp = timeout;
-    }
-    else
-    {
-        ts_timeout.tv_nsec = 0;
-        ts_timeout.tv_sec = rand_range(10, 20);
-        ts_timeout_cp = ts_timeout;
+        case TAPI_IOMUX_SELECT:
+            timeout.tv_usec = 0;
+            timeout.tv_sec = rand_range(10, 20);
+            timeout_cp = timeout;
+            break;
+
+        case TAPI_IOMUX_PSELECT:
+        case TAPI_IOMUX_PPOLL:
+            ts_timeout.tv_nsec = 0;
+            ts_timeout.tv_sec = rand_range(10, 20);
+            ts_timeout_cp = ts_timeout;
+            break;
+
+        default:
+            TEST_FAIL("Incorrect function was specified to the test");
     }
 
     pco_iut->op = RCF_RPC_CALL;
@@ -161,25 +174,46 @@ main(int argc, char *argv[])
                   iomux_call_en2str(iomux), rc);
     }
 
-    if (((iomux == IC_SELECT || iomux == IC_PSELECT) &&
-         !rpc_do_fd_isset(pco_iut, iut_s, readfds)) ||
-        (iomux == IC_PPOLL && !(pollfd->revents & RPC_POLLIN)))
+    switch (iomux)
+    {
+        case TAPI_IOMUX_SELECT:
+        case TAPI_IOMUX_PSELECT:
+            ready_for_reading = rpc_do_fd_isset(pco_iut, iut_s, readfds);
+            break;
+
+        case TAPI_IOMUX_PPOLL:
+            ready_for_reading = pollfd->revents & RPC_POLLIN;
+            break;
+
+        default:
+            TEST_FAIL("Incorrect function was specified to the test");
+    }
+
+    if (!ready_for_reading)
+    {
         TEST_FAIL("%s() didn't return iut_s socket as ready for reading",
                   iomux_call_en2str(iomux));
-
-    if (iomux == IC_SELECT)
-    {
-        sec = timeout.tv_sec;
-        nsec = TE_US2NS(timeout.tv_usec);
-        cp_sec = timeout_cp.tv_sec;
-        cp_nsec = TE_US2NS(timeout_cp.tv_usec);
     }
-    else
+
+    switch (iomux)
     {
-        sec = ts_timeout.tv_sec;
-        nsec = ts_timeout.tv_nsec;
-        cp_sec = ts_timeout_cp.tv_sec;
-        cp_nsec = ts_timeout_cp.tv_nsec;
+        case TAPI_IOMUX_SELECT:
+            sec = timeout.tv_sec;
+            nsec = TE_US2NS(timeout.tv_usec);
+            cp_sec = timeout_cp.tv_sec;
+            cp_nsec = TE_US2NS(timeout_cp.tv_usec);
+            break;
+
+        case TAPI_IOMUX_PSELECT:
+        case TAPI_IOMUX_PPOLL:
+            sec = ts_timeout.tv_sec;
+            nsec = ts_timeout.tv_nsec;
+            cp_sec = ts_timeout_cp.tv_sec;
+            cp_nsec = ts_timeout_cp.tv_nsec;
+            break;
+
+        default:
+            TEST_FAIL("Incorrect function was specified to the test");
     }
 
     if (sec != cp_sec || nsec != cp_nsec)
@@ -219,7 +253,7 @@ cleanup:
     CLEANUP_RPC_CLOSE(pco_iut, iut_s);
     CLEANUP_RPC_CLOSE(pco_tst, tst_s);
 
-    if (iomux == IC_SELECT || iomux == IC_PSELECT)
+    if (iomux == TAPI_IOMUX_SELECT || iomux == TAPI_IOMUX_PSELECT)
         rpc_fd_set_delete(pco_iut, readfds);
 
     TEST_END;
