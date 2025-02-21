@@ -20,6 +20,7 @@
               <value reqs="SELECT">select</value>
               <value reqs="SELECT,PSELECT">pselect</value>
               <value reqs="POLL,PPOLL">ppoll</value>
+              <value reqs="EPOLL,EPOLL_PWAIT2">epoll_pwait2</value>
             </arg>
         </run>
 

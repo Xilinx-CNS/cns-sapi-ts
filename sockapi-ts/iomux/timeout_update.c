@@ -9,8 +9,8 @@
 
 /** @page iomux-timeout_update Update of timeout argument
  *
- * @objective Check if @b select(), @b pselect() or @b poll()
- *            update timeout argument.
+ * @objective Check if @b select(), @b pselect(), @b poll()
+ *            or epoll_pwait2() update timeout argument.
  *
  * @type Conformance, compatibility
  *
@@ -70,6 +70,12 @@
                                &ts_timeout, RPC_NULL);          \
                 break;                                          \
                                                                 \
+            case TAPI_IOMUX_EPOLL_PWAIT2:                       \
+                rc = rpc_epoll_pwait2(pco_iut, epfd, events,    \
+                                      maxevents, &ts_timeout,   \
+                                      RPC_NULL);                \
+                break;                                          \
+                                                                \
             default:                                            \
                 TEST_FAIL("Incorrect function was specified "   \
                           "to the test");                       \
@@ -104,6 +110,10 @@ main(int argc, char *argv[])
 
     struct timespec ts_start, ts_stop;
     bool ready_for_reading;
+    int epfd = -1;
+    uint32_t event;
+    struct rpc_epoll_event events[1];
+    int maxevents = 1;
 
     TEST_START;
     TEST_GET_PCO(pco_iut);
@@ -133,6 +143,13 @@ main(int argc, char *argv[])
             pollfd->events = RPC_POLLIN;
             break;
 
+        case TAPI_IOMUX_EPOLL_PWAIT2:
+            epfd = rpc_epoll_create(pco_iut, 1);
+            event = RPC_EPOLLIN;
+            rpc_epoll_ctl_simple(pco_iut, epfd, RPC_EPOLL_CTL_ADD, iut_s,
+                                 event);
+            break;
+
         default:
             TEST_FAIL("Incorrect function was specified to the test");
     }
@@ -147,6 +164,7 @@ main(int argc, char *argv[])
 
         case TAPI_IOMUX_PSELECT:
         case TAPI_IOMUX_PPOLL:
+        case TAPI_IOMUX_EPOLL_PWAIT2:
             ts_timeout.tv_nsec = 0;
             ts_timeout.tv_sec = rand_range(10, 20);
             ts_timeout_cp = ts_timeout;
@@ -185,6 +203,10 @@ main(int argc, char *argv[])
             ready_for_reading = pollfd->revents & RPC_POLLIN;
             break;
 
+        case TAPI_IOMUX_EPOLL_PWAIT2:
+            ready_for_reading = events[0].events & RPC_POLLIN;
+            break;
+
         default:
             TEST_FAIL("Incorrect function was specified to the test");
     }
@@ -206,6 +228,7 @@ main(int argc, char *argv[])
 
         case TAPI_IOMUX_PSELECT:
         case TAPI_IOMUX_PPOLL:
+        case TAPI_IOMUX_EPOLL_PWAIT2:
             sec = ts_timeout.tv_sec;
             nsec = ts_timeout.tv_nsec;
             cp_sec = ts_timeout_cp.tv_sec;
@@ -251,6 +274,7 @@ main(int argc, char *argv[])
 
 cleanup:
     CLEANUP_RPC_CLOSE(pco_iut, iut_s);
+    CLEANUP_RPC_CLOSE(pco_iut, epfd);
     CLEANUP_RPC_CLOSE(pco_tst, tst_s);
 
     if (iomux == TAPI_IOMUX_SELECT || iomux == TAPI_IOMUX_PSELECT)

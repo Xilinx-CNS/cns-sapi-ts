@@ -7,7 +7,7 @@
   <iter result="PASSED">
     <notes/>
     <test name="timeout_update" type="script">
-      <objective>Check if select(), pselect() or poll() update timeout argument.</objective>
+      <objective>Check if select(), pselect(), poll() or epoll_pwait2() update timeout argument.</objective>
       <notes/>
       <iter result="PASSED">
         <arg name="env"/>
@@ -17,6 +17,11 @@
       <iter result="PASSED">
         <arg name="env"/>
         <arg name="iomux">ppoll</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="iomux">epoll_pwait2</arg>
         <notes/>
       </iter>
       <iter result="PASSED">
