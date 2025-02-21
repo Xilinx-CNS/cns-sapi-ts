@@ -170,9 +170,9 @@ main(int argc, char *argv[])
     if (iomux == IC_SELECT)
     {
         sec = timeout.tv_sec;
-        nsec = timeout.tv_usec * 1000;
+        nsec = TE_US2NS(timeout.tv_usec);
         cp_sec = timeout_cp.tv_sec;
-        cp_nsec = timeout_cp.tv_usec * 1000;
+        cp_nsec = TE_US2NS(timeout_cp.tv_usec);
     }
     else
     {
@@ -185,7 +185,7 @@ main(int argc, char *argv[])
     if (sec != cp_sec || nsec != cp_nsec)
     {
         double ref_time = ts_stop.tv_sec - ts_start.tv_sec +
-            (double)(ts_stop.tv_nsec - ts_start.tv_nsec) / 1000000000;
+            TE_NS2SEC((double)(ts_stop.tv_nsec - ts_start.tv_nsec));
         /*
          * We allow a deviation of iomux_time in the range of 0.5 seconds,
          * due to timeout inaccuracy esp. in case of spinning
@@ -194,7 +194,7 @@ main(int argc, char *argv[])
         double max_time = ref_time + 0.5;
 
         double iomux_time = cp_sec - sec +
-            (double)(cp_nsec - nsec) / 1000000000;
+            TE_NS2SEC((double)(cp_nsec - nsec));
 
         if (min_time < iomux_time && iomux_time < max_time)
         {
