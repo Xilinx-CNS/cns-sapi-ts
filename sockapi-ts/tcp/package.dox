@@ -74,6 +74,7 @@ TCP packets, etc.
 -# @ref tcp-rst_send_partial
 -# @ref tcp-tcp_server_restart
 -# @ref tcp-send_retrans_fail
+-# @ref tcp-move_fd_same_tcp
 
 @}
 
