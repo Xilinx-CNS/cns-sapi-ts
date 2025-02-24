@@ -1349,6 +1349,16 @@
         </results>
       </iter>
     </test>
+    <test name="move_fd_same_tcp" type="script">
+      <objective>Check that onload_move_fd to the same stack does the right thing: returns success without doing anything for different TCP states.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="tcp_state"/>
+        <arg name="active"/>
+        <notes/>
+      </iter>
+    </test>
     <test name="shutdown_states" type="script">
       <objective>Check behaviour and effects of shutdown() call on TCP socket in different TCP states.</objective>
       <notes/>
