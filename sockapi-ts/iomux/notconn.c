@@ -133,9 +133,8 @@ main(int argc, char *argv[])
                          iomux_event_rpc2str(fds.revents));
         }
     }
-    else if ((sock_type == RPC_SOCK_STREAM) && iomux != IC_POLL && 
-             iomux != IC_PPOLL && iomux != IC_EPOLL &&
-             iomux != IC_EPOLL_PWAIT && iomux != IC_OO_EPOLL)
+    else if (sock_type == RPC_SOCK_STREAM &&
+             !IOMUX_IS_POLL_LIKE(iomux))
     {
         if (rc != 0 || fds.revents != 0)
         {
