@@ -554,7 +554,7 @@ main(int argc, char *argv[])
     TEST_GET_INT_PARAM(n_fds); 
 
     epoll_tested = (iomux == IC_EPOLL || iomux == IC_OO_EPOLL ||
-                    iomux == IC_EPOLL_PWAIT);
+                    iomux == IC_EPOLL_PWAIT || iomux == IC_EPOLL_PWAIT2);
 
     iomux_fds = calloc(n_fds, sizeof(iomux_evt_fd));
 
