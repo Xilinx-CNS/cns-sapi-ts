@@ -120,6 +120,8 @@ Each test does one of the following:
    \n @htmlonly &nbsp; @endhtmlonly
 -# @ref bnbvalue-func_sockopt_boolean
 -# @ref bnbvalue-func_sockopt_get_integer
+-# @ref bnbvalue-func_splice_nonconn_dgram
+   \n @htmlonly &nbsp; @endhtmlonly
 -# @ref bnbvalue-func_sockopt_set_integer
    \n @htmlonly &nbsp; @endhtmlonly
 -# @ref bnbvalue-dgram_empty

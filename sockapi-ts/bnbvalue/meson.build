@@ -87,6 +87,7 @@ tests = [
     'func_sockopt_get_integer',
     'func_sockopt_level_name',
     'func_sockopt_set_integer',
+    'func_splice_nonconn_dgram',
     'func_zc_recv_all_zeros',
     'incorrect_address_length',
     'incorrect_family',

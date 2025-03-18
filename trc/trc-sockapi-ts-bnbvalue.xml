@@ -4089,6 +4089,22 @@
         </results>
       </iter>
     </test>
+    <test name="func_splice_nonconn_dgram" type="script">
+      <objective>Check that splice() functions correctly handle situation with not connected SOCK_DGRAM sockets.</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="zero_tx_buf_len"/>
+        <arg name="pipe_with_data"/>
+        <arg name="use_sock_as_in"/>
+        <arg name="blocking_pipe"/>
+        <arg name="blocking_sock"/>
+        <arg name="blocking_splice"/>
+        <arg name="bound_socket"/>
+        <arg name="set_move"/>
+        <arg name="unblock_same_sock"/>
+      </iter>
+    </test>
     <test name="func_bind_addr_null" type="script">
       <objective>Check that bind() function correctly handles situation with passing NULL pointer as the value of address parameter.</objective>
       <notes>Linux has incorrect error reporting (EINVAL/EFAULT) instead of EDESTADDRREQ when bind() is call with NULL address pointer and zero/non-zero address length.</notes>
