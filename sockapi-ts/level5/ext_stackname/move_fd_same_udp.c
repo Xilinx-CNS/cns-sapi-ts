@@ -113,7 +113,10 @@ main(int argc, char *argv[])
 
     TEST_STEP("Call @b onload_move_fd(): move the socket @p iut_s to the same "
               "stack.");
-    CHECK_RC(rpc_onload_move_fd(pco_iut, iut_s));
+    tapi_rpc_onload_move_fd_check(pco_iut, iut_s,
+                                  TAPI_MOVE_FD_SUCCESS_EXPECTED,
+                                  ostat_before.stack_name,
+                                  "Call onload_move_fd()");
 
     TEST_STEP("Depending on parameter values, bind and connect socket on IUT.");
     if (!bind_before)
