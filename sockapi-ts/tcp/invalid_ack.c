@@ -408,29 +408,8 @@ main(int argc, char *argv[])
     TEST_STEP("Move IUT socket to state @p tcp_state, taking into "
               "account @p opening.");
 
-    if (tcp_state == RPC_TCP_TIME_WAIT)
-    {
-        tcp_move_to_state(&ss, RPC_TCP_FIN_WAIT2, opening,
-                          (opening != OL_ACTIVE) ? cache_socket : FALSE);
-        rc = tsa_do_tcp_move(&ss, RPC_TCP_FIN_WAIT2,
-                             RPC_TCP_TIME_WAIT, 0);
-        if (rc != 0)
-        {
-            if (tsa_state_cur(&ss) == RPC_TCP_CLOSE && !zf_shim_run)
-                RING("TCP_TIME_WAIT is not observable");
-            else
-                TEST_VERDICT("Failed to move to TCP_TIME_WAIT state");
-        }
-        else if (!zf_shim_run)
-        {
-            ERROR_VERDICT("TCP_TIME_WAIT is observable");
-        }
-    }
-    else
-    {
-        tcp_move_to_state(&ss, tcp_state, opening,
-                          (opening != OL_ACTIVE) ? cache_socket : FALSE);
-    }
+    tcp_move_to_state(&ss, tcp_state, opening,
+                      (opening != OL_ACTIVE) ? cache_socket : FALSE);
 
     TEST_STEP("If @p tcp_state is @c TCP_ESTABLISHED or @c TCP_CLOSE_WAIT, send "
               "some data from IUT and allow CSAP socket emulation to receive "
@@ -652,23 +631,10 @@ main(int argc, char *argv[])
     rc = tsa_do_tcp_move(&ss, tcp_state, next_state, 0);
     if (rc != 0)
     {
-        if (next_state == RPC_TCP_TIME_WAIT &&
-            tsa_state_cur(&ss) == RPC_TCP_CLOSE && !zf_shim_run)
-        {
-            RING("TCP_TIME_WAIT is not observable");
-        }
-        else
-        {
-            test_failed = TRUE;
-            ERROR_VERDICT("Failed to move from %s to %s",
-                          tcp_state_rpc2str(tcp_state),
-                          tcp_state_rpc2str(next_state));
-        }
-    }
-    else if (next_state == RPC_TCP_TIME_WAIT && !zf_shim_run)
-    {
-        ERROR_VERDICT("TCP_TIME_WAIT is observable");
         test_failed = TRUE;
+        ERROR_VERDICT("Failed to move from %s to %s",
+                      tcp_state_rpc2str(tcp_state),
+                      tcp_state_rpc2str(next_state));
     }
 
     TEST_STEP("If next state is @c TCP_ESTABLISHED, check that "
