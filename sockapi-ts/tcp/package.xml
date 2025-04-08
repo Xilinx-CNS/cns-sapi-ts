@@ -2991,6 +2991,48 @@
             </run>
 
             <run>
+                <script name="move_fd_same_tcp" track_conf="silent">
+                    <req id="SOCK_STREAM"/>
+                    <req id="TAPI_TCP_STATES"/>
+                </script>
+                <arg name="tcp_state" type="tcp_states">
+                    <value>TCP_ESTABLISHED</value>
+                    <value>TCP_FIN_WAIT1</value>
+                    <value>TCP_FIN_WAIT2</value>
+                    <value>TCP_TIME_WAIT</value>
+                    <value>TCP_CLOSE_WAIT</value>
+                    <value>TCP_LAST_ACK</value>
+                    <value>TCP_CLOSING</value>
+                </arg>
+                <arg name="active" type="socket_tcp_boolean"/>
+            </run>
+            <run>
+                <script name="move_fd_same_tcp" track_conf="silent">
+                    <req id="SOCK_STREAM"/>
+                    <req id="TAPI_TCP_STATES"/>
+                </script>
+                <arg name="tcp_state" type="tcp_states">
+                    <value>TCP_LISTEN</value>
+                    <value>TCP_SYN_RECV</value>
+                </arg>
+                <arg name="active" type="socket_tcp_boolean">
+                    <value>FALSE</value>
+                </arg>
+            </run>
+            <run>
+                <script name="move_fd_same_tcp" track_conf="silent">
+                    <req id="SOCK_STREAM"/>
+                    <req id="TAPI_TCP_STATES"/>
+                </script>
+                <arg name="tcp_state" type="tcp_states">
+                    <value>TCP_SYN_SENT</value>
+                </arg>
+                <arg name="active" type="socket_tcp_boolean">
+                    <value>TRUE</value>
+                </arg>
+            </run>
+
+            <run>
                 <script name="tcp_handle_fin">
                     <req id="SOCK_STREAM"/>
                     <req id="TAPI_TCP_STATES"/>
