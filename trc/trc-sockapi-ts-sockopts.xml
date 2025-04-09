@@ -10821,14 +10821,12 @@
         <arg name="tst_type"/>
         <notes/>
         <results tags="linux">
-          <result value="FAILED">
+          <result value="PASSED">
             <verdict>TCP_SYN_SENT is not observable when achieved from TCP_CLOSE</verdict>
             <verdict>TCP_FIN_WAIT1 is not observable when achieved from TCP_ESTABLISHED</verdict>
-            <verdict>TCP_FIN_WAIT2 -&gt; TCP_TIME_WAIT failed. Socket is in TCP_CLOSE instead</verdict>
           </result>
-          <result value="FAILED">
+          <result value="PASSED">
             <verdict>TCP_SYN_SENT is not observable when achieved from TCP_CLOSE</verdict>
-            <verdict>TCP_FIN_WAIT2 -&gt; TCP_TIME_WAIT failed. Socket is in TCP_CLOSE instead</verdict>
           </result>
         </results>
       </iter>
@@ -10944,11 +10942,6 @@
         <arg name="tcp_state_seq">TCP_FIN_WAIT1-&gt;TCP_CLOSING-&gt;TCP_TIME_WAIT</arg>
         <arg name="tst_type"/>
         <notes/>
-        <results tags="linux">
-          <result value="FAILED">
-            <verdict>TCP_CLOSING -&gt; TCP_TIME_WAIT failed. Socket is in TCP_CLOSE instead</verdict>
-          </result>
-        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_gw</arg>
@@ -11005,11 +10998,6 @@
         <arg name="tcp_state_seq">TCP_CLOSE-&gt;TCP_LISTEN-&gt;TCP_SYN_RECV-&gt;TCP_ESTABLISHED</arg>
         <arg name="tst_type"/>
         <notes/>
-        <results tags="linux">
-          <result value="PASSED">
-            <verdict>TCP_SYN_RECV is not observable when achieved from TCP_LISTEN</verdict>
-          </result>
-        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
@@ -11041,11 +11029,6 @@
         <arg name="tcp_state_seq">TCP_CLOSE-&gt;TCP_SYN_SENT-&gt;TCP_ESTABLISHED-&gt;TCP_FIN_WAIT1-&gt;TCP_FIN_WAIT2-&gt;TCP_TIME_WAIT-&gt;timeout-&gt;TCP_CLOSE</arg>
         <arg name="tst_type"/>
         <notes/>
-        <results tags="linux">
-          <result value="FAILED">
-            <verdict>TCP_FIN_WAIT2 -&gt; TCP_TIME_WAIT failed. Socket is in TCP_CLOSE instead</verdict>
-          </result>
-        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_tst</arg>
@@ -11053,11 +11036,6 @@
         <arg name="tcp_state_seq">TCP_CLOSE-&gt;TCP_SYN_SENT-&gt;TCP_ESTABLISHED-&gt;TCP_FIN_WAIT1-&gt;TCP_FIN_WAIT2-&gt;TCP_TIME_WAIT-&gt;timeout-&gt;TCP_CLOSE</arg>
         <arg name="tst_type"/>
         <notes/>
-        <results tags="linux">
-          <result value="FAILED">
-            <verdict>TCP_FIN_WAIT2 -&gt; TCP_TIME_WAIT failed. Socket is in TCP_CLOSE instead</verdict>
-          </result>
-        </results>
       </iter>
     </test>
     <test name="tcp_info_ca_state" type="script">
