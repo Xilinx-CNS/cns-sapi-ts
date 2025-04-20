@@ -304,7 +304,7 @@ copy_onload_tools(rcf_rpc_server *pco_iut)
 
         if (zf_gnu != NULL && *zf_gnu != '\0')
         {
-            CHECK_RC(te_string_append(&zf_stackdump_path, "bin/stripped/%s",
+            CHECK_RC(te_string_append(&zf_stackdump_path, "bin/%s",
                      ZF_STACKDUMP_NAME));
             copy_onload_tool(pco_iut->ta, zf_gnu, agt_dir,
                              zf_stackdump_path.ptr, ZF_STACKDUMP_NAME);
