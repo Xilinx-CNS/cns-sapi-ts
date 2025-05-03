@@ -23345,11 +23345,6 @@
         <arg name="v6only">TRUE</arg>
         <arg name="v6only_after">TRUE</arg>
         <notes/>
-        <results tags="linux&lt;6|linux-6&lt;1" notes="On earlier kernels behaviour may differ">
-          <result value="PASSED">
-            <verdict>Binding IPv4 socket failed unexpectedly with errno RPC-EADDRINUSE</verdict>
-          </result>
-        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
@@ -23359,11 +23354,6 @@
         <arg name="v6only">FALSE</arg>
         <arg name="v6only_after">FALSE</arg>
         <notes/>
-        <results tags="linux&lt;6|linux-6&lt;1" notes="On earlier kernels behaviour may differ">
-          <result value="PASSED">
-            <verdict>Binding IPv4 socket failed unexpectedly with errno RPC-EADDRINUSE</verdict>
-          </result>
-        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
@@ -23373,11 +23363,6 @@
         <arg name="v6only">FALSE</arg>
         <arg name="v6only_after">FALSE</arg>
         <notes/>
-        <results tags="(linux&lt;6|linux-6&lt;1)|v5" notes="On earlier kernels behaviour may differ">
-          <result value="PASSED">
-            <verdict>Binding IPv4 socket failed unexpectedly with errno RPC-EADDRINUSE</verdict>
-          </result>
-        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
@@ -23387,11 +23372,6 @@
         <arg name="v6only">TRUE</arg>
         <arg name="v6only_after">TRUE</arg>
         <notes/>
-        <results tags="(linux&lt;6|linux-6&lt;1)|v5" notes="On earlier kernels behaviour may differ">
-          <result value="PASSED">
-            <verdict>Binding IPv4 socket failed unexpectedly with errno RPC-EADDRINUSE</verdict>
-          </result>
-        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>

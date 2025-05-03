@@ -326,7 +326,8 @@ main(int argc, char *argv[])
                            || ipv6_bind == SOCKTS_ADDR_IPV6);
     bind_condition = (ipv4_bind == SOCKTS_ADDR_IPV4 && (ipv6_bind
                       == SOCKTS_ADDR_IPV4_MAPPED || ipv6_bind
-                      == SOCKTS_ADDR_IPV4_MAPPED_ANY));
+                      == SOCKTS_ADDR_IPV4_MAPPED_ANY) &&
+                      v6only != v6only_after);
 
     if (should_bind_succeed)
     {
