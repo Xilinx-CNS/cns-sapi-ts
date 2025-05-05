@@ -33,6 +33,14 @@ done
 export TE_BASE=$(te_realpath ${TE_BASE})
 echo "TE_BASE=${TE_BASE}"
 
+if test -z "${TE_INSTALL}" ; then
+    # If undefined, TE_INSTALL is always inside build dir in our case
+    TE_INSTALL="${GUESS_TOP_DIR}build/inst"
+    export TE_INSTALL
+fi
+
+PATH="${PATH}:${TE_INSTALL}/default/bin"
+export PATH
 
 # SF_TS_CONFDIR
 for loop in once ; do

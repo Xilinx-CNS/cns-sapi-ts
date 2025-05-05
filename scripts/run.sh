@@ -12,7 +12,10 @@ popd >/dev/null
 
 source "${TE_BASE}/scripts/lib"
 source "${TE_BASE}/scripts/lib.grab_cfg"
+source "${TE_BASE}/scripts/lib.meta"
 source_if_exists "${TE_TS_RIGSDIR}/scripts/lib/grab_cfg_handlers"
+
+TE_RUN_META=no
 
 # Include the file if it really exists - this allows sapi-ts not to break.
 # It seems that the following functions may become unavailable on some
@@ -64,6 +67,8 @@ Options:
                             appropriate actions. For now: do not clear kmemleak
                             on debugging kernels.
   --logs-history=<link>     Link to logs history
+  --meta                    Generate testing metadata
+  --publish                 Publish testing logs to Bublik
 EOF
     call_if_defined grab_cfg_print_help
 
@@ -217,10 +222,32 @@ while test -n "$1" ; do
         --build-only)
             export TE_TS_BUILD_ONLY="yes"
             ;;&
+
+        --meta)
+            TE_RUN_META=yes
+            ;;
+
+        --publish)
+            source "${TE_TS_RIGSDIR}/scripts/publish_logs/ts_publish"
+            pscript="$(tsrigs_publish_get onload)"
+            RUN_OPTS="${RUN_OPTS} --publish=${pscript}"
+
+            # Testing metadata is necessary for publishing
+            TE_RUN_META=yes
+            ;;
+
         *)  RUN_OPTS="${RUN_OPTS} $1" ;;
     esac
     shift 1
 done
+
+if [[ "${TE_RUN_META}" = "yes" ]] ; then
+    te_meta_test_suite "onload"
+
+    te_meta_set Configuration "${cfg}"
+    te_meta_set "status" "DONE"
+    te_meta_set_git "${SF_TS_CONFDIR}" TSCONF
+fi
 
 export ST_IGNORE_NM
 export ST_IGNORE_ZEROCONF
@@ -231,7 +258,9 @@ export ZF_SHIM_RUN=$ZF_SHIM_RUN
 # TODO: remove this when sapi-ts stops relying on Jenkins
 # to generate metadata file. Until then this is needed
 # to avoid overwriting Jenkins metadata file by TE.
-RUN_OPTS="${RUN_OPTS} --no-meta"
+if [[ "${TE_RUN_META}" = "no" ]] ; then
+    RUN_OPTS="${RUN_OPTS} --no-meta"
+fi
 
 if test "${ZF_SHIM_RUN}" = "true" ; then
     check_sf_zetaferno_dir $OOL_SET

@@ -1,0 +1,11 @@
+#!/bin/bash
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (C) 2025 OKTET Ltd. All rights reserved.
+#
+# Publish logs from the last testing.
+
+source "$(dirname "$(which "$0")")"/guess.sh
+
+source "${TE_TS_RIGSDIR}/scripts/publish_logs/ts_publish"
+
+tsrigs_publish_do "onload" "$@"
