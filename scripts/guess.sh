@@ -33,9 +33,16 @@ done
 export TE_BASE=$(te_realpath ${TE_BASE})
 echo "TE_BASE=${TE_BASE}"
 
+
+if test -z "${TE_BUILD}" ; then
+    TE_BUILD="${GUESS_TOP_DIR}/build"
+    mkdir -p build
+    export TE_BUILD
+fi
+
 if test -z "${TE_INSTALL}" ; then
     # If undefined, TE_INSTALL is always inside build dir in our case
-    TE_INSTALL="${GUESS_TOP_DIR}build/inst"
+    TE_INSTALL="${TE_BUILD}/inst"
     export TE_INSTALL
 fi
 
