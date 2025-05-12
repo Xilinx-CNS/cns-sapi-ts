@@ -543,7 +543,16 @@
             <script name="max_bufs" track_conf="silent">
                 <req id="PROC_SYS_NET"/>
             </script>
-            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="sock_type" type="sock_stream_dgram" list="">
+                <value>SOCK_STREAM</value>
+                <value>SOCK_STREAM</value>
+                <value>SOCK_DGRAM</value>
+            </arg>
+            <arg name="small_tcp_bufs" list="">
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
             <arg name="env">
                 <value ref="env.iut_ucast"/>
                 <value ref="env.iut_ucast_ipv6"/>
