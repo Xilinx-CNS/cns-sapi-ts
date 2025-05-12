@@ -20091,6 +20091,7 @@
       <iter result="PASSED">
         <arg name="env"/>
         <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="small_tcp_bufs">FALSE</arg>
         <arg name="check_sndbuf"/>
         <arg name="max_value_change"/>
         <notes/>
@@ -20098,6 +20099,7 @@
       <iter result="PASSED">
         <arg name="env"/>
         <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="small_tcp_bufs"/>
         <arg name="check_sndbuf"/>
         <arg name="max_value_change"/>
         <notes/>
