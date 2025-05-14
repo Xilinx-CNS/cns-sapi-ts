@@ -75,6 +75,9 @@ tcp_test_get_path(rpc_tcp_state state, te_bool active)
         case RPC_TCP_SYN_RECV:
             return "TCP_CLOSE->TCP_LISTEN->TCP_SYN_RECV";
 
+        case RPC_TCP_LISTEN:
+            return "TCP_CLOSE->TCP_LISTEN";
+
         default:
             TEST_VERDICT("Unsupported tcp state was requested for passive "
                          "opening: %s", tcp_state_rpc2str(state));

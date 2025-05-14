@@ -34,6 +34,7 @@ tests = [
     'listen_backlog_max',
     'listener_closing_states',
     'many_listeners',
+    'move_fd_same_tcp',
     'non_accepted_closed',
     'out_of_socks_tcp_loopback',
     'overfill_close',
