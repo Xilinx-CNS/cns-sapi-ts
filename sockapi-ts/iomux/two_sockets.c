@@ -129,10 +129,7 @@ main(int argc, char *argv[])
         if (strcmp(how, "wr") != 0)
             RPC_SEND(rc, pco_tst2, tst_s2, data_buf, data_size, 0);
         else
-            do {
-                rc = rpc_recv(pco_tst2, tst_s2, data_buf, data_size, 0);
-                total_filled -= rc;
-            } while (total_filled != 0);
+            rpc_drain_fd_simple(pco_tst2, tst_s2, NULL);
         TAPI_WAIT_NETWORK;
     }
 
