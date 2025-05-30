@@ -1830,6 +1830,42 @@ gen_conn_with_flags(rcf_rpc_server *pco1, rcf_rpc_server *pco2,
     return 0;
 }
 
+int
+set_sock_non_block(rcf_rpc_server *pco, int s, te_bool use_fcntl,
+                   te_bool use_libc, te_bool enable_nonblock)
+{
+    te_bool old_use_libc = pco->use_libc;
+    int rc;
+
+    pco->use_libc = use_libc;
+
+    if (use_fcntl)
+    {
+        int old_flags, new_flags;
+
+        old_flags = rpc_fcntl(pco, s, RPC_F_GETFL, 0);
+        /*
+         * O_NONBLOCK and O_NDELAY means the same in linux, however
+         * corresponding RPC_ flags don't coinside. Therefore they
+         * should switched off simultaneously.
+         */
+        if (enable_nonblock)
+            new_flags = old_flags | RPC_O_NONBLOCK | RPC_O_NDELAY;
+        else
+            new_flags = old_flags & ~RPC_O_NONBLOCK & ~RPC_O_NDELAY;
+        rc = rpc_fcntl(pco, s, RPC_F_SETFL, new_flags);
+    }
+    else
+    {
+        int req_val = enable_nonblock;
+
+        rc = rpc_ioctl(pco, s, RPC_FIONBIO, &req_val);
+    }
+    pco->use_libc = old_use_libc;
+
+    return rc;
+}
+
 /* See the description in sockapi-ts.h */
 int
 sockts_share_socket_2proc(rcf_rpc_server *rpcs1, rcf_rpc_server *rpcs2,
