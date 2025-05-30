@@ -3082,6 +3082,24 @@ extern int gen_conn_with_flags(rcf_rpc_server *pco1, rcf_rpc_server *pco2,
                                te_bool sf_first, te_bool sf_second,
                                te_bool accept4_first);
 
+/**
+ * Set socket to non-blocking/blocking state.
+ *
+ * @param pco               Handle of RPC server where to create @p s
+ *                          socket
+ * @param s                 Handle of socket
+ * @param use_fcntl         Whether to use ioctl(FIONBIO) or fcntl(O_NONBLOCK)
+ *                          to move socket to non-blocking state
+ * @param use_libc          Whether to use libc to move socket to non-blocking
+ *                          state
+ * @param non_block         Whether the socket should be set to non-blocking
+ *                          state
+ *
+ * @return  0 on success, -1 otherwise
+ */
+extern int set_sock_non_block(rcf_rpc_server *pco, int s, te_bool use_fcntl,
+                              te_bool use_libc, te_bool non_block);
+
 /** Wrapper allowing to call sendmmsg() like sendmsg() */
 static inline ssize_t 
 rpc_sendmmsg_as_sendmsg(rcf_rpc_server *rpcs, int s,
