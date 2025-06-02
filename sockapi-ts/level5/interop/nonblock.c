@@ -2,15 +2,15 @@
 /* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
 /*
  * Socket API Test Suite
- * Interoperability of L5 stack with system stack.
+ * Interoperability of Onload stack with system stack.
  *
  * $Id$
  */
 
-/** @page level5-interop-nonblock Interoperability of libc I/O functions and O_NONBLOCK fcntl() flag or SOCK_NONBLOCK socket()/accept4() flag on L5 socket
+/** @page level5-interop-nonblock Interoperability of libc I/O functions and O_NONBLOCK fcntl() flag, FIONBIO ioctl() flag or SOCK_NONBLOCK socket()/accept4() flag on Onload socket
  *
- * @objective Check that setting @c O_NONBLOCK (or @c SOCK_NONBLOCK) flag
- * really makes L5 socket non-blocking.
+ * @objective Check that setting @c O_NONBLOCK (FIONBIO or @c SOCK_NONBLOCK)
+ * flag really makes Onload socket non-blocking.
  *
  * @type interop
  *
@@ -18,9 +18,11 @@
  * @param test_func         Name of libc function to be tested: @b read(),
  *                          @b readv() @b write() or @b writev()
  * @param nonblock_func     Function used to get socket with NONBLOCK flag
- *                          ("socket", "accept4", "fcntl")
- * @param l5_fcntl          Set @c O_NONBLOCK flag using L5 @b fcntl()
- *                          implementation (if nonblock_func = "fcntl").
+ *                          ("socket", "accept4", "fcntl") or FIONBIO flag
+ *                          ("ioctl")
+ * @param use_libc          Use libc implementation of @b fcntl() or @b ioctl()
+ *                          intead of Onload implementaion to set nonblocking
+ *                          state.
  * @param pco_iut           PCO on IUT
  * @param pco_tst           PCO on Tester
  *
@@ -34,8 +36,10 @@
  *    \n @htmlonly &nbsp; @endhtmlonly
  * -# If @p test_func is sending function, overfill buffers on @p iut_s.
  * -# If @p nonblock_func is @c FCNTL_SET_FDFLAG, set @c O_NONBLOCK flag
- *    on iut_s with help of @b fcntl(). If @p l5_fcntl is @c TRUE, use
- *    Level5 @b fcntl() implementation, otherwise use @e libc function.
+ *    on iut_s with help of @b fcntl(). If @p nonblock_func is
+ *    @c IOCTL_SET_FDFLAG, set @c O_NONBLOCK flag on iut_s with help of
+ *    @b ioctl(). If @p use_libc is @c TRUE, use @e libc @b fcntl() /
+ *    @b ioctl() implementation, otherwise use Level5 function.
  * -# Call @e libc version of the function defined by @p test_func on
  *    @p iut_s. Make sure it fails with @c EAGAIN error.
  * -# Clear @c O_NONBLOCK flag on @p iut_s.
@@ -68,7 +72,7 @@ main(int argc, char *argv[])
     uint8_t               *tst_buf = NULL;
     int                    fdflags;
     te_bool                operation_done;
-    te_bool                l5_fcntl = FALSE;
+    te_bool                use_libc = TRUE;
     te_bool                accept4_found = FALSE;
     te_bool                use_libc_old = FALSE;
     uint64_t               sent;
@@ -89,7 +93,7 @@ main(int argc, char *argv[])
     TEST_GET_ADDR(pco_iut, iut_addr);
     TEST_GET_ADDR(pco_tst, tst_addr);
     TEST_GET_FDFLAG_SET_FUNC(nonblock_func);
-    TEST_GET_BOOL_PARAM(l5_fcntl);
+    TEST_GET_BOOL_PARAM(use_libc);
 
     if (rpc_find_func(pco_iut, "accept4") == 0)
         accept4_found = TRUE;
@@ -131,15 +135,22 @@ main(int argc, char *argv[])
 
     use_libc_old = pco_iut->use_libc;
 
-    if (nonblock_func == FCNTL_SET_FDFLAG)
+    switch (nonblock_func)
     {
-        if (!l5_fcntl)
-            pco_iut->use_libc = TRUE;
-        else
-            pco_iut->use_libc = FALSE;
+        case SOCKET_SET_FDFLAG:
+        case ACCEPT4_SET_FDFLAG:
+            break;
 
-        rpc_fcntl(pco_iut, iut_s, RPC_F_SETFL, fdflags | RPC_O_NONBLOCK);
+        case FCNTL_SET_FDFLAG:
+        case IOCTL_SET_FDFLAG:
+            set_sock_non_block(pco_iut, iut_s,
+                               nonblock_func == FCNTL_SET_FDFLAG,
+                               use_libc, TRUE);
+            break;
 
+        default:
+            TEST_FAIL("Incorrect function to set nonblocking status "
+                      "was specified to the test");
     }
 
     pco_iut->use_libc = TRUE;
@@ -179,10 +190,7 @@ main(int argc, char *argv[])
                     "libc send/recv function failed");
 
     /* Clear O_NONBLOCK flag */
-    if (!l5_fcntl)
-        pco_iut->use_libc = TRUE;
-    else
-        pco_iut->use_libc = FALSE;
+    pco_iut->use_libc = use_libc;
 
     /*
      * At least in Linux O_NONBLOCK is equal to O_NDELAY,

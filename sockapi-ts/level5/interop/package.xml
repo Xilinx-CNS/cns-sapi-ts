@@ -407,7 +407,7 @@
         <run>
             <session>
                 <arg name="env" ref="env.peer2peer"/>
-                <arg name="l5_fcntl" type="boolean"/>
+                <arg name="use_libc" type="boolean"/>
 
                 <run>
                     <script name="nonblock" track_conf="silent"/>
@@ -424,6 +424,7 @@
                         <value>fcntl</value>
                         <value reqs="SOCK_NONBLOCK">socket</value>
                         <value reqs="ACCEPT4,SOCK_NONBLOCK">accept4</value>
+                        <value>ioctl</value>
                     </arg>
                 </run>
                 <run>
