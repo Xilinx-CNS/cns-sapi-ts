@@ -1278,7 +1278,7 @@
           <notes/>
           <iter result="PASSED">
             <arg name="env"/>
-            <arg name="l5_fcntl"/>
+            <arg name="use_libc"/>
             <arg name="nonblock_func">fcntl</arg>
             <arg name="sock_type">SOCK_STREAM</arg>
             <arg name="test_func"/>
@@ -1286,7 +1286,7 @@
           </iter>
           <iter result="PASSED">
             <arg name="env"/>
-            <arg name="l5_fcntl"/>
+            <arg name="use_libc"/>
             <arg name="nonblock_func">socket</arg>
             <arg name="sock_type"/>
             <arg name="test_func"/>
@@ -1299,7 +1299,7 @@
           </iter>
           <iter result="PASSED">
             <arg name="env"/>
-            <arg name="l5_fcntl"/>
+            <arg name="use_libc"/>
             <arg name="nonblock_func">accept4</arg>
             <arg name="sock_type"/>
             <arg name="test_func"/>
@@ -1312,9 +1312,25 @@
           </iter>
           <iter result="PASSED">
             <arg name="env"/>
-            <arg name="l5_fcntl"/>
+            <arg name="use_libc"/>
             <arg name="nonblock_func">fcntl</arg>
             <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="test_func"/>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="use_libc"/>
+            <arg name="nonblock_func">ioctl</arg>
+            <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="test_func"/>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="env"/>
+            <arg name="use_libc"/>
+            <arg name="nonblock_func">ioctl</arg>
+            <arg name="sock_type">SOCK_STREAM</arg>
             <arg name="test_func"/>
             <notes/>
           </iter>
