@@ -7,9 +7,9 @@
  * $Id$
  */
 
-/** @page ioctls-fionbio_thread_unblock_recv FIONBIO from thread when recv() operation is blocked
+/** @page ioctls-fionbio_thread_unblock_recv FIONBIO/NONBLOCK from thread when recv() operation is blocked
  *
- * @objective Try @c FIONBIO from thread when @b recv() operation
+ * @objective Try @c FIONBIO / @c NONBLOCK from thread when @b recv() operation
  *            is blocked in another thread.
  *
  * @param pco_iut       PCO on IUT
@@ -17,6 +17,10 @@
  * @param iut_addr      IUT IP address
  * @param tst_addr      TESTER IP address 
  * @param sock_type     type of sockets (stream or dgram)
+ * @param nonblock_func Function used to get socket with NONBLOCK flag
+ *                      ("fcntl", "ioctl")
+ * @param use_libc      Use libc implementation of @b fcntl() or @b ioctl()
+ *                      intead of Onload implementaion to set nonblocking state.
  *
  * @par Test sequence:
  * -# Create socket @p iut_s on @p pco_iut.
@@ -26,7 +30,7 @@
  * -# Bind @p tst_s to @p tst_addr.
  * -# Connect @p iut_s to @p tst_s (if @p sock_type = SOCK_STREAM).
  * -# Call @b recv(@p iut_s, ...) on @p pco_iut.
- * -# Make socket @p iut_s non-blocking using @c FIONBIO IOCTL request
+ * -# Call @b ioctl() or @b fcntl() on @p iut_s socket to set nonblock state
  *    from @p pco_iut_thread.
  * -# Check that @b recv(@p iut_s, ...) on @p pco_iut is not done.
  * -# Check that @b recv(@p iut_s, ...) on @p pco_iut_thread
@@ -69,7 +73,6 @@ main(int argc, char **argv)
     int                              iut_s = -1;
     int                              tst_s = -1;
     int                              acc_s = -1;
-    int                              req_val;
     te_bool                          is_done;
     unsigned char                    tx_buf[BUF_LEN];
     unsigned char                    rx_buf[BUF_LEN];
@@ -77,12 +80,17 @@ main(int argc, char **argv)
     size_t                           rx_buf_len = BUF_LEN;
     int                              waiting;
 
+    te_bool use_libc = TRUE;
+    fdflag_set_func_type_t nonblock_func = UNKNOWN_SET_FDFLAG;
+
     TEST_START;
     TEST_GET_PCO(pco_iut);
     TEST_GET_PCO(pco_tst);
     TEST_GET_ADDR(pco_iut, iut_addr);
     TEST_GET_ADDR(pco_tst, tst_addr);
     TEST_GET_SOCK_TYPE(sock_type);
+    TEST_GET_FDFLAG_SET_FUNC(nonblock_func);
+    TEST_GET_BOOL_PARAM(use_libc);
 
     CHECK_RC(rcf_rpc_server_thread_create(pco_iut,
                                           "IUT_thread",
@@ -109,8 +117,8 @@ main(int argc, char **argv)
     rpc_recv(pco_iut, iut_s, rx_buf, rx_buf_len, 0);
     MSLEEP(CALLS_DELAY);
 
-    req_val = TRUE;
-    rpc_ioctl(pco_iut_thread, iut_s, RPC_FIONBIO, &req_val);
+    set_sock_non_block(pco_iut_thread, iut_s,
+                       nonblock_func == FCNTL_SET_FDFLAG, use_libc, TRUE);
     MSLEEP(CALLS_DELAY);
 
     CHECK_RC(rcf_rpc_server_is_op_done(pco_iut, &is_done));

@@ -565,21 +565,29 @@
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="use_libc"/>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="use_libc"/>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_tst</arg>
         <arg name="sock_type"/>
+        <arg name="use_libc"/>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="use_libc"/>
+        <arg name="nonblock_func"/>
         <notes/>
         <results tags="v5" key="ON-1901">
           <result value="PASSED"/>
@@ -592,6 +600,8 @@
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="use_libc"/>
+        <arg name="nonblock_func"/>
         <notes/>
         <results tags="v5" key="ON-1901">
           <result value="PASSED"/>
@@ -607,6 +617,8 @@
       <notes/>
       <iter result="PASSED">
         <arg name="env"/>
+        <arg name="use_libc"/>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
     </test>
@@ -615,6 +627,8 @@
       <notes/>
       <iter result="PASSED">
         <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'alien_hwaddr':ether:alien},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+        <arg name="use_libc"/>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
     </test>
@@ -623,6 +637,8 @@
       <notes/>
       <iter result="PASSED">
         <arg name="env">{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'alien_hwaddr':ether:alien},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
+        <arg name="use_libc"/>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
     </test>
@@ -630,9 +646,11 @@
       <objective>Check that FIONBIO request affects accept() and accept4() functions called on SOCK_STREAM socket.</objective>
       <notes/>
       <iter result="PASSED">
-	<arg name="env"/>
+        <arg name="env"/>
         <arg name="func"/>
-	<arg name="func_flag"/>
+        <arg name="func_flag"/>
+        <arg name="use_libc"/>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
     </test>
@@ -643,6 +661,8 @@
         <arg name="env">VAR.env.peer2peer</arg>
         <arg name="gw_exists">FALSE</arg>
         <arg name="bind_iut">TRUE</arg>
+        <arg name="use_libc"/>
+        <arg name="nonblock_func"/>
         <notes/>
         <results tags="linux">
           <result value="PASSED">
@@ -654,6 +674,8 @@
         <arg name="env">VAR.env.peer2peer</arg>
         <arg name="gw_exists">FALSE</arg>
         <arg name="bind_iut">FALSE</arg>
+        <arg name="use_libc"/>
+        <arg name="nonblock_func"/>
         <notes/>
         <results tags="linux">
           <result value="PASSED">
@@ -665,6 +687,8 @@
         <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="gw_exists">FALSE</arg>
         <arg name="bind_iut">TRUE</arg>
+        <arg name="use_libc"/>
+        <arg name="nonblock_func"/>
         <notes/>
         <results tags="linux">
           <result value="PASSED">
@@ -676,6 +700,8 @@
         <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="gw_exists">FALSE</arg>
         <arg name="bind_iut">FALSE</arg>
+        <arg name="use_libc"/>
+        <arg name="nonblock_func"/>
         <notes/>
         <results tags="linux">
           <result value="PASSED">
@@ -687,6 +713,8 @@
         <arg name="env">VAR.env.peer2peer_tst</arg>
         <arg name="gw_exists">FALSE</arg>
         <arg name="bind_iut">TRUE</arg>
+        <arg name="use_libc"/>
+        <arg name="nonblock_func"/>
         <notes/>
         <results tags="linux">
           <result value="PASSED">
@@ -698,6 +726,8 @@
         <arg name="env">VAR.env.peer2peer_tst</arg>
         <arg name="gw_exists">FALSE</arg>
         <arg name="bind_iut">FALSE</arg>
+        <arg name="use_libc"/>
+        <arg name="nonblock_func"/>
         <notes/>
         <results tags="linux">
           <result value="PASSED">
@@ -709,6 +739,8 @@
         <arg name="env">{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},'gw'{{'pco_gw':tester},addr:'gw_iut_addr':inet:unicast}},{'gw'{addr:'gw_tst_addr':inet:unicast,addr:'alien_link_addr':ether:alien},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
         <arg name="gw_exists">TRUE</arg>
         <arg name="bind_iut">FALSE</arg>
+        <arg name="use_libc"/>
+        <arg name="nonblock_func"/>
         <notes/>
         <results tags="linux">
           <result value="PASSED">
@@ -720,6 +752,8 @@
         <arg name="env">{'iut_host'{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if'},'gw'{{'pco_gw':tester},addr:'gw_iut_addr':inet:unicast}},{'gw'{addr:'gw_tst_addr':inet:unicast,addr:'alien_link_addr':ether:alien},'tst_host'{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</arg>
         <arg name="gw_exists">TRUE</arg>
         <arg name="bind_iut">TRUE</arg>
+        <arg name="use_libc"/>
+        <arg name="nonblock_func"/>
         <notes/>
         <results tags="linux">
           <result value="PASSED">

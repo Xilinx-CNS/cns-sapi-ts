@@ -7,9 +7,9 @@
  * $Id$
  */
 
-/** @page ioctls-fionbio_connect Using of connect() function with enabled FIONBIO request 
+/** @page ioctls-fionbio_connect Using of connect() function with enabled FIONBIO or NONBLOCK request
  *
- * @objective Check that @c FIONBIO request affects on
+ * @objective Check that @c FIONBIO / @c O_NONBLOCK request affects on
  *            connect() function called on @c SOCK_STREAM socket.
  *
  * @type conformance
@@ -22,6 +22,11 @@
  *                       to forward incoming packets (router) 
  * @param gw_exists      If @c TRUE pco_gw exists in evnironment. If @c
  *                       FALSE pco_gw does not exist in environment.
+ * @param nonblock_func  Function used to set nonblocking state to socket
+ *                       ("fcntl", "ioctl")
+ * @param use_libc       Use libc implementation of @b fcntl() or @b ioctl()
+ *                       intead of Onload implementaion to set nonblocking
+ *                       state.
  *
  * @par Test sequence:
  * -# If @p gw_exists parameter is @c TRUE enable forwarding on the host
@@ -35,7 +40,7 @@
  * -# Bind @p tst_s socket to a local address - @p tst_addr.
  * -# Call @b listen() on @p tst_s socket.
  *    \n @htmlonly &nbsp; @endhtmlonly
- * -# Call @b ioctl() on @p iut_s socket enabling @c FIONBIO.
+ * -# Call @b ioctl() or @b fcntl() on @p iut_s socket to set nonblock state.
  * -# If @p gw_exists parameter is @c TRUE add a new static ARP entry on
  *    the host with @p pco_tst to direct traffic to @p gw_tst_addr network
  *    address to alien link-layer address;
@@ -82,9 +87,11 @@ main(int argc, char *argv[])
 
     const struct if_nameindex  *tst_if = NULL;
     
-    int                      req_val;
     te_bool                  bind_iut;
     te_bool                  gw_exists;
+
+    te_bool use_libc = TRUE;
+    fdflag_set_func_type_t nonblock_func = UNKNOWN_SET_FDFLAG;
 
     TEST_START;
     TEST_GET_PCO(pco_iut);
@@ -104,6 +111,8 @@ main(int argc, char *argv[])
     TEST_GET_ADDR(pco_iut, iut_addr);
     TEST_GET_ADDR(pco_tst, tst_addr);
     TEST_GET_BOOL_PARAM(bind_iut);
+    TEST_GET_FDFLAG_SET_FUNC(nonblock_func);
+    TEST_GET_BOOL_PARAM(use_libc);
 
     if (bind_iut)
         iut_s = rpc_create_and_bind_socket(pco_iut, RPC_SOCK_STREAM,
@@ -118,9 +127,10 @@ main(int argc, char *argv[])
     rpc_bind(pco_tst, tst_s, tst_addr);
     rpc_listen(pco_tst, tst_s, SOCKTS_BACKLOG_DEF);
 
-    /* Turn on FIONBIO request on 'iut_s' socket */
-    req_val = TRUE;
-    rpc_ioctl(pco_iut, iut_s, RPC_FIONBIO, &req_val);
+    /* Turn on nonblocking state on 'iut_s' socket */
+    set_sock_non_block(pco_iut, iut_s, nonblock_func == FCNTL_SET_FDFLAG,
+                       use_libc, TRUE);
+
 
     if (gw_exists)
     {
