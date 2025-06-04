@@ -7,16 +7,20 @@
  * $Id$
  */
 
-/** @page ioctls-fionbio_thread_unblock_connect FIONBIO from thread when connect() operation is blocked
+/** @page ioctls-fionbio_thread_unblock_connect FIONBIO/NONBLOCK from thread when connect() operation is blocked
  *
- * @objective Try @c FIONBIO from thread
- * when connect() operation is blocked in another thread.
+ * @objective Try @c FIONBIO / @c NONBLOCK from thread
+ *            when @b connect() operation is blocked in another thread.
  *
  * @param pco_iut       PCO on IUT
  * @param iut_addr      IUT IP address
  * @param tst_addr      tester IP address
  * @param iut_if        IUT ifnameindex
  * @param alien_hwaddr  invalid MAC address
+ * @param nonblock_func Function used to get socket with NONBLOCK flag
+ *                      ("fcntl", "ioctl")
+ * @param use_libc      Use libc implementation of @b fcntl() or @b ioctl()
+ *                      intead of Onload implementaion to set nonblocking state.
  *
  * @par Test sequence:
  * -# Create stream socket @p iut_s on @p pco_iut.
@@ -25,7 +29,7 @@
  * -# Add invalid static ARP entry for @p tst_addr 
  *    with @p alien_hwaddr on @p pco_iut @p iut_if interface.
  * -# Call @b connect(@p iut_s, @p tst_addr, ...) on @p pco_iut_thread.
- * -# Make socket @p iut_s non-blocking using @c FIONBIO IOCTL request
+ * -# Call @b ioctl() or @b fcntl() on @p iut_s socket to set nonblock state
  *    from @p pco_iut_thread.
  * -# Check that @b connect(@p iut_s, ...) on @p pco_iut_thread is not done.
  * -# Check that @b connect(@p iut_s, ...) on @p pco_iut fails 
@@ -53,9 +57,11 @@ main(int argc, char **argv)
     const struct sockaddr           *tst_addr;
     const struct sockaddr           *alien_hwaddr;
     int                              iut_s = -1;
-    int                              req_val;
     te_bool                          is_done;
-    
+
+    te_bool use_libc = TRUE;
+    fdflag_set_func_type_t nonblock_func = UNKNOWN_SET_FDFLAG;
+
     TEST_START;
     TEST_GET_PCO(pco_iut);
     TEST_GET_PCO(pco_tst);
@@ -63,6 +69,8 @@ main(int argc, char **argv)
     TEST_GET_ADDR(pco_iut, iut_addr);
     TEST_GET_ADDR(pco_tst, tst_addr);
     TEST_GET_LINK_ADDR(alien_hwaddr);
+    TEST_GET_FDFLAG_SET_FUNC(nonblock_func);
+    TEST_GET_BOOL_PARAM(use_libc);
     
     CHECK_RC(rcf_rpc_server_thread_create(pco_iut,
                                           "IUT_thread",
@@ -84,8 +92,8 @@ main(int argc, char **argv)
     pco_iut_thread->op = RCF_RPC_CALL;
     rpc_connect(pco_iut_thread, iut_s, tst_addr);
         
-    req_val = TRUE;
-    rpc_ioctl(pco_iut, iut_s, RPC_FIONBIO, &req_val);
+    set_sock_non_block(pco_iut, iut_s, nonblock_func == FCNTL_SET_FDFLAG,
+                       use_libc, TRUE);
     MSLEEP(10);
         
     CHECK_RC(rcf_rpc_server_is_op_done(pco_iut_thread, &is_done));

@@ -177,6 +177,8 @@
 	    <arg name="func_flag" type="socket_flags">
 		<value>none</value>
 	    </arg>
+            <arg name="use_libc" type="boolean"/>
+            <arg name="nonblock_func" type="fd_ctl_type"/>
         </run>
         <run>
             <script name="fionbio_accept">
@@ -200,6 +202,8 @@
                 <value>nonblock</value>
 		<value>cloexec</value>
 	    </arg>
+            <arg name="use_libc" type="boolean"/>
+            <arg name="nonblock_func" type="fd_ctl_type"/>
         </run>
 
         <run>
@@ -221,6 +225,8 @@
                 <value>TRUE</value>
             </arg>
             <arg name="bind_iut" type="boolean"/>
+            <arg name="use_libc" type="boolean"/>
+            <arg name="nonblock_func" type="fd_ctl_type"/>
         </run>
         <run>
             <script name="fionbio">
@@ -246,6 +252,8 @@
             <arg name="env">
                 <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'alien_hwaddr':ether:alien},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
             </arg>
+            <arg name="use_libc" type="boolean"/>
+            <arg name="nonblock_func" type="fd_ctl_type"/>
         </run>
         <run>
             <script name="fionbio_thread_unblock_connect" track_conf="silent">
@@ -255,6 +263,8 @@
             <arg name="env">
                 <value>{{{'pco_iut':IUT},addr:'iut_addr':inet:unicast,if:'iut_if',addr:'alien_hwaddr':ether:alien},{{'pco_tst':tester},addr:'tst_addr':inet:unicast,if:'tst_if'}}</value>
             </arg>
+            <arg name="use_libc" type="boolean"/>
+            <arg name="nonblock_func" type="fd_ctl_type"/>
         </run>
         <run>
             <script name="fionbio_thread_unblock_send" track_conf="silent">
@@ -266,6 +276,8 @@
               <value ref="env.peer2peer_tst"/>
               <value ref="env.peer2peer_lo"/>
             </arg>
+            <arg name="use_libc" type="boolean"/>
+            <arg name="nonblock_func" type="fd_ctl_type"/>
         </run>
         <run>
             <script name="fionbio_thread_unblock_recv" track_conf="silent">
@@ -277,6 +289,8 @@
               <value ref="env.peer2peer_lo"/>
             </arg>
             <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="use_libc" type="boolean"/>
+            <arg name="nonblock_func" type="fd_ctl_type"/>
         </run>
 
         <run>

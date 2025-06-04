@@ -7,10 +7,10 @@
  * $Id$
  */
 
-/** @page ioctls-fionbio_accept Using of accept() function with enabled FIONBIO request
+/** @page ioctls-fionbio_accept Using of accept() function with enabled FIONBIO or NONBLOCK request
  *
- * @objective Check that @c FIONBIO request affects accept() and accept4()
- *            functions called on @c SOCK_STREAM socket.
+ * @objective Check that @c FIONBIO /@c O_NONBLOCK request affects accept() and
+ *            accept4() functions called on @c SOCK_STREAM socket.
  *
  * @type conformance
  *
@@ -25,12 +25,16 @@
  *                      - @b default
  *                      - @b nonblock
  *                      - @b cloexec
+ * @param nonblock_func Function used to set nonblocking state to socket
+ *                      ("fcntl", "ioctl")
+ * @param use_libc      Use libc implementation of @b fcntl() or @b ioctl()
+ *                      intead of Onload implementaion to set nonblocking state.
  * 
  * @par Test sequence:
  * -# Create @p iut_s socket of type @c SOCK_STREAM on @p pco_iut.
  * -# Bind @p iut_s socket to a local address.
  *    \n @htmlonly &nbsp; @endhtmlonly
- * -# Call @b ioctl() on @p iut_s socket enabling @c FIONBIO.
+ * -# Call @b ioctl() or @b fcntl() on @p iut_s socket to set nonblock state.
  * -# Call @b listen() on @p iut_s socket.
  * -# Check the function returns @c 0.
  * -# Call @b accept() on @p iut_s socket.
@@ -95,10 +99,12 @@ main(int argc, char *argv[])
 
     const struct sockaddr   *iut_addr;
     const struct sockaddr   *tst_addr;
-    int                      req_val;
 
     const char              *func;
     int                      func_flag;
+
+    te_bool use_libc = TRUE;
+    fdflag_set_func_type_t nonblock_func = UNKNOWN_SET_FDFLAG;
 
     TEST_START;
     TEST_GET_PCO(pco_iut);
@@ -109,15 +115,17 @@ main(int argc, char *argv[])
 
     TEST_GET_ADDR(pco_iut, iut_addr);
     TEST_GET_ADDR(pco_tst, tst_addr);
+    TEST_GET_FDFLAG_SET_FUNC(nonblock_func);
+    TEST_GET_BOOL_PARAM(use_libc);
 
     iut_s = rpc_create_and_bind_socket(pco_iut, RPC_SOCK_STREAM,
                                        RPC_IPPROTO_TCP, TRUE, FALSE,
                                        iut_addr);
 
-    /* Turn on FIONBIO request on 'iut_s' socket */
-    req_val = TRUE;
+    /* Turn on nonblocking state on 'iut_s' socket */
 
-    rpc_ioctl(pco_iut, iut_s, RPC_FIONBIO, &req_val);
+    set_sock_non_block(pco_iut, iut_s, nonblock_func == FCNTL_SET_FDFLAG,
+                       use_libc, TRUE);
 
     rpc_listen(pco_iut, iut_s, SOCKTS_BACKLOG_DEF);
 
