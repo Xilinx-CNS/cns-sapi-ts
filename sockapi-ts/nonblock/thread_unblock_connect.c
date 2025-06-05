@@ -1,13 +1,13 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 /* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
-/* 
+/*
  * Socket API Test Suite
- * IOCTL Requests
- * 
+ * NONBLOCK Requests
+ *
  * $Id$
  */
 
-/** @page ioctls-fionbio_thread_unblock_connect FIONBIO/NONBLOCK from thread when connect() operation is blocked
+/** @page nonblock-thread_unblock_connect FIONBIO/NONBLOCK from thread when connect() operation is blocked
  *
  * @objective Try @c FIONBIO / @c NONBLOCK from thread
  *            when @b connect() operation is blocked in another thread.
@@ -26,21 +26,21 @@
  * -# Create stream socket @p iut_s on @p pco_iut.
  * -# Run RPC server @p pco_iut_thread in thread on @p pco_iut.
  * -# Bind @p iut_s to @p iut_addr.
- * -# Add invalid static ARP entry for @p tst_addr 
+ * -# Add invalid static ARP entry for @p tst_addr
  *    with @p alien_hwaddr on @p pco_iut @p iut_if interface.
  * -# Call @b connect(@p iut_s, @p tst_addr, ...) on @p pco_iut_thread.
  * -# Call @b ioctl() or @b fcntl() on @p iut_s socket to set nonblock state
  *    from @p pco_iut_thread.
  * -# Check that @b connect(@p iut_s, ...) on @p pco_iut_thread is not done.
- * -# Check that @b connect(@p iut_s, ...) on @p pco_iut fails 
+ * -# Check that @b connect(@p iut_s, ...) on @p pco_iut fails
  *    with @b errno EALREADY.
  * -# Destroy rpc server @p pco_iut_thread.
  * -# Remove invalid static ARP entry on @p pco_iut @p iut_if interface
- * 
+ *
  * @author Konstantin Petrov <Konstantin.Petrov@oktetlabs.ru>
  */
 
-#define TE_TEST_NAME  "ioctls/fionbio_thread_unblock_connect"
+#define TE_TEST_NAME  "nonblock/thread_unblock_connect"
 
 #include "sockapi-test.h"
 #include "tapi_cfg.h"
@@ -71,16 +71,16 @@ main(int argc, char **argv)
     TEST_GET_LINK_ADDR(alien_hwaddr);
     TEST_GET_FDFLAG_SET_FUNC(nonblock_func);
     TEST_GET_BOOL_PARAM(use_libc);
-    
+
     CHECK_RC(rcf_rpc_server_thread_create(pco_iut,
                                           "IUT_thread",
                                           &pco_iut_thread));
-    
+
     iut_s = rpc_socket(pco_iut,
                        rpc_socket_domain_by_addr(iut_addr),
                        RPC_SOCK_STREAM,
                        RPC_IPPROTO_TCP);
-    
+
     rpc_bind(pco_iut, iut_s, iut_addr);
 
     CHECK_RC(tapi_update_arp(pco_iut->ta, iut_if->if_name, NULL, NULL,
@@ -91,11 +91,10 @@ main(int argc, char **argv)
 
     pco_iut_thread->op = RCF_RPC_CALL;
     rpc_connect(pco_iut_thread, iut_s, tst_addr);
-        
     set_sock_non_block(pco_iut, iut_s, nonblock_func == FCNTL_SET_FDFLAG,
                        use_libc, TRUE);
     MSLEEP(10);
-        
+
     CHECK_RC(rcf_rpc_server_is_op_done(pco_iut_thread, &is_done));
     if (!is_done)
     {
@@ -141,4 +140,3 @@ cleanup:
 
     TEST_END;
 }
-

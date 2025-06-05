@@ -2,12 +2,12 @@
 /* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
 /*
  * Socket API Test Suite
- * IOCTL Requests
+ * NONBLOCK Requests
  *
  * $Id$
  */
 
-/** @page ioctls-fionbio_thread_unblock_send FIONBIO/NONBLOCK from thread when send() operation is blocked
+/** @page nonblock-thread_unblock_send FIONBIO/NONBLOCK from thread when send() operation is blocked
  *
  * @objective Try @c FIONBIO / @c NONBLOCK from thread when @b send() operation
  *            is blocked in another thread.
@@ -41,7 +41,7 @@
  * @author Konstantin Petrov <Konstantin.Petrov@oktetlabs.ru>
  */
 
-#define TE_TEST_NAME  "ioctls/fionbio_thread_unblock_send"
+#define TE_TEST_NAME  "nonblock/thread_unblock_send"
 
 #include "sockapi-test.h"
 #include "tapi_cfg.h"

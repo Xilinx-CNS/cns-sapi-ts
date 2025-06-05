@@ -1,13 +1,13 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 /* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
-/* 
+/*
  * Socket API Test Suite
- * IOCTL Requests
- * 
+ * NONBLOCK Requests
+ *
  * $Id$
  */
 
-/** @page ioctls-fionbio_accept Using of accept() function with enabled FIONBIO or NONBLOCK request
+/** @page nonblock-accept Using of accept() function with enabled FIONBIO or NONBLOCK request
  *
  * @objective Check that @c FIONBIO /@c O_NONBLOCK request affects accept() and
  *            accept4() functions called on @c SOCK_STREAM socket.
@@ -50,11 +50,11 @@
  * -# Check that the function returns @c -1 and sets @b errno to @c EAGAIN.
  *    \n @htmlonly &nbsp; @endhtmlonly
  * -# Close @p accepted_s, @p iut_s and @p tst_s sockets.
- * 
+ *
  * @author Oleg Kravtsov <Oleg.Kravtsov@oktetlabs.ru>
  */
 
-#define TE_TEST_NAME  "ioctls/fionbio_accept"
+#define TE_TEST_NAME  "nonblock/accept"
 
 #include "sockapi-test.h"
 #include "sockapi-ts_tcp.h"
@@ -134,17 +134,17 @@ main(int argc, char *argv[])
     accepted_s = fd_accept_accept4(pco_iut, iut_s, func, func_flag);
     if (accepted_s != -1)
     {
-        TEST_FAIL("%s() called on server socket with FIONBIO ioctl() "
-                  "request enabled returns %d, but so far there is no "
+        TEST_FAIL("%s() called on server socket with nonblock state "
+                  "enabled returns %d, but so far there is no "
                   "pending connections it is expected to return -1",
                   func, accepted_s);
     }
     CHECK_RPC_ERRNO(pco_iut, RPC_EAGAIN,
-            "%s() called on server socket with FIONBIO ioctl() "
-            "request enabled returns -1, but", func);
+            "%s() called on server socket with nonblock state "
+            "enabled returns -1, but", func);
 
     /* Create a connection */
-    tst_s = rpc_socket(pco_tst, rpc_socket_domain_by_addr(tst_addr), 
+    tst_s = rpc_socket(pco_tst, rpc_socket_domain_by_addr(tst_addr),
                        RPC_SOCK_STREAM, RPC_PROTO_DEF);
     rpc_connect(pco_tst, tst_s, iut_addr);
 
@@ -168,14 +168,14 @@ main(int argc, char *argv[])
 
     if (tmp_s != -1)
     {
-        TEST_FAIL("%s() called on server socket with FIONBIO ioctl() "
-                  "request enabled returns %d, but so far there is no "
+        TEST_FAIL("%s() called on server socket with nonblock state "
+                  "enabled returns %d, but so far there is no "
                   "pending connections it is expected to return -1",
                   func, accepted_s);
     }
     CHECK_RPC_ERRNO(pco_iut, RPC_EAGAIN,
-            "%s() called on server socket with FIONBIO ioctl() "
-            "request enabled returns -1, but", func);
+            "%s() called on server socket with nonblock state "
+            "enabled returns -1, but", func);
 
     TEST_SUCCESS;
 
@@ -188,4 +188,3 @@ cleanup:
 
     TEST_END;
 }
-

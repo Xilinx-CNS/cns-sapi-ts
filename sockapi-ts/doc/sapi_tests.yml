@@ -1399,24 +1399,6 @@ groups:
     - test: fionbio
       summary: Usage of FIONBIO request with receive functions
 
-    - test: fionbio_accept
-      summary: Using of accept() function with enabled FIONBIO request
-
-    - test: fionbio_connect
-      summary: Using of connect() function with enabled FIONBIO request
-
-    - test: fionbio_thread_unblock_accept
-      summary: FIONBIO from thread when accept() operation is blocked
-
-    - test: fionbio_thread_unblock_connect
-      summary: FIONBIO from thread when connect() operation is blocked
-
-    - test: fionbio_thread_unblock_recv
-      summary: FIONBIO from thread when recv() operation is blocked
-
-    - test: fionbio_thread_unblock_send
-      summary: FIONBIO from thread when send() operation is blocked
-
     - test: fionread_listening
       summary: Behaviour of FIONREAD request on listening socket
 
@@ -2269,6 +2251,28 @@ groups:
     - test: iomux_multicast
       summary: iomux() reports events during multicast
       ref: multicast-iomux_multicast
+
+  - group: nonblock
+    summary: IOCTL Requests
+    objective: ''
+    tests:
+    - test: fionbio_accept
+      summary: Using of accept() function with enabled FIONBIO request
+
+    - test: fionbio_connect
+      summary: Using of connect() function with enabled FIONBIO request
+
+    - test: fionbio_thread_unblock_accept
+      summary: FIONBIO from thread when accept() operation is blocked
+
+    - test: fionbio_thread_unblock_connect
+      summary: FIONBIO from thread when connect() operation is blocked
+
+    - test: fionbio_thread_unblock_recv
+      summary: FIONBIO from thread when recv() operation is blocked
+
+    - test: fionbio_thread_unblock_send
+      summary: FIONBIO from thread when send() operation is blocked
 
   - group: pmtu
     summary: Testing of internal send buffers reorganization after path MTU changes.

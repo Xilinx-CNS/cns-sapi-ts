@@ -137,6 +137,7 @@ packages = [
     'level5',
     'libinit',
     'multicast',
+    'nonblock',
     'performance',
     'pmtu',
     'reuseport',

@@ -1,13 +1,13 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 /* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
-/* 
+/*
  * Socket API Test Suite
- * IOCTL Requests
- * 
+ * NONBLOCK Requests
+ *
  * $Id$
  */
 
-/** @page ioctls-fionbio_thread_unblock_recv FIONBIO/NONBLOCK from thread when recv() operation is blocked
+/** @page nonblock-thread_unblock_recv FIONBIO/NONBLOCK from thread when recv() operation is blocked
  *
  * @objective Try @c FIONBIO / @c NONBLOCK from thread when @b recv() operation
  *            is blocked in another thread.
@@ -15,7 +15,7 @@
  * @param pco_iut       PCO on IUT
  * @param pco_tst       PCO on TESTER
  * @param iut_addr      IUT IP address
- * @param tst_addr      TESTER IP address 
+ * @param tst_addr      TESTER IP address
  * @param sock_type     type of sockets (stream or dgram)
  * @param nonblock_func Function used to get socket with NONBLOCK flag
  *                      ("fcntl", "ioctl")
@@ -35,16 +35,16 @@
  * -# Check that @b recv(@p iut_s, ...) on @p pco_iut is not done.
  * -# Check that @b recv(@p iut_s, ...) on @p pco_iut_thread
  *    failes with @b errno EAGAIN.
- * -# Call @b send(@p acc_s, ... ) @p on pco_tst 
+ * -# Call @b send(@p acc_s, ... ) @p on pco_tst
  *    if @p sock_type = SOCK_STREAM.
  *    Call @b sendto(@p tst_s, ..., @p iut_addr)
  *    if @p sock_type = SOCK_DGRAM.
  * -# Check that @b recv(@p iut_s, ...) operation on @p pco_iut is unblocked.
- * 
+ *
  * @author Konstantin Petrov <Konstantin.Petrov@oktetlabs.ru>
  */
 
-#define TE_TEST_NAME  "ioctls/fionbio_thread_unblock_recv"
+#define TE_TEST_NAME  "nonblock/thread_unblock_recv"
 
 #include "sockapi-test.h"
 #include "tapi_cfg.h"
@@ -208,4 +208,3 @@ cleanup:
 
     TEST_END;
 }
-

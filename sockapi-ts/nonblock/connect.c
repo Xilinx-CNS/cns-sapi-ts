@@ -1,13 +1,13 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 /* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
-/* 
+/*
  * Socket API Test Suite
- * IOCTL Requests
- * 
+ * NONBLOCK Requests
+ *
  * $Id$
  */
 
-/** @page ioctls-fionbio_connect Using of connect() function with enabled FIONBIO or NONBLOCK request
+/** @page nonblock-connect Using of connect() function with enabled FIONBIO or NONBLOCK request
  *
  * @objective Check that @c FIONBIO / @c O_NONBLOCK request affects on
  *            connect() function called on @c SOCK_STREAM socket.
@@ -18,8 +18,8 @@
  *
  * @param pco_iut        PCO on IUT
  * @param pco_tst        PCO on TESTER
- * @param pco_gw         PCO on host in the tested network that is able 
- *                       to forward incoming packets (router) 
+ * @param pco_gw         PCO on host in the tested network that is able
+ *                       to forward incoming packets (router)
  * @param gw_exists      If @c TRUE pco_gw exists in evnironment. If @c
  *                       FALSE pco_gw does not exist in environment.
  * @param nonblock_func  Function used to set nonblocking state to socket
@@ -44,7 +44,7 @@
  * -# If @p gw_exists parameter is @c TRUE add a new static ARP entry on
  *    the host with @p pco_tst to direct traffic to @p gw_tst_addr network
  *    address to alien link-layer address;
- * -# Call @b connect() on @p iut_s socket using @p tst_addr as the peer 
+ * -# Call @b connect() on @p iut_s socket using @p tst_addr as the peer
  *    address.
  * -# Check that the function returns @c -1 and sets @b errno to
  *    @c EINPROGRESS.
@@ -59,11 +59,11 @@
  * -# Check that the function returns @c -1 and sets @b errno to @c EISCONN.
  *    \n @htmlonly &nbsp; @endhtmlonly
  * -# Close @p iut_s and @p tst_s sockets.
- * 
+ *
  * @author Oleg Kravtsov <Oleg.Kravtsov@oktetlabs.ru>
  */
 
-#define TE_TEST_NAME  "ioctls/fionbio_connect"
+#define TE_TEST_NAME  "nonblock/connect"
 
 #include "sockapi-test.h"
 #include "tapi_cfg.h"
@@ -86,7 +86,7 @@ main(int argc, char *argv[])
     const struct sockaddr   *gw_tst_addr = NULL;
 
     const struct if_nameindex  *tst_if = NULL;
-    
+
     te_bool                  bind_iut;
     te_bool                  gw_exists;
 
@@ -122,7 +122,7 @@ main(int argc, char *argv[])
         iut_s = rpc_socket(pco_iut, rpc_socket_domain_by_addr(iut_addr),
                            RPC_SOCK_STREAM, RPC_PROTO_DEF);
 
-    tst_s = rpc_socket(pco_tst, rpc_socket_domain_by_addr(tst_addr), 
+    tst_s = rpc_socket(pco_tst, rpc_socket_domain_by_addr(tst_addr),
                        RPC_SOCK_STREAM, RPC_PROTO_DEF);
     rpc_bind(pco_tst, tst_s, tst_addr);
     rpc_listen(pco_tst, tst_s, SOCKTS_BACKLOG_DEF);
@@ -158,7 +158,7 @@ main(int argc, char *argv[])
         }
 
         CFG_WAIT_CHANGES;
-        
+
         /* Add static ARP entry to prevent connection establishment */
         CHECK_RC(tapi_update_arp(pco_tst->ta, tst_if->if_name, NULL, NULL,
                                  gw_tst_addr, CVT_HW_ADDR(alien_link_addr),
@@ -171,15 +171,15 @@ main(int argc, char *argv[])
 
     if (rc != -1)
     {
-        RING_VERDICT("connect() called on the socket with FIONBIO ioctl() "
-                     "request enabled returns %d, but it is expected to "
+        RING_VERDICT("connect() called on the socket with nonblock state "
+                     "enabled returns %d, but it is expected to "
                      "return -1", rc);
     }
     else
         CHECK_RPC_ERRNO(pco_iut, RPC_EINPROGRESS,
-                "connect() called on the socket with FIONBIO ioctl() "
-                "request enabled returns -1, but");
-    
+                "connect() called on the socket with nonblock state "
+                "enabled returns -1, but");
+
     if (gw_exists)
     {
         /* Delete static ARP entry */
@@ -188,12 +188,12 @@ main(int argc, char *argv[])
         CFG_WAIT_CHANGES;
     }
 
-    /* 
+    /*
      * Sleep a while to become more confident that connection is
      * established
      */
     SLEEP(5);
-    
+
     /* Call connect once more */
     do {
         RPC_AWAIT_IUT_ERROR(pco_iut);
@@ -204,13 +204,13 @@ main(int argc, char *argv[])
 
             if (got_zero)
             {
-                TEST_FAIL("connect() called on the socket with FIONBIO "
-                          "ioctl() returned 0 more than once");
+                TEST_FAIL("connect() called on the socket with nonblock "
+                          "state returned 0 more than once");
             }
             else
             {
                 RING_VERDICT("connect() called the second time on "
-                             "the socket with FIONBIO ioctl() set "
+                             "the socket with nonblock state set "
                              "returned 0");
             }
             got_zero = TRUE;
@@ -219,7 +219,7 @@ main(int argc, char *argv[])
         {
             CHECK_RPC_ERRNO(pco_iut, RPC_EISCONN,
                 "connect() called the third time on the socket with "
-                "FIONBIO ioctl() request enabled returns -1, but");
+                "nonblock state request enabled returns -1, but");
         }
     } while (rc == 0);
 
