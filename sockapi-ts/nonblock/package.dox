@@ -1,0 +1,35 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* (c) Copyright 2025 Oktet, Inc. All rights reserved. */
+/**
+
+@defgroup nonblock NONBLOCK Requests
+@ingroup sockapi
+@{
+
+<!--
+  - Specify full package name of the test package node after 'page'
+  - keyword (from root package to the node with '_' separator between
+  - names).
+  -
+  - The rest of the string in title of the test package.
+  -
+  - State brief description of the node in the next paragraph.
+  -->
+
+The package is intended to test to set nonblock state for sockets.
+
+@author Oleg Kravtsov <Oleg.Kravtsov@oktetlabs.ru>
+@author Nikolai Kosovskii <Nikolai.Kosovskii@arknetworks.am>
+
+
+@par Items:
+
+-# @ref nonblock-thread_unblock_send
+-# @ref nonblock-thread_unblock_recv
+-# @ref nonblock-thread_unblock_connect
+-# @ref nonblock-thread_unblock_accept
+-# @ref nonblock-accept
+-# @ref nonblock-connect
+
+@}nonblock
+*/

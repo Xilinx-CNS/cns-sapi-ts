@@ -63,6 +63,9 @@
       <xi:include href="trc-sockapi-ts-multicast.xml" parse="xml"
                   xmlns:xi="http://www.w3.org/2003/XInclude"/>
 
+      <xi:include href="trc-sockapi-ts-nonblock.xml" parse="xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
       <xi:include href="trc-sockapi-ts-aio.xml" parse="xml"
                   xmlns:xi="http://www.w3.org/2003/XInclude"/>
 

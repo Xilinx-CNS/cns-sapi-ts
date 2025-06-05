@@ -4,12 +4,6 @@
 tests = [
     'ethtool_reset',
     'fionbio',
-    'fionbio_accept',
-    'fionbio_connect',
-    'fionbio_thread_unblock_accept',
-    'fionbio_thread_unblock_connect',
-    'fionbio_thread_unblock_recv',
-    'fionbio_thread_unblock_send',
     'fionread_listening',
     'fionread_oob',
     'fionread_pipe',
