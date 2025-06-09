@@ -62,9 +62,7 @@ main(int argc, char **argv)
     int                              acc_s = -1;
     te_bool                          is_done;
     unsigned char                    tx_buf[SEND_BUF_LEN];
-    unsigned char                    rx_buf[RECV_BUF_LEN];
     size_t                           tx_buf_len = SEND_BUF_LEN;
-    size_t                           rx_buf_len = RECV_BUF_LEN;
     uint64_t                         sent;
 
     te_bool use_libc = TRUE;
