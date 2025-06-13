@@ -71,20 +71,18 @@
  */
 int
 fd_accept_accept4(rcf_rpc_server *pco_iut, int iut_s,
-		  const char *func, int func_flag)
+                  const char *func, int func_flag)
 {
+    int rc = 0;
+
     if (strcmp(func, "accept") == 0)
-    {
-	return rpc_accept(pco_iut, iut_s, NULL, NULL);
-    }
+        rc = rpc_accept(pco_iut, iut_s, NULL, NULL);
     else if (strcmp(func, "accept4") == 0)
-    {
-	return rpc_accept4(pco_iut, iut_s, NULL, NULL, func_flag);
-    }
+        rc = rpc_accept4(pco_iut, iut_s, NULL, NULL, func_flag);
     else
-    {
-	TEST_FAIL("Unknown function is tested");
-    }
+        TEST_FAIL("Unknown function is tested");
+
+    return rc;
 }
 
 int
