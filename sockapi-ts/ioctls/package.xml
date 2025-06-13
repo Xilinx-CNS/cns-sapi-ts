@@ -242,6 +242,10 @@
             </arg>
             <arg name="sock_type" type="sock_stream_dgram"/>
             <arg name="func" type="recv_func"/>
+            <arg name="nonblock_func">
+              <value>ioctl</value>
+              <value>fcntl</value>
+            </arg>
         </run>
 
         <run>

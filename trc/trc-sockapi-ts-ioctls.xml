@@ -769,6 +769,7 @@
         <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="func">onload_zc_hlrx_recv_copy</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
         <results tags="v5&amp;(ool_loop=0|ool_loop=1&amp;!reuse_stack)" notes="onload_zc_hlrx_recv_copy() is supported only for accelerated sockets">
           <result value="FAILED">
@@ -780,6 +781,7 @@
         <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
         <arg name="func">onload_zc_hlrx_recv_copy</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
         <results tags="v5&amp;(ool_loop=0|ool_loop=1&amp;!reuse_stack)" notes="onload_zc_hlrx_recv_copy() is supported only for accelerated sockets">
           <result value="FAILED">
@@ -791,6 +793,7 @@
         <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="func">onload_zc_hlrx_recv_zc</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
         <results tags="v5&amp;(ool_loop=0|ool_loop=1&amp;!reuse_stack)" notes="onload_zc_hlrx_recv_zc() is not supported for not accelerated socket">
           <result value="FAILED">
@@ -802,6 +805,7 @@
         <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
         <arg name="func">onload_zc_hlrx_recv_zc</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
         <results tags="v5&amp;(ool_loop=0|ool_loop=1&amp;!reuse_stack)" notes="onload_zc_hlrx_recv_zc() is not supported for not accelerated socket">
           <result value="FAILED">
@@ -813,6 +817,7 @@
         <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="func">onload_zc_recv</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
         <results tags="v5&amp;(ool_loop=0|ool_loop=1&amp;!reuse_stack)" notes="onload_zc_recv() is not supported for not accelerated socket">
           <result value="FAILED">
@@ -824,6 +829,7 @@
         <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
         <arg name="func">onload_zc_recv</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
         <results tags="v5&amp;(ool_loop=0|ool_loop=1&amp;!reuse_stack)" notes="onload_zc_recv() is not supported for not accelerated socket">
           <result value="FAILED">
@@ -835,6 +841,7 @@
         <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="func">recvmmsg</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
         <results tags="v5&amp;(ool_loop=1&amp;reuse_stack|ool_loop&gt;1)" notes="recvmmsg() is not supported for TCP socket on onload">
           <result value="FAILED">
@@ -846,6 +853,7 @@
         <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
         <arg name="func">recvmmsg</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
         <results tags="v5&amp;(ool_loop=1&amp;reuse_stack|ool_loop&gt;1)" notes="recvmmsg() is not supported for TCP socket on onload">
           <result value="FAILED">
@@ -857,6 +865,7 @@
         <arg name="env">VAR.env.peer2peer_tst</arg>
         <arg name="func">onload_zc_hlrx_recv_copy</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
         <results tags="v5" notes="onload_zc_hlrx_recv_copy() is supported only for accelerated sockets">
           <result value="FAILED">
@@ -868,6 +877,7 @@
         <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
         <arg name="func">onload_zc_hlrx_recv_copy</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
         <results tags="v5" notes="onload_zc_hlrx_recv_copy() is supported only for accelerated sockets">
           <result value="FAILED">
@@ -879,6 +889,7 @@
         <arg name="env">VAR.env.peer2peer_tst</arg>
         <arg name="func">onload_zc_hlrx_recv_zc</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
         <results tags="v5" notes="onload_zc_hlrx_recv_zc() function is supported only for accelerated sockets">
           <result value="FAILED">
@@ -890,6 +901,7 @@
         <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
         <arg name="func">onload_zc_hlrx_recv_zc</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
         <results tags="v5" notes="onload_zc_hlrx_recv_zc() function is supported only for accelerated sockets">
           <result value="FAILED">
@@ -901,6 +913,7 @@
         <arg name="env">VAR.env.peer2peer_tst</arg>
         <arg name="func">onload_zc_recv</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
         <results tags="v5" notes="onload_zc_recv() function is supported only for accelerated sockets">
           <result value="FAILED">
@@ -923,6 +936,7 @@
         <arg name="env">VAR.env.peer2peer</arg>
         <arg name="func">recvmmsg</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
         <results tags="linux&amp;v5" notes="recvmmsg() is not supported for TCP socket on onload">
           <result value="FAILED">
@@ -934,6 +948,7 @@
         <arg name="env">VAR.env.peer2peer_ipv6</arg>
         <arg name="func">recvmmsg</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
         <results tags="linux&amp;v5" notes="recvmmsg() is not supported for TCP socket on onload">
           <result value="FAILED">
@@ -945,174 +960,203 @@
         <arg name="env">VAR.env.peer2peer</arg>
         <arg name="func">recvmmsg</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_tst</arg>
         <arg name="func">onload_zc_recv</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_tst</arg>
         <arg name="func">onload_zc_hlrx_recv_zc</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_tst</arg>
         <arg name="func">onload_zc_hlrx_recv_copy</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="func">recvmmsg</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="func">onload_zc_recv</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="func">onload_zc_hlrx_recv_zc</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="func">onload_zc_hlrx_recv_copy</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_ipv6</arg>
         <arg name="func">recvmmsg</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
         <arg name="func">onload_zc_recv</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
         <arg name="func">onload_zc_hlrx_recv_zc</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
         <arg name="func">onload_zc_hlrx_recv_copy</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
         <arg name="func">recvmmsg</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
         <arg name="func">onload_zc_recv</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
         <arg name="func">onload_zc_hlrx_recv_zc</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
         <arg name="func">onload_zc_hlrx_recv_copy</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer</arg>
         <arg name="func">onload_zc_recv</arg>
         <arg name="sock_type"/>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer</arg>
         <arg name="func">onload_zc_hlrx_recv_zc</arg>
         <arg name="sock_type"/>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer</arg>
         <arg name="func">onload_zc_hlrx_recv_copy</arg>
         <arg name="sock_type"/>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_tst</arg>
         <arg name="func">recvmmsg</arg>
         <arg name="sock_type"/>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_ipv6</arg>
         <arg name="func">onload_zc_recv</arg>
         <arg name="sock_type"/>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_ipv6</arg>
         <arg name="func">onload_zc_hlrx_recv_zc</arg>
         <arg name="sock_type"/>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_ipv6</arg>
         <arg name="func">onload_zc_hlrx_recv_copy</arg>
         <arg name="sock_type"/>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
         <arg name="func">recvmmsg</arg>
         <arg name="sock_type"/>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
         <arg name="func">read</arg>
         <arg name="sock_type"/>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
         <arg name="func">readv</arg>
         <arg name="sock_type"/>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
         <arg name="func">recv</arg>
         <arg name="sock_type"/>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
         <arg name="func">recvfrom</arg>
         <arg name="sock_type"/>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
         <arg name="func">recvmsg</arg>
         <arg name="sock_type"/>
+        <arg name="nonblock_func"/>
         <notes/>
       </iter>
     </test>

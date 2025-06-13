@@ -5,10 +5,10 @@
  * IOCTL Requests
  */
 
-/** @page ioctls-fionbio Usage of FIONBIO request with receive functions
+/** @page ioctls-fionbio Usage of FIONBIO or NONBLOCK request with receive functions
  *
- * @objective Check that @c FIONBIO request affects the behaviour of
- *            receive functions.
+ * @objective Check that @c FIONBIO /@c O_NONBLOCK request affects
+ *            the behaviour of receive functions.
  *
  * @type conformance
  *
@@ -29,6 +29,8 @@
  *                      - @b onload_zc_recv()
  *                      - @b onload_zc_hlrx_recv_zc()
  *                      - @b onload_zc_hlrx_recv_copy()
+ * @param nonblock_func Function used to set nonblocking state to socket
+ *                      ("fcntl", "ioctl")
  *
  * @par Test sequence:
  *
@@ -65,7 +67,8 @@ main(int argc, char *argv[])
     socklen_t                peer_addrlen = sizeof(peer_addr);
     const struct sockaddr   *iut_addr;
     const struct sockaddr   *tst_addr;
-    int                      req_val;
+
+    fdflag_set_func_type_t nonblock_func = UNKNOWN_SET_FDFLAG;
 
     TEST_START;
     TEST_GET_SOCK_TYPE(sock_type);
@@ -75,6 +78,7 @@ main(int argc, char *argv[])
 
     TEST_GET_ADDR(pco_iut, iut_addr);
     TEST_GET_ADDR(pco_tst, tst_addr);
+    TEST_GET_FDFLAG_SET_FUNC(nonblock_func);
 
     TEST_STEP("Create a pair of connected sockets on IUT and Tester "
               "of type @p sock_type.");
@@ -85,11 +89,12 @@ main(int argc, char *argv[])
         tst_s = rpc_socket(pco_tst, rpc_socket_domain_by_addr(tst_addr),
                            RPC_SOCK_STREAM, RPC_PROTO_DEF);
 
-        TEST_SUBSTEP("If @p sock_type is @c SOCK_STREAM, set @c FIONBIO "
+        TEST_SUBSTEP("If @p sock_type is @c SOCK_STREAM, set nonblocking state "
                      "for the listener socket on IUT before establishing "
                      "connection to check that it is not inherited.");
-        req_val = TRUE;
-        rpc_ioctl(pco_iut, srv_s, RPC_FIONBIO, &req_val);
+        set_sock_non_block(pco_iut, srv_s, nonblock_func == FCNTL_SET_FDFLAG,
+                           pco_iut->use_libc, TRUE);
+
 
         /* Create a connection */
         rpc_bind(pco_iut, srv_s, iut_addr);
@@ -117,11 +122,11 @@ main(int argc, char *argv[])
               "successfully returned sent data, not failed prematurely "
               "with @c EAGAIN.");
     check_rx_func_mode(func, pco_iut, iut_s, pco_tst, tst_s, RX_BLK,
-                       "Checking before FIONBIO is enabled");
+                       "Checking before nonblocking state is enabled");
 
-    TEST_STEP("Enable @c FIONBIO with @b ioctl() on the IUT socket.");
-    req_val = TRUE;
-    rpc_ioctl(pco_iut, iut_s, RPC_FIONBIO, &req_val);
+    TEST_STEP("Enable nonblocking state on the IUT socket.");
+    set_sock_non_block(pco_iut, iut_s, nonblock_func == FCNTL_SET_FDFLAG,
+                       pco_iut->use_libc, TRUE);
 
     TEST_STEP("Again call @p func on IUT with @c RCF_RPC_CALL, wait for "
               "a while, send data from Tester to unblock it if it was "
@@ -129,18 +134,18 @@ main(int argc, char *argv[])
               "failed with @c EAGAIN. Then read data from the IUT "
               "socket to clean its receive buffer.");
     check_rx_func_mode(func, pco_iut, iut_s, pco_tst, tst_s, RX_NBLK,
-                       "Checking after FIONBIO is enabled");
+                       "Checking after nonblocking state is enabled");
 
-    TEST_STEP("Disable @c FIONBIO with @b ioctl() on the IUT socket.");
-    req_val = FALSE;
-    rpc_ioctl(pco_iut, iut_s, RPC_FIONBIO, &req_val);
+    TEST_STEP("Disable nonblocking state on the IUT socket.");
+    set_sock_non_block(pco_iut, iut_s, nonblock_func == FCNTL_SET_FDFLAG,
+                       pco_iut->use_libc, FALSE);
 
     TEST_STEP("Again call @p func on IUT with @c RCF_RPC_CALL, wait for "
               "a while, send data from Tester to unblock it if it was "
               "blocked. Finish @p func call and check that it "
               "successfully returned sent data.");
     check_rx_func_mode(func, pco_iut, iut_s, pco_tst, tst_s, RX_BLK,
-                       "Checking after FIONBIO is disabled");
+                       "Checking after nonblocking state is disabled");
 
     TEST_SUCCESS;
 
