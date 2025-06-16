@@ -2939,7 +2939,7 @@
                 <value>TCP_CLOSE->TCP_SYN_SENT->TCP_ESTABLISHED->TCP_FIN_WAIT1->TCP_FIN_WAIT2->TCP_TIME_WAIT->timeout->TCP_CLOSE</value>
                 <value>TCP_CLOSE->TCP_LISTEN->TCP_SYN_SENT</value>
                 <value>TCP_CLOSE->TCP_LISTEN->TCP_SYN_RECV->TCP_ESTABLISHED</value>
-                <value>TCP_ESTABLISHED->TCP_CLOSE_WAIT->TCP_LAST_ACK->TCP_CLOSE</value>
+                <value>TCP_SYN_RECV->TCP_ESTABLISHED->TCP_CLOSE_WAIT->TCP_LAST_ACK->TCP_CLOSE</value>
                 <value>TCP_FIN_WAIT1->TCP_CLOSING->TCP_TIME_WAIT</value>
                 <value>TCP_FIN_WAIT1->TCP_TIME_WAIT</value>
                 <value>TCP_SYN_SENT->TCP_CLOSE</value>
@@ -2969,7 +2969,7 @@
             <arg name="tcp_state_seq">
                 <value>TCP_CLOSE->TCP_SYN_SENT->TCP_ESTABLISHED->TCP_FIN_WAIT1->TCP_FIN_WAIT2->TCP_TIME_WAIT->timeout->TCP_CLOSE</value>
                 <value>TCP_CLOSE->TCP_LISTEN->TCP_SYN_RECV->TCP_ESTABLISHED</value>
-                <value>TCP_ESTABLISHED->TCP_CLOSE_WAIT->TCP_LAST_ACK->TCP_CLOSE</value>
+                <value>TCP_SYN_RECV->TCP_ESTABLISHED->TCP_CLOSE_WAIT->TCP_LAST_ACK->TCP_CLOSE</value>
             </arg>
             <arg name="tst_type">
                 <value>TSA_TST_SOCKET</value>

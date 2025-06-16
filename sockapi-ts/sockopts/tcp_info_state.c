@@ -155,54 +155,18 @@ main(int argc, char *argv[])
     TEST_STEP("Call @b tsa_do_moves_str() for tested sequence of TCP states "
               "transitions @p tcp_state_seq.");
 
-    rc = tsa_do_moves_str(&ss, RPC_TCP_UNKNOWN, RPC_TCP_UNKNOWN,
-                          (loopback ? TSA_MOVE_IGNORE_START_ERR : 0),
+    rc = tsa_do_moves_str(&ss,  RPC_TCP_UNKNOWN, RPC_TCP_UNKNOWN, 0,
                           tcp_state_seq);
 
-    while (rc > 0)
+    if (rc > 0)
     {
-        TEST_STEP("If error was returned, check whether the error was expected "
-                  "due to unobservability of particular state in current mode. "
-                  "If so, write corresponding verdict and try to go "
-                  "futher calling @b tsa_do_moves_str() for remaining part of "
-                  "sequence.");
-
-        if ((tsa_state_from(&ss) == RPC_TCP_LISTEN &&
-             tsa_state_to(&ss) == RPC_TCP_SYN_RECV &&
-             tsa_state_cur(&ss) == RPC_TCP_LISTEN) ||
-            (loopback &&
-             ((tsa_state_from(&ss) == RPC_TCP_CLOSE &&
-               tsa_state_to(&ss) == RPC_TCP_SYN_SENT &&
-               tsa_state_cur(&ss) == RPC_TCP_ESTABLISHED) ||
-              (tsa_state_from(&ss) == RPC_TCP_ESTABLISHED &&
-               tsa_state_to(&ss) == RPC_TCP_FIN_WAIT1 &&
-               tsa_state_cur(&ss) == RPC_TCP_FIN_WAIT2) ||
-              (tsa_state_from(&ss) == RPC_TCP_CLOSE_WAIT &&
-               tsa_state_to(&ss) == RPC_TCP_LAST_ACK &&
-               tsa_state_cur(&ss) == RPC_TCP_CLOSE))
-            ))
-        {
-            RING_VERDICT("%s is not observable "
-                         "when achieved from %s",
-                         tcp_state_rpc2str(tsa_state_to(&ss)),
-                         tcp_state_rpc2str(tsa_state_from(&ss)));
-
-            rc = tsa_do_moves_str(&ss, tsa_state_to(&ss), RPC_TCP_UNKNOWN,
-                                  0, tsa_rem_path(&ss));
-        }
-        else
-        {
-            TEST_STEP("If @b tsa_do_moves_str() returned error and the error was "
-                      "not expected, write corresponding verdict and end the "
-                      "test.");
-
-            timeout_msg = (tsa_timeout_used(&ss)) ? TIMEOUT_USED : "";
-            TEST_VERDICT("%s -> %s failed. %sSocket is in %s instead",
-                         tcp_state_rpc2str(tsa_state_from(&ss)),
-                         tcp_state_rpc2str(tsa_state_to(&ss)),
-                         timeout_msg,
-                         tcp_state_rpc2str(tsa_state_cur(&ss)));
-        }
+        timeout_msg = (tsa_timeout_used(&ss)) ? TIMEOUT_USED : "";
+        TEST_VERDICT("%s -> %s failed with rc %s in %s. %s"
+                     "Socket in %s instead",
+                     tcp_state_rpc2str(tsa_state_from(&ss)),
+                     tcp_state_rpc2str(tsa_state_to(&ss)),
+                     te_rc_err2str(rc), te_rc_mod2str(rc), timeout_msg,
+                     tcp_state_rpc2str(tsa_state_cur(&ss)));
     }
 
     TEST_SUCCESS;
