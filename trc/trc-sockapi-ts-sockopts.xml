@@ -10805,12 +10805,12 @@
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_lo</arg>
         <arg name="loopback"/>
-        <arg name="tcp_state_seq">TCP_ESTABLISHED-&gt;TCP_CLOSE_WAIT-&gt;TCP_LAST_ACK-&gt;TCP_CLOSE</arg>
+        <arg name="tcp_state_seq">TCP_SYN_RECV-&gt;TCP_ESTABLISHED-&gt;TCP_CLOSE_WAIT-&gt;TCP_LAST_ACK-&gt;TCP_CLOSE</arg>
         <arg name="tst_type"/>
         <notes/>
         <results tags="linux">
-          <result value="PASSED">
-            <verdict>TCP_LAST_ACK is not observable when achieved from TCP_CLOSE_WAIT</verdict>
+          <result value="FAILED">
+            <verdict>TCP_CLOSE -&gt; TCP_SYN_SENT failed with rc EFAIL in TAPI. Socket in TCP_ESTABLISHED instead</verdict>
           </result>
         </results>
       </iter>
@@ -10821,12 +10821,8 @@
         <arg name="tst_type"/>
         <notes/>
         <results tags="linux">
-          <result value="PASSED">
-            <verdict>TCP_SYN_SENT is not observable when achieved from TCP_CLOSE</verdict>
-            <verdict>TCP_FIN_WAIT1 is not observable when achieved from TCP_ESTABLISHED</verdict>
-          </result>
-          <result value="PASSED">
-            <verdict>TCP_SYN_SENT is not observable when achieved from TCP_CLOSE</verdict>
+          <result value="FAILED">
+            <verdict>TCP_CLOSE -&gt; TCP_SYN_SENT failed with rc EFAIL in TAPI. Socket in TCP_ESTABLISHED instead</verdict>
           </result>
         </results>
       </iter>
@@ -10838,19 +10834,7 @@
         <notes/>
         <results tags="linux">
           <result value="FAILED">
-            <verdict>TCP_SYN_RECV -&gt; TCP_LISTEN failed. Socket is in TCP_CLOSE instead</verdict>
-          </result>
-        </results>
-      </iter>
-      <iter result="PASSED">
-        <arg name="env">VAR.env.peer2peer</arg>
-        <arg name="loopback"/>
-        <arg name="tcp_state_seq">TCP_SYN_SENT-&gt;TCP_SYN_RECV-&gt;TCP_LISTEN</arg>
-        <arg name="tst_type"/>
-        <notes/>
-        <results tags="linux">
-          <result value="FAILED">
-            <verdict>TCP_SYN_RECV -&gt; TCP_LISTEN failed. Socket is in TCP_CLOSE instead</verdict>
+            <verdict>TCP_SYN_RECV -&gt; TCP_LISTEN failed with rc EFAIL in TAPI. Socket in TCP_CLOSE instead</verdict>
           </result>
         </results>
       </iter>
@@ -10862,66 +10846,64 @@
         <notes/>
         <results tags="linux">
           <result value="FAILED">
-            <verdict>TCP_SYN_RECV -&gt; TCP_LISTEN failed. Socket is in TCP_SYN_RECV instead</verdict>
+            <verdict>TCP_SYN_RECV -&gt; TCP_LISTEN failed with rc EFAIL in RCF_PCH. Socket in TCP_SYN_RECV instead</verdict>
           </result>
         </results>
       </iter>
       <iter result="PASSED">
-        <arg name="env">VAR.env.peer2peer_gw</arg>
-        <arg name="loopback"/>
-        <arg name="tcp_state_seq">TCP_SYN_SENT-&gt;TCP_SYN_RECV-&gt;TCP_FIN_WAIT1</arg>
-        <arg name="tst_type"/>
-        <notes/>
-      </iter>
-      <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer</arg>
         <arg name="loopback"/>
-        <arg name="tcp_state_seq">TCP_SYN_SENT-&gt;TCP_SYN_RECV-&gt;TCP_FIN_WAIT1</arg>
-        <arg name="tst_type"/>
-        <notes/>
-      </iter>
-      <iter result="PASSED">
-        <arg name="env">VAR.env.peer2peer_gw</arg>
-        <arg name="loopback"/>
-        <arg name="tcp_state_seq">TCP_SYN_SENT-&gt;TCP_SYN_RECV-&gt;TCP_ESTABLISHED</arg>
-        <arg name="tst_type"/>
-        <notes/>
-      </iter>
-      <iter result="PASSED">
-        <arg name="env">VAR.env.peer2peer</arg>
-        <arg name="loopback"/>
-        <arg name="tcp_state_seq">TCP_SYN_SENT-&gt;TCP_SYN_RECV-&gt;TCP_ESTABLISHED</arg>
-        <arg name="tst_type"/>
-        <notes/>
-      </iter>
-      <iter result="PASSED">
-        <arg name="env">VAR.env.peer2peer_gw</arg>
-        <arg name="loopback"/>
-        <arg name="tcp_state_seq">TCP_FIN_WAIT1-&gt;TCP_TIME_WAIT</arg>
+        <arg name="tcp_state_seq">TCP_SYN_SENT-&gt;TCP_SYN_RECV-&gt;TCP_LISTEN</arg>
         <arg name="tst_type"/>
         <notes/>
         <results tags="linux">
           <result value="FAILED">
-            <verdict>TCP_FIN_WAIT1 -&gt; TCP_TIME_WAIT failed. Socket is in TCP_FIN_WAIT1 instead</verdict>
+            <verdict>TCP_SYN_RECV -&gt; TCP_LISTEN failed with rc EFAIL in TAPI. Socket in TCP_CLOSE instead</verdict>
           </result>
-         </results>
+        </results>
       </iter>
       <iter result="PASSED">
-        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="env"/>
         <arg name="loopback"/>
-        <arg name="tcp_state_seq">TCP_FIN_WAIT1-&gt;TCP_TIME_WAIT</arg>
-        <arg name="tst_type"/>
-        <notes/>
-      </iter>
-      <iter result="PASSED">
-        <arg name="env">VAR.env.peer2peer_tst</arg>
-        <arg name="loopback"/>
-        <arg name="tcp_state_seq">TCP_FIN_WAIT1-&gt;TCP_TIME_WAIT</arg>
+        <arg name="tcp_state_seq">TCP_SYN_SENT-&gt;TCP_SYN_RECV-&gt;TCP_FIN_WAIT1</arg>
         <arg name="tst_type"/>
         <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
+        <arg name="loopback"/>
+        <arg name="tcp_state_seq">TCP_SYN_SENT-&gt;TCP_SYN_RECV-&gt;TCP_ESTABLISHED</arg>
+        <arg name="tst_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="loopback"/>
+        <arg name="tcp_state_seq">TCP_FIN_WAIT1-&gt;TCP_TIME_WAIT</arg>
+        <arg name="tst_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_gw</arg>
+        <arg name="loopback"/>
+        <arg name="tcp_state_seq">TCP_FIN_WAIT1-&gt;TCP_TIME_WAIT</arg>
+        <arg name="tst_type"/>
+        <notes/>
+        <results tags="linux">
+          <result value="FAILED">
+            <verdict>TCP_FIN_WAIT1 -&gt; TCP_TIME_WAIT failed with rc EFAIL in TAPI. Socket in TCP_FIN_WAIT1 instead</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="loopback"/>
+        <arg name="tcp_state_seq">TCP_FIN_WAIT1-&gt;TCP_TIME_WAIT</arg>
+        <arg name="tst_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
         <arg name="loopback"/>
         <arg name="tcp_state_seq">TCP_FIN_WAIT1-&gt;TCP_CLOSING-&gt;TCP_TIME_WAIT</arg>
         <arg name="tst_type"/>
@@ -10930,35 +10912,20 @@
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_gw</arg>
         <arg name="loopback"/>
-        <arg name="tcp_state_seq">TCP_ESTABLISHED-&gt;TCP_CLOSE_WAIT-&gt;TCP_LAST_ACK-&gt;TCP_CLOSE</arg>
+        <arg name="tcp_state_seq">TCP_FIN_WAIT1-&gt;TCP_CLOSING-&gt;TCP_TIME_WAIT</arg>
         <arg name="tst_type"/>
         <notes/>
+        <results tags="linux">
+          <result value="PASSED"/>
+          <result value="FAILED">
+            <verdict>TCP_CLOSING -&gt; TCP_TIME_WAIT failed with rc EFAIL in TAPI. Socket in TCP_CLOSING instead</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer</arg>
         <arg name="loopback"/>
-        <arg name="tcp_state_seq">TCP_ESTABLISHED-&gt;TCP_CLOSE_WAIT-&gt;TCP_LAST_ACK-&gt;TCP_CLOSE</arg>
-        <arg name="tst_type"/>
-        <notes/>
-      </iter>
-      <iter result="PASSED">
-        <arg name="env">VAR.env.peer2peer_tst</arg>
-        <arg name="loopback"/>
-        <arg name="tcp_state_seq">TCP_ESTABLISHED-&gt;TCP_CLOSE_WAIT-&gt;TCP_LAST_ACK-&gt;TCP_CLOSE</arg>
-        <arg name="tst_type"/>
-        <notes/>
-      </iter>
-      <iter result="PASSED">
-        <arg name="env">VAR.env.peer2peer_tst</arg>
-        <arg name="loopback"/>
-        <arg name="tcp_state_seq">TCP_SYN_SENT-&gt;TCP_SYN_RECV-&gt;TCP_FIN_WAIT1</arg>
-        <arg name="tst_type"/>
-        <notes/>
-      </iter>
-      <iter result="PASSED">
-        <arg name="env">VAR.env.peer2peer_tst</arg>
-        <arg name="loopback"/>
-        <arg name="tcp_state_seq">TCP_SYN_SENT-&gt;TCP_SYN_RECV-&gt;TCP_ESTABLISHED</arg>
+        <arg name="tcp_state_seq">TCP_FIN_WAIT1-&gt;TCP_CLOSING-&gt;TCP_TIME_WAIT</arg>
         <arg name="tst_type"/>
         <notes/>
       </iter>
@@ -10984,6 +10951,27 @@
         <notes/>
       </iter>
       <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_gw</arg>
+        <arg name="loopback"/>
+        <arg name="tcp_state_seq">TCP_SYN_RECV-&gt;TCP_ESTABLISHED-&gt;TCP_CLOSE_WAIT-&gt;TCP_LAST_ACK-&gt;TCP_CLOSE</arg>
+        <arg name="tst_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="loopback"/>
+        <arg name="tcp_state_seq">TCP_SYN_RECV-&gt;TCP_ESTABLISHED-&gt;TCP_CLOSE_WAIT-&gt;TCP_LAST_ACK-&gt;TCP_CLOSE</arg>
+        <arg name="tst_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="loopback"/>
+        <arg name="tcp_state_seq">TCP_SYN_RECV-&gt;TCP_ESTABLISHED-&gt;TCP_CLOSE_WAIT-&gt;TCP_LAST_ACK-&gt;TCP_CLOSE</arg>
+        <arg name="tst_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
         <arg name="env"/>
         <arg name="loopback"/>
         <arg name="tcp_state_seq">TCP_CLOSE-&gt;TCP_LISTEN-&gt;TCP_SYN_SENT</arg>
@@ -10991,7 +10979,7 @@
         <notes/>
         <results tags="linux">
           <result value="FAILED">
-            <verdict>TCP_LISTEN -&gt; TCP_SYN_SENT failed. Socket is in TCP_LISTEN instead</verdict>
+            <verdict>TCP_LISTEN -&gt; TCP_SYN_SENT failed with rc EISCONN in RPC. Socket in TCP_LISTEN instead</verdict>
           </result>
         </results>
       </iter>
