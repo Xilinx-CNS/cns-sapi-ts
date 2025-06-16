@@ -10843,23 +10843,6 @@
         </results>
       </iter>
       <iter result="PASSED">
-        <arg name="env">VAR.env.peer2peer_gw</arg>
-        <arg name="loopback"/>
-        <arg name="tcp_state_seq">TCP_SYN_SENT-&gt;TCP_SYN_RECV-&gt;TCP_LISTEN</arg>
-        <arg name="tst_type"/>
-        <notes/>
-        <results tags="linux">
-          <result value="FAILED">
-            <verdict>TCP_SYN_RECV -&gt; TCP_LISTEN failed. Socket is in TCP_CLOSE instead</verdict>
-          </result>
-        </results>
-        <results tags="v5" key="ON-1362">
-          <result value="FAILED">
-            <verdict>TCP_SYN_SENT -&gt; TCP_SYN_RECV failed. Socket is in TCP_SYN_SENT instead</verdict>
-          </result>
-        </results>
-      </iter>
-      <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer</arg>
         <arg name="loopback"/>
         <arg name="tcp_state_seq">TCP_SYN_SENT-&gt;TCP_SYN_RECV-&gt;TCP_LISTEN</arg>
@@ -10870,9 +10853,16 @@
             <verdict>TCP_SYN_RECV -&gt; TCP_LISTEN failed. Socket is in TCP_CLOSE instead</verdict>
           </result>
         </results>
-        <results tags="v5" key="ON-1362">
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_gw</arg>
+        <arg name="loopback"/>
+        <arg name="tcp_state_seq">TCP_SYN_SENT-&gt;TCP_SYN_RECV-&gt;TCP_LISTEN</arg>
+        <arg name="tst_type"/>
+        <notes/>
+        <results tags="linux">
           <result value="FAILED">
-            <verdict>TCP_SYN_SENT -&gt; TCP_SYN_RECV failed. Socket is in TCP_SYN_SENT instead</verdict>
+            <verdict>TCP_SYN_RECV -&gt; TCP_LISTEN failed. Socket is in TCP_SYN_RECV instead</verdict>
           </result>
         </results>
       </iter>
@@ -10882,11 +10872,6 @@
         <arg name="tcp_state_seq">TCP_SYN_SENT-&gt;TCP_SYN_RECV-&gt;TCP_FIN_WAIT1</arg>
         <arg name="tst_type"/>
         <notes/>
-        <results tags="v5" key="25555">
-          <result value="FAILED">
-            <verdict>TCP_SYN_SENT -&gt; TCP_SYN_RECV failed. Socket is in TCP_SYN_SENT instead</verdict>
-          </result>
-        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer</arg>
@@ -10894,11 +10879,6 @@
         <arg name="tcp_state_seq">TCP_SYN_SENT-&gt;TCP_SYN_RECV-&gt;TCP_FIN_WAIT1</arg>
         <arg name="tst_type"/>
         <notes/>
-        <results tags="v5" key="25555">
-          <result value="FAILED">
-            <verdict>TCP_SYN_SENT -&gt; TCP_SYN_RECV failed. Socket is in TCP_SYN_SENT instead</verdict>
-          </result>
-        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_gw</arg>
@@ -10906,11 +10886,6 @@
         <arg name="tcp_state_seq">TCP_SYN_SENT-&gt;TCP_SYN_RECV-&gt;TCP_ESTABLISHED</arg>
         <arg name="tst_type"/>
         <notes/>
-        <results tags="v5" key="25555">
-          <result value="FAILED">
-            <verdict>TCP_SYN_SENT -&gt; TCP_SYN_RECV failed. Socket is in TCP_SYN_SENT instead</verdict>
-          </result>
-        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer</arg>
@@ -10918,23 +10893,32 @@
         <arg name="tcp_state_seq">TCP_SYN_SENT-&gt;TCP_SYN_RECV-&gt;TCP_ESTABLISHED</arg>
         <arg name="tst_type"/>
         <notes/>
-        <results tags="v5" key="25555">
-          <result value="FAILED">
-            <verdict>TCP_SYN_SENT -&gt; TCP_SYN_RECV failed. Socket is in TCP_SYN_SENT instead</verdict>
-          </result>
-        </results>
       </iter>
       <iter result="PASSED">
-        <arg name="env"/>
+        <arg name="env">VAR.env.peer2peer_gw</arg>
         <arg name="loopback"/>
         <arg name="tcp_state_seq">TCP_FIN_WAIT1-&gt;TCP_TIME_WAIT</arg>
         <arg name="tst_type"/>
         <notes/>
         <results tags="linux">
           <result value="FAILED">
-            <verdict>TCP_FIN_WAIT1 -&gt; TCP_TIME_WAIT failed. Socket is in TCP_CLOSE instead</verdict>
+            <verdict>TCP_FIN_WAIT1 -&gt; TCP_TIME_WAIT failed. Socket is in TCP_FIN_WAIT1 instead</verdict>
           </result>
-        </results>
+         </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="loopback"/>
+        <arg name="tcp_state_seq">TCP_FIN_WAIT1-&gt;TCP_TIME_WAIT</arg>
+        <arg name="tst_type"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="loopback"/>
+        <arg name="tcp_state_seq">TCP_FIN_WAIT1-&gt;TCP_TIME_WAIT</arg>
+        <arg name="tst_type"/>
+        <notes/>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
@@ -11017,11 +11001,6 @@
         <arg name="tcp_state_seq">TCP_CLOSE-&gt;TCP_SYN_SENT-&gt;TCP_ESTABLISHED-&gt;TCP_FIN_WAIT1-&gt;TCP_FIN_WAIT2-&gt;TCP_TIME_WAIT-&gt;timeout-&gt;TCP_CLOSE</arg>
         <arg name="tst_type"/>
         <notes/>
-        <results tags="linux">
-          <result value="FAILED">
-            <verdict>TCP_FIN_WAIT2 -&gt; TCP_TIME_WAIT failed. Socket is in TCP_CLOSE instead</verdict>
-          </result>
-        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer</arg>
