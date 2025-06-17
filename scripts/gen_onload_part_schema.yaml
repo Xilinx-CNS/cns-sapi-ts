@@ -8,6 +8,8 @@ params:
     ef100_host: list(str())
     # Hosts with X3 NICs
     x3_host: list(str())
+    # Hosts with XF NICs
+    xf_host: list(str())
     # Hosts without ipvlan
     no_ipvlan: list(str())
     # Hosts with problems with 32-bit agent
@@ -20,6 +22,8 @@ params:
     no_vlan_macvlan: list(str())
     # Hosts on which AF_XDP testing is restricted
     no_af_xdp: list(str())
+    # Hosts with only one link between IUT and TST1
+    one_link_host: list(str())
 # Dictionary to remove params if they are broken on some hosts
 bad_ool_host: map(value=list(str()), key=str())
 # List of params, each part consists of one or more slices

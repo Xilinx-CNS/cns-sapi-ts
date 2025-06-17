@@ -155,6 +155,9 @@ def fix_testing_parms(host, ools, reqs, sl, slice_name,
         if not any(item in ["zc_reg_huge", "zc_reg_huge_align"]
                    for item in ools):
             ools.append("zc_reg_huge")
+
+    if host in params["ef100_host"] or host in params["x3_host"] or \
+       host in params["xf_host"]:
         # ST-2638: X3 and EF100 do no support such packets
         remove_silent(ools, "pkt_nocomp")
 
@@ -168,6 +171,11 @@ def fix_testing_parms(host, ools, reqs, sl, slice_name,
         # ON-13343: temporarily disable rss:active:passive mode
         remove_silent(ools, "scalable_active_passive")
         # ON-14439: problems with configuring bond/team interfaces
+        ools = remove_pattern(ools, "bond")
+        ools = remove_pattern(ools, "team")
+
+    if host in params["one_link_host"]:
+        remove_silent(ools, "hwport2")
         ools = remove_pattern(ools, "bond")
         ools = remove_pattern(ools, "team")
 
@@ -231,6 +239,21 @@ def fix_testing_parms(host, ools, reqs, sl, slice_name,
         x3_deny_list += ["af_xdp_no_filters", "af_xdp", "zc_af_xdp"]
 
         for item in x3_deny_list:
+            remove_silent(ools, item)
+
+    if host in params["xf_host"]:
+        xf_deny_list = ["fw_low_latency", "fw_full_featured"]
+
+        xf_deny_list += ["rss_scalable",
+                         "scalable_active_passive",
+                         "one_cluster",
+                         ]
+        xf_deny_list += ["scalable", "scalable_active", "scalable_passive"]
+        xf_deny_list += ["scalable_iut", "scalable_any"]
+
+        xf_deny_list += ["af_xdp_no_filters", "af_xdp", "zc_af_xdp"]
+
+        for item in xf_deny_list:
             remove_silent(ools, item)
 
     # Remove params which are broken on some configurations
