@@ -9,6 +9,22 @@
 
     <session>
         <run>
+            <script name="nonblock">
+            </script>
+            <arg name="env">
+              <value reqs="V5_SANITY" ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value reqs="V5_SANITY" ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="func" type="recv_func"/>
+            <arg name="nonblock_func" type="fd_ctl_type"/>
+        </run>
+
+        <run>
             <script name="accept">
                 <req id="SOCK_STREAM"/>
                 <req id="V5_SANITY"/>

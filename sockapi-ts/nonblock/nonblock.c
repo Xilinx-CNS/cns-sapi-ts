@@ -2,10 +2,10 @@
 /* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
 /*
  * Socket API Test Suite
- * IOCTL Requests
+ * NONBLOCK Requests
  */
 
-/** @page ioctls-fionbio Usage of FIONBIO or NONBLOCK request with receive functions
+/** @page nonblock-nonblock Usage of FIONBIO or NONBLOCK request with receive functions
  *
  * @objective Check that @c FIONBIO /@c O_NONBLOCK request affects
  *            the behaviour of receive functions.
@@ -37,7 +37,7 @@
  * @author Oleg Kravtsov <Oleg.Kravtsov@oktetlabs.ru>
  */
 
-#define TE_TEST_NAME  "ioctls/fionbio"
+#define TE_TEST_NAME  "nonblock/nonblock"
 
 #include "sockapi-test.h"
 

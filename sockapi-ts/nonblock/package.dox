@@ -30,6 +30,7 @@ The package is intended to test to set nonblock state for sockets.
 -# @ref nonblock-thread_unblock_accept
 -# @ref nonblock-accept
 -# @ref nonblock-connect
+-# @ref nonblock-nonblock
 
 @}nonblock
 */
