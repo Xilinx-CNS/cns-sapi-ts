@@ -2,6 +2,7 @@
 # (c) Copyright 2025 Oktet, Inc. All rights reserved.
 
 tests = [
+    'nonblock',
     'accept',
     'connect',
     'thread_unblock_accept',

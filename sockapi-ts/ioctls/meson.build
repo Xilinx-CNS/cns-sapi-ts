@@ -3,7 +3,6 @@
 
 tests = [
     'ethtool_reset',
-    'fionbio',
     'fionread_listening',
     'fionread_oob',
     'fionread_pipe',

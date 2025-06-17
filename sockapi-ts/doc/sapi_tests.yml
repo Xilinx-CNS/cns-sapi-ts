@@ -1396,9 +1396,6 @@ groups:
     - test: ethtool_reset
       summary: Using of ETHTOOL_RESET request
 
-    - test: fionbio
-      summary: Usage of FIONBIO request with receive functions
-
     - test: fionread_listening
       summary: Behaviour of FIONREAD request on listening socket
 
@@ -2256,6 +2253,9 @@ groups:
     summary: IOCTL Requests
     objective: ''
     tests:
+    - test: nonblock
+      summary: Usage of nonblock request with receive functions
+
     - test: fionbio_accept
       summary: Using of accept() function with enabled FIONBIO request
 
