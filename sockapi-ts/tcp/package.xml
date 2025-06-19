@@ -2994,6 +2994,8 @@
                 <script name="move_fd_same_tcp" track_conf="silent">
                     <req id="SOCK_STREAM"/>
                     <req id="TAPI_TCP_STATES"/>
+                   <!-- There is no onload_fd_stat() in zf_shim library. -->
+                    <req id="ZF_INCOMPATIBLE"/>
                 </script>
                 <arg name="tcp_state" type="tcp_states">
                     <value>TCP_ESTABLISHED</value>
@@ -3010,6 +3012,8 @@
                 <script name="move_fd_same_tcp" track_conf="silent">
                     <req id="SOCK_STREAM"/>
                     <req id="TAPI_TCP_STATES"/>
+                   <!-- There is no onload_fd_stat() in zf_shim library. -->
+                    <req id="ZF_INCOMPATIBLE"/>
                 </script>
                 <arg name="tcp_state" type="tcp_states">
                     <value>TCP_LISTEN</value>
@@ -3023,6 +3027,8 @@
                 <script name="move_fd_same_tcp" track_conf="silent">
                     <req id="SOCK_STREAM"/>
                     <req id="TAPI_TCP_STATES"/>
+                   <!-- There is no onload_fd_stat() in zf_shim library. -->
+                    <req id="ZF_INCOMPATIBLE"/>
                 </script>
                 <arg name="tcp_state" type="tcp_states">
                     <value>TCP_SYN_SENT</value>
