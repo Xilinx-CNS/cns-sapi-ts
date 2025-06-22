@@ -266,17 +266,7 @@ do {                                                                    \
             if (strcmp(evts, "in") == 0)                                \
                 RPC_WRITE(rc, pco_tst_, tst_s_, buffer_, size_);        \
             else                                                        \
-            {                                                           \
-                do {                                                    \
-                    RPC_AWAIT_IUT_ERROR(pco_tst_);                      \
-                    rc = rpc_recv(pco_tst_, tst_s_, buffer_,            \
-                                  size_, RPC_MSG_DONTWAIT);             \
-                } while (rc >= 0);                                      \
-                                                                        \
-                if (RPC_ERRNO(pco_tst_) != RPC_EAGAIN)                  \
-                    TEST_FAIL("recv() returned unexpected errno %s",    \
-                              errno_rpc2str(RPC_ERRNO(pco_tst_)));      \
-            }                                                           \
+                rpc_drain_fd_simple(pco_tst, tst_s, NULL);              \
             if (nblk_)                                                  \
                 TAPI_WAIT_NETWORK;                                      \
         }                                                               \
