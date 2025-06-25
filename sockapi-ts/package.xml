@@ -1031,6 +1031,11 @@ Sending and receiving functions
             <value reqs="TCP_CLOSING">TCP_CLOSING</value>
         </enum>
 
+        <enum name="fd_ctl_type">
+            <value reqs="FIONBIO">fcntl</value>
+            <value reqs="IOCTLS">ioctl</value>
+        </enum>
+
         <!--
         <exception handdown="descendants">
             <script name="exception"/>
