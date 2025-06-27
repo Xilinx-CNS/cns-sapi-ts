@@ -89,6 +89,11 @@
             <verdict>ioctl(FIONREAD) called on epoll descriptor returned 0 instead -1.</verdict>
           </result>
         </results>
+        <results tags="(linux&lt;6|linux-6&lt;12)">
+          <result value="FAILED">
+            <verdict>ioctl(FIONREAD) returns -1: errno is set to ENOTTY instead of EINVAL</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
@@ -98,6 +103,11 @@
         <arg name="req">SIOCATMARK</arg>
         <arg name="sock_type"/>
         <notes/>
+        <results tags="(linux&lt;6|linux-6&lt;12)">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCATMARK) returns -1: errno is set to ENOTTY instead of EINVAL</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
@@ -107,6 +117,11 @@
         <arg name="req">SIOCGIFNETMASK</arg>
         <arg name="sock_type"/>
         <notes/>
+        <results tags="(linux&lt;6|linux-6&lt;12)">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFNETMASK) returns -1: errno is set to ENOTTY instead of EINVAL</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
@@ -116,6 +131,11 @@
         <arg name="req">SIOCSIFNETMASK</arg>
         <arg name="sock_type"/>
         <notes/>
+        <results tags="(linux&lt;6|linux-6&lt;12)">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCSIFNETMASK) returns -1: errno is set to ENOTTY instead of EINVAL</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
@@ -125,6 +145,11 @@
         <arg name="req">SIOCGIFADDR</arg>
         <arg name="sock_type"/>
         <notes/>
+        <results tags="(linux&lt;6|linux-6&lt;12)">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFADDR) returns -1: errno is set to ENOTTY instead of EINVAL</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
@@ -134,6 +159,11 @@
         <arg name="req">SIOCSIFADDR</arg>
         <arg name="sock_type"/>
         <notes/>
+        <results tags="(linux&lt;6|linux-6&lt;12)">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCSIFADDR) returns -1: errno is set to ENOTTY instead of EINVAL</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
@@ -143,6 +173,11 @@
         <arg name="req">SIOCGIFBRDADDR</arg>
         <arg name="sock_type"/>
         <notes/>
+        <results tags="(linux&lt;6|linux-6&lt;12)">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFBRDADDR) returns -1: errno is set to ENOTTY instead of EINVAL</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
@@ -152,6 +187,11 @@
         <arg name="req">SIOCSIFBRDADDR</arg>
         <arg name="sock_type"/>
         <notes/>
+        <results tags="(linux&lt;6|linux-6&lt;12)">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCSIFBRDADDR) returns -1: errno is set to ENOTTY instead of EINVAL</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
@@ -161,6 +201,11 @@
         <arg name="req">SIOCGIFFLAGS</arg>
         <arg name="sock_type"/>
         <notes/>
+        <results tags="(linux&lt;6|linux-6&lt;12)">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFFLAGS) returns -1: errno is set to ENOTTY instead of EINVAL</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
@@ -170,6 +215,11 @@
         <arg name="req">SIOCSIFFLAGS</arg>
         <arg name="sock_type"/>
         <notes/>
+        <results tags="(linux&lt;6|linux-6&lt;12)">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCSIFFLAGS) returns -1: errno is set to ENOTTY instead of EINVAL</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
@@ -179,6 +229,11 @@
         <arg name="req">SIOCGIFMTU</arg>
         <arg name="sock_type"/>
         <notes/>
+        <results tags="(linux&lt;6|linux-6&lt;12)">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFMTU) returns -1: errno is set to ENOTTY instead of EINVAL</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
@@ -188,6 +243,11 @@
         <arg name="req">SIOCSIFMTU</arg>
         <arg name="sock_type"/>
         <notes/>
+        <results tags="(linux&lt;6|linux-6&lt;12)">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCSIFMTU) returns -1: errno is set to ENOTTY instead of EINVAL</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
@@ -197,6 +257,11 @@
         <arg name="req">SIOCGIFDSTADDR</arg>
         <arg name="sock_type"/>
         <notes/>
+        <results tags="(linux&lt;6|linux-6&lt;12)">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFDSTADDR) returns -1: errno is set to ENOTTY instead of EINVAL</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
@@ -206,6 +271,11 @@
         <arg name="req">SIOCSIFDSTADDR</arg>
         <arg name="sock_type"/>
         <notes/>
+        <results tags="(linux&lt;6|linux-6&lt;12)">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCSIFDSTADDR) returns -1: errno is set to ENOTTY instead of EINVAL</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
@@ -215,6 +285,11 @@
         <arg name="req">SIOCGIFHWADDR</arg>
         <arg name="sock_type"/>
         <notes/>
+        <results tags="(linux&lt;6|linux-6&lt;12)">
+          <result value="FAILED">
+            <verdict>ioctl(SIOCGIFHWADDR) returns -1: errno is set to ENOTTY instead of EINVAL</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>

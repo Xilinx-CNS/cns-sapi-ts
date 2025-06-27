@@ -299,21 +299,21 @@
             </arg>
             <arg name="error" list="">
                 <value>0</value>
-                <value>ENOTTY</value>
-                <value>ENOTTY</value>
-                <value>ENOTTY</value>
-                <value>ENOTTY</value>
-                <value>ENOTTY</value>
-                <value>ENOTTY</value>
-                <value>ENOTTY</value>
-                <value>ENOTTY</value>
-                <value>ENOTTY</value>
-                <value>ENOTTY</value>
-                <value>ENOTTY</value>
-                <value>ENOTTY</value>
-                <value>ENOTTY</value>
-                <value>ENOTTY</value>
-                <value>ENOTTY</value>
+                <value>EINVAL</value>
+                <value>EINVAL</value>
+                <value>EINVAL</value>
+                <value>EINVAL</value>
+                <value>EINVAL</value>
+                <value>EINVAL</value>
+                <value>EINVAL</value>
+                <value>EINVAL</value>
+                <value>EINVAL</value>
+                <value>EINVAL</value>
+                <value>EINVAL</value>
+                <value>EINVAL</value>
+                <value>EINVAL</value>
+                <value>EINVAL</value>
+                <value>EINVAL</value>
             </arg>
             <arg name="exp_ret" list="">
                 <value>0</value>
