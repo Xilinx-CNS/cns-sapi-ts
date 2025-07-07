@@ -73,6 +73,8 @@ main(int argc, char *argv[])
     te_bool                use_libc_old = FALSE;
     uint64_t               sent;
 
+    te_bool op_is_completed;
+
     fdflag_set_func_type_t nonblock_func = UNKNOWN_SET_FDFLAG;
 
     /*
@@ -142,15 +144,31 @@ main(int argc, char *argv[])
 
     pco_iut->use_libc = TRUE;
 
+    pco_iut->op = RCF_RPC_CALL;
+
     if (is_send)
     {
-        RPC_AWAIT_IUT_ERROR(pco_iut);
+        CHECK_RC(((rpc_send_f)test_func)(pco_iut, iut_s, data_buf,
+                                     DATA_BULK, 0));
+    }
+    else
+    {
+        CHECK_RC(((rpc_recv_f)test_func)(pco_iut, iut_s, data_buf,
+                                     DATA_BULK, 0));
+    }
+    TAPI_WAIT_NETWORK;
+    CHECK_RC(rcf_rpc_server_is_op_done(pco_iut, &op_is_completed));
+    if (!op_is_completed)
+        TEST_VERDICT("Test function is not completed");
+    pco_iut->op = RCF_RPC_WAIT;
+    RPC_AWAIT_IUT_ERROR(pco_iut);
+    if (is_send)
+    {
         rc = ((rpc_send_f)test_func)(pco_iut, iut_s, data_buf,
                                      DATA_BULK, 0);
     }
     else
     {
-        RPC_AWAIT_IUT_ERROR(pco_iut);
         rc = ((rpc_recv_f)test_func)(pco_iut, iut_s, data_buf,
                                      DATA_BULK, 0);
     }
