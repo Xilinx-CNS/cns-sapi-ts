@@ -66,14 +66,19 @@
  * @param iut_s         Socket on IUT
  * @param func          Function to be called
  * @param func_flag     Flags for @p func if needed
+ * @param await_err     If error is awaited
  *
  * @return              File descriptor from @p func
  */
 int
 fd_accept_accept4(rcf_rpc_server *pco_iut, int iut_s,
-                  const char *func, int func_flag)
+                  const char *func, int func_flag, te_bool await_err)
 {
     int rc = 0;
+    te_bool op_is_completed;
+
+    if (await_err)
+        pco_iut->op = RCF_RPC_CALL;
 
     if (strcmp(func, "accept") == 0)
         rc = rpc_accept(pco_iut, iut_s, NULL, NULL);
@@ -81,6 +86,24 @@ fd_accept_accept4(rcf_rpc_server *pco_iut, int iut_s,
         rc = rpc_accept4(pco_iut, iut_s, NULL, NULL, func_flag);
     else
         TEST_FAIL("Unknown function is tested");
+
+    if (await_err)
+    {
+        if (rc != 0)
+            TEST_VERDICT("accept() is unexpectedly failed to call");
+
+        TAPI_WAIT_NETWORK;
+        CHECK_RC(rcf_rpc_server_is_op_done(pco_iut, &op_is_completed));
+        if (!op_is_completed)
+            TEST_VERDICT("accept() is unexpectedly not completed");
+        pco_iut->op = RCF_RPC_WAIT;
+        RPC_AWAIT_IUT_ERROR(pco_iut);
+
+        if (strcmp(func, "accept") == 0)
+            rc = rpc_accept(pco_iut, iut_s, NULL, NULL);
+        else if (strcmp(func, "accept4") == 0)
+            rc = rpc_accept4(pco_iut, iut_s, NULL, NULL, func_flag);
+    }
 
     return rc;
 }
@@ -127,9 +150,7 @@ main(int argc, char *argv[])
 
     rpc_listen(pco_iut, iut_s, SOCKTS_BACKLOG_DEF);
 
-    RPC_AWAIT_IUT_ERROR(pco_iut);
-
-    accepted_s = fd_accept_accept4(pco_iut, iut_s, func, func_flag);
+    accepted_s = fd_accept_accept4(pco_iut, iut_s, func, func_flag, TRUE);
     if (accepted_s != -1)
     {
         TEST_FAIL("%s() called on server socket with nonblock state "
@@ -149,7 +170,7 @@ main(int argc, char *argv[])
     /* Wait a while to make sure that listening socket gets connection */
     TAPI_WAIT_NETWORK;
 
-    accepted_s = fd_accept_accept4(pco_iut, iut_s, func, func_flag);
+    accepted_s = fd_accept_accept4(pco_iut, iut_s, func, func_flag, FALSE);
 
     if ((rc = sockts_compare_sock_peer_name(pco_iut, accepted_s,
                                             pco_tst, tst_s)) < 0)
@@ -160,9 +181,7 @@ main(int argc, char *argv[])
 
     CHECK_RC(sockts_check_sock_flags(pco_iut, accepted_s, func_flag));
 
-    RPC_AWAIT_IUT_ERROR(pco_iut);
-
-    tmp_s = fd_accept_accept4(pco_iut, iut_s, func, func_flag);
+    tmp_s = fd_accept_accept4(pco_iut, iut_s, func, func_flag, TRUE);
 
     if (tmp_s != -1)
     {
