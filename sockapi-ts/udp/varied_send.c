@@ -153,26 +153,6 @@ make_iov_dbuf(int mtu, iovec_cnt *iov, te_dbuf *dbuf)
     rpc_iov_append2dbuf(iov->iov, iov->iovcnt, dbuf);
 }
 
-/**
- * Allocate and fill datagrams bunch in iov vectors, copy the data to the
- * single buffer @p dbuf.
- *
- * @param mtu   MTU size.
- * @param iov   Iov vectors array.
- * @param num   Datagrams number.
- * @param dbuf  Data buffer.
- */
-static void
-init_send_bufs(int mtu, iovec_cnt *iovs, int num, te_dbuf *dbuf)
-{
-    int i;
-
-    for (i = 0; i < num; i++)
-    {
-        make_iov_dbuf(mtu, iovs + i, dbuf);
-    }
-}
-
 int
 main(int argc, char *argv[])
 {
@@ -182,8 +162,6 @@ main(int argc, char *argv[])
     const struct sockaddr  *tst_addr = NULL;
     const struct if_nameindex *iut_if = NULL;
 
-    te_dbuf snd_buf = TE_DBUF_INIT(0);
-    te_dbuf rcv_buf = TE_DBUF_INIT(0);
     char    buf[DGRAM_MAX];
     iovec_cnt iovs[TEST_BUNCH];
     struct timeval tv1;
@@ -193,7 +171,18 @@ main(int argc, char *argv[])
     int mtu;
     int len;
     int iter = 0;
-    int i;
+    int i, j;
+    te_bool datagrams_transmitted;
+    te_bool datagrams_transmitted_total = FALSE;
+    int datagram_permutation[TEST_BUNCH];
+    te_dbuf snd_bufs[TEST_BUNCH];
+    te_dbuf rcv_bufs[TEST_BUNCH];
+
+    for (i = 0; i < TEST_BUNCH; i++)
+    {
+        snd_bufs[i] = (te_dbuf)TE_DBUF_INIT(0);
+        rcv_bufs[i] = (te_dbuf)TE_DBUF_INIT(0);
+    }
 
     TEST_START;
     TEST_GET_PCO(pco_iut);
@@ -206,7 +195,7 @@ main(int argc, char *argv[])
 
     CHECK_RC(tapi_cfg_base_if_get_mtu_u(pco_iut->ta, iut_if->if_name, &mtu));
 
-    /*- Create and bind UDP sockets on IUT and tester. */
+    TEST_STEP("Create and bind UDP sockets on IUT and tester");
     GEN_CONNECTION(pco_iut, pco_tst, RPC_SOCK_DGRAM, RPC_PROTO_DEF,
                    iut_addr, tst_addr, &iut_s, &tst_s);
 
@@ -218,11 +207,11 @@ main(int argc, char *argv[])
         pco_tst->silent_default = TRUE;
     }
 
-    RING("In the loop, send %d datagrams from IUT, receive them on "
-         "tester and check the data", TEST_BUNCH);
-    /*- In the loop during @c 3 seconds: */
+    TEST_STEP("In the loop, send datagrams from IUT, receive them "
+              "on tester and check the data In the loop during @c 3 seconds");
     do {
-        /*-- Send a bunch of datagrams
+        /*
+         *   Send a bunch of datagrams
          *      -# bunch size is @c 10;
          *      -# a datagram have the following parameters
          *        -# size
@@ -240,8 +229,11 @@ main(int argc, char *argv[])
          *        -# big-many, first iov is smaller than MTU
          *        -# big-many, first iov is larger than MTU
          *        -# big-many, last iov is smaller than MTU
-         *        -# big-many, last iov is larger than MTU */
-        init_send_bufs(mtu, iovs, TEST_BUNCH, &snd_buf);
+         *        -# big-many, last iov is larger than MTU
+         */
+        TEST_SUBSTEP("Send datagrams");
+        for (i = 0; i < TEST_BUNCH; i++)
+            make_iov_dbuf(mtu, &iovs[i], &snd_bufs[i]);
         for (i = 0; i < TEST_BUNCH; i++)
         {
             rc = rpc_writev(pco_iut, iut_s, iovs[i].iov, iovs[i].iovcnt);
@@ -254,16 +246,65 @@ main(int argc, char *argv[])
             }
         }
 
-        /*-- Read and check datagrams on tester. */
+        TEST_SUBSTEP("Read datagrams on tester");
         for (i = 0; i < TEST_BUNCH; i++)
         {
             rc = rpc_recv(pco_tst, tst_s, buf, DGRAM_MAX, 0);
-            te_dbuf_append(&rcv_buf, buf, rc);
+            te_dbuf_append(&rcv_bufs[i], buf, rc);
         }
-        SOCKTS_CHECK_RECV(pco_tst, snd_buf.ptr, rcv_buf.ptr,
-                          snd_buf.len, rcv_buf.len);
-        te_dbuf_reset(&snd_buf);
-        te_dbuf_reset(&rcv_buf);
+
+        TEST_SUBSTEP("Check datagrams");
+        /*
+         * datagram_permutation[j] == i if i is nonnegative means
+         * i-th sent datagram coinsides with j-th received one.
+         * If i equals to -1 it means it j-th received datagram is
+         * not founded among sent ones yet.
+         */
+        for (i = 0; i < TEST_BUNCH; i++)
+            datagram_permutation[i] = -1;
+        datagrams_transmitted = FALSE;
+
+        for (i = 0; i < TEST_BUNCH; i++)
+        {
+            te_bool datagram_is_found = FALSE;
+
+            for (j = 0; j < TEST_BUNCH; j++)
+            {
+                if (datagram_permutation[j] < 0 &&
+                    snd_bufs[i].len == rcv_bufs[j].len &&
+                    memcmp(snd_bufs[i].ptr, rcv_bufs[j].ptr,
+                           snd_bufs[i].len) == 0)
+                {
+                    datagram_is_found = TRUE;
+                    datagram_permutation[j] = i;
+                    if (i != j)
+                        datagrams_transmitted = TRUE;
+                    break;
+                }
+            }
+            if (!datagram_is_found)
+            {
+                ERROR("During iteration number %d sent %d-th datagram "
+                      "was not found among the received ones", iter, i);
+                TEST_VERDICT("One of sent datagrams was not found among "
+                             "the received ones");
+            }
+        }
+
+        if (datagrams_transmitted)
+        {
+            RING("During iteration number %d the order of datagrams "
+                 "has been changed", iter);
+            datagrams_transmitted_total = TRUE;
+        }
+
+        for (i = 0; i < TEST_BUNCH; i++)
+        {
+            te_dbuf_reset(&snd_bufs[i]);
+            te_dbuf_reset(&rcv_bufs[j]);
+            snd_bufs[i] = (te_dbuf)TE_DBUF_INIT(0);
+            rcv_bufs[i] = (te_dbuf)TE_DBUF_INIT(0);
+        }
 
         gettimeofday(&tv2, NULL);
         if (iter % LOGGING_STEP == 0)
@@ -272,6 +313,11 @@ main(int argc, char *argv[])
         iter++;
     } while(TE_US2MS(TIMEVAL_SUB(tv2, tv1)) < TEST_LOOP_TIME);
 
+    if (datagrams_transmitted_total)
+    {
+        RING_VERDICT("The order of the sent datagrams is not coincide with "
+                     "the order of the received ones");
+    }
     TEST_SUCCESS;
 
 cleanup:
