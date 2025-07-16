@@ -29,6 +29,7 @@ UDP tunneling is tested here as well.
 -# @ref udp-send_via_os
 -# @ref udp-recv_from_multiple_sources
 -# @ref udp-recv_from_multiple_sources_two_ifs
+-# @ref udp-reduce_mtu_flood_udp
 
 @}
 

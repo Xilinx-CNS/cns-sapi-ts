@@ -404,5 +404,14 @@
         </results>
       </iter>
     </test>
+    <test name="reduce_mtu_flood_udp" type="script">
+      <objective>Check that eventually the TST side sees UDP packets after some lost ones when MTU was reduced.</objective>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="route_direct"/>
+        <arg name="from_tst"/>
+        <notes/>
+      </iter>
+    </test>
   </iter>
 </test>

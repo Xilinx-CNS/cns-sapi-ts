@@ -496,5 +496,18 @@
             </arg>
         </run>
 
+        <run>
+            <script name="reduce_mtu_flood_udp" track_conf="silent">
+                <req id="SOCK_DGRAM"/>
+                <req id="ENV-GW"/>
+            </script>
+            <arg name="env">
+              <value ref="env.peer2peer_gw"/>
+              <value reqs="IPV6_MTU" ref="env.peer2peer_gw_ipv6"/>
+            </arg>
+            <arg name="route_direct" type="boolean"/>
+            <arg name="from_tst" type="boolean"/>
+        </run>
+
     </session>
 </package>
