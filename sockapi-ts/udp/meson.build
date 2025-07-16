@@ -18,6 +18,7 @@ tests = [
     'recv_connect',
     'recv_from_multiple_sources',
     'recv_from_multiple_sources_two_ifs',
+    'reduce_mtu_flood_udp',
     'reuseaddr_connect',
     'round_trip_1',
     'round_trip_2',
