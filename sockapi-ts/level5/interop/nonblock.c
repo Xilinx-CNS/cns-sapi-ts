@@ -143,9 +143,9 @@ main(int argc, char *argv[])
 
         case FCNTL_SET_FDFLAG:
         case IOCTL_SET_FDFLAG:
+            pco_iut->use_libc = use_libc;
             set_sock_non_block(pco_iut, iut_s,
-                               nonblock_func == FCNTL_SET_FDFLAG,
-                               use_libc, TRUE);
+                               nonblock_func == FCNTL_SET_FDFLAG, TRUE);
             break;
 
         default:

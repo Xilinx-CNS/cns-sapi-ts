@@ -1832,12 +1832,9 @@ gen_conn_with_flags(rcf_rpc_server *pco1, rcf_rpc_server *pco2,
 
 int
 set_sock_non_block(rcf_rpc_server *pco, int s, te_bool use_fcntl,
-                   te_bool use_libc, te_bool enable_nonblock)
+                   te_bool enable_nonblock)
 {
-    te_bool old_use_libc = pco->use_libc;
     int rc;
-
-    pco->use_libc = use_libc;
 
     if (use_fcntl)
     {
@@ -1861,7 +1858,6 @@ set_sock_non_block(rcf_rpc_server *pco, int s, te_bool use_fcntl,
 
         rc = rpc_ioctl(pco, s, RPC_FIONBIO, &req_val);
     }
-    pco->use_libc = old_use_libc;
 
     return rc;
 }
