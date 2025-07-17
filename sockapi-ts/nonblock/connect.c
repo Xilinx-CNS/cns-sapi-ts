@@ -24,9 +24,6 @@
  *                       FALSE pco_gw does not exist in environment.
  * @param nonblock_func  Function used to set nonblocking state to socket
  *                       ("fcntl", "ioctl")
- * @param use_libc       Use libc implementation of @b fcntl() or @b ioctl()
- *                       intead of Onload implementaion to set nonblocking
- *                       state.
  *
  * @par Test sequence:
  * -# If @p gw_exists parameter is @c TRUE enable forwarding on the host
@@ -90,7 +87,6 @@ main(int argc, char *argv[])
     te_bool                  bind_iut;
     te_bool                  gw_exists;
 
-    te_bool use_libc = TRUE;
     fdflag_set_func_type_t nonblock_func = UNKNOWN_SET_FDFLAG;
 
     TEST_START;
@@ -112,7 +108,6 @@ main(int argc, char *argv[])
     TEST_GET_ADDR(pco_tst, tst_addr);
     TEST_GET_BOOL_PARAM(bind_iut);
     TEST_GET_FDFLAG_SET_FUNC(nonblock_func);
-    TEST_GET_BOOL_PARAM(use_libc);
 
     if (bind_iut)
         iut_s = rpc_create_and_bind_socket(pco_iut, RPC_SOCK_STREAM,
@@ -128,8 +123,7 @@ main(int argc, char *argv[])
     rpc_listen(pco_tst, tst_s, SOCKTS_BACKLOG_DEF);
 
     /* Turn on nonblocking state on 'iut_s' socket */
-    set_sock_non_block(pco_iut, iut_s, nonblock_func == FCNTL_SET_FDFLAG,
-                       use_libc, TRUE);
+    set_sock_non_block(pco_iut, iut_s, nonblock_func == FCNTL_SET_FDFLAG, TRUE);
 
 
     if (gw_exists)

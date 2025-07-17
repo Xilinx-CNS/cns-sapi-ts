@@ -19,8 +19,6 @@
  * @param tst_addr      TESTER IP address
  * @param nonblock_func Function used to get socket with NONBLOCK flag
  *                      ("fcntl", "ioctl")
- * @param use_libc      Use libc implementation of @b fcntl() or @b ioctl()
- *                      intead of Onload implementaion to set nonblocking state.
  *
  * @par Test sequence:
  * -# Create stream socket @p iut_s on @p pco_iut.
@@ -58,7 +56,6 @@ main(int argc, char **argv)
     int                              acc_s = -1;
     te_bool                          is_done;
 
-    te_bool use_libc = TRUE;
     fdflag_set_func_type_t nonblock_func = UNKNOWN_SET_FDFLAG;
 
     TEST_START;
@@ -68,7 +65,6 @@ main(int argc, char **argv)
     TEST_GET_ADDR(pco_tst, tst_addr);
 
     TEST_GET_FDFLAG_SET_FUNC(nonblock_func);
-    TEST_GET_BOOL_PARAM(use_libc);
 
     CHECK_RC(rcf_rpc_server_thread_create(pco_iut,
                                           "IUT_thread",
@@ -90,7 +86,7 @@ main(int argc, char **argv)
     rpc_accept(pco_iut, iut_s, NULL, NULL);
 
     set_sock_non_block(pco_iut_thread, iut_s,
-                       nonblock_func == FCNTL_SET_FDFLAG, use_libc, TRUE);
+                       nonblock_func == FCNTL_SET_FDFLAG, TRUE);
     MSLEEP(100);
 
     CHECK_RC(rcf_rpc_server_is_op_done(pco_iut, &is_done));

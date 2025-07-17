@@ -19,8 +19,6 @@
  * @param sock_type     type of sockets (stream or dgram)
  * @param nonblock_func Function used to get socket with NONBLOCK flag
  *                      ("fcntl", "ioctl")
- * @param use_libc      Use libc implementation of @b fcntl() or @b ioctl()
- *                      intead of Onload implementaion to set nonblocking state.
  *
  * @par Test sequence:
  * -# Create socket @p iut_s on @p pco_iut.
@@ -80,7 +78,6 @@ main(int argc, char **argv)
     size_t                           rx_buf_len = BUF_LEN;
     int                              waiting;
 
-    te_bool use_libc = TRUE;
     fdflag_set_func_type_t nonblock_func = UNKNOWN_SET_FDFLAG;
 
     TEST_START;
@@ -90,7 +87,6 @@ main(int argc, char **argv)
     TEST_GET_ADDR(pco_tst, tst_addr);
     TEST_GET_SOCK_TYPE(sock_type);
     TEST_GET_FDFLAG_SET_FUNC(nonblock_func);
-    TEST_GET_BOOL_PARAM(use_libc);
 
     CHECK_RC(rcf_rpc_server_thread_create(pco_iut,
                                           "IUT_thread",
@@ -118,7 +114,7 @@ main(int argc, char **argv)
     MSLEEP(CALLS_DELAY);
 
     set_sock_non_block(pco_iut_thread, iut_s,
-                       nonblock_func == FCNTL_SET_FDFLAG, use_libc, TRUE);
+                       nonblock_func == FCNTL_SET_FDFLAG, TRUE);
     MSLEEP(CALLS_DELAY);
 
     CHECK_RC(rcf_rpc_server_is_op_done(pco_iut, &is_done));

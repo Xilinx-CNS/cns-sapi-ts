@@ -93,8 +93,7 @@ main(int argc, char *argv[])
                      "for the listener socket on IUT before establishing "
                      "connection to check that it is not inherited.");
         set_sock_non_block(pco_iut, srv_s, nonblock_func == FCNTL_SET_FDFLAG,
-                           pco_iut->use_libc, TRUE);
-
+                           TRUE);
 
         /* Create a connection */
         rpc_bind(pco_iut, srv_s, iut_addr);
@@ -126,7 +125,7 @@ main(int argc, char *argv[])
 
     TEST_STEP("Enable nonblocking state on the IUT socket.");
     set_sock_non_block(pco_iut, iut_s, nonblock_func == FCNTL_SET_FDFLAG,
-                       pco_iut->use_libc, TRUE);
+                       TRUE);
 
     TEST_STEP("Again call @p func on IUT with @c RCF_RPC_CALL, wait for "
               "a while, send data from Tester to unblock it if it was "
@@ -138,7 +137,7 @@ main(int argc, char *argv[])
 
     TEST_STEP("Disable nonblocking state on the IUT socket.");
     set_sock_non_block(pco_iut, iut_s, nonblock_func == FCNTL_SET_FDFLAG,
-                       pco_iut->use_libc, FALSE);
+                       FALSE);
 
     TEST_STEP("Again call @p func on IUT with @c RCF_RPC_CALL, wait for "
               "a while, send data from Tester to unblock it if it was "
