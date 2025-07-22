@@ -159,11 +159,6 @@
         <arg name="sock_type">SOCK_STREAM</arg>
         <arg name="nonblock_func"/>
         <notes/>
-        <results tags="v5" notes="onload_zc_recv() function is supported only for accelerated sockets">
-          <result value="FAILED">
-            <verdict>Checking before nonblocking state is enabled: tested function unexpectedly failed with error RPC-ESOCKTNOSUPPORT</verdict>
-          </result>
-        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
@@ -182,11 +177,6 @@
         <arg name="sock_type">SOCK_STREAM</arg>
         <arg name="nonblock_func"/>
         <notes/>
-        <results tags="linux&amp;v5" notes="recvmmsg() is not supported for TCP socket on onload">
-          <result value="FAILED">
-            <verdict>Checking before nonblocking state is enabled: tested function unexpectedly failed with error RPC-ENOSYS</verdict>
-          </result>
-        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_ipv6</arg>
@@ -315,7 +305,19 @@
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer</arg>
         <arg name="func">onload_zc_recv</arg>
-        <arg name="sock_type"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="nonblock_func"/>
+        <notes/>
+        <results tags="v5" notes="onload_zc_recv() function is supported only for accelerated sockets">
+          <result value="FAILED">
+            <verdict>Checking before nonblocking state is enabled: tested function unexpectedly failed with error RPC-ESOCKTNOSUPPORT</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="func">onload_zc_recv</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
         <arg name="nonblock_func"/>
         <notes/>
       </iter>
@@ -336,7 +338,18 @@
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_tst</arg>
         <arg name="func">recvmmsg</arg>
-        <arg name="sock_type"/>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="nonblock_func"/>
+        <results tags="linux&amp;v5" notes="recvmmsg() is not supported for TCP socket on onload">
+          <result value="FAILED">
+            <verdict>Checking before nonblocking state is enabled: tested function unexpectedly failed with error RPC-ENOSYS</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="func">recvmmsg</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
         <arg name="nonblock_func"/>
         <notes/>
       </iter>
