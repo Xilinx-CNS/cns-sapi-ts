@@ -20,8 +20,42 @@
               <value ref="env.peer2peer_lo_ipv6"/>
             </arg>
             <arg name="sock_type" type="sock_stream_dgram"/>
-            <arg name="func" type="recv_func"/>
+            <arg name="func" type="recv_func">
+              <value>recvfrom</value>
+              <value>recvmsg</value>
+              <value>recvmmsg</value>
+              <value>onload_zc_recv</value>
+              <value>onload_zc_hlrx_recv_zc</value>
+              <value>onload_zc_hlrx_recv_copy</value>
+            </arg>
             <arg name="nonblock_func" type="fd_ctl_type"/>
+            <arg name="libc_switch_mode">
+              <value>none</value>
+            </arg>
+        </run>
+        <run>
+            <script name="nonblock">
+            </script>
+            <arg name="env">
+              <value reqs="V5_SANITY" ref="env.peer2peer"/>
+              <value ref="env.peer2peer_tst"/>
+              <value ref="env.peer2peer_lo"/>
+              <value reqs="V5_SANITY" ref="env.peer2peer_ipv6"/>
+              <value ref="env.peer2peer_tst_ipv6"/>
+              <value ref="env.peer2peer_lo_ipv6"/>
+            </arg>
+            <arg name="sock_type" type="sock_stream_dgram"/>
+            <arg name="func" type="recv_func">
+              <value>read</value>
+              <value>readv</value>
+            </arg>
+            <arg name="nonblock_func" type="fd_ctl_type"/>
+            <arg name="libc_switch_mode">
+              <value>none</value>
+              <value>before_nb</value>
+              <value>after_nb</value>
+              <value>after_func</value>
+            </arg>
         </run>
 
         <run>
