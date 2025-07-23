@@ -14,6 +14,7 @@
         <arg name="func">onload_zc_hlrx_recv_copy</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
         <results tags="v5&amp;(ool_loop=0|ool_loop=1&amp;!reuse_stack)" notes="onload_zc_hlrx_recv_copy() is supported only for accelerated sockets">
           <result value="FAILED">
@@ -26,6 +27,7 @@
         <arg name="func">onload_zc_hlrx_recv_copy</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
         <results tags="v5&amp;(ool_loop=0|ool_loop=1&amp;!reuse_stack)" notes="onload_zc_hlrx_recv_copy() is supported only for accelerated sockets">
           <result value="FAILED">
@@ -38,6 +40,7 @@
         <arg name="func">onload_zc_hlrx_recv_zc</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
         <results tags="v5&amp;(ool_loop=0|ool_loop=1&amp;!reuse_stack)" notes="onload_zc_hlrx_recv_zc() is not supported for not accelerated socket">
           <result value="FAILED">
@@ -50,6 +53,7 @@
         <arg name="func">onload_zc_hlrx_recv_zc</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
         <results tags="v5&amp;(ool_loop=0|ool_loop=1&amp;!reuse_stack)" notes="onload_zc_hlrx_recv_zc() is not supported for not accelerated socket">
           <result value="FAILED">
@@ -62,6 +66,7 @@
         <arg name="func">onload_zc_recv</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
         <results tags="v5&amp;(ool_loop=0|ool_loop=1&amp;!reuse_stack)" notes="onload_zc_recv() is not supported for not accelerated socket">
           <result value="FAILED">
@@ -74,6 +79,7 @@
         <arg name="func">onload_zc_recv</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
         <results tags="v5&amp;(ool_loop=0|ool_loop=1&amp;!reuse_stack)" notes="onload_zc_recv() is not supported for not accelerated socket">
           <result value="FAILED">
@@ -86,6 +92,7 @@
         <arg name="func">recvmmsg</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
         <results tags="v5&amp;(ool_loop=1&amp;reuse_stack|ool_loop&gt;1)" notes="recvmmsg() is not supported for TCP socket on onload">
           <result value="FAILED">
@@ -98,6 +105,7 @@
         <arg name="func">recvmmsg</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
         <results tags="v5&amp;(ool_loop=1&amp;reuse_stack|ool_loop&gt;1)" notes="recvmmsg() is not supported for TCP socket on onload">
           <result value="FAILED">
@@ -110,6 +118,7 @@
         <arg name="func">onload_zc_hlrx_recv_copy</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
         <results tags="v5" notes="onload_zc_hlrx_recv_copy() is supported only for accelerated sockets">
           <result value="FAILED">
@@ -122,6 +131,7 @@
         <arg name="func">onload_zc_hlrx_recv_copy</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
         <results tags="v5" notes="onload_zc_hlrx_recv_copy() is supported only for accelerated sockets">
           <result value="FAILED">
@@ -134,6 +144,7 @@
         <arg name="func">onload_zc_hlrx_recv_zc</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
         <results tags="v5" notes="onload_zc_hlrx_recv_zc() function is supported only for accelerated sockets">
           <result value="FAILED">
@@ -146,6 +157,7 @@
         <arg name="func">onload_zc_hlrx_recv_zc</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
         <results tags="v5" notes="onload_zc_hlrx_recv_zc() function is supported only for accelerated sockets">
           <result value="FAILED">
@@ -158,6 +170,7 @@
         <arg name="func">onload_zc_recv</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -176,6 +189,7 @@
         <arg name="func">recvmmsg</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -183,6 +197,7 @@
         <arg name="func">recvmmsg</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
         <results tags="linux&amp;v5" notes="recvmmsg() is not supported for TCP socket on onload">
           <result value="FAILED">
@@ -195,6 +210,7 @@
         <arg name="func">recvmmsg</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -202,6 +218,7 @@
         <arg name="func">onload_zc_recv</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -209,6 +226,7 @@
         <arg name="func">onload_zc_hlrx_recv_zc</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -216,6 +234,7 @@
         <arg name="func">onload_zc_hlrx_recv_copy</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -223,6 +242,7 @@
         <arg name="func">recvmmsg</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -230,6 +250,7 @@
         <arg name="func">onload_zc_recv</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -237,6 +258,7 @@
         <arg name="func">onload_zc_hlrx_recv_zc</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -244,6 +266,7 @@
         <arg name="func">onload_zc_hlrx_recv_copy</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -251,6 +274,7 @@
         <arg name="func">recvmmsg</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -258,6 +282,7 @@
         <arg name="func">onload_zc_recv</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -265,6 +290,7 @@
         <arg name="func">onload_zc_hlrx_recv_zc</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -272,6 +298,7 @@
         <arg name="func">onload_zc_hlrx_recv_copy</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -279,6 +306,7 @@
         <arg name="func">recvmmsg</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -286,6 +314,7 @@
         <arg name="func">onload_zc_recv</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -293,6 +322,7 @@
         <arg name="func">onload_zc_hlrx_recv_zc</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -300,6 +330,7 @@
         <arg name="func">onload_zc_hlrx_recv_copy</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -307,6 +338,7 @@
         <arg name="func">onload_zc_recv</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
         <results tags="v5" notes="onload_zc_recv() function is supported only for accelerated sockets">
           <result value="FAILED">
@@ -319,6 +351,7 @@
         <arg name="func">onload_zc_recv</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -326,6 +359,7 @@
         <arg name="func">onload_zc_hlrx_recv_zc</arg>
         <arg name="sock_type"/>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -333,6 +367,7 @@
         <arg name="func">onload_zc_hlrx_recv_copy</arg>
         <arg name="sock_type"/>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -340,6 +375,7 @@
         <arg name="func">recvmmsg</arg>
         <arg name="sock_type">SOCK_STREAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <results tags="linux&amp;v5" notes="recvmmsg() is not supported for TCP socket on onload">
           <result value="FAILED">
             <verdict>Checking before nonblocking state is enabled: tested function unexpectedly failed with error RPC-ENOSYS</verdict>
@@ -351,6 +387,7 @@
         <arg name="func">recvmmsg</arg>
         <arg name="sock_type">SOCK_DGRAM</arg>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -358,6 +395,7 @@
         <arg name="func">onload_zc_recv</arg>
         <arg name="sock_type"/>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -365,6 +403,7 @@
         <arg name="func">onload_zc_hlrx_recv_zc</arg>
         <arg name="sock_type"/>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -372,6 +411,7 @@
         <arg name="func">onload_zc_hlrx_recv_copy</arg>
         <arg name="sock_type"/>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -379,6 +419,7 @@
         <arg name="func">recvmmsg</arg>
         <arg name="sock_type"/>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -386,6 +427,7 @@
         <arg name="func">read</arg>
         <arg name="sock_type"/>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -393,6 +435,7 @@
         <arg name="func">readv</arg>
         <arg name="sock_type"/>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -400,6 +443,7 @@
         <arg name="func">recv</arg>
         <arg name="sock_type"/>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -407,6 +451,7 @@
         <arg name="func">recvfrom</arg>
         <arg name="sock_type"/>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
       <iter result="PASSED">
@@ -414,6 +459,7 @@
         <arg name="func">recvmsg</arg>
         <arg name="sock_type"/>
         <arg name="nonblock_func"/>
+        <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
     </test>

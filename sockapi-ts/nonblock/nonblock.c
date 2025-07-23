@@ -14,23 +14,28 @@
  *
  * @reference @ref XNS5 section 8.1
  *
- * @param env           Testing environment:
- *                      - @ref arg_types_env_peer2peer_all_ipv4_ipv6
- * @param sock_type     Socket type:
- *                      - @c SOCK_STREAM
- *                      - @c SOCK_DGRAM
- * @param func          Function used in the test:
- *                      - @b read()
- *                      - @b readv()
- *                      - @b recv()
- *                      - @b recvfrom()
- *                      - @b recvmsg()
- *                      - @b recvmmsg()
- *                      - @b onload_zc_recv()
- *                      - @b onload_zc_hlrx_recv_zc()
- *                      - @b onload_zc_hlrx_recv_copy()
- * @param nonblock_func Function used to set nonblocking state to socket
- *                      ("fcntl", "ioctl")
+ * @param env              Testing environment:
+ *                         - @ref arg_types_env_peer2peer_all_ipv4_ipv6
+ * @param sock_type        Socket type:
+ *                         - @c SOCK_STREAM
+ *                         - @c SOCK_DGRAM
+ * @param func             Function used in the test:
+ *                         - @b read()
+ *                         - @b readv()
+ *                         - @b recv()
+ *                         - @b recvfrom()
+ *                         - @b recvmsg()
+ *                         - @b recvmmsg()
+ *                         - @b onload_zc_recv()
+ *                         - @b onload_zc_hlrx_recv_zc()
+ *                         - @b onload_zc_hlrx_recv_copy()
+ * @param nonblock_func    Function used to set nonblocking state to socket
+ *                         ("fcntl", "ioctl")
+ * @param libc_switch_mode When we should switch to libc function after
+ *                         the moment when connection was establioshed
+ *                         (before setting the socket to be nonblocking,
+ *                         just after it, after calling testing function
+ *                         or no switch at all)
  *
  * @par Test sequence:
  *
@@ -45,6 +50,19 @@ typedef enum test_rx_mode {
     RX_BLK,
     RX_NBLK
 } test_rx_mode;
+
+typedef enum {
+    LIBC_BEFORE_NONBLOCK,
+    LIBC_AFTER_NONBLOCK,
+    LIBC_AFTER_FUNC,
+    LIBC_NONE,
+} switch_to_libc_mode_t;
+
+#define SWITCH_TO_LIBC_LIST  \
+    { "before_nb",  LIBC_BEFORE_NONBLOCK },      \
+    { "after_nb",   LIBC_AFTER_NONBLOCK },       \
+    { "after_func", LIBC_AFTER_FUNC },           \
+    { "none",       LIBC_NONE }
 
 static void check_rx_func_mode(const char *func,
                                rcf_rpc_server *pco_iut, int iut_s,
@@ -69,6 +87,7 @@ main(int argc, char *argv[])
     const struct sockaddr   *tst_addr;
 
     fdflag_set_func_type_t nonblock_func = UNKNOWN_SET_FDFLAG;
+    switch_to_libc_mode_t libc_switch_mode;
 
     TEST_START;
     TEST_GET_SOCK_TYPE(sock_type);
@@ -79,6 +98,7 @@ main(int argc, char *argv[])
     TEST_GET_ADDR(pco_iut, iut_addr);
     TEST_GET_ADDR(pco_tst, tst_addr);
     TEST_GET_FDFLAG_SET_FUNC(nonblock_func);
+    TEST_GET_ENUM_PARAM(libc_switch_mode, SWITCH_TO_LIBC_LIST);
 
     TEST_STEP("Create a pair of connected sockets on IUT and Tester "
               "of type @p sock_type.");
@@ -124,8 +144,12 @@ main(int argc, char *argv[])
                        "Checking before nonblocking state is enabled");
 
     TEST_STEP("Enable nonblocking state on the IUT socket.");
+    if (libc_switch_mode == LIBC_BEFORE_NONBLOCK)
+        pco_iut->use_libc = TRUE;
     set_sock_non_block(pco_iut, iut_s, nonblock_func == FCNTL_SET_FDFLAG,
                        TRUE);
+    if (libc_switch_mode == LIBC_AFTER_NONBLOCK)
+        pco_iut->use_libc = TRUE;
 
     TEST_STEP("Again call @p func on IUT with @c RCF_RPC_CALL, wait for "
               "a while, send data from Tester to unblock it if it was "
@@ -134,6 +158,8 @@ main(int argc, char *argv[])
               "socket to clean its receive buffer.");
     check_rx_func_mode(func, pco_iut, iut_s, pco_tst, tst_s, RX_NBLK,
                        "Checking after nonblocking state is enabled");
+    if (libc_switch_mode == LIBC_AFTER_FUNC)
+        pco_iut->use_libc = TRUE;
 
     TEST_STEP("Disable nonblocking state on the IUT socket.");
     set_sock_non_block(pco_iut, iut_s, nonblock_func == FCNTL_SET_FDFLAG,
