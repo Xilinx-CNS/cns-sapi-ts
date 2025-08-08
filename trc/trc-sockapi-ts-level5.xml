@@ -964,14 +964,14 @@
             </results>
           </iter>
         </test>
-        <test name="fcntl_nonblock" type="script">
+        <test name="derived_nonblock" type="script">
           <objective>Check that O_NONBLOCK flag can be changed from different processes by L5 and libc implementations of fcntl().</objective>
           <notes/>
           <iter result="PASSED">
             <arg name="change_iut"/>
             <arg name="child_sys_call"/>
             <arg name="env"/>
-            <arg name="fcntl_sys_call">TRUE</arg>
+            <arg name="nonblock_sys_call">TRUE</arg>
             <arg name="func"/>
             <arg name="is_pipe"/>
             <arg name="iut_sys_call"/>
@@ -993,7 +993,7 @@
             <arg name="change_iut"/>
             <arg name="child_sys_call"/>
             <arg name="env"/>
-            <arg name="fcntl_sys_call">TRUE</arg>
+            <arg name="nonblock_sys_call">TRUE</arg>
             <arg name="func"/>
             <arg name="is_pipe"/>
             <arg name="iut_sys_call"/>
@@ -1010,7 +1010,7 @@
             <arg name="change_iut"/>
             <arg name="child_sys_call"/>
             <arg name="env"/>
-            <arg name="fcntl_sys_call">FALSE</arg>
+            <arg name="nonblock_sys_call">FALSE</arg>
             <arg name="func"/>
             <arg name="is_pipe"/>
             <arg name="iut_sys_call"/>
@@ -1027,7 +1027,7 @@
             <arg name="change_iut"/>
             <arg name="child_sys_call">FALSE</arg>
             <arg name="env"/>
-            <arg name="fcntl_sys_call">TRUE</arg>
+            <arg name="nonblock_sys_call">TRUE</arg>
             <arg name="func"/>
             <arg name="is_pipe"/>
             <arg name="iut_sys_call">FALSE</arg>
@@ -1050,7 +1050,7 @@
             <arg name="change_iut"/>
             <arg name="child_sys_call">TRUE</arg>
             <arg name="env"/>
-            <arg name="fcntl_sys_call">TRUE</arg>
+            <arg name="nonblock_sys_call">TRUE</arg>
             <arg name="func"/>
             <arg name="is_pipe"/>
             <arg name="iut_sys_call">FALSE</arg>
@@ -1073,7 +1073,7 @@
             <arg name="change_iut"/>
             <arg name="child_sys_call"/>
             <arg name="env"/>
-            <arg name="fcntl_sys_call">TRUE</arg>
+            <arg name="nonblock_sys_call">TRUE</arg>
             <arg name="func"/>
             <arg name="is_pipe"/>
             <arg name="iut_sys_call">TRUE</arg>
@@ -1091,7 +1091,7 @@
             <arg name="change_iut"/>
             <arg name="child_sys_call"/>
             <arg name="env"/>
-            <arg name="fcntl_sys_call">FALSE</arg>
+            <arg name="nonblock_sys_call">FALSE</arg>
             <arg name="func"/>
             <arg name="is_pipe"/>
             <arg name="iut_sys_call"/>
@@ -1109,7 +1109,7 @@
             <arg name="change_iut"/>
             <arg name="child_sys_call"/>
             <arg name="env"/>
-            <arg name="fcntl_sys_call">TRUE</arg>
+            <arg name="nonblock_sys_call">TRUE</arg>
             <arg name="func"/>
             <arg name="is_pipe"/>
             <arg name="iut_sys_call">FALSE</arg>
@@ -1132,7 +1132,7 @@
             <arg name="change_iut"/>
             <arg name="child_sys_call"/>
             <arg name="env"/>
-            <arg name="fcntl_sys_call">TRUE</arg>
+            <arg name="nonblock_sys_call">TRUE</arg>
             <arg name="func"/>
             <arg name="is_pipe"/>
             <arg name="iut_sys_call">TRUE</arg>
@@ -1150,7 +1150,7 @@
             <arg name="change_iut"/>
             <arg name="child_sys_call"/>
             <arg name="env"/>
-            <arg name="fcntl_sys_call">FALSE</arg>
+            <arg name="nonblock_sys_call">FALSE</arg>
             <arg name="func"/>
             <arg name="is_pipe"/>
             <arg name="iut_sys_call"/>
@@ -1168,7 +1168,7 @@
             <arg name="change_iut"/>
             <arg name="child_sys_call"/>
             <arg name="env"/>
-            <arg name="fcntl_sys_call">TRUE</arg>
+            <arg name="nonblock_sys_call">TRUE</arg>
             <arg name="func"/>
             <arg name="is_pipe"/>
             <arg name="iut_sys_call">FALSE</arg>
@@ -1186,7 +1186,7 @@
             <arg name="change_iut"/>
             <arg name="child_sys_call"/>
             <arg name="env"/>
-            <arg name="fcntl_sys_call">TRUE</arg>
+            <arg name="nonblock_sys_call">TRUE</arg>
             <arg name="func"/>
             <arg name="is_pipe"/>
             <arg name="iut_sys_call"/>
@@ -1203,7 +1203,7 @@
             <arg name="change_iut"/>
             <arg name="child_sys_call"/>
             <arg name="env"/>
-            <arg name="fcntl_sys_call">TRUE</arg>
+            <arg name="nonblock_sys_call">TRUE</arg>
             <arg name="func"/>
             <arg name="is_pipe"/>
             <arg name="iut_sys_call">TRUE</arg>
@@ -1216,7 +1216,7 @@
             <arg name="change_iut"/>
             <arg name="child_sys_call"/>
             <arg name="env"/>
-            <arg name="fcntl_sys_call">FALSE</arg>
+            <arg name="nonblock_sys_call">FALSE</arg>
             <arg name="func"/>
             <arg name="is_pipe"/>
             <arg name="iut_sys_call"/>
@@ -1229,7 +1229,7 @@
             <arg name="change_iut"/>
             <arg name="child_sys_call"/>
             <arg name="env"/>
-            <arg name="fcntl_sys_call">FALSE</arg>
+            <arg name="nonblock_sys_call">FALSE</arg>
             <arg name="func"/>
             <arg name="is_pipe"/>
             <arg name="iut_sys_call"/>
@@ -1241,7 +1241,7 @@
             <arg name="change_iut"/>
             <arg name="child_sys_call"/>
             <arg name="env"/>
-            <arg name="fcntl_sys_call">TRUE</arg>
+            <arg name="nonblock_sys_call">TRUE</arg>
             <arg name="func"/>
             <arg name="is_pipe"/>
             <arg name="iut_sys_call">FALSE</arg>
@@ -1259,11 +1259,101 @@
             <arg name="change_iut"/>
             <arg name="child_sys_call"/>
             <arg name="env"/>
-            <arg name="fcntl_sys_call">TRUE</arg>
+            <arg name="nonblock_sys_call">TRUE</arg>
             <arg name="func"/>
             <arg name="is_pipe"/>
             <arg name="iut_sys_call"/>
             <arg name="nonblock_func">fcntl</arg>
+            <arg name="start_blocking">FALSE</arg>
+            <notes/>
+            <results tags="v5" key="ON-751">
+              <result value="FAILED">
+                <verdict>Check blocking state on pco_iut: Failed unexpectedly with errno RPC-EAGAIN</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="change_iut"/>
+            <arg name="child_sys_call"/>
+            <arg name="env"/>
+            <arg name="nonblock_sys_call">TRUE</arg>
+            <arg name="func"/>
+            <arg name="is_pipe"/>
+            <arg name="iut_sys_call"/>
+            <arg name="nonblock_func">ioctl</arg>
+            <arg name="start_blocking">TRUE</arg>
+            <notes/>
+            <results tags="v5" key="ON-751">
+              <result value="FAILED">
+                <verdict>Check blocking state on pco_iut: Failed with RCF_PCH-ERPCTIMEOUT errno instead of EAGAIN</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="change_iut"/>
+            <arg name="child_sys_call"/>
+            <arg name="env"/>
+            <arg name="nonblock_sys_call">TRUE</arg>
+            <arg name="func"/>
+            <arg name="is_pipe"/>
+            <arg name="iut_sys_call">TRUE</arg>
+            <arg name="nonblock_func">ioctl</arg>
+            <arg name="sock_type"/>
+            <arg name="start_blocking"/>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="change_iut"/>
+            <arg name="child_sys_call"/>
+            <arg name="env"/>
+            <arg name="nonblock_sys_call">FALSE</arg>
+            <arg name="func"/>
+            <arg name="is_pipe"/>
+            <arg name="iut_sys_call"/>
+            <arg name="nonblock_func">ioctl</arg>
+            <arg name="sock_type"/>
+            <arg name="start_blocking"/>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="change_iut"/>
+            <arg name="child_sys_call"/>
+            <arg name="env"/>
+            <arg name="nonblock_sys_call">FALSE</arg>
+            <arg name="func"/>
+            <arg name="is_pipe"/>
+            <arg name="iut_sys_call"/>
+            <arg name="nonblock_func">ioctl</arg>
+            <arg name="start_blocking"/>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="change_iut"/>
+            <arg name="child_sys_call"/>
+            <arg name="env"/>
+            <arg name="nonblock_sys_call">TRUE</arg>
+            <arg name="func"/>
+            <arg name="is_pipe"/>
+            <arg name="iut_sys_call">FALSE</arg>
+            <arg name="nonblock_func">ioctl</arg>
+            <arg name="sock_type"/>
+            <arg name="start_blocking">FALSE</arg>
+            <notes/>
+            <results tags="v5" key="ON-751">
+              <result value="FAILED">
+                <verdict>Check blocking state on pco_iut: Failed unexpectedly with errno RPC-EAGAIN</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="change_iut"/>
+            <arg name="child_sys_call"/>
+            <arg name="env"/>
+            <arg name="nonblock_sys_call">TRUE</arg>
+            <arg name="func"/>
+            <arg name="is_pipe"/>
+            <arg name="iut_sys_call"/>
+            <arg name="nonblock_func">ioctl</arg>
             <arg name="start_blocking">FALSE</arg>
             <notes/>
             <results tags="v5" key="ON-751">
