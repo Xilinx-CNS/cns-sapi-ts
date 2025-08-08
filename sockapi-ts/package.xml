@@ -1032,7 +1032,7 @@ Sending and receiving functions
         </enum>
 
         <enum name="fd_ctl_type">
-            <value reqs="FIONBIO">fcntl</value>
+            <value reqs="FCNTL">fcntl</value>
             <value reqs="IOCTLS">ioctl</value>
         </enum>
 
