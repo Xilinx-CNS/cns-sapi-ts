@@ -13,7 +13,7 @@ tests = [
     'close_read',
     'close_shutdown_socket',
     'close_udp_readable_socket',
-    'fcntl_nonblock',
+    'derived_nonblock',
     'nonblock',
     'nonblock_handover',
     'onload_msg_recv_os_inline',

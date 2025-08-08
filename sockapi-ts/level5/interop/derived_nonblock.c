@@ -7,11 +7,11 @@
  * $Id$
  */
 
-/** @page level5-interop-fcntl_nonblock Interoperability of libc and L5 implementations of fcntl() O_NONBLOCK and socket()/accept4()/pipe2() (SOCK|O)_NONBLOCK flags
+/** @page level5-interop-fcntl_nonblock Interoperability of libc and L5 implementations of fcntl() O_NONBLOCK, ioctl() FIONBIO and socket()/accept4()/pipe2() (SOCK|O)_NONBLOCK flags
  *
  * @objective Check that @c O_NONBLOCK flag can be changed from
  *            different processes by @e L5 and @e libc implementations
- *            of @b fcntl().
+ *            of @b fcntl() and @b ioctl().
  *
  * @type interop
  *
@@ -24,15 +24,15 @@
  *                          @b readv(), @b write(), @b writev(),
  *                          @b send() or @b recv().
  * @param nonblock_func     Function used to get fd with NONBLOCK flag
- *                          ("socket", "accept4", "fcntl", "pipe2")
+ *                          ("socket", "accept4", "fcntl", "pipe2". "ioctl")
  *                          initially
- * @param fcntl_sys_call    Whether system provided @b fcntl() function
- *                          should be used instead of vendor-specific one
- *                          (This parameter only has sense when we have
+ * @param nonblock_sys_call Whether system provided @b fcntl() / @b ioctl()
+ *                          function should be used instead of vendor-specific
+ *                          one. (This parameter only has sense when we have
  *                          alternative TCP/IP stack that provides
  *                          socket API, along with system "libc" library)
- *                          Set it to TRUE when you want to use @b fcntl()
- *                          from "libc".
+ *                          Set it to TRUE when you want to use @b fcntl() /
+ *                          @b ioctl() from "libc".
  * @param iut_sys_call      Whether system provided @b func function
  *                          should be used instead of vendor-specific one
  *                          on @p pco_iut
@@ -62,13 +62,14 @@
  *    @c ACCEPT4_SET_FDFLAG, @c SOCKET_SET_FDFLAG or @c PIPE2_SET_FDFLAG,
  *    and @p start_blocking is FALSE, set @c SOCK_NONBLOCK flag with
  *    help of function defined by @p nonblock_func.
- * -# If @p nonblock_func is @c FCNTL_SET_FDFLAG, set (non)blocking
- *    mode of @p iut_fd according to @p start_blocking parameter using
- *    @b fcntl(@c F_SETFL) call.
+ * -# If @p nonblock_func is @c FCNTL_SET_FDFLAG or @c IOCTL_SET_FD_FLAG,
+ *    set (non)blocking mode of @p iut_fd according to @p start_blocking
+ *    parameter using @b fcntl(@c F_SETFL) or @b ioctl() call.
  * -# @b fork() + @b exec() @p pco_iut, obtain @p pco_iut_child RPC server;
- * -# Change blocking mode of @p iut_fd using @b fcnlt(@c F_SETFL) call on
- *    @p pco_iut or @p pco_iut_child according to @p change_iut.
- *    Library should be reset according to @p fcntl_sys_call;
+ * -# Change blocking mode of @p iut_fd using @b fcntl(@c F_SETFL) /
+ *    @b ioctl call on @p pco_iut or @p pco_iut_child according to
+ *    @p change_iut.
+ *    Library should be reset according to @p nonblock_sys_call;
  * -# If @p func is send function, overfill buffers of @p iut_fd.
  * -# If @p child_sys_call is @c TRUE, reset lib on @p pco_iut_child
  *    permanently.
@@ -86,31 +87,13 @@
 
 #define DATA_BULK               1024
 
-/**
- * Set O_NONBLOCK flag using fcntl(F_SETFL) call.
- *
- * @param _pco      RPC server handle
- * @param _fd       file descriptor of socket or pipe
- * @param _flag     Set O_NONBLOCK flag or not 
- * @param _sys      whether to use sys_call or not
- */
-#define TST_SET_NONBLOCK(_pco, _fd, _flag, _sys) \
-    do                                                      \
-    {                                                       \
-        int newflags = fdflags;                             \
-                                                            \
-        if((_flag))                                         \
-            newflags = fdflags | RPC_O_NONBLOCK;            \
-        (_pco)->use_libc_once = _sys;                       \
-        rpc_fcntl((_pco), (_fd), RPC_F_SETFL, newflags);  \
-    } while (0)
-
 int
 main(int argc, char *argv[])
 {
     rcf_rpc_server         *pco_iut = NULL;
     rcf_rpc_server         *pco_tst = NULL;
     rcf_rpc_server         *pco_iut_child = NULL;
+    rcf_rpc_server         *next_pco = NULL;
 
     int                     iut_fd = -1;
     int                     tst_fd = -1;
@@ -123,7 +106,7 @@ main(int argc, char *argv[])
     te_bool                 is_send = FALSE;
     te_bool                 iut_sys_call;
     te_bool                 child_sys_call;
-    te_bool                 fcntl_sys_call;
+    te_bool                 nonblock_sys_call;
     te_bool                 start_blocking;
     te_bool                 change_iut;
     te_bool                 is_pipe;
@@ -141,7 +124,7 @@ main(int argc, char *argv[])
     TEST_GET_FUNC(func, is_send);
     TEST_GET_BOOL_PARAM(iut_sys_call);
     TEST_GET_BOOL_PARAM(child_sys_call);
-    TEST_GET_BOOL_PARAM(fcntl_sys_call);
+    TEST_GET_BOOL_PARAM(nonblock_sys_call);
     TEST_GET_BOOL_PARAM(start_blocking);
     TEST_GET_BOOL_PARAM(change_iut);
     TEST_GET_BOOL_PARAM(is_pipe);
@@ -226,29 +209,26 @@ main(int argc, char *argv[])
         TEST_FAIL("Unexpected O_NONBLOCK flag on just created "
                   "file descriptor.");
 
-    if (!(fdflags & RPC_O_NONBLOCK) && !start_blocking
-        && nonblock_func != FCNTL_SET_FDFLAG)
+    if (!(fdflags & RPC_O_NONBLOCK) && !start_blocking &&
+          nonblock_func != FCNTL_SET_FDFLAG &&
+          nonblock_func != IOCTL_SET_FDFLAG)
         TEST_FAIL("O_NONBLOCK flag wasn't set by socket or accept4 "
                   "or pipe2 functions.");
 
-    /*
-     * At least in Linux O_NONBLOCK is equal to O_NDELAY,
-     * but in TE RPC_O_NONBLOCK and RPC_O_DELAY are not
-     * equal, so, we will have both different bits set or not
-     * simultaneously in any case and we must turn off both
-     * ones to turn off blocking mode.
-     */
-    fdflags &= ~RPC_O_NONBLOCK & ~RPC_O_NDELAY;
-
-    if (nonblock_func == FCNTL_SET_FDFLAG)
-        TST_SET_NONBLOCK(pco_iut , iut_fd, !start_blocking, FALSE);
+    if (nonblock_func == FCNTL_SET_FDFLAG ||
+        nonblock_func == IOCTL_SET_FDFLAG)
+        set_sock_non_block(pco_iut, iut_fd,
+                           nonblock_func != IOCTL_SET_FDFLAG, !start_blocking);
 
     CHECK_RC(rcf_rpc_server_fork_exec(pco_iut, "iut_child",
                                       &pco_iut_child));
 
-    TST_SET_NONBLOCK(change_iut ? pco_iut : pco_iut_child, iut_fd,
-                     start_blocking,
-                     fcntl_sys_call);
+    next_pco = change_iut ? pco_iut : pco_iut_child;
+    use_libc_old = next_pco->use_libc;
+    next_pco->use_libc = nonblock_sys_call;
+    set_sock_non_block(next_pco, iut_fd,
+                       nonblock_func != IOCTL_SET_FDFLAG, start_blocking);
+    next_pco->use_libc = use_libc_old;
 
     if (is_send)
     {

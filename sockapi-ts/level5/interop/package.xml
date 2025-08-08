@@ -248,7 +248,7 @@
                 </arg>
 
                 <run>
-                    <script name="fcntl_nonblock"/>
+                    <script name="derived_nonblock"/>
                     <arg name="is_pipe">
                         <value>FALSE</value>
                     </arg>
@@ -258,7 +258,7 @@
                         <value>TRUE</value>
                         <value>FALSE</value>
                     </arg>
-                    <arg name="fcntl_sys_call" list="iut_sys">
+                    <arg name="nonblock_sys_call" list="iut_sys">
                         <value>TRUE</value>
                         <value>FALSE</value>
                         <value>FALSE</value>
@@ -278,11 +278,12 @@
                     </arg>
                     <arg name="nonblock_func">
                         <value>fcntl</value>
+                        <value>ioctl</value>
                     </arg>
                 </run>
 
                 <run>
-                    <script name="fcntl_nonblock"/>
+                    <script name="derived_nonblock"/>
                     <arg name="is_pipe">
                         <value>FALSE</value>
                     </arg>
@@ -294,7 +295,7 @@
                         <value>FALSE</value>
                         <value>TRUE</value>
                     </arg>
-                    <arg name="fcntl_sys_call" list="iut_sys">
+                    <arg name="nonblock_sys_call" list="iut_sys">
                         <value>TRUE</value>
                         <value>TRUE</value>
                         <value>TRUE</value>
@@ -320,18 +321,19 @@
                     </arg>
                     <arg name="nonblock_func">
                         <value>fcntl</value>
+                        <value>ioctl</value>
                     </arg>
                 </run>
 
                 <run>
-                    <script name="fcntl_nonblock">
+                    <script name="derived_nonblock">
                       <req id="SOCK_NONBLOCK"/>
                     </script>
                     <arg name="is_pipe">
                         <value>FALSE</value>
                     </arg>
                     <arg name="change_iut" type="boolean"/>
-                    <arg name="fcntl_sys_call" type="syscall_bool"/>
+                    <arg name="nonblock_sys_call" type="syscall_bool"/>
                     <arg name="iut_sys_call" type="syscall_bool"/>
                     <arg name="start_blocking" type="boolean">
                         <value>FALSE</value>
@@ -352,7 +354,7 @@
                 </run>
 
                 <run>
-                    <script name="fcntl_nonblock">
+                    <script name="derived_nonblock">
                       <req id="ACCEPT4"/>
                       <req id="SOCK_NONBLOCK"/>
                     </script>
@@ -360,7 +362,7 @@
                         <value>FALSE</value>
                     </arg>
                     <arg name="change_iut" type="boolean"/>
-                    <arg name="fcntl_sys_call" type="syscall_bool"/>
+                    <arg name="nonblock_sys_call" type="syscall_bool"/>
                     <arg name="iut_sys_call" type="syscall_bool"/>
                     <arg name="start_blocking" type="boolean">
                         <value>FALSE</value>
@@ -379,7 +381,7 @@
             </session>
         </run>
         <run>
-            <script name="fcntl_nonblock">
+            <script name="derived_nonblock">
             </script>
             <arg name="env" ref="env.iut_only"/>
             <arg name="is_pipe">
@@ -392,7 +394,7 @@
             </arg>
             <arg name="start_blocking" type="boolean"/>
             <arg name="change_iut" type="boolean"/>
-            <arg name="fcntl_sys_call" type="boolean"/>
+            <arg name="nonblock_sys_call" type="boolean"/>
             <arg name="iut_sys_call" type="boolean"/>
             <arg name="func">
                 <value>read</value>
@@ -400,6 +402,7 @@
             </arg>
             <arg name="nonblock_func">
                 <value>fcntl</value>
+                <value>ioctl</value>
                 <value reqs="PIPE2">pipe2</value>
             </arg>
         </run>
