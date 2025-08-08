@@ -439,6 +439,7 @@
                     <arg name="nonblock_func">
                         <value>fcntl</value>
                         <value reqs="SOCK_NONBLOCK">socket</value>
+                        <value>ioctl</value>
                     </arg>
                 </run>
             </session>
