@@ -52,9 +52,9 @@
             <arg name="nonblock_func" type="fd_ctl_type"/>
             <arg name="libc_switch_mode">
               <value>none</value>
-              <value>before_nb</value>
-              <value>after_nb</value>
-              <value>after_func</value>
+              <value reqs="ONLOAD_ONLY,OOL_INTEROP">before_nb</value>
+              <value reqs="ONLOAD_ONLY,OOL_INTEROP">after_nb</value>
+              <value reqs="ONLOAD_ONLY,OOL_INTEROP">after_func</value>
             </arg>
         </run>
 
