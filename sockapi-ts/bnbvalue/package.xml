@@ -663,7 +663,9 @@
             <arg name="blocking_splice" type="boolean"/>
             <arg name="bound_socket" type="boolean"/>
             <arg name="set_move" type="boolean"/>
-            <arg name="zero_tx_buf_len" type="boolean"/>
+            <arg name="zero_tx_buf_len" type="boolean">
+                <value>FALSE</value>
+            </arg>
             <arg name="unblock_same_sock" type="boolean">
                 <value>FALSE</value>
             </arg>
@@ -676,6 +678,142 @@
                 <value>TRUE</value>
                 <value>FALSE</value>
                 <value>FALSE</value>
+            </arg>
+        </run>
+        <run>
+            <script name="func_splice_nonconn_dgram">
+                <req id="SOCK_DGRAM"/>
+                <req id="SENDMSG_RECVMSG"/>
+            </script>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="blocking_sock" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="blocking_pipe" type="boolean"/>
+            <arg name="blocking_splice" type="boolean"/>
+            <arg name="bound_socket" type="boolean"/>
+            <arg name="set_move" type="boolean"/>
+            <arg name="zero_tx_buf_len" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="unblock_same_sock" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="pipe_with_data" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="use_sock_as_in" list="">
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+        <run>
+            <script name="func_splice_nonconn_dgram">
+                <req id="SOCK_DGRAM"/>
+                <req id="SENDMSG_RECVMSG"/>
+            </script>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="blocking_sock" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="blocking_pipe" type="boolean"/>
+            <arg name="blocking_splice" type="boolean"/>
+            <arg name="bound_socket" type="boolean"/>
+            <arg name="set_move" type="boolean"/>
+            <arg name="zero_tx_buf_len" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="unblock_same_sock" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="pipe_with_data" list="">
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="use_sock_as_in" list="">
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+        </run>
+        <run>
+            <script name="func_splice_nonconn_dgram">
+                <req id="SOCK_DGRAM"/>
+                <req id="SENDMSG_RECVMSG"/>
+            </script>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="blocking_sock" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="blocking_pipe" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="blocking_splice" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="bound_socket" type="boolean"/>
+            <arg name="set_move" type="boolean"/>
+            <arg name="zero_tx_buf_len" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="unblock_same_sock" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="pipe_with_data">
+                <value>FALSE</value>
+            </arg>
+            <arg name="use_sock_as_in">
+                <value>TRUE</value>
+            </arg>
+        </run>
+        <run>
+            <script name="func_splice_nonconn_dgram">
+                <req id="SOCK_DGRAM"/>
+                <req id="SENDMSG_RECVMSG"/>
+                <!-- See ON-16796 -->
+                <req id="BROKEN"/>
+            </script>
+            <arg name="env">
+                <value ref="env.iut_ucast"/>
+                <value ref="env.iut_ucast_ipv6"/>
+            </arg>
+            <arg name="blocking_sock" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="blocking_pipe" type="boolean" list="">
+                <value>FALSE</value>
+                <value>TRUE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="blocking_splice" type="boolean" list="">
+                <value>TRUE</value>
+                <value>FALSE</value>
+                <value>FALSE</value>
+            </arg>
+            <arg name="bound_socket" type="boolean"/>
+            <arg name="set_move" type="boolean"/>
+            <arg name="zero_tx_buf_len" type="boolean">
+                <value>TRUE</value>
+            </arg>
+            <arg name="unblock_same_sock" type="boolean">
+                <value>FALSE</value>
+            </arg>
+            <arg name="pipe_with_data">
+                <value>FALSE</value>
+            </arg>
+            <arg name="use_sock_as_in">
+                <value>TRUE</value>
             </arg>
         </run>
         <run>
