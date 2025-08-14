@@ -18,10 +18,13 @@
         <arg name="env"/>
         <arg name="iomux">ppoll</arg>
         <notes/>
-        <results tags="linux&amp;syscall">
+        <results tags="linux&amp;syscall&amp;!v5">
           <result value="FAILED">
             <verdict>Timeout parameter was modified by ppoll() function</verdict>
           </result>
+        </results>
+        <results tags="linux&amp;syscall&amp;v5"  key="ON-16726">
+          <result value="PASSED"/>
         </results>
       </iter>
       <iter result="PASSED">
