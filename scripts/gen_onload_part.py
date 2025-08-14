@@ -253,9 +253,6 @@ def fix_testing_parms(host, ools, reqs, sl, slice_name,
 
         xf_deny_list += ["af_xdp_no_filters", "af_xdp", "zc_af_xdp"]
 
-        # ON-16745
-        xf_deny_list += ["scooby"]
-
         for item in xf_deny_list:
             remove_silent(ools, item)
 
