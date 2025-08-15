@@ -4106,7 +4106,7 @@
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
-        <arg name="zero_tx_buf_len"/>
+        <arg name="zero_tx_buf_len">TRUE</arg>
         <arg name="pipe_with_data"/>
         <arg name="use_sock_as_in">TRUE</arg>
         <arg name="blocking_pipe"/>
@@ -4115,6 +4115,47 @@
         <arg name="bound_socket"/>
         <arg name="set_move"/>
         <arg name="unblock_same_sock"/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="zero_tx_buf_len">FALSE</arg>
+        <arg name="pipe_with_data">TRUE</arg>
+        <arg name="use_sock_as_in">TRUE</arg>
+        <arg name="blocking_pipe"/>
+        <arg name="blocking_sock">TRUE</arg>
+        <arg name="blocking_splice"/>
+        <arg name="bound_socket"/>
+        <arg name="set_move"/>
+        <arg name="unblock_same_sock"/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="zero_tx_buf_len">FALSE</arg>
+        <arg name="pipe_with_data">FALSE</arg>
+        <arg name="use_sock_as_in">TRUE</arg>
+        <arg name="blocking_pipe"/>
+        <arg name="blocking_sock">TRUE</arg>
+        <arg name="blocking_splice"/>
+        <arg name="bound_socket"/>
+        <arg name="set_move"/>
+        <arg name="unblock_same_sock">FALSE</arg>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="zero_tx_buf_len">FALSE</arg>
+        <arg name="pipe_with_data">FALSE</arg>
+        <arg name="use_sock_as_in">TRUE</arg>
+        <arg name="blocking_pipe"/>
+        <arg name="blocking_sock">TRUE</arg>
+        <arg name="blocking_splice"/>
+        <arg name="bound_socket"/>
+        <arg name="set_move"/>
+        <arg name="unblock_same_sock">TRUE</arg>
+        <results tags="v5" key="ON-16792">
+          <result value="FAILED">
+            <verdict>write() is unexpectedly not completed when UDP socket connected to itself</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
