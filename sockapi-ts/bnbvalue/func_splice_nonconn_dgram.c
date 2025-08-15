@@ -179,7 +179,24 @@ main(int argc, char *argv[])
                 CHECK_RC(rpc_bind(pco_aux, iut_socket, iut_addr));
             if (unblock_same_sock)
             {
+                te_bool op_is_completed;
+
                 CHECK_RC(rpc_connect(pco_aux, iut_socket, iut_addr));
+                pco_aux->op = RCF_RPC_CALL;
+                rc = rpc_write(pco_aux, iut_socket, msg,
+                               strlen(msg) + 1);
+                if (rc != 0)
+                    TEST_VERDICT("write() is unexpectedly failed to call "
+                                 "when UDP socket connected to itself");
+
+                TAPI_WAIT_NETWORK;
+                CHECK_RC(rcf_rpc_server_is_op_done(pco_aux, &op_is_completed));
+                if (!op_is_completed)
+                    TEST_VERDICT("write() is unexpectedly not completed "
+                                 "when UDP socket connected to itself");
+                pco_iut->op = RCF_RPC_WAIT;
+                RPC_AWAIT_IUT_ERROR(pco_aux);
+
                 RPC_WRITE(rc, pco_aux, iut_socket, msg,
                           strlen(msg) + 1);
             }
