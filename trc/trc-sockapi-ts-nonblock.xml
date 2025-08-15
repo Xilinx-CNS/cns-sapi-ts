@@ -413,7 +413,119 @@
         <arg name="env"/>
         <arg name="func">read</arg>
         <arg name="sock_type"/>
-        <arg name="nonblock_func"/>
+        <arg name="nonblock_func">fcntl</arg>
+        <arg name="libc_switch_mode"/>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">read</arg>
+        <arg name="sock_type"/>
+        <arg name="nonblock_func">ioctl</arg>
+        <arg name="libc_switch_mode">none</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">read</arg>
+        <arg name="sock_type"/>
+        <arg name="nonblock_func">ioctl</arg>
+        <arg name="libc_switch_mode">before_nb</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">read</arg>
+        <arg name="sock_type"/>
+        <arg name="nonblock_func">ioctl</arg>
+        <arg name="libc_switch_mode">after_func</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="func">read</arg>
+        <arg name="sock_type"/>
+        <arg name="nonblock_func">ioctl</arg>
+        <arg name="libc_switch_mode">after_nb</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="func">read</arg>
+        <arg name="sock_type"/>
+        <arg name="nonblock_func">ioctl</arg>
+        <arg name="libc_switch_mode">after_nb</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="func">read</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="nonblock_func">ioctl</arg>
+        <arg name="libc_switch_mode">after_nb</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="func">read</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="nonblock_func">ioctl</arg>
+        <arg name="libc_switch_mode">after_nb</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="func">read</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="nonblock_func">ioctl</arg>
+        <arg name="libc_switch_mode">after_nb</arg>
+        <results tags="v5" key="ON-16838">
+          <result value="FAILED">
+            <verdict>Checking after nonblocking state is enabled: tested function succeeded instead of failing with EAGAIN</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="func">read</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="nonblock_func">ioctl</arg>
+        <arg name="libc_switch_mode">after_nb</arg>
+        <results tags="v5" key="ON-16838">
+          <result value="FAILED">
+            <verdict>Checking after nonblocking state is enabled: tested function succeeded instead of failing with EAGAIN</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="func">read</arg>
+        <arg name="sock_type"/>
+        <arg name="nonblock_func">ioctl</arg>
+        <arg name="libc_switch_mode">after_nb</arg>
+        <results tags="v5" key="ON-16838">
+          <result value="FAILED">
+            <verdict>Checking after nonblocking state is enabled: tested function succeeded instead of failing with EAGAIN</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="func">read</arg>
+        <arg name="sock_type"/>
+        <arg name="nonblock_func">ioctl</arg>
+        <arg name="libc_switch_mode">after_nb</arg>
+        <results tags="v5" key="ON-16838">
+          <result value="FAILED">
+            <verdict>Checking after nonblocking state is enabled: tested function succeeded instead of failing with EAGAIN</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">readv</arg>
+        <arg name="sock_type"/>
+        <arg name="nonblock_func">fcntl</arg>
         <arg name="libc_switch_mode"/>
         <notes/>
       </iter>
@@ -421,9 +533,105 @@
         <arg name="env"/>
         <arg name="func">readv</arg>
         <arg name="sock_type"/>
-        <arg name="nonblock_func"/>
-        <arg name="libc_switch_mode"/>
+        <arg name="nonblock_func">ioctl</arg>
+        <arg name="libc_switch_mode">none</arg>
         <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">readv</arg>
+        <arg name="sock_type"/>
+        <arg name="nonblock_func">ioctl</arg>
+        <arg name="libc_switch_mode">before_nb</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="func">readv</arg>
+        <arg name="sock_type"/>
+        <arg name="nonblock_func">ioctl</arg>
+        <arg name="libc_switch_mode">after_func</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <arg name="func">readv</arg>
+        <arg name="sock_type"/>
+        <arg name="nonblock_func">ioctl</arg>
+        <arg name="libc_switch_mode">after_nb</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <arg name="func">readv</arg>
+        <arg name="sock_type"/>
+        <arg name="nonblock_func">ioctl</arg>
+        <arg name="libc_switch_mode">after_nb</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="func">readv</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="nonblock_func">ioctl</arg>
+        <arg name="libc_switch_mode">after_nb</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="func">readv</arg>
+        <arg name="sock_type">SOCK_STREAM</arg>
+        <arg name="nonblock_func">ioctl</arg>
+        <arg name="libc_switch_mode">after_nb</arg>
+        <notes/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <arg name="func">readv</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="nonblock_func">ioctl</arg>
+        <arg name="libc_switch_mode">after_nb</arg>
+        <results tags="v5" key="ON-16838">
+          <result value="FAILED">
+            <verdict>Checking after nonblocking state is enabled: tested function succeeded instead of failing with EAGAIN</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <arg name="func">readv</arg>
+        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="nonblock_func">ioctl</arg>
+        <arg name="libc_switch_mode">after_nb</arg>
+        <results tags="v5" key="ON-16838">
+          <result value="FAILED">
+            <verdict>Checking after nonblocking state is enabled: tested function succeeded instead of failing with EAGAIN</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer</arg>
+        <arg name="func">readv</arg>
+        <arg name="sock_type"/>
+        <arg name="nonblock_func">ioctl</arg>
+        <arg name="libc_switch_mode">after_nb</arg>
+        <results tags="v5" key="ON-16838">
+          <result value="FAILED">
+            <verdict>Checking after nonblocking state is enabled: tested function succeeded instead of failing with EAGAIN</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <arg name="func">readv</arg>
+        <arg name="sock_type"/>
+        <arg name="nonblock_func">ioctl</arg>
+        <arg name="libc_switch_mode">after_nb</arg>
+        <results tags="v5" key="ON-16838">
+          <result value="FAILED">
+            <verdict>Checking after nonblocking state is enabled: tested function succeeded instead of failing with EAGAIN</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
