@@ -244,12 +244,10 @@ def fix_testing_parms(host, ools, reqs, sl, slice_name,
     if host in params["xf_host"]:
         xf_deny_list = ["fw_low_latency", "fw_full_featured"]
 
+        # ON-16845
         xf_deny_list += ["rss_scalable",
                          "scalable_active_passive",
-                         "one_cluster",
                          ]
-        xf_deny_list += ["scalable", "scalable_active", "scalable_passive"]
-        xf_deny_list += ["scalable_iut", "scalable_any"]
 
         xf_deny_list += ["af_xdp_no_filters", "af_xdp", "zc_af_xdp"]
 
