@@ -1457,19 +1457,24 @@
           </iter>
           <iter result="PASSED">
             <arg name="env"/>
-            <arg name="use_libc"/>
+            <arg name="use_libc">TRUE</arg>
             <arg name="nonblock_func">ioctl</arg>
-            <arg name="sock_type">SOCK_DGRAM</arg>
+            <arg name="sock_type"/>
             <arg name="test_func"/>
             <notes/>
           </iter>
           <iter result="PASSED">
             <arg name="env"/>
-            <arg name="use_libc"/>
+            <arg name="use_libc">FALSE</arg>
             <arg name="nonblock_func">ioctl</arg>
-            <arg name="sock_type">SOCK_STREAM</arg>
+            <arg name="sock_type"/>
             <arg name="test_func"/>
             <notes/>
+            <results tags="v5" key="ON-16838">
+              <result value="FAILED">
+                <verdict>Test function is not completed</verdict>
+              </result>
+            </results>
           </iter>
         </test>
         <test name="close_fdopen_fclose" type="script">
