@@ -4106,15 +4106,68 @@
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
-        <arg name="zero_tx_buf_len">TRUE</arg>
+        <arg name="zero_tx_buf_len"/>
         <arg name="pipe_with_data"/>
-        <arg name="use_sock_as_in">TRUE</arg>
+        <arg name="use_sock_as_in">FALSEE</arg>
         <arg name="blocking_pipe"/>
         <arg name="blocking_sock">TRUE</arg>
         <arg name="blocking_splice"/>
         <arg name="bound_socket"/>
         <arg name="set_move"/>
         <arg name="unblock_same_sock"/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="zero_tx_buf_len">TRUE</arg>
+        <arg name="pipe_with_data"/>
+        <arg name="use_sock_as_in">TRUE</arg>
+        <arg name="blocking_pipe">FALSE</arg>
+        <arg name="blocking_sock">TRUE</arg>
+        <arg name="blocking_splice"/>
+        <arg name="bound_socket"/>
+        <arg name="set_move"/>
+        <arg name="unblock_same_sock"/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="zero_tx_buf_len">TRUE</arg>
+        <arg name="pipe_with_data"/>
+        <arg name="use_sock_as_in">TRUE</arg>
+        <arg name="blocking_pipe">TRUE</arg>
+        <arg name="blocking_sock">TRUE</arg>
+        <arg name="blocking_splice">FALSE</arg>
+        <arg name="bound_socket"/>
+        <arg name="set_move"/>
+        <arg name="unblock_same_sock"/>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="zero_tx_buf_len">TRUE</arg>
+        <arg name="pipe_with_data"/>
+        <arg name="use_sock_as_in">TRUE</arg>
+        <arg name="blocking_pipe">TRUE</arg>
+        <arg name="blocking_sock">TRUE</arg>
+        <arg name="blocking_splice">TRUE</arg>
+        <arg name="bound_socket"/>
+        <arg name="set_move"/>
+        <arg name="unblock_same_sock">TRUE</arg>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="zero_tx_buf_len">TRUE</arg>
+        <arg name="pipe_with_data"/>
+        <arg name="use_sock_as_in">TRUE</arg>
+        <arg name="blocking_pipe">TRUE</arg>
+        <arg name="blocking_sock">TRUE</arg>
+        <arg name="blocking_splice">TRUE</arg>
+        <arg name="bound_socket"/>
+        <arg name="set_move"/>
+        <arg name="unblock_same_sock">FALSE</arg>
+        <results tags="v5" key="ON-16793">
+          <result value="FAILED">
+            <verdict>splice() is unexpectedly blocked</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env"/>
