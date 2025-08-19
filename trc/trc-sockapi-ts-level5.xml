@@ -1312,8 +1312,55 @@
             <arg name="iut_sys_call"/>
             <arg name="nonblock_func">ioctl</arg>
             <arg name="sock_type"/>
-            <arg name="start_blocking"/>
+            <arg name="start_blocking">FALSE</arg>
             <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="change_iut"/>
+            <arg name="child_sys_call">FALSE</arg>
+            <arg name="env"/>
+            <arg name="nonblock_sys_call">FALSE</arg>
+            <arg name="func"/>
+            <arg name="is_pipe"/>
+            <arg name="iut_sys_call">FALSE</arg>
+            <arg name="nonblock_func">ioctl</arg>
+            <arg name="sock_type"/>
+            <arg name="start_blocking">TRUE</arg>
+            <notes/>
+          </iter>
+          <iter result="PASSED">
+            <arg name="change_iut"/>
+            <arg name="child_sys_call">TRUE</arg>
+            <arg name="env"/>
+            <arg name="nonblock_sys_call">FALSE</arg>
+            <arg name="func"/>
+            <arg name="is_pipe"/>
+            <arg name="iut_sys_call">FALSE</arg>
+            <arg name="nonblock_func">ioctl</arg>
+            <arg name="sock_type"/>
+            <arg name="start_blocking">TRUE</arg>
+            <results tags="v5" key="ON-16838">
+              <result value="FAILED">
+                <verdict>Check blocking state on pco_iut_child: Failed with RCF_PCH-ERPCTIMEOUT errno instead of EAGAIN</verdict>
+              </result>
+            </results>
+          </iter>
+          <iter result="PASSED">
+            <arg name="change_iut"/>
+            <arg name="child_sys_call"/>
+            <arg name="env"/>
+            <arg name="nonblock_sys_call">FALSE</arg>
+            <arg name="func"/>
+            <arg name="is_pipe"/>
+            <arg name="iut_sys_call">TRUE</arg>
+            <arg name="nonblock_func">ioctl</arg>
+            <arg name="sock_type"/>
+            <arg name="start_blocking">TRUE</arg>
+            <results tags="v5" key="ON-16838">
+              <result value="FAILED">
+                <verdict>Check blocking state on pco_iut: Failed with RCF_PCH-ERPCTIMEOUT errno instead of EAGAIN</verdict>
+              </result>
+            </results>
           </iter>
           <iter result="PASSED">
             <arg name="change_iut"/>
