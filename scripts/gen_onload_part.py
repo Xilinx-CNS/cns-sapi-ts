@@ -251,6 +251,9 @@ def fix_testing_parms(host, ools, reqs, sl, slice_name,
 
         xf_deny_list += ["af_xdp_no_filters", "af_xdp", "zc_af_xdp"]
 
+        if "rss_scalable" in ools or "scalable_active_passive" in ools:
+            remove_silent(ools, "scalable_any", "scalable_iut")
+
         for item in xf_deny_list:
             remove_silent(ools, item)
 
