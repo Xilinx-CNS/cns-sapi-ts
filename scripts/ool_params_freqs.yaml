@@ -52,3 +52,4 @@
 - {null: 1, zc_reg_huge: 1, zc_reg_huge_align: 1}
 - {null: 1, urg_ignore: 1, urg_allow: 1}
 - {mcast_send0: 1, mcast_send1: 1, mcast_send2: 1, mcast_send3: 1}
+- {null: 1, shrub_controller: 1}
