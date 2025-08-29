@@ -285,6 +285,14 @@ copy_onload_tools(rcf_rpc_server *pco_iut)
         if (tapi_onload_run())
         {
             copy_onload_tool(pco_iut->ta, path, agt_dir,
+                             "../../scripts/onload_tcpdump",
+                             "te_onload_tcpdump");
+
+            copy_onload_tool(pco_iut->ta, path, agt_dir,
+                             "tools/ip/onload_tcpdump.bin",
+                             "onload_tcpdump.bin");
+
+            copy_onload_tool(pco_iut->ta, path, agt_dir,
                              "tools/ip/onload_stackdump",
                              "te_onload_stdump");
 
