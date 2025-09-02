@@ -9196,6 +9196,15 @@
         <notes/>
       </iter>
     </test>
+    <test name="rst_pkt_without_ack" type="script">
+      <objective>Test that RST in response to packet without ACK-bit set contains correct ACK</objective>
+      <notes/>
+      <iter result="PASSED">
+        <arg name="env"/>
+        <arg name="tcpdump_mode"/>
+        <notes/>
+      </iter>
+    </test>
     <test name="rst_send_partial" type="script">
       <objective>Check that after receiving RST packet blocked send() finishes correctly</objective>
       <notes/>

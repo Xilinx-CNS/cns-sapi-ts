@@ -43,6 +43,7 @@ tests = [
     'peer_large_window',
     'prologue_timeouts_init',
     'recv_unblock_fin',
+    'rst_pkt_without_ack',
     'rst_send_partial',
     'rtt_calc',
     'same_tuple_new_isn',
