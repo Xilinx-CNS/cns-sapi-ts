@@ -3333,6 +3333,19 @@
         </run>
 
         <run>
+          <script name="rst_pkt_without_ack"/>
+          <arg name="env">
+            <value ref="env.peer2peer"/>
+            <value ref="env.peer2peer_ipv6"/>
+          </arg>
+          <arg name="tcpdump_mode">
+            <value>none</value>
+            <value>linux</value>
+            <value reqs="ONLOAD_ONLY">onload</value>
+          </arg>
+        </run>
+
+        <run>
           <script name="rst_send_partial"/>
           <arg name="env">
             <value ref="env.peer2peer"/>
