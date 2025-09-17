@@ -25,14 +25,6 @@
 #include "extensions.h"
 #include "iomux.h"
 
-#define CHECK_DATA(_buf, _buf_len, _got_buf, _got_buf_len) \
-do {                                             \
-    if (_got_buf_len != _buf_len)                \
-        TEST_FAIL("Only part of data received"); \
-    if (memcmp(_buf, _got_buf, _buf_len))        \
-            TEST_FAIL("Invalid data received");  \
-} while(0);
-
 #define DATA_LEN 4096
 
 int
