@@ -113,14 +113,15 @@
 #define RECV_ALL_DATA(pco_, s_, received_, buf_, buf_size_) \
     do {                                                                \
         te_bool readable_ = FALSE;                                      \
+        int rc_;                                                        \
                                                                         \
         received_ = 0;                                                  \
         do {                                                            \
             RPC_GET_READABILITY(readable_, pco_, s_, 1000);             \
             if (!readable_)                                             \
                 break;                                                  \
-            rc = rpc_read(pco_, s_, buf_, buf_size_);                   \
-            received_ += rc;                                            \
+            rc_ = rpc_read(pco_, s_, buf_, buf_size_);                  \
+            received_ += rc_;                                           \
         } while (TRUE);                                                 \
     } while (0)
 
