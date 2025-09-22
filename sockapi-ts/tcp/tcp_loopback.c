@@ -448,34 +448,12 @@ main(int argc, char *argv[])
                   "csap id %d", rc, csap);
 
     rpc_send(pco_iut, acc_s, tx_buf, BUF_SIZE, 0);
-    rc = rpc_recv(pco_tst, tst_s, rx_buf, BUF_SIZE, 0);
-    if (rc != BUF_SIZE)
-    {
-        RING_VERDICT("recv() on pco_tst returned %d bytes "
-                     "instead of %d", rc, BUF_SIZE);
-        is_failed = TRUE;
-    }
-    else if (memcmp(tx_buf, rx_buf, BUF_SIZE) != 0)
-    {
-        RING_VERDICT("Wrong data was received on pco_tst");
-        is_failed = TRUE;
-    }
+    sockts_read_check_fd(pco_tst, tst_s, tx_buf, rx_buf, BUF_SIZE);
 
     memset(rx_buf, 0, BUF_SIZE);
 
     rpc_send(pco_tst, tst_s, tx_buf, BUF_SIZE, 0);
-    rc = rpc_recv(pco_iut, acc_s, rx_buf, BUF_SIZE, 0);
-    if (rc != BUF_SIZE)
-    {
-        RING_VERDICT("recv() on pco_iut returned %d bytes "
-                     "instead of %d", rc, BUF_SIZE);
-        is_failed = TRUE;
-    }
-    else if (memcmp(tx_buf, rx_buf, BUF_SIZE) != 0)
-    {
-        RING_VERDICT("Wrong data was received on pco_iut");
-        is_failed = TRUE;
-    }
+    sockts_read_check_fd(pco_iut, acc_s, tx_buf, rx_buf, BUF_SIZE);
 
     if (tapi_tad_trrecv_stop(pco_iut->ta, sid, csap, NULL,
                              &received_packets_number))
