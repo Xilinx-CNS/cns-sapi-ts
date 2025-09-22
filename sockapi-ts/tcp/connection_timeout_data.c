@@ -152,8 +152,7 @@ main(int argc, char *argv[])
         TEST_VERDICT("Connection has not been dropped");
 
     TEST_STEP("Read and check all data on IUT.");
-    rc = rpc_recv(pco_iut, iut_s, rcvbuf, DATA_SIZE, 0);
-    SOCKTS_CHECK_RECV(pco_iut, sndbuf, rcvbuf, DATA_SIZE, rc);
+    sockts_read_check_fd(pco_iut, iut_s, sndbuf, rcvbuf, DATA_SIZE);
 
     TEST_SUCCESS;
 cleanup:
