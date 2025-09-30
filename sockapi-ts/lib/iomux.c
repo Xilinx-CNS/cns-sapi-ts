@@ -88,6 +88,8 @@ iomux_call_epoll_internal(iomux_call_type call_type, rcf_rpc_server *rpcs,
 {
     struct rpc_epoll_event *p_events;
     int epoll_timeout;
+    struct tarpc_timespec timeout_timespec;
+    struct tarpc_timespec *p_timeout_timespec;
     int rc = 0;
 
     VERB("Epoll requested");
@@ -116,11 +118,46 @@ iomux_call_epoll_internal(iomux_call_type call_type, rcf_rpc_server *rpcs,
         }
     }
 
-    if (timeout != NULL)
-        epoll_timeout = timeout->tv_sec * 1000 + timeout->tv_usec / 1000;
-    else
-        epoll_timeout = -1;
-    VERB("Epoll timeout %d", epoll_timeout);
+    switch (call_type)
+    {
+        case TAPI_IOMUX_EPOLL:
+        case TAPI_IOMUX_EPOLL_PWAIT:
+        case TAPI_IOMUX_OO_EPOLL:
+            if (timeout != NULL)
+            {
+                epoll_timeout = TE_SEC2MS(timeout->tv_sec) +
+                                TE_US2MS(timeout->tv_usec);
+            }
+            else
+            {
+                epoll_timeout = -1;
+            }
+
+            VERB("Epoll timeout %dms", epoll_timeout);
+            break;
+
+        case TAPI_IOMUX_EPOLL_PWAIT2:
+            if (timeout != NULL)
+            {
+                timeout_timespec.tv_sec = timeout->tv_sec;
+                timeout_timespec.tv_nsec = TE_US2NS(timeout->tv_usec);
+                p_timeout_timespec = &timeout_timespec;
+            }
+            else
+            {
+                p_timeout_timespec = NULL;
+            }
+            VERB("Epoll_pwait2 timeout (timespec) %s",
+                 tarpc_timespec2str(p_timeout_timespec));
+            break;
+
+        case TAPI_IOMUX_DEFAULT:
+            ERROR("%s can't be used with default iomux call", __FUNCTION__);
+            break;
+
+        default:
+            ERROR("Wrong type of epoll function");
+    }
 
     rpcs->op = save_op;
     RPC_AWAIT_IUT_ERROR(rpcs);
@@ -146,7 +183,7 @@ iomux_call_epoll_internal(iomux_call_type call_type, rcf_rpc_server *rpcs,
 
         case TAPI_IOMUX_EPOLL_PWAIT2:
             rc = rpc_epoll_pwait2(rpcs, cur_st_p->epfd, p_events, n_evts,
-                                  timeout, sigmask);
+                                  p_timeout_timespec, sigmask);
         break;
 
         case TAPI_IOMUX_OO_EPOLL:
