@@ -469,7 +469,8 @@ check_udp_recv_reuseport(reuseport_socket_ctx *s1,
                                 (struct sockaddr_storage *)s->tst_addr,
                                 &tst_addr_handles[tst_addrs_num]);
             tst_addrs_num++;
-            CHECK_RC(tapi_remove_arp(s->pco_iut->ta, iut_if, s->tst_addr));
+            CHECK_RC(tapi_remove_arp(s->pco_iut->ta, iut_if->if_name,
+                                     s->tst_addr));
         }
         else
         {
