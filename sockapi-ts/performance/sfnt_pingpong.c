@@ -129,7 +129,7 @@ main(int argc, char *argv[])
 
     rpc_setenv(pco_iut, "EF_PERIODIC_TIMER_CPU", ef_periodic_timer_cpu, 1);
 
-    af.cpu_ids = &cpu_mask;
+    af.cpu_ids = cpu_mask;
     af.cpu_ids_len = TE_ARRAY_LEN(cpu_mask);
 
     sched_param[0].type = TAPI_JOB_SCHED_AFFINITY;
