@@ -142,7 +142,7 @@ main(int argc, char *argv[])
     if (tapi_onload_lib_exists(pco_iut->ta))
     {
         char *tool = PATH_TO_TE_ONLOAD;
-        char *tool_argv[2] = {
+        const char *tool_argv[2] = {
             PATH_TO_TE_ONLOAD,
             NULL
         };
