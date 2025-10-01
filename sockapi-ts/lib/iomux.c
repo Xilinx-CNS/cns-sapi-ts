@@ -134,22 +134,22 @@ iomux_call_epoll_internal(iomux_call_type call_type, rcf_rpc_server *rpcs,
 
     switch (call_type)
     {
-        case IC_EPOLL:
+        case TAPI_IOMUX_EPOLL:
             rc = rpc_epoll_wait(rpcs, cur_st_p->epfd, p_events, n_evts,
                                 epoll_timeout);
         break;
 
-        case IC_EPOLL_PWAIT:
+        case TAPI_IOMUX_EPOLL_PWAIT:
             rc = rpc_epoll_pwait(rpcs, cur_st_p->epfd, p_events, n_evts,
                                  epoll_timeout, sigmask);
         break;
 
-        case IC_EPOLL_PWAIT2:
+        case TAPI_IOMUX_EPOLL_PWAIT2:
             rc = rpc_epoll_pwait2(rpcs, cur_st_p->epfd, p_events, n_evts,
                                   timeout, sigmask);
         break;
 
-        case IC_OO_EPOLL:
+        case TAPI_IOMUX_OO_EPOLL:
         {
             rpc_onload_ordered_epoll_event *oo_events;
 
@@ -160,7 +160,7 @@ iomux_call_epoll_internal(iomux_call_type call_type, rcf_rpc_server *rpcs,
         }
         break;
 
-        case IC_DEFAULT:
+        case TAPI_IOMUX_DEFAULT:
             ERROR("%s can't be used with default iomux call", __FUNCTION__);
             break;
 
@@ -206,10 +206,10 @@ iomux_call_gen(iomux_call_type call_type, rcf_rpc_server *rpcs,
         return -1;
     }
 
-    if (call_type == IC_DEFAULT)
+    if (call_type == TAPI_IOMUX_DEFAULT)
         call_type = iomux_call_get_default();
 
-    if (call_type == IC_UNKNOWN)
+    if (call_type == TAPI_IOMUX_UNKNOWN)
     {
         ERROR("Wrong parameter 'iomux' passed to iomux_call");
         return -1;
@@ -223,8 +223,8 @@ iomux_call_gen(iomux_call_type call_type, rcf_rpc_server *rpcs,
     }
 
     if (sigmask != RPC_NULL &&
-        (call_type == IC_POLL || call_type == IC_SELECT ||
-         call_type == IC_EPOLL || call_type == IC_OO_EPOLL))
+        (call_type == TAPI_IOMUX_POLL || call_type == TAPI_IOMUX_SELECT ||
+         call_type == TAPI_IOMUX_EPOLL || call_type == TAPI_IOMUX_OO_EPOLL))
         ERROR("Non-null sigmsk is specified for select()/poll()/epoll()/"
               "onload_ordered_epoll_wait()");
 
@@ -284,7 +284,7 @@ iomux_call_gen(iomux_call_type call_type, rcf_rpc_server *rpcs,
 
     save_op = rpcs->op;
 
-    if (call_type == IC_POLL || call_type == IC_PPOLL)
+    if (call_type == TAPI_IOMUX_POLL || call_type == TAPI_IOMUX_PPOLL)
     {
         int poll_timeout;
         struct tarpc_timespec ppoll_timeout;
@@ -306,7 +306,7 @@ iomux_call_gen(iomux_call_type call_type, rcf_rpc_server *rpcs,
             }
         }
 
-        if (call_type == IC_POLL)
+        if (call_type == TAPI_IOMUX_POLL)
         {
             if (timeout != NULL)
             {
@@ -328,7 +328,7 @@ iomux_call_gen(iomux_call_type call_type, rcf_rpc_server *rpcs,
 
         rpcs->op = save_op;
         RPC_AWAIT_IUT_ERROR(rpcs);
-        if (call_type == IC_POLL)
+        if (call_type == TAPI_IOMUX_POLL)
             rc = rpc_poll(rpcs, events ? cur_st_p->poll_fd_array : NULL,
                           n_evts, poll_timeout);
         else
@@ -361,8 +361,10 @@ iomux_call_gen(iomux_call_type call_type, rcf_rpc_server *rpcs,
 
         return rc;
     }
-    else if (call_type == IC_EPOLL || call_type == IC_EPOLL_PWAIT ||
-             call_type == IC_EPOLL_PWAIT2 || call_type == IC_OO_EPOLL)
+    else if (call_type == TAPI_IOMUX_EPOLL ||
+             call_type == TAPI_IOMUX_EPOLL_PWAIT ||
+             call_type == TAPI_IOMUX_EPOLL_PWAIT2 ||
+             call_type == TAPI_IOMUX_OO_EPOLL)
     {
         rc = iomux_call_epoll_internal(call_type, rpcs, events, n_evts,
                                        timeout, sigmask, save_op);
@@ -480,7 +482,7 @@ iomux_call_gen(iomux_call_type call_type, rcf_rpc_server *rpcs,
 
         rpcs->op = save_op;
 
-        if (call_type == IC_SELECT)
+        if (call_type == TAPI_IOMUX_SELECT)
         {
             RPC_AWAIT_IUT_ERROR(rpcs);
             select_rc = rpc_select(rpcs, max_fd,
@@ -602,11 +604,12 @@ iomux_call(iomux_call_type call_type, rcf_rpc_server *rpcs,
     int signal_call = 0;
     rcf_rpc_op save_op = rpcs->op;
 
-    if (call_type == IC_DEFAULT)
+    if (call_type == TAPI_IOMUX_DEFAULT)
         call_type = iomux_call_get_default();
 
-    if (call_type == IC_PSELECT || call_type == IC_PPOLL ||
-        call_type == IC_EPOLL_PWAIT || call_type == IC_EPOLL_PWAIT2)
+    if (call_type == TAPI_IOMUX_PSELECT || call_type == TAPI_IOMUX_PPOLL ||
+        call_type == TAPI_IOMUX_EPOLL_PWAIT ||
+        call_type == TAPI_IOMUX_EPOLL_PWAIT2)
         signal_call = 1;
 
     if (signal_call && rpcs->op != RCF_RPC_WAIT)
@@ -647,7 +650,7 @@ iomux_call_default_simple(rcf_rpc_server *rpcs, int sock, iomux_evt evt,
         tv.tv_usec = TE_MS2US(timeout) % 1000000L;
     }
 
-    rc = iomux_call(IC_DEFAULT, rpcs, &event, 1,
+    rc = iomux_call(TAPI_IOMUX_DEFAULT, rpcs, &event, 1,
                     (timeout < 0) ? NULL : &tv);
     if (revt != NULL)
         *revt = event.revents;
@@ -672,7 +675,7 @@ iomux_is_writable(rcf_rpc_server *rpcs, int sock, iomux_call_type iomux,
 
     assert(ok != NULL);
 
-    if (iomux == IC_DEFAULT)
+    if (iomux == TAPI_IOMUX_DEFAULT)
         iomux = iomux_call_get_default();
 
     memset(&evt, 0, sizeof(evt));
@@ -720,7 +723,7 @@ iomux_fill_io_buffers(rcf_rpc_server *rpcs, int sock,
     uint8_t    *m = (uint8_t *)&j;
     te_bool     iomux_ok;
 
-    if (iomux == IC_DEFAULT)
+    if (iomux == TAPI_IOMUX_DEFAULT)
         iomux = iomux_call_get_default();
 
     while (iomux_is_writable(rpcs, sock, iomux, &iomux_ok) && iomux_ok)
@@ -779,7 +782,7 @@ iomux_common_steps(iomux_call_type iomux, rcf_rpc_server *iut, int iut_s,
     int             iomux_result = -1;
     tarpc_timeval   prepared_timeout = { 0, 0 }; 
 
-    if (iomux == IC_DEFAULT)
+    if (iomux == TAPI_IOMUX_DEFAULT)
         iomux = iomux_call_get_default();
 
     if (timeout == IOMUX_TIMEOUT_RAND)
@@ -802,7 +805,8 @@ iomux_common_steps(iomux_call_type iomux, rcf_rpc_server *iut, int iut_s,
          * epoll.
          */
         rpc_overfill_buffers_gen(iut, iut_s, &sent,
-                                 iomux == IC_OO_EPOLL ? IC_EPOLL : iomux);
+                                 iomux == TAPI_IOMUX_OO_EPOLL ?
+                                          TAPI_IOMUX_EPOLL : iomux);
     }
     *events = 0;
 
@@ -839,16 +843,16 @@ int
 iomux_epoll_call(iomux_call_type call_type, rcf_rpc_server *rpcs, int epfd,
                  struct rpc_epoll_event *events, int maxevents, int timeout)
 {
-    if (call_type == IC_DEFAULT)
+    if (call_type == TAPI_IOMUX_DEFAULT)
         call_type = iomux_call_get_default();
 
     switch (call_type)
     {
-        case IC_EPOLL:
+        case TAPI_IOMUX_EPOLL:
             return rpc_epoll_wait(rpcs, epfd, events, maxevents, timeout);
 
-        case IC_EPOLL_PWAIT:
-        case IC_EPOLL_PWAIT2:
+        case TAPI_IOMUX_EPOLL_PWAIT:
+        case TAPI_IOMUX_EPOLL_PWAIT2:
         {
             struct tarpc_timespec  tv;
             struct tarpc_timespec *tv_ptr = &tv;
@@ -879,7 +883,7 @@ iomux_epoll_call(iomux_call_type call_type, rcf_rpc_server *rpcs, int epfd,
                 rpcs->iut_err_jump = iut_err_jump;
             }
 
-            if (call_type == IC_EPOLL_PWAIT)
+            if (call_type == TAPI_IOMUX_EPOLL_PWAIT)
             {
                 rc = rpc_epoll_pwait(rpcs, epfd, events, maxevents, timeout,
                                      cur_st_p->iomux_call_sigmask);
@@ -907,7 +911,7 @@ iomux_epoll_call(iomux_call_type call_type, rcf_rpc_server *rpcs, int epfd,
             return rc;
         }
 
-        case IC_OO_EPOLL:
+        case TAPI_IOMUX_OO_EPOLL:
         {
             rpc_onload_ordered_epoll_event oo_events;
 
@@ -931,7 +935,7 @@ iomux_init_rd_error(iomux_evt_fd *event, int iut_s, iomux_call_type iomux,
 {
     int exp;
 
-    if (iomux == IC_DEFAULT)
+    if (iomux == TAPI_IOMUX_DEFAULT)
         iomux = iomux_call_get_default();
 
     event->fd = iut_s;
@@ -943,8 +947,8 @@ iomux_init_rd_error(iomux_evt_fd *event, int iut_s, iomux_call_type iomux,
 
     switch (iomux)
     {
-        case IC_SELECT:
-        case IC_PSELECT:
+        case TAPI_IOMUX_SELECT:
+        case TAPI_IOMUX_PSELECT:
             exp = EVT_RD;
             if (select_err_queue)
             {
@@ -954,12 +958,12 @@ iomux_init_rd_error(iomux_evt_fd *event, int iut_s, iomux_call_type iomux,
             }
             break;
 
-        case IC_POLL:
-        case IC_PPOLL:
-        case IC_EPOLL:
-        case IC_EPOLL_PWAIT:
-        case IC_EPOLL_PWAIT2:
-        case IC_OO_EPOLL:
+        case TAPI_IOMUX_POLL:
+        case TAPI_IOMUX_PPOLL:
+        case TAPI_IOMUX_EPOLL:
+        case TAPI_IOMUX_EPOLL_PWAIT:
+        case TAPI_IOMUX_EPOLL_PWAIT2:
+        case TAPI_IOMUX_OO_EPOLL:
             exp = EVT_EXC | EVT_ERR;
             if (select_err_queue)
                 exp |= EVT_PRI;
