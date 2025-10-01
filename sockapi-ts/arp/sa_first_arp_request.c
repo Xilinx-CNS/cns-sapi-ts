@@ -57,6 +57,7 @@ arp_handler(asn_value *pkt, void *userdata)
     uint8_t dst_mac[ETHER_ADDR_LEN];
     uint8_t *source_addr;
     uint32_t proto_size;
+    size_t addr_len;
     int rv;
 
     rc = asn_read_uint32(pkt, &proto_size,
@@ -68,15 +69,16 @@ arp_handler(asn_value *pkt, void *userdata)
         goto cleanup;
     }
 
-    if (proto_size != te_netaddr_get_size(ctx->source_addr->sa_family))
+    addr_len = te_netaddr_get_size(ctx->source_addr->sa_family);
+    if (proto_size != (uint32_t)addr_len)
     {
         ERROR("ARP PROTO-SIZE does't match with the size of the source address");
         ctx->failed = TRUE;
         goto cleanup;
     }
 
-    source_addr = tapi_calloc(1, proto_size);
-    rc = asn_read_value_field(pkt, source_addr, &proto_size,
+    source_addr = tapi_calloc(1, addr_len);
+    rc = asn_read_value_field(pkt, source_addr, &addr_len,
                               "pdus.0.#arp.snd-proto-addr.#plain");
     if (rc != 0)
     {
@@ -94,7 +96,7 @@ arp_handler(asn_value *pkt, void *userdata)
         goto cleanup;
     }
 
-    rv = memcmp(te_sockaddr_get_netaddr(ctx->source_addr), source_addr, proto_size);
+    rv = memcmp(te_sockaddr_get_netaddr(ctx->source_addr), source_addr, addr_len);
     if (rv != 0)
     {
         ERROR_VERDICT("Incorrect source IP address");
