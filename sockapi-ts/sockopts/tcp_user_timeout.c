@@ -149,6 +149,7 @@ wait_connection_termination(tsa_session *ss,
     int rc;
     int fdflags;
     rpc_tcp_state last_state;
+    bool failed;
 
     CHECK_RC(tsa_do_moves_str(ss, RPC_TCP_UNKNOWN, RPC_TCP_UNKNOWN,
                               flags, tcp_state_rpc2str(tcp_state)));
@@ -188,8 +189,10 @@ wait_connection_termination(tsa_session *ss,
         }
         else
         {
-            CHECK_RPC_ERRNO(pco_iut, RPC_ETIMEDOUT,
+            CHECK_RPC_ERRNO_NOEXIT(pco_iut, RPC_ETIMEDOUT, failed,
                             "%s: connect function failed", vpref);
+            if (failed)
+                TEST_STOP;
         }
     }
 }
