@@ -294,14 +294,17 @@ sockts_ct_get_ns_veth_net_addr(rcf_rpc_server *pco_ns, tapi_env_net *net,
 {
     unsigned int n_addrs = 0;
     char *ct_recv_veth2_name = NULL;
+    struct sockaddr_storage **ns_addrs;
 
     CHECK_NOT_NULL(ct_recv_veth2_name =
                         sockts_ct_param_get("receiver_second_veth_name"));
 
     CHECK_RC(sockts_get_net_addrs_from_if(pco_ns, ct_recv_veth2_name, net,
-                                          AF_INET, ns_addr, &n_addrs));
+                                          AF_INET, ns_addrs, &n_addrs));
     if (n_addrs != 1)
         TEST_FAIL("Interface inside namespace has more that one address.");
+
+    *ns_addr = (struct sockaddr *)*ns_addrs;
 
     free(ct_recv_veth2_name);
 }
