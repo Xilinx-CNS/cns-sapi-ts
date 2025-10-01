@@ -17,6 +17,7 @@
 #include "tapi_proc.h"
 #include "lib-ts_netns.h"
 #include "onload.h"
+#include "tapi_cfg_iptables.h"
 
 /**
  * Configurator path to the event which handle onload banners counter
