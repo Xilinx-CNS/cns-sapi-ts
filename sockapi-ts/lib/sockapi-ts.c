@@ -3897,3 +3897,22 @@ sockts_destroy_netns(const char *ta, rcf_rpc_server *rpcs_ns,
 
     CHECK_RC(cfg_synchronize_fmt(TRUE, "/agent:%s", netns_ta));
 }
+
+void
+sockts_read_check_fd(rcf_rpc_server *rpcs, int socket, char *tx_buf,
+                     char *rx_buf, size_t exp_len)
+{
+    ssize_t rc_ret;
+    ssize_t len;
+
+    rc_ret = rpc_read_fd(rpcs, socket, TAPI_WAIT_NETWORK_DELAY, exp_len,
+                         &rx_buf, &len);
+
+    if (rc_ret != 0)
+    {
+        TEST_VERDICT("Last recv() failed on %s with %r instead of "
+                     "returning 0", rpcs->name, RPC_ERRNO(rpcs));
+    }
+
+    SOCKTS_CHECK_RECV(rpcs, tx_buf, rx_buf, exp_len, len);
+}
