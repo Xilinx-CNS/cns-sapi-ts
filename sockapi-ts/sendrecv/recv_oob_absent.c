@@ -98,7 +98,7 @@ main(int argc, char *argv[])
         TEST_FAIL("Expected to recieve %d instead %d, because out-of-band "
                   "byte was sent", sent, recv);
     }
-    if (memcmp(rx_buf, tx_buf, 1) != 0)
+    if (memcmp(rx_buf, tx_buf, TST_BUF_SIZE) != 0)
     {
         TEST_FAIL("Data sent is not the same as received one");
     }
