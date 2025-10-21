@@ -41,14 +41,6 @@ typedef struct splice_params {
     int flags;
 } splice_params;
 
-#define CHECK_DATA(_buf, _buf_len, _got_buf, _got_buf_len) \
-do {                                             \
-    if (_got_buf_len != _buf_len)                \
-        TEST_FAIL("Only part of data received"); \
-    if (memcmp(_buf, _got_buf, _buf_len))        \
-            TEST_FAIL("Invalid data received");  \
-} while(0);
-
 int
 main(int argc, char *argv[])
 {
