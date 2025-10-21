@@ -187,15 +187,9 @@ main(int argc, char *argv[])
     RPC_SEND(sent, pco_tst1, tst1_s, tx_buf, TST_BUF_LEN, 0);
 
     if (iut1_done)
-        rcv = rpc_recv(pco_iut, acc1_s, rx_buf, TST_BUF_LEN, 0);
+        sockts_read_check_fd(pco_iut, acc1_s, tx_buf, rx_buf, TST_BUF_LEN);
     else
-        rcv = rpc_recv(iut_aux, acc2_s, rx_buf, TST_BUF_LEN, 0);
-
-    if (rcv != sent)
-        TEST_FAIL("%d bytes was received instead of %d", rcv, sent);
-
-    if (memcmp(tx_buf, rx_buf, TST_BUF_LEN) != 0)
-        TEST_FAIL(" received data is not the same as sent");
+        sockts_read_check_fd(iut_aux, acc2_s, tx_buf, rx_buf, TST_BUF_LEN);
 
     rpc_connect(pco_tst2, tst2_s, iut_addr);
 
