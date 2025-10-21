@@ -54,16 +54,6 @@
 #include "sockapi-test.h"
 #include "iomux.h"
 
-
-#define TST_CMP_BUFFERS(_x) \
-    do {                                                     \
-        if (memcmp(tx_buf, rx_buf, buf_len) != 0)            \
-        {                                                    \
-            TEST_FAIL("data received on "#_x" differ "       \
-                    "than was sent from pco_tst");           \
-        }                                                    \
-    } while (0)
-
 #define TST_CALL_FUNC(_pco, _sock, _func, _exit) \
     do {                                                                \
         _pco->op = RCF_RPC_CALL;                                        \
