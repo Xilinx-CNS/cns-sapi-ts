@@ -143,22 +143,12 @@ main(int argc, char *argv[])
 
     RPC_SEND(rc, pco_snd1, snd1_s, tx_buf, TST_BUF_LEN, 0);
     MSLEEP(500);
-    rc = rpc_recv(pco_rcv1, rcv1_s, rx_buf, TST_BUF_LEN, 0);
-    if (rc != TST_BUF_LEN)
-        TEST_FAIL("recv() returns %d bytes instead of %d",
-                  rc, TST_BUF_LEN);
-    if (memcmp(rx_buf, tx_buf, TST_BUF_LEN) != 0)
-        TEST_FAIL("Invalid data received over rcv1_s");
+    sockts_read_check_fd(pco_rcv1, rcv1_s, tx_buf, rx_buf, TST_BUF_LEN);
 
     memset(rx_buf, 0, TST_BUF_LEN);
     RPC_SEND(rc, pco_snd2, snd2_s, tx_buf, TST_BUF_LEN, 0);
     MSLEEP(500);
-    rc = rpc_recv(pco_rcv2, rcv2_s, rx_buf, TST_BUF_LEN, 0);
-    if (rc != TST_BUF_LEN)
-        TEST_FAIL("recv() returns %d bytes instead of %d",
-                  rc, TST_BUF_LEN);
-    if (memcmp(rx_buf, tx_buf, TST_BUF_LEN) != 0)
-        TEST_FAIL("Invalid data received over rcv2_s");
+    sockts_read_check_fd(pco_rcv2, rcv2_s, tx_buf, rx_buf, TST_BUF_LEN);
 
     pco_snd1->op = RCF_RPC_CALL;
     rpc_simple_sender(pco_snd1, snd1_s, 1, 10, 0, 0, 10000, 1, 20, &sent, 0);
@@ -173,12 +163,7 @@ main(int argc, char *argv[])
     memset(rx_buf, 0, TST_BUF_LEN);
     RPC_SEND(rc, pco_snd2, snd2_s, tx_buf, TST_BUF_LEN, 0);
     MSLEEP(500);
-    rc = rpc_recv(pco_rcv2, rcv2_s, rx_buf, TST_BUF_LEN, 0);
-    if (rc != TST_BUF_LEN)
-        TEST_FAIL("recv() returns %d bytes instead of %d",
-                  rc, TST_BUF_LEN);
-    if (memcmp(rx_buf, tx_buf, TST_BUF_LEN) != 0)
-        TEST_FAIL("Invalid data received over rcv2_s");
+    sockts_read_check_fd(pco_rcv2, rcv2_s, tx_buf, rx_buf, TST_BUF_LEN);
 
     /* Call simple reciever to get number of bytes received */
     rpc_simple_receiver(pco_rcv1, rcv1_s, 0, &received_before);
