@@ -296,6 +296,10 @@ copy_onload_tools(rcf_rpc_server *pco_iut)
                              "tools/ip/onload_stackdump",
                              "te_onload_stdump");
 
+            copy_onload_tool(pco_iut->ta, path, agt_dir,
+                             "tools/onload_remote_monitor/orm_json",
+                             "orm_json");
+
             /*
              * ulhepler build profile requires onload_helper tool
              * in the path
