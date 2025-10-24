@@ -6,7 +6,7 @@ cc = meson.get_compiler('c')
 
 add_global_arguments('-Werror', language : 'c')
 
-te_deps = []
+te_deps = [dependency('jansson', required: false)]
 
 te_cflags = get_option('te_cflags').split()
 te_ldflags = get_option('te_ldflags').split()

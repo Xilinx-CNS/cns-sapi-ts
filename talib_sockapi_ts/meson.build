@@ -99,9 +99,20 @@ endforeach
 
 sources += files('rpc.c')
 sources += files('syscall_close.S')
+sources += files('parse_orm_json.c')
 
 build_lib = 'static'
 te_libs += [
     'loggerta',
     'rpcserver',
+]
+
+dep_jansson = dependency('jansson', required: false)
+required_deps += 'jansson'
+if not dep_jansson.found()
+    missed_deps += 'jansson'
+endif
+
+deps += [
+    dep_jansson,
 ]
