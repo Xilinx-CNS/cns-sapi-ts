@@ -17,6 +17,15 @@ te_tests_info_sh = find_program(join_paths(te_path, 'te_tests_info.sh'))
 test_deps = [
     dependency('threads'),
 ]
+dep_jansson = dependency('jansson', required: false)
+if not dep_jansson.found()
+    missed_deps += 'jansson'
+endif
+
+test_deps += [
+    dep_jansson,
+]
+
 
 test_deps += [ cc.find_library('m'), cc.find_library('pcap') ]
 

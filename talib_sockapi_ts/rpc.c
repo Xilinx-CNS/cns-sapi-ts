@@ -98,6 +98,7 @@
 #include "tad_common.h"
 #include "te_ipstack.h"
 #include "te_time.h"
+#include "parse_orm_json.h"
 
 /** Test Agent executable name */ 
 extern const char *ta_execname;
@@ -9638,27 +9639,80 @@ cleanup:
 }
 
 /**
+ * Get TCP state from a orm_json output.
+ *
+ * @param      loc_addr    Local address.
+ * @param      rem_addr    Remote address.
+ * @param[out] state       Where to save obtained TCP state.
+ * @param[out] found       Will be set to @c TRUE if a socket was found.
+ *
+ * @return Status code.
+ */
+static te_errno
+get_tcp_state_from_orm_json(struct sockaddr *loc_addr,
+                            struct sockaddr *rem_addr,
+                            rpc_tcp_state *state, te_bool *found)
+{
+    te_string str = TE_STRING_INIT;
+    te_errno rc;
+
+    *found = FALSE;
+    *state = RPC_TCP_UNKNOWN;
+
+    rc = ta_read_cmd("orm_json all", &str);
+
+    if (rc != 0)
+        goto cleanup;
+
+    rc = orm_json_get_tcp_state(str.ptr, loc_addr, rem_addr, state, found);
+    if (rc == TE_RC(TE_TAPI, TE_EFMT))
+    {
+        ERROR("Unexpected serialized JSON object format");
+    }
+    else if (rc == TE_RC(TE_TAPI, TE_ENOENT))
+    {
+        RING("TCP state with given local and remote addresses "
+             "was not found in orm_json output");
+    }
+    else if (rc != 0)
+    {
+        ERROR("Parsing serialized JSON object failed "
+              "in unexpected way");
+    }
+    rc = 0;
+
+cleanup:
+
+    te_string_free(&str);
+
+    return rc;
+}
+
+/**
  * Get state of a TCP socket from output of one of the tools (netstat,
- * onload_stackdump, zf_stackdump). All the available tools will be
+ * orm_json, onload_stackdump, zf_stackdump). All the available tools will be
  * tried in search of the socket.
  *
  * @param loc_addr              Local address.
  * @param rem_addr              Remote address.
+ * @param orm_json              Whether orm_json should be tried.
  * @param onload_stdump         Whether te_onload_stdump should be tried.
  * @param onload_stdump_netstat Whether "te_onload_stdump -z netstat" is
  *                              available.
  * @param zf_stdump             Whether zf_stackdump should be tried.
  * @param state                 Where to save obtained TCP state.
  * @param found                 Will be set to @c TRUE if TCP socket was
- *                              found.
+ *                              found. orm_json is the only tool that can
+ *                              detect the TCP_CLOSED state; we also treat this
+ *                              case as 'not found'.
  *
  * @return Status code.
  */
 static te_errno
 tcp_get_state(struct sockaddr *loc_addr, struct sockaddr *rem_addr,
-              bool onload_stdump, bool onload_stdump_netstat,
+              bool orm_json, bool onload_stdump, bool onload_stdump_netstat,
               bool zf_stdump,
-              rpc_tcp_state *state, bool *found)
+              rpc_tcp_state *state, te_bool *found)
 {
     te_errno rc = 0;
 
@@ -9667,10 +9721,23 @@ tcp_get_state(struct sockaddr *loc_addr, struct sockaddr *rem_addr,
     rc = tcp_get_state_from_tool("netstat -atn",
                                  loc_addr, rem_addr, state, found);
 
+    if (rc == 0 && orm_json && !*found)
+        rc = get_tcp_state_from_orm_json(loc_addr, rem_addr, state, found);
+
+    /*
+     * onload_stackdump provides information about sockets in TCP_SYN_RECV,
+     * while orm_json with any option does not show them. Therefore, we should
+     * continue looking for such sockets using onload_stackdump. Without this
+     * check, we cannot distinguish TCP_SYN_RECV from TCP_CLOSED.
+     */
     if (rc == 0 && onload_stdump && !*found)
         rc = tcp_get_state_from_tool("te_onload_stdump netstat",
                                      loc_addr, rem_addr, state, found);
 
+    /*
+     * Unfortunetly there is no information in orm_json output about
+     * zombie sockets now.
+     */
     if (rc == 0 && onload_stdump && !*found)
     {
         rc = tcp_get_state_from_tool((onload_stdump_netstat ?
@@ -9732,6 +9799,8 @@ check_program_exists(bool *exists, const char *path, ...)
  * Find tools which can be used to obtain information about existing
  * sockets and their states.
  *
+ * @param orm_json                Will be set to @c TRUE if orm_json
+ *                                is present.
  * @param onload_stdump           Will be set to @c TRUE if te_onload_stdump
  *                                is present.
  * @param onload_stdump_netstat   Will be set to @c TRUE if te_onload_stdump
@@ -9741,8 +9810,8 @@ check_program_exists(bool *exists, const char *path, ...)
  * @return Status code.
  */
 static te_errno
-find_netstat_tools(bool *onload_stdump, bool *onload_stdump_netstat,
-                   bool *zf_stdump)
+find_netstat_tools(bool *orm_json, bool *onload_stdump,
+                   bool *onload_stdump_netstat, bool *zf_stdump)
 {
     te_errno rc;
 
@@ -9752,6 +9821,9 @@ find_netstat_tools(bool *onload_stdump, bool *onload_stdump_netstat,
 
     char        buf[MAX_CMD_LEN];
     te_string   str = TE_STRING_BUF_INIT(buf);
+
+    rc = check_program_exists(orm_json, "%s/orm_json",
+                              ta_dir);
 
     rc = check_program_exists(onload_stdump, "%s/te_onload_stdump",
                               ta_dir);
@@ -9826,11 +9898,12 @@ wait_tcp_socket_termination(struct sockaddr *loc_addr,
     struct timeval  tv_start;
     struct timeval  tv_end;
 
+    bool orm_json = FALSE;
     bool onload_stdump = FALSE;
     bool onload_stdump_netstat = FALSE;
     bool zf_stdump = FALSE;
 
-    rc = find_netstat_tools(&onload_stdump, &onload_stdump_netstat,
+    rc = find_netstat_tools(&orm_json, &onload_stdump, &onload_stdump_netstat,
                             &zf_stdump);
     if (rc != 0)
         return rc;
@@ -9841,7 +9914,7 @@ wait_tcp_socket_termination(struct sockaddr *loc_addr,
 
     while (TRUE)
     {
-        rc = tcp_get_state(loc_addr, rem_addr,
+        rc = tcp_get_state(loc_addr, rem_addr, orm_json,
                            onload_stdump, onload_stdump_netstat, zf_stdump,
                            &cur_state, &found);
         if (rc != 0)
@@ -10089,18 +10162,19 @@ get_tcp_socket_state(struct sockaddr *loc_addr,
     rpc_tcp_state   sock_state;
 
     bool sock_found;
+    bool orm_json = FALSE;
     bool onload_stdump = FALSE;
     bool onload_stdump_netstat = FALSE;
     bool zf_stdump = FALSE;
 
     int saved_errno = errno;
 
-    rc = find_netstat_tools(&onload_stdump, &onload_stdump_netstat,
+    rc = find_netstat_tools(&orm_json, &onload_stdump, &onload_stdump_netstat,
                             &zf_stdump);
     if (rc != 0)
         return rc;
 
-    rc = tcp_get_state(loc_addr, rem_addr,
+    rc = tcp_get_state(loc_addr, rem_addr, orm_json,
                        onload_stdump, onload_stdump_netstat, zf_stdump,
                        &sock_state, &sock_found);
     if (rc != 0)
