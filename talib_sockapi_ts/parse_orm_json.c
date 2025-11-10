@@ -259,6 +259,17 @@ orm_json_get_tcp_state(const char *joutput, const struct sockaddr *loc_addr,
     json_t *jipx;
     json_t *jip4;
     json_t *jip_daddr;
+    json_t *jtcp_listen;
+    json_t *jtcp_listen_issue;
+    const char *tcp_listen_id;
+    json_t *jtcp_listen_synrecv;
+    json_t *jl_addr;
+    json_t *jr_addr;
+    json_t *jl_port;
+    json_t *jr_port;
+    json_t *jtcp_listenq_bucket;
+    int jtcp_listenq_bucket_i;
+    json_t *jtcp_listenq_bucket_elt;
 
     jmain = json_loads(joutput, 0, &error);
 
@@ -279,6 +290,21 @@ orm_json_get_tcp_state(const char *joutput, const struct sockaddr *loc_addr,
      * ...
      *                 "stack": {
      * ...
+     *                     "tcp_listen": {
+     *                         "2047": {
+     * ...
+     *                             "tcp_listenq_bucket": [
+     *                                 {
+     *                                     "tcp_listen_synrecv": {
+     *                                         "l_addr": "192.168.20.1",
+     *                                         "r_addr": "192.168.210.2",
+     *                                         "l_port": 20988,
+     *                                         "r_port": 20989
+     *                                     }
+     *                                 }
+     *                             ]
+     *                         }
+     *                     },
      *                     "tcp": {
      *                         "2045": {
      *                             "tcp_state": {
@@ -362,6 +388,40 @@ orm_json_get_tcp_state(const char *joutput, const struct sockaddr *loc_addr,
                     *state = cur_state;
                     rc = 0;
                     goto cleanup;
+                }
+            }
+            JSON_OBJECT_GET_CHECK(stack, tcp_listen, object, FALSE);
+            json_object_foreach(jtcp_listen, tcp_listen_id, jtcp_listen_issue)
+            {
+                jtcp_listenq_bucket = json_object_get(jtcp_listen_issue,
+                                                      "tcp_listenq_bucket");
+                if (!json_is_array(jtcp_listenq_bucket))
+                    continue;
+                json_array_foreach(jtcp_listenq_bucket, jtcp_listenq_bucket_i,
+                                   jtcp_listenq_bucket_elt)
+                {
+                    JSON_OBJECT_GET_CHECK(tcp_listenq_bucket_elt,
+                                          tcp_listen_synrecv, object, FALSE);
+                    JSON_OBJECT_GET_CHECK(tcp_listen_synrecv, l_addr, string,
+                                          FALSE);
+                    JSON_OBJECT_GET_CHECK(tcp_listen_synrecv, r_addr, string,
+                                          FALSE);
+                    JSON_OBJECT_GET_CHECK(tcp_listen_synrecv, l_port, integer,
+                                          FALSE);
+                    JSON_OBJECT_GET_CHECK(tcp_listen_synrecv, r_port, integer,
+                                          FALSE);
+                    if (check_state_addr_port(RPC_TCP_SYN_RECV, loc_addr,
+                                              json_string_value(jl_addr),
+                                              json_integer_value(jl_port),
+                                              rem_addr,
+                                              json_string_value(jr_addr),
+                                              json_integer_value(jr_port)))
+                    {
+                        *found = TRUE;
+                        *state = RPC_TCP_SYN_RECV;
+                        rc = 0;
+                        goto cleanup;
+                    }
                 }
             }
         }
