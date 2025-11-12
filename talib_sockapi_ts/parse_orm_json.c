@@ -432,3 +432,72 @@ cleanup:
 
     return rc;
 }
+
+te_errno
+orm_json_get_stat(const char *joutput, const char *stat_name, int *stat_value)
+{
+    te_errno rc = TE_RC(TE_TAPI, TE_ENOENT);
+    json_error_t error;
+    json_t *jmain;
+    json_t *jjson;
+    json_t *jjson_elt;
+    int jjson_i;
+    const char *jjson_elt_id;
+    json_t *jjson_elt_issue;
+    json_t *jstats;
+    json_t *jstat_value;
+
+    jmain = json_loads(joutput, 0, &error);
+
+    if (jmain == NULL)
+    {
+        ERROR("json_loads fails with message: \"%s\", position: %u",
+              error.text, error.position);
+        rc = TE_RC(TE_TAPI, TE_EFMT);
+        goto cleanup;
+    }
+    /*
+     * The corresponding serialized JSON looks like this.
+     * {
+     * ...
+     *     "json": [
+     *         {
+     *             "0": {
+     * ...
+     *                 "stats": {
+     *                     "k_polls": 205,
+     *                     "u_polls": 1,
+     * ...
+     *                 },
+     * ...
+     *             }
+     *         }
+     *     ]
+     * }
+     */
+    JSON_CHECK_GOTTEN(the whole json, "main", jmain, object, TRUE);
+    JSON_OBJECT_GET_CHECK(main, json, array, TRUE);
+    json_array_foreach(jjson, jjson_i, jjson_elt)
+    {
+        if (!json_is_object(jjson_elt))
+        {
+            ERROR("Element in jjson with index %d is not an object", jjson_i);
+            rc = TE_RC(TE_TAPI, TE_EFMT);
+            goto cleanup;
+        }
+        json_object_foreach(jjson_elt, jjson_elt_id, jjson_elt_issue)
+        {
+            JSON_OBJECT_GET_CHECK(json_elt_issue, stats, object, TRUE);
+            JSON_OBJECT_GET_CHECK_EXT(jstats, stat_name, jstat_value, integer,
+                                      TRUE);
+            *stat_value = json_integer_value(jstat_value);
+            rc = 0;
+            goto cleanup;
+        }
+    }
+
+cleanup:
+    json_decref(jmain);
+
+    return rc;
+}

@@ -78,4 +78,19 @@ te_errno orm_json_get_tcp_state(const char *joutput,
                                 const struct sockaddr *rem_addr,
                                 rpc_tcp_state *state, bool *found);
 
+/**
+ * Get statistic from an orm_json tool's output.
+ *
+ * @param      joutput    Serialized JSON orm_json output.
+ * @param      stat_name  Name of the statistic.
+ * @param[out] stat_value Value of the statistic.
+ *
+ * @return Status code.
+ * @retval TE_ENOENT  No information about this statistic was found.
+ * @retval TE_EFMT    Unexpected JSON format.
+ * @retval 0          Success.
+ */
+te_errno orm_json_get_stat(const char *joutput, const char *stat_name,
+                           int *stat_value);
+
 #endif /* __PARSE_ORM_JSON_H__ */
