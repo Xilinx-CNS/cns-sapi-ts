@@ -130,30 +130,15 @@ tapi_onload_check_socket_caching(rcf_rpc_server *rpcs1, int sock,
 int
 tapi_onload_get_stats_val(rcf_rpc_server *rpcs, const char *name)
 {
-    char cmd[128] = {0};
-    char *buf = NULL;
-    char *ptr;
+    int rc;
     int num = 0;
 
     if (!tapi_onload_lib_exists(rpcs->ta))
         TEST_VERDICT("This iteration cannot be tested with unaccelerated "
                      "socket");
 
-    snprintf(cmd, sizeof(cmd), "te_onload_stdump lots | grep %s:", name);
-    rpc_shell_get_all(rpcs, &buf, cmd, -1);
-    if (buf != NULL)
-    {
-        RING("%s", buf);
-        if ((ptr = strchr(buf, ' ')) == NULL)
-        {
-            free(buf);
-            TEST_FAIL("Couldn't parse sockcache_contention value");
-        }
-
-        num = atoi(ptr);
-        free(buf);
-    }
-    else
+    rc = rpc_get_stat_from_orm_json(rpcs, name, &num);
+    if (rc != 0)
         TEST_VERDICT("Failed to get %s value from Onload stats", name);
 
     return num;
