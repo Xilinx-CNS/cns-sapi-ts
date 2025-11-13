@@ -11525,3 +11525,64 @@ TARPC_FUNC_STATIC(sockts_peek_stream_receiver, {},
 {
     MAKE_CALL(out->retval = func(in, out));
 })
+
+/**
+ * Get statistic using orm_json tool.
+ *
+ * @param      stat_name   Name of the statistic.
+ * @param[out] stat_value  Value of the statistic.
+ *
+ * @return @c 0 on success, @c -1 on failure.
+ */
+static int
+get_stat_from_orm_json(const char *stat_name, int *stat_value)
+{
+    te_string str = TE_STRING_INIT;
+    te_errno rc;
+    int saved_errno = errno;
+
+    rc = ta_read_cmd("orm_json stats", &str);
+
+    if (rc != 0)
+        goto cleanup;
+
+    rc = orm_json_get_stat(str.ptr, stat_name, stat_value);
+    if (rc == TE_RC(TE_TAPI, TE_EFMT))
+    {
+        ERROR("Unexpected serialized JSON object format");
+    }
+    else if (rc == TE_RC(TE_TAPI, TE_ENOENT))
+    {
+        RING("Statistic '%s' was not found in orm_json output", stat_name);
+    }
+    else if (rc != 0)
+    {
+        ERROR("Parsing serialized JSON object failed "
+              "in unexpected way");
+    }
+
+cleanup:
+
+    te_string_free(&str);
+
+    errno = saved_errno;
+
+    return (rc == 0) ? 0 : -1;
+}
+
+TARPC_FUNC_STATIC(get_stat_from_orm_json, {},
+{
+    te_errno rc = 0;
+
+    MAKE_CALL(rc = func(in->stat_name, &out->stat_value));
+
+    if (rc != 0)
+    {
+        out->retval = -1;
+        out->common._errno = rc;
+    }
+    else
+    {
+        out->retval = 0;
+    }
+})

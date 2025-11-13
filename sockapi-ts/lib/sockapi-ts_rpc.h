@@ -1918,4 +1918,16 @@ extern int rpc_sockts_peek_stream_receiver(rcf_rpc_server *rpcs, int s,
                                            tarpc_pat_gen_arg *gen_arg,
                                            uint64_t *received);
 
+/**
+ * Get statistic using an orm_json tool.
+ *
+ * @param      rpcs       RPC server handle.
+ * @param      stat_name  Name of the statistic.
+ * @param[out] stat_value Value of the statistic.
+ *
+ * @return @c 0 on success, @c -1 on failure.
+ */
+extern int rpc_get_stat_from_orm_json(rcf_rpc_server *rpcs,
+                                      const char *stat_name, int *stat_value);
+
 #endif /* !__SOCKAPI_TS_RPC_H__ */
