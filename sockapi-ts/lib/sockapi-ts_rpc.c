@@ -3772,3 +3772,29 @@ rpc_sockts_peek_stream_receiver(rcf_rpc_server *rpcs, int s,
 
     RETVAL_INT(sockts_peek_stream_receiver, out.retval);
 }
+
+/* See description in sockapi-ts_rpc.h */
+int
+rpc_get_stat_from_orm_json(rcf_rpc_server *rpcs, const char *stat_name,
+                           int *stat_value)
+{
+    tarpc_get_stat_from_orm_json_in in;
+    tarpc_get_stat_from_orm_json_out out;
+
+    memset(&in, 0, sizeof(in));
+    memset(&out, 0, sizeof(out));
+
+    in.stat_name = strdup(stat_name);
+
+    rcf_rpc_call(rpcs, "get_stat_from_orm_json", &in, &out);
+
+    CHECK_RETVAL_VAR_IS_ZERO_OR_MINUS_ONE(get_stat_from_orm_json,
+                                          out.retval);
+    TAPI_RPC_LOG(rpcs, get_stat_from_orm_json, "stat_name=%s, stat_value=%d",
+                 "%d", stat_name, out.stat_value, out.retval);
+
+    if (stat_value != NULL)
+        *stat_value = out.stat_value;
+
+    RETVAL_INT(get_stat_from_orm_json, out.retval);
+}

@@ -1353,6 +1353,19 @@ struct tarpc_sockts_peek_stream_receiver_out {
     tarpc_int retval;
 };
 
+struct tarpc_get_stat_from_orm_json_in {
+    struct tarpc_in_arg common;
+
+    string stat_name<>;
+};
+
+struct tarpc_get_stat_from_orm_json_out {
+    struct tarpc_out_arg common;
+
+    tarpc_int stat_value;
+    tarpc_int retval;
+};
+
 program sapits
 {
     version ver0
@@ -1448,5 +1461,6 @@ program sapits
         RPC_DEF(connect_send_dur_time)
         RPC_DEF(sockts_iomux_timeout_loop)
         RPC_DEF(sockts_peek_stream_receiver)
+        RPC_DEF(get_stat_from_orm_json)
     } = 1;
 } = 2;
