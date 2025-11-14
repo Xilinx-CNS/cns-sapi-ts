@@ -11586,3 +11586,67 @@ TARPC_FUNC_STATIC(get_stat_from_orm_json, {},
         out->retval = 0;
     }
 })
+
+/**
+ * Get size of listen queue using orm_json tool.
+ *
+ * @param      loc_addr   Local IP address.
+ * @param[out] n_listenq  Size of listen queue
+ *
+ * @return @c 0 on success, @c -1 on failure.
+ */
+static int
+get_n_listenq_from_orm_json(const struct sockaddr *loc_addr, int *n_listenq)
+{
+    te_string str = TE_STRING_INIT;
+    te_errno rc;
+    int saved_errno = errno;
+
+    rc = ta_read_cmd("orm_json all", &str);
+
+    if (rc != 0)
+        goto cleanup;
+
+    rc = orm_json_get_n_listenq(str.ptr, loc_addr, n_listenq);
+    if (rc == TE_RC(TE_TAPI, TE_EFMT))
+    {
+        ERROR("Unexpected serialized JSON object format");
+    }
+    else if (rc == TE_RC(TE_TAPI, TE_ENOENT))
+    {
+        RING("Number of elements in listenq given local address "
+             "was not found in orm_json output");
+    }
+    else if (rc != 0)
+    {
+        ERROR("Parsing serialized JSON object failed "
+              "in unexpected way");
+    }
+
+cleanup:
+
+    te_string_free(&str);
+
+    errno = saved_errno;
+
+    return (rc == 0) ? 0 : -1;
+}
+
+TARPC_FUNC_STATIC(get_n_listenq_from_orm_json, {},
+{
+    te_errno rc = 0;
+
+    PREPARE_ADDR(loc_addr, in->loc_addr, 0);
+
+    MAKE_CALL(rc = func(loc_addr, &out->n_listenq));
+
+    if (rc != 0)
+    {
+        out->retval = -1;
+        out->common._errno = rc;
+    }
+    else
+    {
+        out->retval = 0;
+    }
+})

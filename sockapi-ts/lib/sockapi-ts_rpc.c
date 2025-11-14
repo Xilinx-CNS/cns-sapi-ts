@@ -3798,3 +3798,32 @@ rpc_get_stat_from_orm_json(rcf_rpc_server *rpcs, const char *stat_name,
 
     RETVAL_INT(get_stat_from_orm_json, out.retval);
 }
+
+/* See description in sockapi-ts_rpc.h */
+int
+rpc_get_n_listenq_from_orm_json(rcf_rpc_server *rpcs,
+                                const struct sockaddr *loc_addr,
+                                int *n_listenq)
+{
+    tarpc_get_n_listenq_from_orm_json_in in;
+    tarpc_get_n_listenq_from_orm_json_out out;
+    char loc_buf[TE_SOCKADDR_STR_LEN];
+
+    memset(&in, 0, sizeof(in));
+    memset(&out, 0, sizeof(out));
+
+    sockaddr_input_h2rpc(loc_addr, &in.loc_addr);
+
+    rcf_rpc_call(rpcs, "get_n_listenq_from_orm_json", &in, &out);
+
+    CHECK_RETVAL_VAR_IS_ZERO_OR_MINUS_ONE(get_n_listenq_from_orm_json,
+                                          out.retval);
+    TAPI_RPC_LOG(rpcs, get_n_listenq_from_orm_json, "loc_addr=%s, n_listenq=%d",
+                 "%d", SOCKADDR_H2STR_SBUF(loc_addr, loc_buf),
+                 out.n_listenq, out.retval);
+
+    if (n_listenq != NULL)
+        *n_listenq = out.n_listenq;
+
+    RETVAL_INT(get_n_listenq_from_orm_json, out.retval);
+}
