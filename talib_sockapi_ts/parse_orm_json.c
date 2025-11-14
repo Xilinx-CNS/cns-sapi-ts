@@ -614,3 +614,79 @@ cleanup:
 
     return rc;
 }
+
+te_errno
+orm_json_get_opt(const char *joutput, int stack_id, const char *opt_name,
+                 int *opt_value)
+{
+    te_errno rc = TE_RC(TE_TAPI, TE_ENOENT);
+    json_error_t error;
+    json_t *jmain;
+    json_t *jjson;
+    json_t *jjson_elt;
+    int jjson_i;
+    const char *jjson_elt_id;
+    json_t *jjson_elt_issue;
+    json_t *jopts;
+    json_t *jopt_value;
+
+    jmain = json_loads(joutput, 0, &error);
+
+    if (jmain == NULL)
+    {
+        ERROR("json_loads fails with message: \"%s\", position: %u",
+              error.text, error.position);
+        rc = TE_RC(TE_TAPI, TE_EFMT);
+        goto cleanup;
+    }
+    /*
+     * The corresponding serialized JSON looks like this.
+     * {
+     * ...
+     *     "json": [
+     *         {
+     *             "0": {
+     * ...
+     *                 "opts": {
+     *                     "NDEBUG": 0,
+     * ...
+     *                     "EF_MAX_PACKETS": 32768,
+     * ...
+     *                 }
+     *             }
+     *         }
+     *     ]
+     * }
+     */
+    JSON_CHECK_GOTTEN(the whole json, "main", jmain, object, TRUE);
+    JSON_OBJECT_GET_CHECK(main, json, array, TRUE);
+    json_array_foreach(jjson, jjson_i, jjson_elt)
+    {
+        if (!json_is_object(jjson_elt))
+        {
+            ERROR("Element in jjson with index %d is not an object", jjson_i);
+            rc = TE_RC(TE_TAPI, TE_EFMT);
+            goto cleanup;
+        }
+        json_object_foreach(jjson_elt, jjson_elt_id, jjson_elt_issue)
+        {
+            int cur_id = atoi(jjson_elt_id);
+
+            if (cur_id != stack_id ||
+                (cur_id == 0 && strcmp(jjson_elt_id, "0") != 0))
+                continue;
+
+            JSON_OBJECT_GET_CHECK(json_elt_issue, opts, object, TRUE);
+            JSON_OBJECT_GET_CHECK_EXT(jopts, opt_name, jopt_value, integer,
+                                      TRUE);
+            *opt_value = json_integer_value(jopt_value);
+            rc = 0;
+            goto cleanup;
+        }
+    }
+
+cleanup:
+    json_decref(jmain);
+
+    return rc;
+}
