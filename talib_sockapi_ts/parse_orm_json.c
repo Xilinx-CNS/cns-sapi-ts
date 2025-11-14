@@ -501,3 +501,116 @@ cleanup:
 
     return rc;
 }
+
+te_errno
+orm_json_get_n_listenq(const char *joutput, const struct sockaddr *loc_addr,
+                       int *n_listenq)
+{
+    te_errno rc = TE_RC(TE_TAPI, TE_ENOENT);
+    json_error_t error;
+    json_t *jmain;
+    json_t *jjson;
+    json_t *jjson_elt;
+    int jjson_i;
+    const char *jjson_elt_id;
+    json_t *jjson_elt_issue;
+    json_t *jstack;
+    json_t *js;
+    json_t *jladdr;
+    json_t *jcp;
+    json_t *jlport;
+    json_t *jtcp_listen;
+    json_t *jtcp_listen_issue;
+    const char *tcp_listen_id;
+    json_t *jtcp_listen_sockets;
+    json_t *jn_listenq;
+
+    *n_listenq = -1;
+
+    jmain = json_loads(joutput, 0, &error);
+
+    if (jmain == NULL)
+    {
+        ERROR("json_loads fails with message: \"%s\", position: %u",
+              error.text, error.position);
+        rc = TE_RC(TE_TAPI, TE_EFMT);
+        goto cleanup;
+    }
+    /*
+     * The corresponding serialized JSON looks like this.
+     * {
+     * ...
+     *     "json": [
+     *         {
+     *             "0": {
+     * ...
+     *                 "stack": {
+     * ...
+     *                     "tcp_listen": {
+     *                         "2047": {
+     *                             "tcp_listen_sockets": {
+     *                                 "s": {
+     * ...
+     *                                     "laddr": "192.168.20.1",
+     *                                     "cp": {
+     *                                         "laddr": "192.168.20.1",
+     *                                         "lport": 20988,
+     * ...
+     *                                     },
+     * ...
+     *                                 },
+     * ...
+     *                                 "n_listenq": 1,
+     * ...
+     *                             },
+     * ...
+     *                         }
+     *                     },
+     * ...
+     *                 },
+     * ...
+     *             }
+     *         }
+     *     ]
+     * }
+     */
+    JSON_CHECK_GOTTEN(the whole json, "main", jmain, object, TRUE);
+    JSON_OBJECT_GET_CHECK(main, json, array, TRUE);
+    json_array_foreach(jjson, jjson_i, jjson_elt)
+    {
+        if (!json_is_object(jjson_elt))
+        {
+            ERROR("Element in jjson with index %d is not an object", jjson_i);
+            rc = TE_RC(TE_TAPI, TE_EFMT);
+            goto cleanup;
+        }
+        json_object_foreach(jjson_elt, jjson_elt_id, jjson_elt_issue)
+        {
+            JSON_OBJECT_GET_CHECK(json_elt_issue, stack, object, FALSE);
+            JSON_OBJECT_GET_CHECK(stack, tcp_listen, object, FALSE);
+            json_object_foreach(jtcp_listen, tcp_listen_id, jtcp_listen_issue)
+            {
+                JSON_OBJECT_GET_CHECK(tcp_listen_issue, tcp_listen_sockets,
+                                      object, FALSE);
+                JSON_OBJECT_GET_CHECK(tcp_listen_sockets, n_listenq, integer,
+                                      FALSE);
+                JSON_OBJECT_GET_CHECK(tcp_listen_sockets, s, object, FALSE);
+                JSON_OBJECT_GET_CHECK(s, laddr, string, FALSE);
+                JSON_OBJECT_GET_CHECK(s, cp, object, FALSE);
+                JSON_OBJECT_GET_CHECK(cp, lport, integer, FALSE);
+                if (sockaddr_cmp(loc_addr, json_string_value(jladdr),
+                                 json_integer_value(jlport), TRUE))
+                {
+                    *n_listenq = json_integer_value(jn_listenq);
+                    rc = 0;
+                    goto cleanup;
+                }
+            }
+        }
+    }
+
+cleanup:
+    json_decref(jmain);
+
+    return rc;
+}
