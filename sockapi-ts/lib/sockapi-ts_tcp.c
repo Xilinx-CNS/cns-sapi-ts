@@ -60,28 +60,23 @@ onload_listenq_is_empty(rcf_rpc_server *rpcs,
 {
     static const char *zf_path = NULL;
     rpc_wait_status st;
-    char *addr_str = NULL;
+    int rc, n_listenq;
 
     if (use_zf)
         zf_path = sockts_zf_stackdump_path(rpcs);
 
     RPC_AWAIT_IUT_ERROR(rpcs);
     if (use_zf)
+    {
         st = rpc_system_ex(rpcs, "%s dump | grep 'lcl=%s.*SYN-RCVD' "
                            "2>&1 1>/dev/null", zf_path,
                            sockaddr_h2str(addr));
+    }
     else
     {
-        CHECK_RC(te_sockaddr_h2str(addr, &addr_str));
-        st = rpc_system_ex(rpcs,
-                           "te_onload_stdump dump | "
-                           "grep -A 12 'lcl=.*%s.*%u.*LISTEN' |"
-                           "grep 'listenq.*n=0'",
-                           addr_str, htons(te_sockaddr_get_port(addr)));
-        if (addr_str != NULL)
-            free(addr_str);
+        rc = rpc_get_n_listenq_from_orm_json(rpcs, addr, &n_listenq);
     }
-    if ((st.value != 0 && zf_path) || (st.value == 0 && !zf_path))
+    if ((zf_path && st.value != 0) || (!zf_path && rc == 0 && n_listenq == 0))
         return TRUE;
 
     return FALSE;
