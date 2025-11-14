@@ -109,4 +109,19 @@ te_errno orm_json_get_n_listenq(const char *joutput,
                                 const struct sockaddr *loc_addr,
                                 int *n_listenq);
 
+/**
+ * Get option for specified stack from an orm_json tool's output.
+ *
+ * @param      joutput   Serialized JSON orm_json output.
+ * @param      stack_id  Stack_id.
+ * @param      opt_name  Name of the option.
+ * @param[out] opt_value Value of the option.
+ *
+ * @return Status code.
+ * @retval TE_ENOENT     No information about this option was found.
+ * @retval TE_EFMT       Unexpected JSON format.
+ * @retval 0             Success.
+ */
+te_errno orm_json_get_opt(const char *joutput, int stack_id,
+                          const char *opt_name, int *opt_value);
 #endif /* __PARSE_ORM_JSON_H__ */
