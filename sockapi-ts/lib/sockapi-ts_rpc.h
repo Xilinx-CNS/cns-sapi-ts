@@ -1930,4 +1930,17 @@ extern int rpc_sockts_peek_stream_receiver(rcf_rpc_server *rpcs, int s,
 extern int rpc_get_stat_from_orm_json(rcf_rpc_server *rpcs,
                                       const char *stat_name, int *stat_value);
 
+/**
+ * Get number of members in listenq using an orm_json tool.
+ *
+ * @param      rpcs      RPC server handle.
+ * @param      loc_addr  Local address.
+ * @param[out] n_listenq Number of members in listenq.
+ *
+ * @return @c 0 on success, @c -1 on failure.
+ */
+
+extern int rpc_get_n_listenq_from_orm_json(rcf_rpc_server *rpcs,
+                                           const struct sockaddr *loc_addr,
+                                           int *n_listenq);
 #endif /* !__SOCKAPI_TS_RPC_H__ */
