@@ -93,4 +93,20 @@ te_errno orm_json_get_tcp_state(const char *joutput,
 te_errno orm_json_get_stat(const char *joutput, const char *stat_name,
                            int *stat_value);
 
+/**
+ * Get number of members in listenq from an orm_json tool's output.
+ *
+ * @param      joutput   Serialized JSON orm_json output.
+ * @param      loc_addr  Local address.
+ * @param[out] n_listenq Number of members in listenq.
+ *
+ * @return Status code.
+ * @retval TE_ENOENT     No information about this listen queue was found.
+ * @retval TE_EFMT       Unexpected JSON format.
+ * @retval 0             Success.
+ */
+te_errno orm_json_get_n_listenq(const char *joutput,
+                                const struct sockaddr *loc_addr,
+                                int *n_listenq);
+
 #endif /* __PARSE_ORM_JSON_H__ */
