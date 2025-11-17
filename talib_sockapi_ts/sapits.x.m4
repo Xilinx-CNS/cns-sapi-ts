@@ -1379,6 +1379,20 @@ struct tarpc_get_n_listenq_from_orm_json_out {
     tarpc_int retval;
 };
 
+struct tarpc_get_opt_from_orm_json_in {
+    struct tarpc_in_arg common;
+
+    tarpc_int stack_id;
+    string opt_name<>;
+};
+
+struct tarpc_get_opt_from_orm_json_out {
+    struct tarpc_out_arg common;
+
+    tarpc_int opt_value;
+    tarpc_int retval;
+};
+
 program sapits
 {
     version ver0
@@ -1476,5 +1490,6 @@ program sapits
         RPC_DEF(sockts_peek_stream_receiver)
         RPC_DEF(get_stat_from_orm_json)
         RPC_DEF(get_n_listenq_from_orm_json)
+        RPC_DEF(get_opt_from_orm_json)
     } = 1;
 } = 2;

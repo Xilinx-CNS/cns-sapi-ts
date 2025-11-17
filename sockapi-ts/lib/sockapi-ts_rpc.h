@@ -1943,4 +1943,17 @@ extern int rpc_get_stat_from_orm_json(rcf_rpc_server *rpcs,
 extern int rpc_get_n_listenq_from_orm_json(rcf_rpc_server *rpcs,
                                            const struct sockaddr *loc_addr,
                                            int *n_listenq);
+
+/**
+ * Get option using an orm_json tool.
+ *
+ * @param      rpcs      RPC server handle.
+ * @param      stack_id  Stack ID.
+ * @param      opt_name  Name of the option.
+ * @param[out] opt_value Value of the option.
+ *
+ * @return @c 0 on success, @c -1 on failure.
+ */
+extern int rpc_get_opt_from_orm_json(rcf_rpc_server *rpcs, int stack_id,
+                                     const char *opt_name, int *opt_value);
 #endif /* !__SOCKAPI_TS_RPC_H__ */

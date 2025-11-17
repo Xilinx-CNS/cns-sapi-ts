@@ -11650,3 +11650,66 @@ TARPC_FUNC_STATIC(get_n_listenq_from_orm_json, {},
         out->retval = 0;
     }
 })
+
+/**
+ * Get option using orm_json tool.
+ *
+ * @param      stack_id   Stack ID.
+ * @param      opt_name   Name of the option.
+ * @param[out] opt_value  Value of the option.
+ *
+ * @return @c 0 on success, @c -1 on failure.
+ */
+static int
+get_opt_from_orm_json(int stack_id, const char *opt_name, int *opt_value)
+{
+    te_string str = TE_STRING_INIT;
+    te_errno rc;
+    int saved_errno = errno;
+
+    rc = ta_read_cmd("orm_json opts", &str);
+
+    if (rc != 0)
+        goto cleanup;
+
+    rc = orm_json_get_opt(str.ptr, stack_id, opt_name, opt_value);
+    if (rc == TE_RC(TE_TAPI, TE_EFMT))
+    {
+        ERROR("Unexpected serialized JSON object format");
+    }
+    else if (rc == TE_RC(TE_TAPI, TE_ENOENT))
+    {
+        RING("Option '%s' in stack with ID=%d was not found in orm_json output",
+             opt_name, stack_id);
+    }
+    else if (rc != 0)
+    {
+        ERROR("Parsing serialized JSON object failed "
+              "in unexpected way");
+    }
+
+cleanup:
+
+    te_string_free(&str);
+
+    errno = saved_errno;
+
+    return (rc == 0) ? 0 : -1;
+}
+
+TARPC_FUNC_STATIC(get_opt_from_orm_json, {},
+{
+    te_errno rc = 0;
+
+    MAKE_CALL(rc = func(in->stack_id, in->opt_name, &out->opt_value));
+
+    if (rc != 0)
+    {
+        out->retval = -1;
+        out->common._errno = rc;
+    }
+    else
+    {
+        out->retval = 0;
+    }
+})
