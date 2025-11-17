@@ -135,24 +135,11 @@ get_ef_max_packets(rcf_rpc_server *pco)
 {
     int val;
     tarpc_onload_stat ostat;
-    char *buf = NULL;
-    char *ptr = NULL;
     int s = rpc_socket(pco, RPC_AF_INET, RPC_SOCK_STREAM, RPC_PROTO_DEF);
 
     rpc_onload_fd_stat(pco, s, &ostat);
-    rpc_shell_get_all2(pco, &buf, "te_onload_stdump %d get_opt max_packets",
-                       ostat.stack_id);
+    rpc_get_opt_from_orm_json(pco, ostat.stack_id, "EF_MAX_PACKETS", &val);
     rpc_close(pco, s);
-
-    /* Input string example - "[1] max_packets: 16384" */
-    if ((ptr = strrchr(buf, ' ')) == NULL)
-    {
-        free(buf);
-        TEST_FAIL("Couldn't parse stackdump output");
-    }
-
-    val = atoi(ptr);
-    free(buf);
 
     return val;
 }
