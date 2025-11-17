@@ -89,36 +89,6 @@ clean_server_ctx(struct server_ctx *server_ctx, int num)
     free(server_ctx);
 }
 
-/**
- * Get @b sockcache_contention value from Onload stackdump.
- *
- * @param rpcs  RPC server
- *
- * @return @b sockcache_contention value
- */
-static int
-get_sockcache_contention(rcf_rpc_server *rpcs)
-{
-    int num = 0;
-    char *buf = NULL;
-    char *ptr;
-
-    rpc_shell_get_all(rpcs, &buf, "te_onload_stdump lots | grep sockcache_contention", -1);
-    if (buf != NULL)
-    {
-        RING("%s", buf);
-        if ((ptr = strchr(buf, ' ')) == NULL)
-            TEST_FAIL("Couldn't parse sockcache_contention value");
-
-        num = atoi(ptr);
-        free(buf);
-    }
-    else
-        TEST_VERDICT("Failed to get sockcache_contention value");
-
-    return num;
-}
-
 int
 main(int argc, char *argv[])
 {
@@ -378,9 +348,18 @@ main(int argc, char *argv[])
     RING("Total opened sockets number %d, cached %d",
          iter_num * listener_num * num, total);
 
-    if (disable_caching && get_sockcache_contention(pco_iut2) > 0)
-        TEST_VERDICT("Onload stackdump showed non-zero "
-                     "sockcache_contention");
+    if (disable_caching)
+    {
+        int sockcache_contention;
+
+        rpc_get_stat_from_orm_json(pco_iut2, "sockcache_contention",
+                                   &sockcache_contention);
+        if (sockcache_contention > 0)
+        {
+            TEST_VERDICT("Onload stackdump showed non-zero "
+                         "sockcache_contention");
+        }
+    }
 
     TEST_SUCCESS;
 
