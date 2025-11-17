@@ -3827,3 +3827,31 @@ rpc_get_n_listenq_from_orm_json(rcf_rpc_server *rpcs,
 
     RETVAL_INT(get_n_listenq_from_orm_json, out.retval);
 }
+
+/* See description in sockapi-ts_rpc.h */
+int
+rpc_get_opt_from_orm_json(rcf_rpc_server *rpcs, int stack_id,
+                          const char *opt_name, int *opt_value)
+{
+    tarpc_get_opt_from_orm_json_in in;
+    tarpc_get_opt_from_orm_json_out out;
+
+    memset(&in, 0, sizeof(in));
+    memset(&out, 0, sizeof(out));
+
+    in.opt_name = strdup(opt_name);
+    in.stack_id = stack_id;
+
+    rcf_rpc_call(rpcs, "get_opt_from_orm_json", &in, &out);
+
+    CHECK_RETVAL_VAR_IS_ZERO_OR_MINUS_ONE(get_opt_from_orm_json,
+                                          out.retval);
+    TAPI_RPC_LOG(rpcs, get_opt_from_orm_json,
+                 "stack_id=%d, opt_name=%s, opt_value=%d",
+                 "%d", stack_id, opt_name, out.opt_value, out.retval);
+
+    if (opt_value != NULL)
+        *opt_value = out.opt_value;
+
+    RETVAL_INT(get_opt_from_orm_json, out.retval);
+}
