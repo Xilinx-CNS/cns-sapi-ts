@@ -452,7 +452,7 @@ struct mmsghdr_alt {
     unsigned int  msg_len;  /**< Number of received bytes for header */
     int           s;        /**< Socket fd */
 
-    te_bool                 keep_iovs;      /**< If @c TRUE, keep Onload
+    bool                    keep_iovs;      /**< If @c TRUE, keep Onload
                                                  buffers using
                                                  @c ONLOAD_ZC_KEEP flag */
     struct onload_zc_iovec *saved_iovs;     /**< Where to save kept Onload
@@ -1419,9 +1419,9 @@ set_tcp_nodelay(int s, api_func func_setsockopt, int val)
  * @return @c -1 on failure, number of bytes sent on success.
  */
 static int
-send_msg_more_check(te_bool send_zc, struct onload_zc_mmsg *mmsg,
+send_msg_more_check(bool send_zc, struct onload_zc_mmsg *mmsg,
                     int s, const char *buf, size_t buf_len,
-                    te_bool more_flag, api_func_ptr func_zc_send,
+                    bool more_flag, api_func_ptr func_zc_send,
                     api_func func_send, const char *msg_name)
 {
     int rc;
@@ -1590,7 +1590,7 @@ typedef TAILQ_HEAD(zc_compl_bufs, zc_compl_buf) zc_compl_bufs;
  */
 static unsigned int
 remove_compl_bufs_by_fd(zc_compl_bufs *compl_bufs, int fd,
-                        te_bool free_compl_bufs)
+                        bool free_compl_bufs)
 {
     zc_compl_buf *p;
     zc_compl_buf *q;
@@ -1626,8 +1626,8 @@ remove_compl_bufs_by_fd(zc_compl_bufs *compl_bufs, int fd,
  */
 int
 wait_for_zc_completion(zc_compl_bufs *sent_bufs,
-                       te_bool free_compl_bufs,
-                       te_bool log_result,
+                       bool free_compl_bufs,
+                       bool log_result,
                        int timeout)
 {
     api_func_ptr      func_poll = NULL;
@@ -1638,8 +1638,8 @@ wait_for_zc_completion(zc_compl_bufs *sent_bufs,
     struct cmsghdr   *cmsg;
     zc_compl_buf     *sent_buf = NULL;
     struct pollfd     pfd;
-    te_bool           failed = FALSE;
-    te_bool           add_sleep = FALSE;
+    bool              failed = FALSE;
+    bool              add_sleep = FALSE;
     int               rc = 0;
     unsigned int      completed_num = 0;
     int               saved_errno = errno;
@@ -1764,7 +1764,7 @@ wait_for_zc_completion(zc_compl_bufs *sent_bufs,
                 {
                     zc_compl_buf *compl_buf;
                     zc_compl_buf *buf_aux;
-                    te_bool       found;
+                    bool found;
 
                     found = FALSE;
                     memcpy(&compl_buf, CMSG_DATA(cmsg), sizeof(compl_buf));
@@ -2648,7 +2648,7 @@ typedef struct zc_mmsg_data {
                                              onload_zc_mmsg structure */
 
     unsigned int  iov_rlen;      /**< Real number of IOVs in the message */
-    te_bool       use_reg_bufs;  /**< If @c TRUE and buf_specs is not
+    bool          use_reg_bufs;  /**< If @c TRUE and buf_specs is not
                                       specified, use
                                       @b onload_zc_register_buffers();
                                       otherwise -
@@ -2674,8 +2674,8 @@ typedef struct zc_mmsg_data {
                                                     mapped memory chunk */
 #endif
 
-    te_bool initialized;  /**< If @c TRUE, this structure was successfully
-                               initialized with zc_mmsg_data_alloc_fill() */
+    bool initialized;  /**< If @c TRUE, this structure was successfully
+                            initialized with zc_mmsg_data_alloc_fill() */
 } zc_mmsg_data;
 
 /**
@@ -2709,7 +2709,7 @@ typedef struct zc_mmsg_data {
  */
 static int
 zc_mmsg_data_alloc_fill(zc_mmsg_data *mmsg_data,
-                        te_bool no_compl)
+                        bool no_compl)
 {
     unsigned int  i = 0;
     unsigned int  j = 0;
@@ -2717,7 +2717,7 @@ zc_mmsg_data_alloc_fill(zc_mmsg_data *mmsg_data,
     int           rc_aux;
 
     tarpc_onload_zc_buf_spec  *buf_specs;
-    te_bool                    allocated_seq = FALSE;
+    bool                       allocated_seq = FALSE;
     int                        buf_type;
     int                        buf_type_aux;
 
@@ -3299,7 +3299,7 @@ TARPC_FUNC(simple_zc_send,
         struct tarpc_msghdr    *rpc_msg;
         struct msghdr          *msg = NULL;
         te_errno                rc;
-        te_bool                 no_completions = FALSE;
+        bool                    no_completions = FALSE;
 
 #ifdef ONLOAD_SO_ONLOADZC_COMPLETE
         struct zc_compl_bufs *compl_queue = NULL;
@@ -3624,7 +3624,7 @@ TARPC_FUNC(template_send, {},
 /**
  * Flag to start popen flooders on all threads
  */
-static te_bool popen_flooder_toggle_en = FALSE;
+static bool popen_flooder_toggle_en = FALSE;
 
 /**
  * Argument to be passed to a thread @b popen_flooder_thread() during
@@ -3697,7 +3697,7 @@ popen_flooder_thread(void *arg)
  */
 int
 popen_flooder(int threads_num, int iterations, int popen_iter,
-              te_bool sync_popen)
+              bool sync_popen)
 {
     popen_flooder_thread_arg_t *thrd_arg;
 
@@ -3795,7 +3795,7 @@ TARPC_FUNC(popen_flooder, {},
 )
 
 void
-popen_flooder_toggle(te_bool enable)
+popen_flooder_toggle(bool enable)
 {
     popen_flooder_toggle_en = enable;
 }
@@ -4190,7 +4190,7 @@ od_fallback_sendmsg(int fd, struct iovec *iov, size_t iov_len, int flags)
 
 int
 od_send(int fd, struct iovec *iov, size_t iov_len, int flags,
-        te_bool raw_send)
+        bool raw_send)
 {
     struct onload_delegated_send ods;
     uint8_t                      headers[OD_HEADERS_LEN];
@@ -4480,7 +4480,7 @@ int
 onload_hw_filters_limit(struct sockaddr *addr, socklen_t addr_len)
 {
     struct onload_stat st;
-    te_bool  fail = TRUE;
+    bool fail = TRUE;
     int      rc;
     int     *s;
     int     *tmp;
@@ -4614,7 +4614,7 @@ TARPC_FUNC(onload_hw_filters_limit, {},
  *       L5 functions by default.
  */
 int
-out_of_hw_filters_do(tarpc_lib_flags lib_flags, te_bool do_bind,
+out_of_hw_filters_do(tarpc_lib_flags lib_flags, bool do_bind,
                      struct sockaddr *bind_addr, socklen_t bind_addr_len,
                      struct sockaddr *connect_addr,
                      socklen_t connect_addr_len, int sock_type, int action,
@@ -5460,7 +5460,7 @@ TARPC_FUNC(many_socket, {},
  * 
  * @return @c TRUE if the socket is cached.
  */
-static te_bool
+static bool
 socket_is_cached(int sock, api_func func)
 {
     struct stat st;
@@ -5618,7 +5618,7 @@ get_all_epoll_evts(api_func epoll_wait_f, int epfd,
  */
 static int
 check_evts_for_fd(struct epoll_event *evts, int num, int fd,
-                  uint32_t events, te_bool expect_evt)
+                  uint32_t events, bool expect_evt)
 {
     int i;
     int found_idx = -1;
@@ -5698,7 +5698,7 @@ check_evts_for_fd(struct epoll_event *evts, int num, int fd,
  */
 static int
 many_epoll_ctl_add_del(tarpc_lib_flags lib_flags, int *sockets, int socks_num,
-                       int epfd, uint32_t events, te_bool check_epoll_wait,
+                       int epfd, uint32_t events, bool check_epoll_wait,
                        int time2run)
 {
     int i = 0;
@@ -5881,7 +5881,7 @@ TARPC_FUNC_STATIC(get_socket_from_array, {},
  * 
  * @return @c TRUE if durtaion is expired.
  */
-static inline te_bool
+static inline bool
 duration_is_expired(int duration, struct timeval *tv_start)
 {
     struct timeval tv_finish;
@@ -5916,7 +5916,7 @@ duration_is_expired(int duration, struct timeval *tv_start)
 int
 many_recv(tarpc_lib_flags lib_flags, int sock, int num, int duration,
           size_t length, uint8_t *last_packet, size_t last_packet_len,
-          te_bool count_fails, int *fails)
+          bool count_fails, int *fails)
 {
     struct timeval tv_start;
     api_func func = NULL;
@@ -6117,7 +6117,7 @@ TARPC_FUNC(recv_timing, {},
 int
 many_send_num(tarpc_lib_flags lib_flags, int sock, size_t length_min,
               size_t length_max, int num, int duration,
-              const char *func_name, te_bool check_len, te_bool count_fails,
+              const char *func_name, bool check_len, bool count_fails,
               int *fails)
 {
     struct timeval tv_start;
@@ -6242,7 +6242,7 @@ TARPC_FUNC(many_send_num, {},
  * @return Status code.
  */
 te_errno
-traffic_processor(tarpc_lib_flags lib_flags, int s, te_bool snd,
+traffic_processor(tarpc_lib_flags lib_flags, int s, bool snd,
                   uint8_t *bytes_p, uint8_t *stop)
 {
     te_errno rc;
@@ -7554,7 +7554,7 @@ TARPC_FUNC(get_callback_list, {},
 static void
 blk_aio_callback(union sigval val)
 {
-    *(te_bool *)(val.SIVAL_PTR) = TRUE;
+    *(bool *)(val.SIVAL_PTR) = TRUE;
 }
 #endif
 
@@ -7590,7 +7590,7 @@ blk_aio(int s, void *buf, size_t len, rpc_lio_opcode op, int mode,
     
     int _err = errno;
 
-    te_bool called = FALSE;
+    bool called = FALSE;
     
     sighandler_t old = NULL;
 
@@ -7892,7 +7892,7 @@ long long unsigned int    onstack_addr = 0;
  * Whether SS_ONSTACK flag was returned
  * by sigaltstack() or not
  */
-te_bool                   was_onstack = FALSE;
+bool                      was_onstack = FALSE;
 
 /**
  * Special signal handler which registers signals
@@ -7926,7 +7926,7 @@ signal_registrar_onstack(int signum)
  * Whether signal_registrar_nodefer() was called
  * twice when it was executing already or not.
  */
-te_bool nodefer_called_twice = FALSE;
+bool nodefer_called_twice = FALSE;
 
 /**
  * How many times signal_registrar_nodefer() was called.
@@ -7937,7 +7937,7 @@ int nodefer_calls_count = 0;
  * Whether from the signal handler the signal action seems to be reset
  * to default.
  */
-te_bool nodefer_reset = FALSE;
+bool nodefer_reset = FALSE;
 
 /**
  * Signal handler for @c SA_NODEFER testing.
@@ -7954,7 +7954,7 @@ signal_registrar_nodefer(int signum)
     struct sigaction    old_act;
     pthread_t           tid;
 
-    static te_bool      nodefer_called_already = FALSE;
+    static bool         nodefer_called_already = FALSE;
 
     if (!nodefer_called_already)
         nodefer_called_already = TRUE;
@@ -8046,7 +8046,7 @@ TARPC_FUNC(sighandler_createfile_cleanup, {},
 )
 
 /* Check the presence of the file */
-te_bool
+bool
 sighandler_createfile_exists_unlink(int signo)
 {
     char *filename = sighandler_get_filename(signo);
@@ -8065,7 +8065,7 @@ TARPC_FUNC(sighandler_createfile_exists_unlink, {},
 )
 
 /* Check the presence of the file from another RPC server*/
-te_bool
+bool
 thrd_sighnd_crtfile_exists_unlink(int signo, tarpc_pid_t pid,
                                   tarpc_pthread_t tid)
 {
@@ -8197,8 +8197,8 @@ static void
 nr_callback(union sigval val)
 {
     struct aiocb *cb = (struct aiocb *)(val.SIVAL_PTR);
-    
-    te_bool rd;
+    bool rd;
+
     int     i;
     int     rc;
     
@@ -9103,7 +9103,7 @@ send_msg_warm_flow(const char *func_name,
     uint64_t normal_sent2 = 0;
     uint64_t warm_sent2 = 0;
 
-    te_bool    first_fd = FALSE;
+    bool       first_fd = FALSE;
     int        fd;
     uint64_t  *normal_sent_p = NULL;
     uint64_t  *warm_sent_p = NULL;
@@ -9281,8 +9281,8 @@ static int
 many_send_cork(tarpc_lib_flags lib_flags, int fd, int fd_aux,
                size_t size_min, size_t size_max,
                size_t send_num, size_t length,
-               int send_usleep, te_bool tcp_nodelay,
-               te_bool no_trigger,
+               int send_usleep, bool tcp_nodelay,
+               bool no_trigger,
                te_errno *te_err)
 {
     api_func setsockopt_f;
@@ -9490,7 +9490,7 @@ static te_errno
 tcp_get_state_from_tool(const char *tool,
                         struct sockaddr *loc_addr,
                         struct sockaddr *rem_addr,
-                        rpc_tcp_state *state, te_bool *found)
+                        rpc_tcp_state *state, bool *found)
 {
 #define STATE_LEN 256
     te_string  cmd = TE_STRING_INIT;
@@ -9656,9 +9656,9 @@ cleanup:
  */
 static te_errno
 tcp_get_state(struct sockaddr *loc_addr, struct sockaddr *rem_addr,
-              te_bool onload_stdump, te_bool onload_stdump_netstat,
-              te_bool zf_stdump,
-              rpc_tcp_state *state, te_bool *found)
+              bool onload_stdump, bool onload_stdump_netstat,
+              bool zf_stdump,
+              rpc_tcp_state *state, bool *found)
 {
     te_errno rc = 0;
 
@@ -9702,7 +9702,7 @@ tcp_get_state(struct sockaddr *loc_addr, struct sockaddr *rem_addr,
  * @return Status code.
  */
 static te_errno
-check_program_exists(te_bool *exists, const char *path, ...)
+check_program_exists(bool *exists, const char *path, ...)
 {
     va_list     ap;
     te_errno    rc;
@@ -9741,8 +9741,8 @@ check_program_exists(te_bool *exists, const char *path, ...)
  * @return Status code.
  */
 static te_errno
-find_netstat_tools(te_bool *onload_stdump, te_bool *onload_stdump_netstat,
-                   te_bool *zf_stdump)
+find_netstat_tools(bool *onload_stdump, bool *onload_stdump_netstat,
+                   bool *zf_stdump)
 {
     te_errno rc;
 
@@ -9820,15 +9820,15 @@ wait_tcp_socket_termination(struct sockaddr *loc_addr,
     rpc_tcp_state   cur_state = RPC_TCP_UNKNOWN;
     te_errno        rc;
     int             retval;
-    te_bool         found = FALSE;
+    bool            found = FALSE;
 
     struct timeval  tv_start_close;
     struct timeval  tv_start;
     struct timeval  tv_end;
 
-    te_bool onload_stdump = FALSE;
-    te_bool onload_stdump_netstat = FALSE;
-    te_bool zf_stdump = FALSE;
+    bool onload_stdump = FALSE;
+    bool onload_stdump_netstat = FALSE;
+    bool zf_stdump = FALSE;
 
     rc = find_netstat_tools(&onload_stdump, &onload_stdump_netstat,
                             &zf_stdump);
@@ -10087,11 +10087,11 @@ get_tcp_socket_state(struct sockaddr *loc_addr,
 {
     te_errno        rc;
     rpc_tcp_state   sock_state;
-    te_bool         sock_found;
 
-    te_bool onload_stdump = FALSE;
-    te_bool onload_stdump_netstat = FALSE;
-    te_bool zf_stdump = FALSE;
+    bool sock_found;
+    bool onload_stdump = FALSE;
+    bool onload_stdump_netstat = FALSE;
+    bool zf_stdump = FALSE;
 
     int saved_errno = errno;
 
@@ -10435,7 +10435,7 @@ static pthread_mutex_t hlrx_ctxts_lock = PTHREAD_MUTEX_INITIALIZER;
  * Should be set to @c TRUE after hlrx_close_fd_hook() is registered
  * to prevent multiple registations.
  */
-static te_bool hlrx_hook_set = FALSE;
+static bool hlrx_hook_set = FALSE;
 
 /**
  * Hook called just before closing FD; used to release onload_zc_hlrx
@@ -10501,7 +10501,7 @@ static int
 obtain_hlrx_struct(int fd, struct onload_zc_hlrx **hlrx)
 {
     zc_hlrx_ctxt   *ctxt;
-    te_bool         found = FALSE;
+    bool            found = FALSE;
     int             rc = 0;
     int             res;
     api_func        func_alloc = NULL;
@@ -11310,7 +11310,7 @@ sockts_peek_stream_receiver(tarpc_sockts_peek_stream_receiver_in *in,
     struct pollfd pfd;
     struct timeval tv_start = {0, 0};
     struct timeval tv_cur = {0, 0};
-    te_bool time_got = FALSE;
+    bool time_got = FALSE;
     int timeout;
 
     te_errno te_rc;
