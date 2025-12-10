@@ -24,7 +24,7 @@ main(int argc, char *argv[])
     TEST_GET_PCO(pco_iut);
     TEST_GET_PCO(pco_tst);
 
-    CHECK_RC(te_string_append(&cmd, "pkill -f netserver"));
+    te_string_append(&cmd, "pkill -f netserver");
 
     if ((pid = rpc_te_shell_cmd(pco_tst, cmd.ptr, -1, NULL, NULL, NULL)) < 0)
         ERROR("Failed to kill netserver: %s", cmd);

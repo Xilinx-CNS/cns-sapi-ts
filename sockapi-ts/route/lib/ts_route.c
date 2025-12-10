@@ -793,7 +793,7 @@ sockts_rt_one_sock_check_route(te_bool first_if,
 
     SOCKTS_RT_RING("Send data in both directions between IUT and Tester");
 
-    CHECK_RC(te_string_append(&err_str, "%s, sending from IUT", err_msg));
+    te_string_append(&err_str, "%s, sending from IUT", err_msg);
 
     test_send_rc = sockts_rt_test_send(rt_sock_type, pco_iut, *iut_s,
                                        pco_tst, *tst_s,
@@ -803,8 +803,7 @@ sockts_rt_one_sock_check_route(te_bool first_if,
         TEST_STOP;
 
     te_string_reset(&err_str);
-    CHECK_RC(te_string_append(&err_str, "%s, sending from Tester",
-                              err_msg));
+    te_string_append(&err_str, "%s, sending from Tester", err_msg);
 
     test_send_rc = sockts_rt_test_send(
                             (rt_sock_type == SOCKTS_SOCK_UDP ?

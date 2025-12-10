@@ -135,7 +135,7 @@ main(int argc, char *argv[])
     tapi_sniffer_add(pco_tst->ta, tst_if->if_name, NULL, NULL, TRUE);
 
     TEST_STEP("Add and load into the kernel @p prog_name on IUT.");
-    CHECK_RC(te_string_append(&obj_name, "%s%s", prog_name, BPF_OBJ_NAME_SFX));
+    te_string_append(&obj_name, "%s%s", prog_name, BPF_OBJ_NAME_SFX);
     bpf_path = sockts_bpf_get_path(pco_iut, iut_if->if_name, obj_name.ptr);
     rc = sockts_bpf_obj_init(pco_iut, iut_if->if_name, bpf_path,
                              TAPI_BPF_PROG_TYPE_XDP, &bpf_id);

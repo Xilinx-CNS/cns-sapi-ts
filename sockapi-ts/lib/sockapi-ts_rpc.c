@@ -1963,50 +1963,43 @@ rpc_sockts_proc_zc_compl_queue(rcf_rpc_server *rpcs, rpc_ptr qhead,
  * @param mmsg      Pointer to structure.
  * @param str       Where to append string representation.
  *
- * @return Status code.
+ * @return 0
+ *
+ * @note The function never returns an error. Its return type is not void
+ *       for legacy reasons.
  */
 static te_errno
 onload_zc_mmsg_rpc2str(rcf_rpc_server *rpcs,
                        struct rpc_onload_zc_mmsg *mmsg, te_string *str)
 {
-    te_errno rc = 0;
     tarpc_size_t i;
 
-    rc = te_string_append(str, "{ ");
-    if (rc != 0)
-        return rc;
-
+    te_string_append(str, "{ ");
     msghdr_rpc2str(&mmsg->msg, str);
 
     if (mmsg->buf_specs != NULL)
     {
         tarpc_onload_zc_buf_spec *specs = mmsg->buf_specs;
 
-        rc = te_string_append(str, ", buf_specs = [");
-        if (rc != 0)
-            return rc;
+        te_string_append(str, ", buf_specs = [");
 
         for (i = 0; i < mmsg->msg.msg_riovlen; i++)
         {
             if (i > 0)
-            {
-                rc = te_string_append(str, ", ");
-                if (rc != 0)
-                    return rc;
-            }
+                te_string_append(str, ", ");
 
             switch (specs[i].type)
             {
                 case TARPC_ONLOAD_ZC_BUF_NEW_ALLOC:
-                    rc = te_string_append(str, "NEW_ALLOC");
+                    te_string_append(str, "NEW_ALLOC");
                     break;
 
                 case TARPC_ONLOAD_ZC_BUF_NEW_REG:
-                    rc = te_string_append(str, "NEW_REG");
+                    te_string_append(str, "NEW_REG");
                     break;
 
                 case TARPC_ONLOAD_ZC_BUF_EXIST_ALLOC:
-                    rc = te_string_append(
+                    te_string_append(
                           str,
                           "EXIST_ALLOC (buf = " RPC_PTR_FMT ", "
                           "index = %u)",
@@ -2015,7 +2008,7 @@ onload_zc_mmsg_rpc2str(rcf_rpc_server *rpcs,
                     break;
 
                 case TARPC_ONLOAD_ZC_BUF_EXIST_REG:
-                    rc = te_string_append(
+                    te_string_append(
                           str,
                           "EXIST_REG (buf = " RPC_PTR_FMT ", "
                           "offset = % " TE_PRINTF_64 "u)",
@@ -2024,38 +2017,26 @@ onload_zc_mmsg_rpc2str(rcf_rpc_server *rpcs,
                     break;
 
                 default:
-                    rc = te_string_append(str, "<UNKNOWN>");
+                    te_string_append(str, "<UNKNOWN>");
             }
-
-            if (rc != 0)
-                return rc;
         }
 
-        rc = te_string_append(str, "]");
-        if (rc != 0)
-            return rc;
+        te_string_append(str, "]");
     }
 
-    rc = te_string_append(str, ", keep_recv_bufs=%s, saved_recv_bufs="
+    te_string_append(str, ", keep_recv_bufs=%s, saved_recv_bufs="
                           RPC_PTR_FMT,
                           (mmsg->keep_recv_bufs ? "TRUE" : "FALSE"),
                           RPC_PTR_VAL(mmsg->saved_recv_bufs));
-    if (rc != 0)
-        return rc;
 
     if (mmsg->rc < 0)
-    {
-        rc = te_string_append(str, ", rc=-error:%s",
-                              errno_rpc2str(-mmsg->rc));
-    }
+        te_string_append(str, ", rc=-error:%s", errno_rpc2str(-mmsg->rc));
     else
-    {
-        rc = te_string_append(str, ", rc=%d", mmsg->rc);
-    }
-    if (rc != 0)
-        return rc;
+        te_string_append(str, ", rc=%d", mmsg->rc);
 
-    return te_string_append(str, ", fd=%d }", mmsg->fd);
+    te_string_append(str, ", fd=%d }", mmsg->fd);
+
+    return 0;
 }
 
 /**
@@ -2080,11 +2061,7 @@ onload_zc_mmsgs_rpc2str(rcf_rpc_server *rpcs,
     for (i = 0; i < mlen; i++)
     {
         if (i > 0)
-        {
-            rc = te_string_append(str, ", ");
-            if (rc != 0)
-                return rc;
-        }
+            te_string_append(str, ", ");
 
         rc = onload_zc_mmsg_rpc2str(rpcs, &msgs[i], str);
         if (rc != 0)
@@ -2276,11 +2253,7 @@ rpc_simple_zc_send_gen(rcf_rpc_server *rpcs,
             msgs[j].rc = out.zc_rc.zc_rc_val[j];
 
             if (j > 0)
-            {
-                rc = te_string_append(&str_msgs, ", ");
-                if (rc != 0)
-                    break;
-            }
+                te_string_append(&str_msgs, ", ");
 
             rc = onload_zc_mmsg_rpc2str(rpcs, &msgs[j], &str_msgs);
             if (rc != 0)

@@ -47,7 +47,7 @@ main(int argc, char *argv[])
     TEST_GET_PCO(pco_iut);
 
     /* We need to be sure that process of netserver does't exist */
-    CHECK_RC(te_string_append(&cmd, "pkill -f netserver"));
+    te_string_append(&cmd, "pkill -f netserver");
 
     CHECK_RC(tapi_onload_copy_sapi_ts_script(pco_iut, PATH_TO_TE_ONLOAD));
     if ((pid = rpc_te_shell_cmd(pco_tst, cmd.ptr, -1, NULL, NULL, NULL)) < 0)

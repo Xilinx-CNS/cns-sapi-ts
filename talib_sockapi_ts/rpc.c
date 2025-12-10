@@ -9542,15 +9542,13 @@ tcp_get_state_from_tool(const char *tool,
      * removes from string everything except the last word which
      * is assumed to be TCP state name.
      */
-    res = te_string_append(
+    te_string_append(
               &cmd,
               "%s | grep \"[^0-9]\\[\\?%s\\]\\?:%hu"
               "\\(\\s.*[^0-9]\\|\\s\\+\\)\\[\\?%s\\]\\?:%hu\\s\\+\" | "
               "sed \"s/^.*\\s\\([^[:space:]]\\+\\)\\s*\\$/\\1/\"",
               tool, loc_addr_str, ntohs(te_sockaddr_get_port(loc_addr)),
               rem_addr_str, ntohs(te_sockaddr_get_port(rem_addr)));
-    if (res != 0)
-        goto cleanup;
 
     res = ta_popen_r(cmd.ptr, &cmd_pid, &f);
     if (res != 0)
@@ -9766,7 +9764,10 @@ tcp_get_state(struct sockaddr *loc_addr, struct sockaddr *rem_addr,
  * @param path        Format string for path.
  * @param ...         Parameters for format string.
  *
- * @return Status code.
+ * @return 0
+ *
+ * @note The function never returns an error. Its return type is not void
+ *       for legacy reasons.
  */
 static te_errno
 check_program_exists(bool *exists, const char *path, ...)
@@ -9779,15 +9780,8 @@ check_program_exists(bool *exists, const char *path, ...)
     *exists = FALSE;
 
     va_start(ap, path);
-    rc = te_string_append_va(&str, path, ap);
+    te_string_append_va(&str, path, ap);
     va_end(ap);
-
-    if (rc != 0)
-    {
-        ERROR("%s(): te_string_append_va() failed, %r",
-              __FUNCTION__, rc);
-        return rc;
-    }
 
     if (access(str.ptr, X_OK) == 0)
         *exists = TRUE;
@@ -9834,11 +9828,8 @@ find_netstat_tools(bool *orm_json, bool *onload_stdump,
     {
         int retval;
 
-        rc = te_string_append(&str,
-                              "%s/te_onload_stdump -z netstat "
-                              "| grep \"unknown command\"", ta_dir);
-        if (rc != 0)
-            return rc;
+        te_string_append(&str, "%s/te_onload_stdump -z netstat "
+                         "| grep \"unknown command\"", ta_dir);
 
         retval = ta_system(str.ptr);
 

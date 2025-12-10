@@ -72,7 +72,7 @@ compare_src_addr(const struct sockaddr *exp_addr,
     va_list     ap;
 
     va_start(ap, format);
-    CHECK_RC(te_string_append_va(&str, format, ap));
+    te_string_append_va(&str, format, ap);
     va_end(ap);
 
     if (te_sockaddrcmp_no_ports(real_addr, real_addr_len,

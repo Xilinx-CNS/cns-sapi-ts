@@ -135,8 +135,7 @@ create_configure_macvlan_or_ipvlan(rcf_rpc_server *pco_iut,
     te_string if_name = TE_STRING_INIT;
     *vlan_if_configured = FALSE;
 
-    CHECK_RC(te_string_append(&if_name, "%svlan_%d",
-                              (macvlan ? "mac" : "ip"), if_id));
+    te_string_append(&if_name, "%svlan_%d", (macvlan ? "mac" : "ip"), if_id);
     *vlan_if_name = if_name.ptr;
     if (macvlan)
     {

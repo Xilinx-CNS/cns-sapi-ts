@@ -593,8 +593,7 @@ main(int argc, char *argv[])
         if (!conns[i].isn_captured)
             TEST_VERDICT("For some connections ISN was not captured");
 
-        CHECK_RC(te_string_append(&str, "conns[%u].ISN = %u\n",
-                                  i, conns[i].isn));
+        te_string_append(&str, "conns[%u].ISN = %u\n", i, conns[i].isn);
     }
     RING("Obtained ISNs:\n%s", str.ptr);
 
@@ -609,10 +608,7 @@ main(int argc, char *argv[])
     for (i = 0; i < TEST_CONNS_NUM; i++)
     {
         if (conns[i].max_mark == diff_metric)
-        {
-            CHECK_RC(te_string_append(&str, "conns[%u].ISN = %u\n",
-                                      i, conns[i].isn));
-        }
+            te_string_append(&str, "conns[%u].ISN = %u\n", i, conns[i].isn);
     }
     RING("The longest list of connections with close ISN values:\n%s",
          str.ptr);

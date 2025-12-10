@@ -199,7 +199,7 @@ check_connection(rcf_rpc_server *pco_iut, const struct if_nameindex *iut_if,
     if (rt_sock_type == SOCKTS_SOCK_UDP)
         rpc_connect(pco_tst, tst_s, SA(&iut_bind_addr));
 
-    CHECK_EXPR(te_string_append(&str, "%s, sending from IUT", msg));
+    te_string_append(&str, "%s, sending from IUT", msg);
     test_send_rc = sockts_rt_test_send(rt_sock_type, pco_iut, iut_s,
                                        pco_tst, tst_s,
                                        SA(&tst_bind_addr), NULL,
@@ -211,7 +211,7 @@ check_connection(rcf_rpc_server *pco_iut, const struct if_nameindex *iut_if,
     }
 
     te_string_reset(&str);
-    CHECK_EXPR(te_string_append(&str, "%s, sending from Tester", msg));
+    te_string_append(&str, "%s, sending from Tester", msg);
     test_send_rc = sockts_rt_test_send(rt_sock_type, pco_tst, tst_s,
                                        pco_iut, iut_s,
                                        SA(&iut_bind_addr), NULL,

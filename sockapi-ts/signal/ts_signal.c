@@ -35,9 +35,9 @@ set_sighandler(rcf_rpc_server *rpcs, rpc_signum sig,
 {
     te_string prefix = TE_STRING_INIT;
 
-    CHECK_RC(te_string_append(&prefix, ""));
+    te_string_append(&prefix, "");
     if (vpref != NULL)
-        CHECK_RC(te_string_append(&prefix, "%s: ", vpref));
+        te_string_append(&prefix, "%s: ", vpref);
 
     if (old_act != NULL)
         rpc_sigaction_reinit(rpcs, old_act);

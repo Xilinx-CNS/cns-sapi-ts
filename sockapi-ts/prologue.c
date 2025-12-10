@@ -316,15 +316,14 @@ copy_onload_tools(rcf_rpc_server *pco_iut)
 
         if (zf_gnu != NULL && *zf_gnu != '\0')
         {
-            CHECK_RC(te_string_append(&zf_stackdump_path, "bin/%s",
-                     ZF_STACKDUMP_NAME));
+            te_string_append(&zf_stackdump_path, "bin/%s", ZF_STACKDUMP_NAME);
             copy_onload_tool(pco_iut->ta, zf_gnu, agt_dir,
                              zf_stackdump_path.ptr, ZF_STACKDUMP_NAME);
         }
         else if (onload_gnu != NULL && *onload_gnu != '\0')
         {
-            CHECK_RC(te_string_append(&zf_stackdump_path, "tools/zf/%s",
-                     ZF_STACKDUMP_NAME));
+            te_string_append(&zf_stackdump_path, "tools/zf/%s",
+                             ZF_STACKDUMP_NAME);
             copy_onload_tool(pco_iut->ta, onload_gnu, agt_dir,
                              zf_stackdump_path.ptr, ZF_STACKDUMP_NAME);
         }
@@ -506,17 +505,17 @@ copy_lib_for_zfshim()
     val_type = CVT_STRING;
     CHECK_RC(cfg_get_instance_fmt(&val_type, &agt_dir, "/agent:%s/dir:",
                                   ta));
-    CHECK_RC(te_string_append(&dst, "%s/libonload_zf.so.1", agt_dir));
+    te_string_append(&dst, "%s/libonload_zf.so.1", agt_dir);
 
     /*
      * Zetaferno has a separate repo after onload-8.0 release.
      * It must be taken into account when setting LD_LIBRARY_PATH.
      */
     if (zf_gnu != NULL && zf_gnu[0] != '\0')
-        CHECK_RC(te_string_append(&src, "%s/lib/", zf_gnu));
+        te_string_append(&src, "%s/lib/", zf_gnu);
     else
-        CHECK_RC(te_string_append(&src, "%s/lib/zf/", onload_gnu));
-    CHECK_RC(te_string_append(&src, "libonload_zf.so"));
+        te_string_append(&src, "%s/lib/zf/", onload_gnu);
+    te_string_append(&src, "libonload_zf.so");
 
     if ((rc = access(src.ptr, F_OK)) < 0)
     {
@@ -853,13 +852,7 @@ set_max_stacks_possible(rcf_rpc_server *rpcs, const char *ifname)
         return 0;
     }
 
-    rc = te_string_append(&max_stacks_s, "%d", max_stacks);
-    if (rc != 0)
-    {
-        ERROR("Failed to convert max_stack value "
-              "to its string representation: %r", rc);
-        return rc;
-    }
+    te_string_append(&max_stacks_s, "%d", max_stacks);
 
     rc = tapi_sh_env_get_int(rpcs, "SOCKTS_MAX_STACKS", &imp_stacks);
     if (rc != 0 || imp_stacks > max_stacks)

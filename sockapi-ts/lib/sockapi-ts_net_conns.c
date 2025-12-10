@@ -167,8 +167,7 @@ configure_macvlan_or_ipvlan_pair(
     sockts_allocate_network(&conn->net_handle, &conn->net_prefix,
                             af);
 
-    CHECK_RC(te_string_append(&if_name, "%svlan_%d",
-                              (macvlan ? "mac" : "ip"), if_id));
+    te_string_append(&if_name, "%svlan_%d", (macvlan ? "mac" : "ip"), if_id);
     conn->iut_new_if.if_name = if_name.ptr;
 
     if (macvlan)

@@ -274,11 +274,11 @@ ts_print_msg_control_data(rpc_msghdr *msghdr)
     struct msghdr              msg;
     te_string                  str = TE_STRING_BUF_INIT(buf);
 
-    CHECK_RC(te_string_append(&str, "Control data: "));
+    te_string_append(&str, "Control data: ");
 
     if (msghdr->msg_controllen == 0)
     {
-        CHECK_RC(te_string_append(&str, "none"));
+        te_string_append(&str, "none");
         RING("%s", str.ptr);
         return;
     }
@@ -292,13 +292,13 @@ ts_print_msg_control_data(rpc_msghdr *msghdr)
          cmsg = CMSG_NXTHDR(&msg, cmsg))
     {
         if (cmsg != CMSG_FIRSTHDR(&msg))
-            CHECK_RC(te_string_append(&str, ", "));
+            te_string_append(&str, ", ");
 
-        CHECK_RC(te_string_append(&str, "level=%d type=%d (%s)",
+        te_string_append(&str, "level=%d type=%d (%s)",
                                   cmsg->cmsg_level, cmsg->cmsg_type,
                                    sockopt_rpc2str(
                                         cmsg_type_h2rpc(cmsg->cmsg_level,
-                                                        cmsg->cmsg_type))));
+                                                        cmsg->cmsg_type)));
     }
 
     RING("%s", str.ptr);

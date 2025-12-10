@@ -102,12 +102,7 @@ ipv4_callback(const tapi_ip4_packet_t *pkt, void *userdata)
 static void
 te_string_append_flag(te_string *str, const char *flag)
 {
-    te_errno rc;
-
-    rc = te_string_append(str, "%s%s", (str->len > 0 ? "|" : ""),
-                          flag);
-    if (rc != 0)
-        ERROR("te_string_append() returned %r", rc);
+    te_string_append(str, "%s%s", (str->len > 0 ? "|" : ""), flag);
 }
 
 /**
