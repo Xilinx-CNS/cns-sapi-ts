@@ -542,6 +542,9 @@
         <run>
             <script name="max_bufs" track_conf="silent">
                 <req id="PROC_SYS_NET"/>
+                <!-- Onload can't obtain rmem_max/wmem_max from
+                     the main namespace. See ON-12805 -->
+                <req id="NO_NETNS"/>
             </script>
             <arg name="sock_type" type="sock_stream_dgram" list="">
                 <value>SOCK_STREAM</value>
