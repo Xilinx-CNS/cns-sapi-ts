@@ -3588,6 +3588,9 @@
         <run>
             <script name="setbuf_force">
               <req ref="opt_name"/>
+              <!-- Onload can't obtain rmem_max/wmem_max from
+                   the main namespace. See ON-12805 -->
+              <req id="NO_NETNS"/>
             </script>
             <arg name="env">
                 <value ref="env.iut_only"/>

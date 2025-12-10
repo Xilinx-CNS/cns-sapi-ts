@@ -23222,32 +23222,8 @@
         <arg name="domain"/>
         <arg name="env"/>
         <arg name="opt_name"/>
-        <arg name="sock_type">SOCK_DGRAM</arg>
+        <arg name="sock_type"/>
         <notes/>
-      </iter>
-      <iter result="PASSED">
-        <arg name="domain"/>
-        <arg name="env"/>
-        <arg name="opt_name">SO_SNDBUFFORCE</arg>
-        <arg name="sock_type">SOCK_STREAM</arg>
-        <notes/>
-        <results tags="v5" key="ON-8252">
-          <result value="PASSED">
-            <verdict>setsockopt(SO_SNDBUF) allowed to set value bigger than system maximum</verdict>
-          </result>
-        </results>
-      </iter>
-      <iter result="PASSED">
-        <arg name="domain"/>
-        <arg name="env"/>
-        <arg name="opt_name">SO_RCVBUFFORCE</arg>
-        <arg name="sock_type">SOCK_STREAM</arg>
-        <notes/>
-        <results tags="v5" key="ON-8252">
-          <result value="PASSED">
-            <verdict>setsockopt(SO_RCVBUF) allowed to set value bigger than system maximum</verdict>
-          </result>
-        </results>
       </iter>
     </test>
     <test name="ipv6_only_bind" type="script">
