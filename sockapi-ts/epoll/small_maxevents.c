@@ -312,8 +312,9 @@ main(int argc, char *argv[])
             }
 
             if (conn->use_libc)
-                CHECK_RC(te_string_append(&fds_str, "%s", "libc."));
-            CHECK_RC(te_string_append(&fds_str, "%d, ", fd));
+                te_string_append(&fds_str, "%s", "libc.");
+
+            te_string_append(&fds_str, "%d, ", fd);
 
             memcpy(&conn->last_reported, &cur_ts, sizeof(cur_ts));
 
@@ -332,22 +333,21 @@ main(int argc, char *argv[])
                          conn->sent_len, 0);
 
                 if (conn->use_libc)
-                    CHECK_RC(te_string_append(&proc_str, "%s", "libc."));
-                CHECK_RC(te_string_append(&proc_str, "%d, ", fd));
+                    te_string_append(&proc_str, "%s", "libc.");
+
+                te_string_append(&proc_str, "%d, ", fd);
             }
         }
 
         te_string_cut(&fds_str, 2);
         te_string_cut(&proc_str, 2);
         te_string_reset(&str_log);
-        CHECK_RC(te_string_append(&str_log,
-                                  "Events were reported for FDs %s",
-                                  fds_str.ptr));
+        te_string_append(&str_log, "Events were reported for FDs %s",
+                         fds_str.ptr);
         if (proc_str.len > 0)
         {
-            CHECK_RC(te_string_append(&str_log,
-                                      "; events were processed for FDs %s",
-                                      proc_str.ptr));
+            te_string_append(&str_log, "; events were processed for FDs %s",
+                             proc_str.ptr);
         }
 
         RING("%s", str_log.ptr);

@@ -230,13 +230,13 @@ check_nodelay(rcf_rpc_server *pco_iut, int iut_s,
 
     te_fill_buf(tx_buf, sizeof(tx_buf));
 
-    CHECK_RC(te_string_append(&str, "%s, sending the first packet", msg));
+    te_string_append(&str, "%s, sending the first packet", msg);
     send_recv_pkt(pco_iut, iut_s, tcp_conn, &tx_buf[0], 1, str.ptr);
     process_csap_pkts(csap_ta, csap, &user_data, str.ptr);
     ts1 = user_data.ts;
 
     te_string_reset(&str);
-    CHECK_RC(te_string_append(&str, "%s, sending the second packet", msg));
+    te_string_append(&str, "%s, sending the second packet", msg);
     send_recv_pkt(pco_iut, iut_s, tcp_conn, &tx_buf[1], 1, str.ptr);
     process_csap_pkts(csap_ta, csap, &user_data, str.ptr);
     ts2 = user_data.ts;

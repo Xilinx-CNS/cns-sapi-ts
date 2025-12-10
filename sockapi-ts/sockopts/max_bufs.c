@@ -91,10 +91,8 @@ set_sock_buf(rcf_rpc_server *rpcs, int s, rpc_sockopt opt,
     va_list ap;
 
     va_start(ap, err_msg);
-    rc = te_string_append_va(&stage, err_msg, ap);
+    te_string_append_va(&stage, err_msg, ap);
     va_end(ap);
-    if (rc != 0)
-        TEST_FAIL("%s(): failed to construct stage string", __FUNCTION__);
 
     RPC_AWAIT_ERROR(rpcs);
     rc = rpc_setsockopt_int(rpcs, s, opt, set_val);

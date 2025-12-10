@@ -73,17 +73,12 @@ append_flags_descr(uint32_t flags, te_string *str)
 
 #define CHECK_FLAG(_flags, _f, _s) \
     do {                                                  \
-        te_errno _rc;                                     \
-                                                          \
         if (_flags & TCP_ ## _f ## _FLAG)                 \
         {                                                 \
             if (added_flag)                               \
-                _rc = te_string_append(_s, "|%s", #_f);   \
+                te_string_append(_s, "|%s", #_f);         \
             else                                          \
-                _rc = te_string_append(_s, "%s", #_f);    \
-                                                          \
-            if (_rc != 0)                                 \
-                return _rc;                               \
+                te_string_append(_s, "%s", #_f);          \
                                                           \
             added_flag = TRUE;                            \
         }                                                 \
@@ -95,7 +90,7 @@ append_flags_descr(uint32_t flags, te_string *str)
     CHECK_FLAG(flags, ACK, str);
 
     if (!added_flag)
-        return te_string_append(str, "no");
+        te_string_append(str, "no");
 
     return 0;
 #undef CHECK_FLAG
@@ -155,15 +150,14 @@ pkt_handler(asn_value *pkt, void *user_data)
     CB_CHECK_RC(asn_read_uint32(pkt, &flags, "pdus.0.#tcp.flags"));
     CB_CHECK_RC(tapi_tcp_get_hdrs_payload_len(pkt, NULL, &payload_len));
 
-    CB_CHECK_RC(te_string_append(&pkt_descr, "packet with "));
+    te_string_append(&pkt_descr, "packet with ");
     CB_CHECK_RC(append_flags_descr(flags, &pkt_descr));
-    CB_CHECK_RC(te_string_append(&pkt_descr, " flag(s)"));
+    te_string_append(&pkt_descr, " flag(s)");
 
     if (payload_len > 0)
-        CB_CHECK_RC(te_string_append(&pkt_descr, " and payload"));
+        te_string_append(&pkt_descr, " and payload");
 
-    CB_CHECK_RC(te_string_append(&pkt_descr, " sent from %s",
-                                 pkt_source));
+    te_string_append(&pkt_descr, " sent from %s", pkt_source);
 
     rc = tapi_tcp_get_ts_opt(pkt, &ts_value, &ts_echo);
     if (rc != 0)

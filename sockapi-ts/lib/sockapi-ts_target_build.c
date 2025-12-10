@@ -175,39 +175,32 @@ sockts_build_dir(rcf_rpc_server *pco, const char *src_dir,
 
     if (build_on_engine)
     {
-        CHECK_ERRNO_RET((ret = te_string_append(&cmd, "make -C %s", src_dir)));
+        te_string_append(&cmd, "make -C %s", src_dir);
         CHECK_ERRNO_RET((ret = sockts_run_cmd(cmd.ptr)));
 
         te_string_reset(&cmd);
-        CHECK_ERRNO_RET((ret = te_string_append(&cmd, "cd %s && tar -cvzf %s "
-                                                "--exclude=%s *.o",
-                                                src_dir, SOCKTS_TMP_TGZ_NAME,
-                                                SOCKTS_TMP_TGZ_NAME)));
+        te_string_append(&cmd, "cd %s && tar -cvzf %s --exclude=%s *.o",
+                         src_dir, SOCKTS_TMP_TGZ_NAME, SOCKTS_TMP_TGZ_NAME);
         CHECK_ERRNO_RET(sockts_run_cmd(cmd.ptr));
     }
     else
     {
-        CHECK_ERRNO_RET((ret = te_string_append(&cmd, "cd %s && tar -cvzf %s "
-                                                "--exclude=%s *",
-                                                src_dir, SOCKTS_TMP_TGZ_NAME,
-                                                SOCKTS_TMP_TGZ_NAME)));
+        te_string_append(&cmd, "cd %s && tar -cvzf %s --exclude=%s *",
+                         src_dir, SOCKTS_TMP_TGZ_NAME, SOCKTS_TMP_TGZ_NAME);
         CHECK_ERRNO_RET((ret = sockts_run_cmd(cmd.ptr)));
     }
 
-    CHECK_ERRNO_RET((ret = te_string_append(&src_full, "%s/%s", src_dir,
-                                            SOCKTS_TMP_TGZ_NAME)));
-    CHECK_ERRNO_RET((ret = te_string_append(&dst, "%s/%s", dst_dir,
-                                            SOCKTS_TMP_TGZ_NAME)));
+    te_string_append(&src_full, "%s/%s", src_dir, SOCKTS_TMP_TGZ_NAME);
+    te_string_append(&dst, "%s/%s", dst_dir, SOCKTS_TMP_TGZ_NAME);
     CHECK_ERRNO_RET((ret = rcf_ta_put_file(pco->ta, 0, src_full.ptr, dst.ptr)));
 
     te_string_reset(&cmd);
-    CHECK_ERRNO_RET((ret = te_string_append(&cmd, "tar -C %s -xvzf %s",
-                                            dst_dir, dst.ptr)));
+    te_string_append(&cmd, "tar -C %s -xvzf %s", dst_dir, dst.ptr);
     CHECK_ERRNO_RET((ret = sockts_run_rpcs_cmd(pco, cmd.ptr, 0)));
     if (!build_on_engine)
     {
         te_string_reset(&cmd);
-        CHECK_ERRNO_RET((ret = te_string_append(&cmd, "make -C %s", dst_dir)));
+        te_string_append(&cmd, "make -C %s", dst_dir);
         CHECK_ERRNO_RET((ret = sockts_run_rpcs_cmd(pco,
                                                    cmd.ptr, TE_SEC2MS(300))));
     }
@@ -228,8 +221,7 @@ sockts_cleanup_build(const char *src_dir, te_bool build_on_engine)
 
     if (build_on_engine)
     {
-        CHECK_ERRNO_RET((ret = te_string_append(&cmd, "cd %s && make clean",
-                                                src_dir)));
+        te_string_append(&cmd, "cd %s && make clean", src_dir);
         CHECK_ERRNO_RET((ret = sockts_run_cmd(cmd.ptr)));
         te_string_free(&cmd);
     }
@@ -237,10 +229,9 @@ sockts_cleanup_build(const char *src_dir, te_bool build_on_engine)
     te_string_reset(&cmd);
     if (src_dir != NULL)
     {
-        CHECK_ERRNO_RET((ret = te_string_append(&cmd,
-                                                "test -f %s/%s && rm %s/%s",
-                                                src_dir, SOCKTS_TMP_TGZ_NAME,
-                                                src_dir, SOCKTS_TMP_TGZ_NAME)));
+        te_string_append(&cmd, "test -f %s/%s && rm %s/%s",
+                         src_dir, SOCKTS_TMP_TGZ_NAME,
+                         src_dir, SOCKTS_TMP_TGZ_NAME);
         CHECK_ERRNO_RET((ret = sockts_run_cmd(cmd.ptr)));
     }
 

@@ -233,18 +233,8 @@ tst_packets_handler(asn_value *pkt, void *userdata)
         WARN("Captured packet was not recognized");
     }
 
-    rc = te_string_append(&addrs_log, " with src=%s",
-                          sockaddr_h2str(SA(&src)));
-    if (rc == 0)
-    {
-        rc = te_string_append(&addrs_log, " dst=%s",
-                              sockaddr_h2str(SA(&dst)));
-    }
-    if (rc != 0)
-    {
-        ERROR("%s(): te_string_append() returned %r", __FUNCTION__, rc);
-        te_string_reset(&addrs_log);
-    }
+    te_string_append(&addrs_log, " with src=%s", sockaddr_h2str(SA(&src)));
+    te_string_append(&addrs_log, " dst=%s", sockaddr_h2str(SA(&dst)));
 
     if (!data->no_pkts_log)
     {
@@ -352,8 +342,8 @@ establish_connection(rcf_rpc_server *pco_iut, rcf_rpc_server *pco_tst,
     if (msg[0] != '\0')
     {
         va_start(ap, msg);
-        CHECK_RC(te_string_append_va(&str, msg, ap));
-        CHECK_RC(te_string_append(&str, ": "));
+        te_string_append_va(&str, msg, ap);
+        te_string_append(&str, ": ");
     }
 
     iut_s = *iut_s_ptr =
@@ -485,8 +475,8 @@ send_recv_data(te_bool from_tester,
     if (msg[0] != '\0')
     {
         va_start(ap, msg);
-        CHECK_RC(te_string_append_va(&str, msg, ap));
-        CHECK_RC(te_string_append(&str, ": "));
+        te_string_append_va(&str, msg, ap);
+        te_string_append(&str, ": ");
     }
 
     for (i = 0; i < pkts_num; i++)

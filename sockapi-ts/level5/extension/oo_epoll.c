@@ -514,10 +514,8 @@ data_transmission_loop(rcf_rpc_server *pco_iut, rcf_rpc_server *pco_tst,
         {
             if (rand_range(1, MAX(pkts_per_stream / 2, 1)) == 1)
             {
-                CHECK_RC(
-                    te_string_append(&log_buf,
-                                     "Make IUT socket %d writable\n",
-                                     conns[j].iut_s));
+                te_string_append(&log_buf, "Make IUT socket %d writable\n",
+                                 conns[j].iut_s);
                 RPC_AWAIT_ERROR(pco_tst);
                 pco_tst->silent_pass = TRUE;
                 rc = rpc_drain_fd(pco_tst, conns[j].tst_s, max_size,
@@ -569,12 +567,11 @@ data_transmission_loop(rcf_rpc_server *pco_iut, rcf_rpc_server *pco_tst,
             exp_bytes = 0;
         }
 
-        CHECK_RC(
-          te_string_append(
+        te_string_append(
               &log_buf,
               "%d bytes were sent to IUT socket %d, %d bytes should "
               "be reported in the related event now\n",
-              pkt_size, conns[j].iut_s, exp_bytes));
+              pkt_size, conns[j].iut_s, exp_bytes);
 
         if (i % PACKETS_LIMIT == PACKETS_LIMIT - 1 ||
             sent_bytes[j] > (size_t)rcvbuf_val / 2)

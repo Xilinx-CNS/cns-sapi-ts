@@ -149,11 +149,7 @@ sockts_bpf_map_arr32_to_str(rcf_rpc_server *rpcs, char *ifname, unsigned int bpf
                        __FUNCTION__, rc);
         }
 
-        if ((rc = te_string_append(str, "%s%u(%d)", key == 0 ? "" :  ", ",
-                                   key, val)) != 0)
-        {
-            TEST_FAIL("%s() te_string_append() -> %r", __FUNCTION__, rc);
-        }
+        te_string_append(str, "%s%u(%d)", key == 0 ? "" :  ", ", key, val);
     }
 }
 
@@ -320,9 +316,7 @@ sockts_bpf_build_all(rcf_rpc_server *pco)
     if (rc != 0)
         return rc;
 
-    rc = te_string_append(&src_dir, "%s/%s", sapi_dir, SOCKTS_BPF_SRC_DIR);
-    if (rc != 0)
-        goto exit;
+    te_string_append(&src_dir, "%s/%s", sapi_dir, SOCKTS_BPF_SRC_DIR);
 
     rc = sockts_build_dir(pco, src_dir.ptr, ta_dir, FALSE);
     if (rc != 0)
@@ -353,9 +347,7 @@ sockts_bpf_build_stimuli(rcf_rpc_server *pco)
     if (rc != 0)
         return rc;
 
-    rc = te_string_append(&src_dir, "%s/%s", te_dir, "bpf");
-    if (rc != 0)
-        goto exit;
+    te_string_append(&src_dir, "%s/%s", te_dir, "bpf");
 
     rc = sockts_build_dir(pco, src_dir.ptr, ta_dir, FALSE);
     if (rc != 0)

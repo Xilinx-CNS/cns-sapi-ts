@@ -265,7 +265,7 @@ main(int argc, char *argv[])
                                       SIN(iut_addr)->sin_port,
                                       &csap));
 
-        CHECK_RC(te_string_append(&str, "{ pdus { udp:{}, ip4:{}, eth:{} } }"));
+        te_string_append(&str, "{ pdus { udp:{}, ip4:{}, eth:{} } }");
     }
     else
     {
@@ -283,7 +283,7 @@ main(int argc, char *argv[])
                                       SIN6(iut_addr)->sin6_port,
                                       &csap));
 
-        CHECK_RC(te_string_append(&str, "{ pdus { udp:{}, ip6:{}, eth:{} } }"));
+        te_string_append(&str, "{ pdus { udp:{}, ip6:{}, eth:{} } }");
     }
 
     CHECK_RC(asn_parse_value_text(str.ptr, ndn_traffic_template,

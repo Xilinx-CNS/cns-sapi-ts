@@ -284,9 +284,8 @@ main(int argc, char *argv[])
     memset(&curr, 0, sizeof(curr));
     curr.rcvbuf = 10;
 
-    CHECK_RC(te_string_append(&str, "%20s %20s %20s %20s %10s\n",
-                              "RCVBUF", "RATIO", "READ", "RATIO",
-                              "RESULT"));
+    te_string_append(&str, "%20s %20s %20s %20s %10s\n",
+                     "RCVBUF", "RATIO", "READ", "RATIO", "RESULT");
 
     for (i = 0; i < MAX_ITER_NUM; i++)
     {
@@ -344,10 +343,10 @@ main(int argc, char *argv[])
             }
         }
 
-        CHECK_RC(te_string_append(&str, "%20d %20.3f %20d %20.3f %10s\n",
+        te_string_append(&str, "%20d %20.3f %20d %20.3f %10s\n",
                                   curr.rcvbuf, rcvbuf_ratio,
                                   curr.filled, filled_ratio,
-                                  (fail ? "FAIL" : "PASS")));
+                                  (fail ? "FAIL" : "PASS"));
 
         if (prev.rcvbuf == curr.rcvbuf ||
             curr.rcvbuf >= rcvbuf_max * 2)

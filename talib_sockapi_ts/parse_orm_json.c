@@ -133,9 +133,7 @@ ta_read_cmd(const char *cmd, te_string *str)
         }
         buf[sys_rc] = '\0';
 
-        rc = te_string_append(str, "%s", buf);
-        if (rc != 0)
-            goto cleanup;
+        te_string_append(str, "%s", buf);
     }
 
 cleanup:

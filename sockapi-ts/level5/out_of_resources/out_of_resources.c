@@ -175,9 +175,7 @@ count_nic_addresses(const char *ta, const char *ifname, count_addrs_ctx *ctx)
     size_t       num;
     te_errno     rc;
 
-    rc = te_string_append(&ta_ifname, "%s/%s", ta, ifname);
-    if (rc != 0)
-        return rc;
+    te_string_append(&ta_ifname, "%s/%s", ta, ifname);
 
     if (tq_strings_add_uniq(&ctx->ifs, ta_ifname.ptr) != FALSE)
     {
