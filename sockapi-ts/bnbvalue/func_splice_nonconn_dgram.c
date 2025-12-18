@@ -229,7 +229,7 @@ main(int argc, char *argv[])
                         tx_buf_len, flags);
         if (use_sock_as_in)
         {
-            if (rc != strlen(msg) + 1)
+            if (rc != (int)strlen(msg) + 1)
             {
                 TEST_VERDICT("splice() called on not connected "
                              "SOCK_DGRAM sockets unexpectedly returned %d", rc);
