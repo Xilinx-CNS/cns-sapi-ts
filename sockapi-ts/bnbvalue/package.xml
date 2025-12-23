@@ -621,7 +621,7 @@
             </arg>
         </run>
         <run>
-            <script name="func_splice_nonconn_dgram">
+            <script name="func_splice_nonconn_dgram" track_conf="silent">
                 <req id="SOCK_DGRAM"/>
                 <req id="SENDMSG_RECVMSG"/>
             </script>
