@@ -7038,13 +7038,39 @@
         <arg name="env"/>
         <arg name="len_buffer"/>
         <arg name="opt_buffer"/>
-        <arg name="opt_len_val"/>
+        <arg name="opt_len_val">1</arg>
         <arg name="opt_name">IPV6_ROUTER_ALERT</arg>
         <arg name="type"/>
         <notes/>
-        <results tags="linux">
+        <results tags="linux&amp;(linux&lt;6|linux-6&lt;12)">
           <result value="FAILED">
             <verdict>IPV6_ROUTER_ALERT option is unknown at level SOL_IPV6, getsockopt() failed, errno=ENOPROTOOPT</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;(linux&gt;6|linux-6&gt;=12)">
+          <result value="PASSED">
+            <verdict>getsockopt(IPV6_ROUTER_ALERT) has not changed opt_len and returned no error</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="buf_rlen"/>
+        <arg name="domain">PF_INET6</arg>
+        <arg name="env"/>
+        <arg name="len_buffer"/>
+        <arg name="opt_buffer"/>
+        <arg name="opt_len_val">200</arg>
+        <arg name="opt_name">IPV6_ROUTER_ALERT</arg>
+        <arg name="type"/>
+        <notes/>
+        <results tags="linux&amp;(linux&lt;6|linux-6&lt;12)">
+          <result value="FAILED">
+            <verdict>IPV6_ROUTER_ALERT option is unknown at level SOL_IPV6, getsockopt() failed, errno=ENOPROTOOPT</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;(linux&gt;6|linux-6&gt;=12)">
+          <result value="PASSED">
+            <verdict>getsockopt(IPV6_ROUTER_ALERT) has reduced opt_len and returned no error</verdict>
           </result>
         </results>
       </iter>
