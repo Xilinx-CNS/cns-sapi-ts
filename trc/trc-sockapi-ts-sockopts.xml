@@ -20975,7 +20975,7 @@
         <arg name="sock_type"/>
         <arg name="write_end"/>
         <notes/>
-        <results tags="linux">
+        <results tags="linux&amp;(linux&lt;6|linux-6&lt;12)">
           <result value="FAILED">
             <verdict>getsockopt(SOL_IPV6, IPV6_ROUTER_ALERT) unexpectedly failed with errno ENOPROTOOPT</verdict>
           </result>
