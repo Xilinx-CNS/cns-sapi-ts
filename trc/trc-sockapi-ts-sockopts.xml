@@ -19948,6 +19948,11 @@
             <verdict>(bound pco_iut socket) SO_RCVBUF default socket option value differentiates from system wide one</verdict>
           </result>
         </results>
+        <results tags="(netns_iut|netns_all)&amp;(linux&amp;(linux&gt;6|linux-6&gt;=12))" key="ON-7537">
+          <result value="FAILED">
+            <verdict>Failed to set net/core/wmem_default</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="change_val">TRUE</arg>
