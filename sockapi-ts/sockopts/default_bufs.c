@@ -76,11 +76,15 @@
 
 #define SET_AND_CHECK(def_, val_) \
     do {                                                            \
+        int rc;                                                     \
+                                                                    \
         /* Decrease system wide snd/rcv buffer max value */         \
         val_ /= 2;                                                  \
         RING("Attempt to set %s to %d", def_, val_);                \
-        CHECK_RC(tapi_cfg_sys_ns_set_int(pco_native->ta, val_,      \
-                                         NULL, def_));              \
+        rc = tapi_cfg_sys_ns_set_int(pco_native->ta, val_, NULL,    \
+                                     def_);                         \
+        if (rc != 0)                                                \
+            TEST_VERDICT("Failed to set %s", def_);                 \
         changed_ ## val_ = TRUE;                                    \
         /* Check that system wide values set correctly */           \
         CHECK_RC(tapi_cfg_sys_ns_get_int(pco_native->ta, &def_aux,  \
