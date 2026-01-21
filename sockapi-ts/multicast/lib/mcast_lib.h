@@ -117,8 +117,7 @@ extern void mcast_listener_fini(rcf_rpc_server *rpcs,
             vector_.iov_len = vector_.iov_rlen = len_;              \
             msg_.msg_iov = &vector_;                                \
             msg_.msg_iovlen = msg_.msg_riovlen = 1;                 \
-            if (ptr_is_not_null(peer_addr_) &&                      \
-                ptr_is_not_null(peer_addrlen_))                     \
+            if (peer_addr_ != NULL && peer_addrlen_ != NULL)        \
             {                                                       \
                 msg_.msg_name = SA(peer_addr_);                     \
                 msg_.msg_namelen = msg_.msg_rnamelen =              \
@@ -142,7 +141,7 @@ extern void mcast_listener_fini(rcf_rpc_server *rpcs,
                                                 flags_);            \
                         if (rc > 0)                                 \
                         {                                           \
-                            if (ptr_is_not_null(detected_) &&       \
+                            if ((detected_ != NULL) &&              \
                                 !(*((te_bool *)detected_)))         \
                                 *(te_bool *)detected_ = TRUE;       \
                                                                     \
@@ -154,7 +153,7 @@ extern void mcast_listener_fini(rcf_rpc_server *rpcs,
             else                                                    \
                 rc = rpc_simple_zc_recv(pco_, s_, &msg_, flags_);   \
                                                                     \
-            if (ptr_is_not_null(peer_addrlen_))                     \
+            if (peer_addrlen_ != NULL)                              \
                 *((int *)peer_addrlen_) = msg_.msg_namelen;         \
     } while (0)
 
