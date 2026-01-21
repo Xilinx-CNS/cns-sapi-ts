@@ -280,7 +280,7 @@ create_net_channel(struct rcf_rpc_server *pco_iut,
                         get_name_by_addr(SA(_addr), _peer_names),  \
                         get_name_by_addr(SA(_exp_addr),            \
                                          _peer_names));            \
-            if (ptr_is_not_null(_unexp_peer))                      \
+            if (_unexp_peer != NULL)                               \
                 *(te_bool *)_unexp_peer = TRUE;                    \
         }                                                          \
         else if ((int)_ret_len != (int)_exp_len)                   \
@@ -288,7 +288,7 @@ create_net_channel(struct rcf_rpc_server *pco_iut,
             _macro_len("%s receives unexpected number of "         \
                        "bytes from %s", _sock_name,                \
                        get_name_by_addr(SA(_addr), _peer_names));  \
-            if (ptr_is_not_null(_unexp_len))                       \
+            if (_unexp_len != NULL)                                \
                 *(te_bool *)_unexp_len = TRUE;                     \
         }                                                          \
     } while (0)

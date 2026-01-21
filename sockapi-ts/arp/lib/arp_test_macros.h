@@ -39,8 +39,7 @@ extern "C" {
         struct arpreq   req_;                                             \
         int             rc_ = 0;                                          \
                                                                           \
-        if (rpcs_ == NULL || !ptr_is_not_null(net_addr_) ||               \
-            !ptr_is_not_null(link_addr_))                                 \
+        if (rpcs_ == NULL || net_addr_ == NULL || link_addr_ == NULL)     \
         {                                                                 \
             TEST_FAIL("NULL pointer passed to TEST_GET_ARP_ENTRY");       \
         }                                                                 \
