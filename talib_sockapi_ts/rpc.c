@@ -581,7 +581,8 @@ simple_cb(struct onload_zc_recv_args *args, int flags)
         ol_iov = &(args->msg.iov[i]);
         if (ol_iov->iov_len > iov->iov_len)
         {
-            ERROR("Obtained buffer is bigger than provided one");
+            ERROR("Obtained buffer (%zu) is bigger than provided one (%zu)",
+                  ol_iov->iov_len, iov->iov_len);
             return ONLOAD_ZC_TERMINATE;
         }
         if (ol_iov->iov_base == NULL)
