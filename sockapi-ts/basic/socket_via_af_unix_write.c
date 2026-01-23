@@ -195,7 +195,6 @@ main(int argc, char *argv[])
         {
             struct rpc_iovec iov;
             rpc_msghdr msg;
-            size_t addr_len;
 
             memset(&msg, 0, sizeof(msg));
 

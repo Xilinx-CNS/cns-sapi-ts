@@ -199,7 +199,7 @@ main(int argc, char *argv[])
     int                    num = -1;
 
     rcf_rpc_server        *rpcs_recv;
-    struct sockaddr       *send_addr;
+    struct sockaddr       *send_addr = NULL;
     struct sockaddr        bind_addr;
 
     te_bool                iut_vlan1_configured = FALSE;

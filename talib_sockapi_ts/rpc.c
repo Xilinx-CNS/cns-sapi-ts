@@ -9774,7 +9774,6 @@ static te_errno
 check_program_exists(bool *exists, const char *path, ...)
 {
     va_list     ap;
-    te_errno    rc;
     char        buf[MAX_CMD_LEN];
     te_string   str = TE_STRING_BUF_INIT(buf);
 
@@ -10225,10 +10224,10 @@ send_var_size(int s, send_func_ctx *ctx, size_t len, int flags,
               const struct sockaddr *dest_addr, socklen_t addrlen,
               tarpc_send_function send_func)
 {
-    char   *buf = NULL;
+    char   *buf;
     ssize_t rc;
 
-    buf = malloc(len);
+    buf = calloc(1, len);
     if (buf == NULL)
         return -1;
 

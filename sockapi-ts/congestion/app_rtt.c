@@ -297,7 +297,6 @@ sockts_ct_get_retrans_from_pcap(tapi_sniffer_id *sniff,
 {
     char *caps_path = getenv("TE_SNIFF_LOG_DIR");
     char pcap_file[1024];
-    te_errno rc;
 
     if (caps_path == NULL || strlen(caps_path) == 0)
     {

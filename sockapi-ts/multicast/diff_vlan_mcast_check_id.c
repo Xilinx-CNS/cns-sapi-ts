@@ -62,8 +62,8 @@ main(int argc, char *argv[])
     const struct sockaddr       *tst_addr = NULL;
     const struct sockaddr       *mcast_addr = NULL;
     tarpc_joining_method         method;
-    uint16_t                     vlan1;
-    uint16_t                     vlan2;
+    uint16_t                     vlan1 = 0;
+    uint16_t                     vlan2 = 0;
     uint                         packet_number;
 
     cfg_handle             vlan_net_handle = CFG_HANDLE_INVALID;

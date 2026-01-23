@@ -322,7 +322,6 @@ sockts_bpf_build_all(rcf_rpc_server *pco)
     if (rc != 0)
         ERROR("Failed to build BPF: %r", rc);
 
-exit:
     rc = sockts_cleanup_build(src_dir.ptr, FALSE);
     free(ta_dir);
     te_string_free(&src_dir);
@@ -353,7 +352,6 @@ sockts_bpf_build_stimuli(rcf_rpc_server *pco)
     if (rc != 0)
         ERROR("Failed to build BPF: %r", rc);
 
-exit:
     rc = sockts_cleanup_build(src_dir.ptr, FALSE);
     free(ta_dir);
     te_string_free(&src_dir);

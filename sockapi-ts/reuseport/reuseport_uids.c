@@ -40,8 +40,6 @@ main(int argc, char *argv[])
     int sock1 = -1;
     int sock2 = -1;
 
-    tarpc_uid_t    uid = 0;
-
     TEST_START;
     TEST_GET_PCO(pco_iut1);
     TEST_GET_PCO(pco_iut2);
