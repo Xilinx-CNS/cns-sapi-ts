@@ -94,7 +94,7 @@ create_iut_event(rcf_rpc_server *pco_iut_thread,
                  const struct sockaddr *iut_addr,
                  sockts_socket_type sock_type, tapi_iomux_evt evt)
 {
-    char         buf[SOCKTS_MSG_STREAM_MAX];
+    char         buf[SOCKTS_MSG_STREAM_MAX] = { 0 };
     te_bool      connect = FALSE;
 
     connect = sock_type == SOCKTS_SOCK_TCP_PASSIVE_CL ||

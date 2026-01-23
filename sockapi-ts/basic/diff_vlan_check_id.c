@@ -71,8 +71,8 @@ main(int argc, char *argv[])
     const struct sockaddr       *iut_addr = NULL;
     const struct sockaddr       *tst_addr = NULL;
     te_bool                      use_netns;
-    uint16_t                     vlan1;
-    uint16_t                     vlan2;
+    uint16_t                     vlan1 = 0;
+    uint16_t                     vlan2 = 0;
 
     cfg_handle             vlan_net_handle = CFG_HANDLE_INVALID;
     cfg_handle             iut_vlan1_addr_handle = CFG_HANDLE_INVALID;

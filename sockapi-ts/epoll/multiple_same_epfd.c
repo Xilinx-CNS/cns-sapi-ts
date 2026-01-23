@@ -89,8 +89,6 @@ launch_epoll_wait(void *args)
     int                     maxevents = epw_args->maxevents;
     int                     timeout = epw_args->timeout;
     rpc_sigset_p            sigmask = epw_args->sigmask;
-    struct tarpc_timespec   tv;
-    struct tarpc_timespec  *tv_ptr = &tv;
 
     switch (epw_args->iomux)
     {

@@ -51,7 +51,6 @@ main(int argc, char *argv[])
     tarpc_joining_method       method;
     sockts_socket_func         sock_func;
 
-    int                        opt_on = 1;
     te_bool                    blocking = false;
 
     iomux_evt_fd               evt;

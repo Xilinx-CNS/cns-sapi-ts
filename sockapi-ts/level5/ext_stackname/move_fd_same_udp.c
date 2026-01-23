@@ -69,7 +69,6 @@ main(int argc, char *argv[])
 
     te_bool                 bind_before = FALSE;
     connect_socket_t        connect_socket;
-    te_bool                 same_stack;
 
     unsigned char          *tx_buf = NULL;
     unsigned char          *rx_buf = NULL;

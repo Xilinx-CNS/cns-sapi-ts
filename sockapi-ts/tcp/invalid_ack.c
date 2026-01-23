@@ -311,7 +311,6 @@ main(int argc, char *argv[])
     char    send_buf[BUF_LEN];
     te_dbuf recv_dbuf = TE_DBUF_INIT(0);
 
-    te_bool zf_shim_run = FALSE;
     te_bool test_failed = FALSE;
 
     asn_value          *pkt_tmpl = NULL;
@@ -338,8 +337,6 @@ main(int argc, char *argv[])
     TEST_GET_ENUM_PARAM(opening, OPENING_LISTENER);
     TEST_GET_BOOL_PARAM(cache_socket);
     TEST_GET_ENUM_PARAM(timestamp, TEST_TS_VALUES);
-
-    zf_shim_run = sockts_zf_shim_run();
 
     TEST_STEP("Use GW CSAP to control traffic from Tester side.");
 

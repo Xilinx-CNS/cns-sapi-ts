@@ -101,6 +101,7 @@ static void sockts_pcap_retrans_number_handler(u_char *args,
     struct iphdr *iph = NULL;
     sockts_pcap_user_data *data = (sockts_pcap_user_data *)args;
 
+    UNUSED(header);
     ethertype = sockts_pcap_get_ethertype(pkt, &offset);
     if (ethertype != ETH_P_IP)
     {
@@ -172,7 +173,6 @@ sockts_pcap_get_retrans(const char *pcap_file,
     sockts_pcap_user_data data = {0};
     struct bpf_program filter_handle;
     int retrans_buf[SOCKTS_PCAP_RETRANS_BUF_SIZE] = {0};
-    unsigned int i;
     te_errno rc = 0;
 
     handle = pcap_open_offline(pcap_file, error_buffer);
