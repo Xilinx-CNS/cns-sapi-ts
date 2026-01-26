@@ -4159,13 +4159,11 @@ sockts_destroy_netns(const char *ta, rcf_rpc_server *rpcs_ns,
  *
  * @param rpcs       RPC server handle.
  * @param socket     Socket.
- * @param tx_buf     Buffer with sent data
- * @param rx_buf     Buffer for received data
- * @param exp_len    Expected data length and
- *                   length of buffer for received data.
+ * @param tx_buf     Buffer with sent data.
+ * @param exp_len    Expected data length.
  */
 extern void sockts_read_check_fd(rcf_rpc_server *rpcs, int socket,
-                                 char *tx_buf, char *rx_buf, size_t exp_len);
+                                 char *tx_buf, size_t exp_len);
 
 #ifdef __cplusplus
 } /* extern "C" */

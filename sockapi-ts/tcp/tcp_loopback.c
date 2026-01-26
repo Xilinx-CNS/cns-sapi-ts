@@ -128,8 +128,7 @@ main(int argc, char *argv[])
     uint16_t    iut_port;
     te_bool     v6only;
 
-    uint8_t     tx_buf[BUF_SIZE];
-    uint8_t     rx_buf[BUF_SIZE];
+    char tx_buf[BUF_SIZE];
 
     int             sid;
     unsigned int    received_packets_number = 0;
@@ -205,7 +204,6 @@ main(int argc, char *argv[])
     }
 
     te_fill_buf(tx_buf, BUF_SIZE);
-    memset(rx_buf, 0, BUF_SIZE);
 
     SA(&loopback_addr)->sa_family = SA(iut_addr1)->sa_family;
     te_sockaddr_set_loopback(SA(&loopback_addr));
@@ -448,12 +446,10 @@ main(int argc, char *argv[])
                   "csap id %d", rc, csap);
 
     rpc_send(pco_iut, acc_s, tx_buf, BUF_SIZE, 0);
-    sockts_read_check_fd(pco_tst, tst_s, tx_buf, rx_buf, BUF_SIZE);
-
-    memset(rx_buf, 0, BUF_SIZE);
+    sockts_read_check_fd(pco_tst, tst_s, tx_buf, BUF_SIZE);
 
     rpc_send(pco_tst, tst_s, tx_buf, BUF_SIZE, 0);
-    sockts_read_check_fd(pco_iut, acc_s, tx_buf, rx_buf, BUF_SIZE);
+    sockts_read_check_fd(pco_iut, acc_s, tx_buf, BUF_SIZE);
 
     if (tapi_tad_trrecv_stop(pco_iut->ta, sid, csap, NULL,
                              &received_packets_number))

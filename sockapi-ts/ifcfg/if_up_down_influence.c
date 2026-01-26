@@ -82,7 +82,6 @@ main(int argc, char *argv[])
     int                    rcv2_s = -1;
 
     void     *tx_buf;
-    void     *rx_buf;
 
     te_bool                change_if = FALSE;
 
@@ -108,7 +107,6 @@ main(int argc, char *argv[])
     TEST_GET_BOOL_PARAM(change_if);
 
     tx_buf = te_make_buf_by_len(TST_BUF_LEN);
-    rx_buf = te_make_buf_by_len(TST_BUF_LEN);
 
     GEN_CONNECTION(pco_tst1, pco_iut1, RPC_SOCK_STREAM, RPC_PROTO_DEF,
                    tst1_addr, iut1_addr, &tst1_s, &iut1_s);
@@ -143,12 +141,11 @@ main(int argc, char *argv[])
 
     RPC_SEND(rc, pco_snd1, snd1_s, tx_buf, TST_BUF_LEN, 0);
     MSLEEP(500);
-    sockts_read_check_fd(pco_rcv1, rcv1_s, tx_buf, rx_buf, TST_BUF_LEN);
+    sockts_read_check_fd(pco_rcv1, rcv1_s, tx_buf, TST_BUF_LEN);
 
-    memset(rx_buf, 0, TST_BUF_LEN);
     RPC_SEND(rc, pco_snd2, snd2_s, tx_buf, TST_BUF_LEN, 0);
     MSLEEP(500);
-    sockts_read_check_fd(pco_rcv2, rcv2_s, tx_buf, rx_buf, TST_BUF_LEN);
+    sockts_read_check_fd(pco_rcv2, rcv2_s, tx_buf, TST_BUF_LEN);
 
     pco_snd1->op = RCF_RPC_CALL;
     rpc_simple_sender(pco_snd1, snd1_s, 1, 10, 0, 0, 10000, 1, 20, &sent, 0);
@@ -160,10 +157,9 @@ main(int argc, char *argv[])
     CHECK_RC(tapi_cfg_base_if_down(pco_iut1->ta, if_to_shutdown->if_name));
     CFG_WAIT_CHANGES;
 
-    memset(rx_buf, 0, TST_BUF_LEN);
     RPC_SEND(rc, pco_snd2, snd2_s, tx_buf, TST_BUF_LEN, 0);
     MSLEEP(500);
-    sockts_read_check_fd(pco_rcv2, rcv2_s, tx_buf, rx_buf, TST_BUF_LEN);
+    sockts_read_check_fd(pco_rcv2, rcv2_s, tx_buf, TST_BUF_LEN);
 
     /* Call simple reciever to get number of bytes received */
     rpc_simple_receiver(pco_rcv1, rcv1_s, 0, &received_before);
@@ -199,6 +195,5 @@ cleanup:
     CLEANUP_RPC_CLOSE(pco_tst2, tst2_s);
 
     free(tx_buf);
-    free(rx_buf);
     TEST_END;
 }

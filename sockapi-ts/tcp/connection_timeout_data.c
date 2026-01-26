@@ -53,7 +53,6 @@ main(int argc, char *argv[])
     tapi_route_gateway gateway;
 
     char   *sndbuf = NULL;
-    char   *rcvbuf = NULL;
     int iut_s = -1;
     int tst_s = -1;
 
@@ -73,7 +72,6 @@ main(int argc, char *argv[])
     CHECK_RC(rcf_rpc_server_restart(pco_iut));
 
     sndbuf = te_make_buf_by_len(DATA_SIZE);
-    rcvbuf = te_make_buf_by_len(DATA_SIZE);
 
     TEST_STEP("Configure gateway.");
     TAPI_INIT_ROUTE_GATEWAY(gateway);
@@ -152,7 +150,7 @@ main(int argc, char *argv[])
         TEST_VERDICT("Connection has not been dropped");
 
     TEST_STEP("Read and check all data on IUT.");
-    sockts_read_check_fd(pco_iut, iut_s, sndbuf, rcvbuf, DATA_SIZE);
+    sockts_read_check_fd(pco_iut, iut_s, sndbuf, DATA_SIZE);
 
     TEST_SUCCESS;
 cleanup:
@@ -160,7 +158,6 @@ cleanup:
     CLEANUP_RPC_CLOSE(pco_tst, tst_s);
 
     free(sndbuf);
-    free(rcvbuf);
 
     TEST_END;
 }

@@ -3900,10 +3900,11 @@ sockts_destroy_netns(const char *ta, rcf_rpc_server *rpcs_ns,
 
 void
 sockts_read_check_fd(rcf_rpc_server *rpcs, int socket, char *tx_buf,
-                     char *rx_buf, size_t exp_len)
+                     size_t exp_len)
 {
-    ssize_t rc_ret;
-    ssize_t len;
+    int rc_ret;
+    size_t len;
+    void *rx_buf = NULL;
 
     rc_ret = rpc_read_fd(rpcs, socket, TAPI_WAIT_NETWORK_DELAY, exp_len,
                          &rx_buf, &len);
@@ -3914,5 +3915,10 @@ sockts_read_check_fd(rcf_rpc_server *rpcs, int socket, char *tx_buf,
                      "returning 0", rpcs->name, RPC_ERRNO(rpcs));
     }
 
+    if (len > exp_len)
+        TEST_VERDICT("Received data has %zd length; that is bigger "
+                     "than expected %zd length", len, exp_len);
+
     SOCKTS_CHECK_RECV(rpcs, tx_buf, rx_buf, exp_len, len);
+    free(rx_buf);
 }

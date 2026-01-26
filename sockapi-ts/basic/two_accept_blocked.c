@@ -94,10 +94,8 @@ main(int argc, char *argv[])
     te_bool                 iut_aux_done = FALSE;
     te_bool                 do_fork = FALSE;
 
-    uint8_t                 tx_buf[TST_BUF_LEN] = { 0, };
-    uint8_t                 rx_buf[TST_BUF_LEN] = { 0, };
+    char                    tx_buf[TST_BUF_LEN] = { 0, };
     int                     sent;
-    int                     rcv;
 
     TEST_START;
     TEST_GET_PCO(pco_iut);
@@ -187,9 +185,9 @@ main(int argc, char *argv[])
     RPC_SEND(sent, pco_tst1, tst1_s, tx_buf, TST_BUF_LEN, 0);
 
     if (iut1_done)
-        sockts_read_check_fd(pco_iut, acc1_s, tx_buf, rx_buf, TST_BUF_LEN);
+        sockts_read_check_fd(pco_iut, acc1_s, tx_buf, TST_BUF_LEN);
     else
-        sockts_read_check_fd(iut_aux, acc2_s, tx_buf, rx_buf, TST_BUF_LEN);
+        sockts_read_check_fd(iut_aux, acc2_s, tx_buf, TST_BUF_LEN);
 
     rpc_connect(pco_tst2, tst2_s, iut_addr);
 
