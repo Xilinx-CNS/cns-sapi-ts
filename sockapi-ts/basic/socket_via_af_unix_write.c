@@ -54,6 +54,7 @@ main(int argc, char *argv[])
     int iut1_us = -1;
     int iut2_us = -1;
     int tst_s = -1;
+    ssize_t ret;
 
     rpc_msghdr msg_tx;
     rpc_msghdr msg_rx;
@@ -158,7 +159,7 @@ main(int argc, char *argv[])
     switch (send_func)
     {
         case SOCKTS_SENDF_WRITE:
-            rc = rpc_write(pco_iut2, iut_s2, tx_buf, buf_len);
+            ret = rpc_write(pco_iut2, iut_s2, tx_buf, buf_len);
             break;
         case SOCKTS_SENDF_WRITEV:
         case SOCKTS_SENDF_TEMPLATE_SEND:
@@ -169,24 +170,23 @@ main(int argc, char *argv[])
             iov.iov_len = iov.iov_rlen = buf_len;
 
             if (send_func == SOCKTS_SENDF_WRITEV)
-                rc = rpc_writev(pco_iut2, iut_s2, &iov, 1);
+                ret = rpc_writev(pco_iut2, iut_s2, &iov, 1);
             else
-                rc = rpc_template_send(pco_iut2, iut_s2, &iov, 1, 1, 0);
+                ret = rpc_template_send(pco_iut2, iut_s2, &iov, 1, 1, 0);
 
             break;
         }
         case SOCKTS_SENDF_SEND:
-            rc = rpc_send(pco_iut2, iut_s2, tx_buf, buf_len, 0);
+            ret = rpc_send(pco_iut2, iut_s2, tx_buf, buf_len, 0);
             break;
         case SOCKTS_SENDF_SENDTO:
-            rc = rpc_sendto(pco_iut2, iut_s2, tx_buf, buf_len, 0,
-                            NULL);
+            ret = rpc_sendto(pco_iut2, iut_s2, tx_buf, buf_len, 0, NULL);
             break;
         case SOCKTS_SENDF_OD_SEND:
-            rc = rpc_od_send(pco_iut2, iut_s2, tx_buf, buf_len, 0);
+            ret = rpc_od_send(pco_iut2, iut_s2, tx_buf, buf_len, 0);
             break;
         case SOCKTS_SENDF_OD_SEND_RAW:
-            rc = rpc_od_send_raw(pco_iut2, iut_s2, tx_buf, buf_len, 0);
+            ret = rpc_od_send_raw(pco_iut2, iut_s2, tx_buf, buf_len, 0);
             break;
         case SOCKTS_SENDF_SENDMSG:
         case SOCKTS_SENDF_SENDMMSG:
@@ -206,20 +206,20 @@ main(int argc, char *argv[])
 
             if (send_func == SOCKTS_SENDF_SENDMSG)
             {
-                rc = rpc_sendmsg(pco_iut2, iut_s2, &msg, 0);
+                ret = rpc_sendmsg(pco_iut2, iut_s2, &msg, 0);
             }
             else if (send_func == SOCKTS_SENDF_SENDMMSG)
             {
-                rc = rpc_sendmmsg_as_sendmsg(pco_iut2, iut_s2, &msg, 0);
+                ret = rpc_sendmmsg_as_sendmsg(pco_iut2, iut_s2, &msg, 0);
             }
             else if (send_func == SOCKTS_SENDF_ONLOAD_ZC_SEND)
             {
-                rc = rpc_simple_zc_send(pco_iut2, iut_s2, &msg, 0);
+                ret = rpc_simple_zc_send(pco_iut2, iut_s2, &msg, 0);
             }
             else
             {
-                rc = rpc_simple_zc_send_gen_msg(pco_iut2, iut_s2, &msg, 0, -1,
-                                                TRUE);
+                ret = rpc_simple_zc_send_gen_msg(pco_iut2, iut_s2, &msg, 0, -1,
+                                                 TRUE);
             }
             free(msg.msg_name);
             break;
@@ -227,18 +227,18 @@ main(int argc, char *argv[])
         default:
             TEST_FAIL("Unknown @p send_func");
     }
-    if (rc < 0)
+    if (ret < 0)
     {
         TEST_VERDICT("Sending function failed with unexpected error " RPC_ERROR_FMT,
                      RPC_ERROR_ARGS(pco_iut2));
     }
 
-    if (rc != buf_len)
+    if (ret != (ssize_t)buf_len)
         TEST_VERDICT("Sending function sent the wrong number of bytes");
 
-    rc = rpc_recv(pco_tst, tst_s, rx_buf, buf_len, 0);
+    ret = rpc_recv(pco_tst, tst_s, rx_buf, buf_len, 0);
 
-    SOCKTS_CHECK_RECV(pco_iut2, tx_buf, rx_buf, buf_len, rc);
+    SOCKTS_CHECK_RECV(pco_iut2, tx_buf, rx_buf, buf_len, ret);
 
     TEST_SUCCESS;
 
