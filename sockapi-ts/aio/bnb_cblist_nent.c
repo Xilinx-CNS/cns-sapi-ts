@@ -81,7 +81,7 @@ main(int argc, char *argv[])
     if (!list && nent > 0)
         TEST_FAIL("NULL list and nent > 0 will crash the process");
     
-    GEN_CONNECTION(pco_iut, pco_tst, SOCK_DGRAM, RPC_PROTO_DEF,
+    GEN_CONNECTION(pco_iut, pco_tst, RPC_SOCK_DGRAM, RPC_PROTO_DEF,
                    iut_addr, tst_addr, &iut_s, &tst_s);
 
     create_aiocb(pco_iut, iut_s, RPC_LIO_READ, &buf, 128, 128, NULL, &cb);
