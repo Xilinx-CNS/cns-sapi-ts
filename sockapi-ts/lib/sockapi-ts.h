@@ -4067,7 +4067,7 @@ sockts_get_used_agt_name(rcf_rpc_server *rpcs,
  * @param rpcs                RPC server handle
  * @param ifname              Interface name
  */
-extern char*
+extern const char*
 sockts_get_used_if_name(rcf_rpc_server *rpcs,
                         const char *ifname);
 
