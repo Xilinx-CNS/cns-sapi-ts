@@ -133,7 +133,7 @@ main(int argc, char *argv[])
 
     rpc_create_child_process_socket(method, pco_iut, sock_iut, 
                                     rpc_socket_domain_by_addr(iut_addr), 
-                                    SOCK_DGRAM, &iut_child, &sock_child);
+                                    RPC_SOCK_DGRAM, &iut_child, &sock_child);
 
     if (act_child)
     {
