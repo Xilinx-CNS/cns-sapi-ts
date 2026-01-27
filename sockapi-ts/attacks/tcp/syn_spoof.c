@@ -69,7 +69,7 @@ syn_rcv_callback(const asn_value *packet, int layer,
 
     if (((struct iphdr *)payload)->protocol == IPPROTO_TCP)
     {
-        if ((*(payload + IP_HDR_LEN + 13) & TCP_ACK_FLAG) == 1)
+        if (*(payload + IP_HDR_LEN + 13) & TCP_ACK_FLAG)
         {
             WARN("ACK was received src");
             ack_received = TRUE;
