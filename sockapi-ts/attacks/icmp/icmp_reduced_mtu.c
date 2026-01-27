@@ -193,9 +193,9 @@ main(int argc, char **argv)
                                    NULL, TIMEOUT, num, RCF_TRRECV_PACKETS));
 
     iut_s_tcp = rpc_socket(pco_iut, rpc_socket_domain_by_addr(iut_addr),
-                           RPC_SOCK_STREAM, RPC_PF_INET);
+                           RPC_SOCK_STREAM, RPC_PROTO_DEF);
     tst1_s_tcp = rpc_socket(pco_tst1, rpc_socket_domain_by_addr(tst1_addr),
-                            RPC_SOCK_STREAM, RPC_PF_INET);
+                            RPC_SOCK_STREAM, RPC_PROTO_DEF);
                             
     rpc_bind(pco_tst1, tst1_s_tcp, SA(&tst1_taddr));
     rpc_listen(pco_tst1, tst1_s_tcp, 1);
