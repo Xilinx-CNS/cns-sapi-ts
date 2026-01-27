@@ -1131,5 +1131,6 @@ iomux_epoll_pwait_call(iomux_call_type iomux, rcf_rpc_server *rpcs, int epfd,
         default:
             TEST_FAIL("Incorrect value of 'iomux' parameter. "
                       "It should be either EPOLL_PWAIT or EPOLL_PWAIT2.");
+            return 0;
     }
 }
