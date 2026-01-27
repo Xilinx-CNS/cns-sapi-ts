@@ -222,6 +222,9 @@ main(int argc, char *argv[])
             accept_sock = rpc_accept(pco_tst1, tst_s, NULL, NULL);
             break;
         }
+
+        default:
+            TEST_VERDICT("Unsupported socket type");
     }
     TAPI_WAIT_NETWORK;
 
