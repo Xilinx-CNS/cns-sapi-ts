@@ -471,4 +471,51 @@ extern int iomux_epoll_pwait_call(iomux_call_type iomux, rcf_rpc_server *rpcs,
                                   int maxevents, int timeout_ms,
                                   const rpc_sigset_p sigmask);
 
+/**
+ * Convert a value of type tapi_iomux_type to iomux_func.
+ * It is used by rpc_overfill_buffers_gen(), so regular epoll is used
+ * instead of Onload ordered epoll.
+ *
+ * @param iomux    Value of type tapi_iomux_type representing an iomux
+ *                 function.
+ *
+ * @return Corresponding iomux_func value.
+ */
+static inline iomux_func
+tapi_iomux_type2iomux_func(tapi_iomux_type iomux)
+{
+#define TAPI_2_FUNC_CASE(_iomux) \
+        case TAPI_IOMUX_##_iomux: \
+            return FUNC_##_iomux
+
+    switch (iomux)
+    {
+        TAPI_2_FUNC_CASE(SELECT);
+        TAPI_2_FUNC_CASE(PSELECT);
+        TAPI_2_FUNC_CASE(POLL);
+        TAPI_2_FUNC_CASE(PPOLL);
+        TAPI_2_FUNC_CASE(EPOLL);
+        TAPI_2_FUNC_CASE(EPOLL_PWAIT);
+        /**
+         * Buffer overfilling function is implemented in TE, so it does not
+         * support WODA API. Usual epoll is used instead Onload ordered
+         * epoll.
+         */
+        case TAPI_IOMUX_OO_EPOLL:
+            return FUNC_EPOLL;
+        TAPI_2_FUNC_CASE(EPOLL_PWAIT2);
+        case TAPI_IOMUX_DEFAULT:
+            return FUNC_DEFAULT_IOMUX;
+        case TAPI_IOMUX_UNKNOWN:
+            /* Fallthrough */
+
+        default:
+        {
+            TEST_VERDICT("Unknown type of iomux call");
+            return FUNC_DEFAULT_IOMUX;
+        }
+    }
+#undef TAPI_2_FUNC_CASE
+}
+
 #endif

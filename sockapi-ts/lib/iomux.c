@@ -836,14 +836,8 @@ iomux_common_steps(iomux_call_type iomux, rcf_rpc_server *iut, int iut_s,
     {
         uint64_t sent;
 
-        /**
-         * Buffer overfilling function is implemented in TE, so it does not
-         * support WODA API. Usual epoll is used instead Onload ordered
-         * epoll.
-         */
         rpc_overfill_buffers_gen(iut, iut_s, &sent,
-                                 iomux == TAPI_IOMUX_OO_EPOLL ?
-                                          TAPI_IOMUX_EPOLL : iomux);
+                                 tapi_iomux_type2iomux_func(iomux));
     }
     *events = 0;
 
