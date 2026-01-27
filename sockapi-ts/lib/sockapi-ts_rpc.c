@@ -3678,12 +3678,9 @@ rpc_sockts_iomux_timeout_loop(rcf_rpc_server *rpcs, iomux_call_type iomux,
     memset(&in, 0, sizeof(in));
     memset(&out, 0, sizeof(out));
 
-    in.iomux = iomux;
-    if (iomux == IC_OO_EPOLL)
-    {
+    if (iomux == TAPI_IOMUX_OO_EPOLL)
         in.oo_epoll = TRUE;
-        in.iomux = IC_EPOLL;
-    }
+    in.iomux = tapi_iomux_type2iomux_func(iomux);
     in.fds.fds_val = fds;
     in.fds.fds_len = nfds;
     in.timeout = timeout;
