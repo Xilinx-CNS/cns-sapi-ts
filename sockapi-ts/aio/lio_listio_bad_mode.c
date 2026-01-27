@@ -43,7 +43,7 @@ main(int argc, char *argv[])
     
     TEST_GET_PCO(pco_iut);
 
-    memset(&lio_cb, RPC_NULL, LIST_LEN);
+    memset(lio_cb, RPC_NULL, sizeof(lio_cb));
     
     memset(&ev, 0, sizeof(ev));
     ev.notify = RPC_SIGEV_NONE;
