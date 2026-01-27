@@ -82,7 +82,7 @@ main(int argc, char *argv[])
 
     rpc_create_child_process_socket(method, pco_iut, sock, 
                                     rpc_socket_domain_by_addr(iut_addr), 
-                                    SOCK_DGRAM, &iut_child, &sock_child);
+                                    RPC_SOCK_DGRAM, &iut_child, &sock_child);
 
     CHECK_SOCKET_STATE_AND_RETURN_VERDICT(pco_iut, sock, 
                                           NULL, -1, STATE_CLEAR);
