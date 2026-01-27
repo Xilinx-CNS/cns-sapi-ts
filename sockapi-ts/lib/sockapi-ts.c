@@ -1971,7 +1971,7 @@ sockts_kill_zombie_stacks_gen(rcf_rpc_server *rpcs, unsigned int stacks_num)
     struct timeval tv_end;
 
     gettimeofday(&tv_start, NULL);
-    while (tapi_onload_stacks_number(rpcs) > stacks_num)
+    while (tapi_onload_stacks_number(rpcs) > (int)stacks_num)
     {
         sockts_kill_zombie_stacks(rpcs);
         TAPI_WAIT_NETWORK;
