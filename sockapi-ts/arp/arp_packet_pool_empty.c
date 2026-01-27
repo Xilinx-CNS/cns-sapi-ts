@@ -116,7 +116,7 @@ main(int argc, char *argv[])
     
     for (i = 0; i < conn_num; i++)
         *(sock_list + i) = rpc_socket(pco1_iut, 
-                   RPC_AF_INET, SOCK_DGRAM, RPC_PROTO_DEF);
+                   RPC_AF_INET, RPC_SOCK_DGRAM, RPC_PROTO_DEF);
     
     /* Create sockaddr list */
     sockaddr_list = 
