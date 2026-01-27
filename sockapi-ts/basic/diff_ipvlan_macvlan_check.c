@@ -29,6 +29,7 @@
  */
 
 #define TE_TEST_NAME  "basic/diff_ipvlan_macvlan_check"
+#define IFS_TO_CHECK_NUM 3
 
 #include "sockapi-test.h"
 
@@ -230,10 +231,8 @@ main(int argc, char *argv[])
     char                   buf[BUFFER_SIZE];
     char                   recv_buf[BUFFER_SIZE];
 
-    struct sockaddr       *destination_addrs[] = {send_addr, iut_vlan2_addr,
-                                                  iut_addr};
-    uint8_t               *destination_macs[] = {mac_vlan1, mac_vlan2,
-                                                 mac_iut};
+    const struct sockaddr *destination_addrs[IFS_TO_CHECK_NUM];
+    uint8_t               *destination_macs[IFS_TO_CHECK_NUM];
     uint8_t               *addr;
 
     int                    rcv;
@@ -425,7 +424,7 @@ main(int argc, char *argv[])
     }
     ip_version = (iut_addr->sa_family == AF_INET ? 4 : 6);
 
-    for (i = 0; i < (unsigned int)TE_ARRAY_LEN(destination_addrs); i++)
+    for (i = 0; i < IFS_TO_CHECK_NUM; i++)
     {
         if (use_macvlan)
         {
