@@ -138,7 +138,7 @@ main(int argc, char *argv[])
     size_t tx_buf_len = 128;
     uint16_t opcode = ARPOP_REQUEST;
     asn_value *pkt_pattern = NULL;
-    int pkt_nums;
+    unsigned int pkt_nums;
 
     tapi_tad_trrecv_cb_data cb;
     arp_handler_ctx arp_ctx;
