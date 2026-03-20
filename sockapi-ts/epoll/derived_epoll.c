@@ -161,7 +161,8 @@ main(int argc, char *argv[])
 
     if ((event & RPC_EPOLLOUT) != 0 &&
         (sock_type == RPC_SOCK_STREAM) && !gen_ev_before)
-        rpc_overfill_buffers_gen(pco_iut, iut_s, &total_bytes, iomux);
+        rpc_overfill_buffers_gen(pco_iut, iut_s, &total_bytes,
+                                 tapi_iomux_type2iomux_func(iomux));
     if (event == RPC_EPOLLIN && gen_ev_before)
         RPC_WRITE(rc, pco_tst, tst_s, buffer, data_size);
 

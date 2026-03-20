@@ -159,8 +159,7 @@ main(int argc, char *argv[])
     {
         if (sock_type == RPC_SOCK_STREAM)
             rpc_overfill_buffers_gen(pco_iut, iut_fd, &total_bytes,
-                                     iomux == IC_OO_EPOLL ? IC_EPOLL
-                                                          : iomux);
+                                     tapi_iomux_type2iomux_func(iomux));
         else
         {
 #define UDP_SEND_PACKETS 10000

@@ -122,7 +122,7 @@ main(int argc, char *argv[])
         sock_type == RPC_SOCK_STREAM && send_data)
     {
         rpc_overfill_buffers_gen(pco_iut, iut_s, &total_bytes,
-                                 iomux == IC_OO_EPOLL ? IC_EPOLL : iomux);
+                                 tapi_iomux_type2iomux_func(iomux));
     }
 
     events[0].fd = epfd;

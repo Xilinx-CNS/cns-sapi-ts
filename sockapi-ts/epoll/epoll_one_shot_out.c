@@ -76,7 +76,7 @@ main(int argc, char *argv[])
 
     TEST_STEP("Overfill buffers for IUT->tester direction.");
     rpc_overfill_buffers_gen(pco_iut, iut_s, &total_bytes,
-                             iomux == IC_OO_EPOLL ? IC_EPOLL : iomux);
+                             tapi_iomux_type2iomux_func(iomux));
 
     TEST_STEP("Create epoll set and add IUT socket to it.");
     epfd = rpc_epoll_create(pco_iut, 1);
