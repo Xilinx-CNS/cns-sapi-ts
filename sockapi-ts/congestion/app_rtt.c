@@ -445,7 +445,7 @@ main(int argc, char *argv[])
     tapi_bpf_stim_hdl  *handle = NULL;
     unsigned int        stimulus;
     int                 stimulus_param;
-    int                 i;
+    unsigned int        i;
     unsigned int        slow_start_in_chunks = 0;
     sockts_stats_int    rtt_stats;
     te_bool             slow_start_stim = FALSE;
