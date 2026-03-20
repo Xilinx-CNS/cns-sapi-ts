@@ -119,7 +119,7 @@ main(int argc, char *argv[])
         {
             iut_s = rpc_socket(pco_iut,
                                rpc_socket_domain_by_addr(bond_addr),
-                               SOCK_DGRAM, RPC_PROTO_DEF);
+                               RPC_SOCK_DGRAM, RPC_PROTO_DEF);
             sock_created = TRUE;
             rpc_bind(pco_iut, iut_s, bond_addr);
         }
