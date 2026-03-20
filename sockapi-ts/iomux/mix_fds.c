@@ -710,6 +710,7 @@ main(int argc, char *argv[])
 
             case FD_PIPE_R_LIBC:
                 pco_iut->use_libc_once = TRUE;
+                /* Fallthrough */
 
             case FD_PIPE_R:
                 rpc_pipe(pco_iut, fd_pair);
@@ -720,6 +721,7 @@ main(int argc, char *argv[])
 
             case FD_PIPE_W_LIBC:
                 pco_iut->use_libc_once = TRUE;
+                /* Fallthrough */
 
             case FD_PIPE_W:
                 rpc_pipe(pco_iut, fd_pair);
@@ -755,6 +757,7 @@ main(int argc, char *argv[])
             case FD_TCPCONN_LIBC:
             case FD_UDPCONN_LIBC:
                 pco_iut->use_libc = TRUE;
+                /* Fallthrough */
 
             case FD_TCPCONN:
             case FD_UDPCONN:
