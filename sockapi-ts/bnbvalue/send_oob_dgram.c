@@ -128,7 +128,7 @@ main(int argc, char *argv[])
         }
 
         RPC_AWAIT_IUT_ERROR(pco_tst);
-        rc = rpc_recv(pco_tst, tst_s, rx_buf, TST_BUF_LEN, MSG_DONTWAIT);
+        rc = rpc_recv(pco_tst, tst_s, rx_buf, TST_BUF_LEN, RPC_MSG_DONTWAIT);
 
         if (rc < 0)
         {
