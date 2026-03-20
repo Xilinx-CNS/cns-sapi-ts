@@ -71,7 +71,7 @@
             is_failed = TRUE;                                           \
             ERROR_VERDICT("Number of packets observed on expected "     \
                           "interface is %d %s than expected one",       \
-                          abs(num - (_n)),                              \
+                          abs((int)num - (_n)),                         \
                           num > (_n) ? "greater" : "less");             \
         }                                                               \
     } while (0)
