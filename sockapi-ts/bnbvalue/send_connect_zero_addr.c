@@ -45,6 +45,8 @@ main(int argc, char *argv[])
     void                   *recv_buf = NULL;
     size_t                  buf_len;
 
+    ssize_t ret;
+
     TEST_START;
     TEST_GET_PCO(pco_iut);
     TEST_GET_PCO(pco_tst);
@@ -82,8 +84,8 @@ main(int argc, char *argv[])
         TEST_STEP("If @p sock_type is @c SOCK_STREAM, then @b listen() "
                   "on peer Tester socket and check that it succeeds");
         RPC_AWAIT_IUT_ERROR(pco_tst);
-        rc = rpc_listen(pco_tst, tst_s, SOCKTS_BACKLOG_DEF);
-        if (rc == -1)
+        ret = rpc_listen(pco_tst, tst_s, SOCKTS_BACKLOG_DEF);
+        if (ret == -1)
         {
             TEST_VERDICT("Listen() failed with %r on TST",
                          RPC_ERRNO(pco_tst));
@@ -95,12 +97,12 @@ main(int argc, char *argv[])
         TEST_STEP("If @p use_connect is @c TRUE, then @b connect() IUT "
                   "socket to @b addr");
         RPC_AWAIT_IUT_ERROR(pco_iut);
-        rc = rpc_connect(pco_iut, iut_s, SA(&addr));
+        ret = rpc_connect(pco_iut, iut_s, SA(&addr));
         if (sock_type == RPC_SOCK_DGRAM)
         {
             TEST_SUBSTEP("If @p sock_type is @c SOCK_DGRAM, then check "
                          "that @b connect() succeeds");
-            if (rc != 0)
+            if (ret != 0)
             {
                 TEST_VERDICT("Connect() failed with %r on IUT",
                              RPC_ERRNO(pco_iut));
@@ -111,7 +113,7 @@ main(int argc, char *argv[])
             TEST_SUBSTEP("If @p sock_type is @c SOCK_STREAM, then check "
                          "that @b connect() fails with @c ECONNREFUSED "
                          "errno and terminate the testing");
-            if (rc == -1)
+            if (ret == -1)
             {
                 CHECK_RPC_ERRNO(pco_iut, RPC_ECONNREFUSED,
                                 "Connect() called with wildcard address "
@@ -140,17 +142,17 @@ main(int argc, char *argv[])
               "is @c TRUE and @b sendto() otherwise");
     RPC_AWAIT_IUT_ERROR(pco_iut);
     if (use_connect)
-        rc = rpc_send(pco_iut, iut_s, send_buf, buf_len, 0);
+        ret = rpc_send(pco_iut, iut_s, send_buf, buf_len, 0);
     else
-        rc = rpc_sendto(pco_iut, iut_s, send_buf, buf_len, 0, SA(&addr));
+        ret = rpc_sendto(pco_iut, iut_s, send_buf, buf_len, 0, SA(&addr));
 
     TEST_SUBSTEP("Check that sending function returns correct value");
-    if (rc < 0 )
+    if (ret < 0 )
     {
         TEST_VERDICT("Sending function failed with %r on IUT",
                      RPC_ERRNO(pco_iut));
     }
-    if (rc != buf_len)
+    if (ret != (ssize_t)buf_len)
     {
         TEST_VERDICT("Sending function sent less bytes than it "
                      "was expected to");
@@ -159,8 +161,8 @@ main(int argc, char *argv[])
     TEST_STEP("Check that receive fails with EAGAIN or EWOULDBLOCK");
     rpc_fcntl(pco_tst, tst_s, RPC_F_SETFL, RPC_O_NONBLOCK);
     RPC_AWAIT_IUT_ERROR(pco_tst);
-    rc = rpc_recv(pco_tst, tst_s, recv_buf, buf_len, 0);
-    if (rc < 0)
+    ret = rpc_recv(pco_tst, tst_s, recv_buf, buf_len, 0);
+    if (ret < 0)
     {
         if (RPC_ERRNO(pco_tst) != RPC_EAGAIN &&
             RPC_ERRNO(pco_tst) != RPC_EWOULDBLOCK)
@@ -173,8 +175,11 @@ main(int argc, char *argv[])
     else
     {
         ERROR_VERDICT("Recv() succeeded unexpectedly");
-        if (rc != buf_len || memcmp(send_buf, recv_buf, buf_len) != 0)
+        if (ret != (ssize_t)buf_len ||
+            memcmp(send_buf, recv_buf, buf_len) != 0)
+        {
             TEST_VERDICT("Recv() returned unexpected data");
+        }
         TEST_STOP;
     }
 
