@@ -38,7 +38,7 @@ main(int argc, char *argv[])
     int                     accepted_s = -1;
     const struct sockaddr  *tst_addr = NULL;
     const struct sockaddr  *iut_addr = NULL;
-    sockts_socket_type      sock_type;
+    rpc_socket_type         sock_type;
     te_bool                 use_connect;
     struct sockaddr_storage addr;
     void                   *send_buf = NULL;
