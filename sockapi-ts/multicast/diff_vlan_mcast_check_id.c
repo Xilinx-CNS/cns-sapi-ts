@@ -235,7 +235,7 @@ main(int argc, char *argv[])
                   "interface has received packets;\n"
                   " - number of received bytes for each packet in case of "
                   "correct VLAN tag.");
-        if (num != packet_number * (i + 1))
+        if (num != (int)(packet_number * (i + 1)))
         {
             ERROR("CSAP on TST has sent %d packets instead of %d to IUT VLAN",
                   num, packet_number * (i + 1));
