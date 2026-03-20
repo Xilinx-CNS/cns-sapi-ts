@@ -82,7 +82,7 @@ main(int argc, char *argv[])
     CFG_WAIT_CHANGES;
 
     TEST_STEP("Create UDP socket.");
-    iut_s = rpc_socket(pco_iut, RPC_AF_INET, SOCK_DGRAM, RPC_PROTO_DEF);
+    iut_s = rpc_socket(pco_iut, RPC_AF_INET, RPC_SOCK_DGRAM, RPC_PROTO_DEF);
 
     TEST_STEP("Bind it to the @b second IUT address or @c INADDRA_ANY or don't bind "
               "in dependence on @p bind_to.");
@@ -99,7 +99,7 @@ main(int argc, char *argv[])
     }
 
     TEST_STEP("Create and bind tester socket to @c INADDR_ANY.");
-    tst_s = rpc_socket(pco_tst, RPC_AF_INET, SOCK_DGRAM, RPC_PROTO_DEF);
+    tst_s = rpc_socket(pco_tst, RPC_AF_INET, RPC_SOCK_DGRAM, RPC_PROTO_DEF);
 
     CHECK_RC(tapi_sockaddr_clone2(tst_addr, &tst_addr_wild));
     te_sockaddr_set_wildcard(tst_addr_wild);
