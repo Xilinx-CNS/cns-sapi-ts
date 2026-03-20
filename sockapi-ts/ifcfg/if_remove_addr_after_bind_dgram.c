@@ -74,14 +74,14 @@ main(int argc, char *argv[])
     tapi_allocate_set_port(pco_iut, iut_addr);
 
     TEST_STEP("Create and bind UDP socket.");
-    iut_s = rpc_socket(pco_iut, RPC_AF_INET, SOCK_DGRAM, RPC_PROTO_DEF);
+    iut_s = rpc_socket(pco_iut, RPC_AF_INET, RPC_SOCK_DGRAM, RPC_PROTO_DEF);
     rpc_bind(pco_iut, iut_s, iut_addr);
 
     memset(&myaddr, 0, sizeof(myaddr));
     myaddrlen = sizeof(myaddr);
     rpc_getsockname(pco_iut, iut_s, SA(&myaddr), &myaddrlen);
 
-    tst_s = rpc_socket(pco_tst, RPC_AF_INET, SOCK_DGRAM, RPC_PROTO_DEF);
+    tst_s = rpc_socket(pco_tst, RPC_AF_INET, RPC_SOCK_DGRAM, RPC_PROTO_DEF);
     rpc_bind(pco_tst, tst_s, tst_addr);
 
     TEST_STEP("Delete added address from IUT interface.");
