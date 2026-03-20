@@ -84,7 +84,7 @@ main(int argc, char *argv[])
         rpc_connect(pco_tst, tst_s[i], iut_addr);
 
         iut_acc[i] = rpc_accept(pco_iut, iut_s, NULL, NULL);
-        if (cloexec ? RPC_O_CLOEXEC : 0)
+        if (cloexec)
             rpc_fcntl(pco_iut, iut_acc[i], RPC_F_SETFD, FD_CLOEXEC, 1);
     }
 
