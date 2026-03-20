@@ -139,7 +139,7 @@ main(int argc, char *argv[])
     if (overfill)
     {
         rpc_overfill_buffers_gen(pco_iut1, iut_s, &total_filled,
-                                 iomux == IC_OO_EPOLL ? IC_EPOLL : iomux);
+                                 tapi_iomux_type2iomux_func(iomux));
         RING("To overfill the both send and received buffers "
              "%d bytes are written", (unsigned int)total_filled);
     }

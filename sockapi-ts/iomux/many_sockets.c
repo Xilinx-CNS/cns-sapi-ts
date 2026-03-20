@@ -304,7 +304,7 @@ main (int argc, char *argv[])
 
         rpc_overfill_buffers_gen(pco_iomux, iut_accepted_socket,
                                  &total_filled,
-                                 iomux == IC_OO_EPOLL ? IC_EPOLL : iomux);
+                                 tapi_iomux_type2iomux_func(iomux));
 
         CHECK_IOMUX_CALL(iomux, pco_iomux, events, sockets_number + 1, NULL);
 

@@ -91,8 +91,7 @@ main(int argc, char *argv[])
                    iut_addr, tst_addr, &iut_s, &tst_s);
 
     if (rpc_overfill_buffers_gen(pco_iut, iut_s, &sent,
-                                 iomux == IC_OO_EPOLL ? IC_EPOLL
-                                                      : iomux) != 0)
+                                 tapi_iomux_type2iomux_func(iomux)) != 0)
     {
         TEST_FAIL("Failed to fill in socket Tx buffer");
     }

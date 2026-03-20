@@ -114,11 +114,11 @@ main(int argc, char *argv[])
 
     if (strcmp(how, "rd") != 0 && sock_type != RPC_SOCK_DGRAM)
         rpc_overfill_buffers_gen(pco_iut, iut_s1, &total_filled,
-                                 iomux == IC_OO_EPOLL ? IC_EPOLL : iomux);
+                                 tapi_iomux_type2iomux_func(iomux));
 
     if (!ready && strcmp(how, "rd") != 0)
         rpc_overfill_buffers_gen(pco_iut, iut_s2, &total_filled,
-                                 iomux == IC_OO_EPOLL ? IC_EPOLL : iomux);
+                                 tapi_iomux_type2iomux_func(iomux));
         
     pco_iut->op = RCF_RPC_CALL;
     rc = iomux_call(iomux, pco_iut, event, 2, &tv);

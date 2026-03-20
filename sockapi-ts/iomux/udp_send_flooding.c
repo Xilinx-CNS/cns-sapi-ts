@@ -98,7 +98,8 @@ main(int argc, char *argv[])
               "-# wait on iomux for @c POLLOUT event; "
               "-# go to the send loop until the timeout is expired.");
     pco_iut->timeout = pco_iut->def_timeout + FLOODER_DURATION;
-    rpc_send_flooder_iomux(pco_iut, iut_s, iomux, send_func, msg_dontwait,
+    rpc_send_flooder_iomux(pco_iut, iut_s, tapi_iomux_type2iomux_func(iomux),
+                           send_func, msg_dontwait,
                            FLOODER_DATA_SIZE, FLOODER_DURATION, &sent,
                            &errors);
 
