@@ -142,6 +142,7 @@ main(int argc, char *argv[])
 
     tapi_tad_trrecv_cb_data cb;
     arp_handler_ctx arp_ctx;
+    struct sockaddr_storage addr_copy;
 
     TEST_START;
     TEST_GET_PCO(pco_iut);
@@ -232,7 +233,8 @@ main(int argc, char *argv[])
               "and destination MAC address corresponds broadcast MAC address.");
 
     memset(&arp_ctx, 0, sizeof(arp_ctx));
-    arp_ctx.source_addr = iut_addr2;
+    tapi_sockaddr_clone_exact(iut_addr2, &addr_copy);
+    arp_ctx.source_addr = SA(&addr_copy);
     arp_ctx.failed = FALSE;
     arp_ctx.correct = TRUE;
 
