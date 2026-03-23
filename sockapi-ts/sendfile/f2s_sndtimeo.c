@@ -117,7 +117,7 @@ main(int argc, char *argv[])
                             file_length - offset, FALSE);
 
         RING("sendfile() blocks within %d microseconds", pco_iut->duration);
-        if (abs(sndtimeo - pco_iut->duration / 1000) > 1)
+        if (abs(sndtimeo - (int)(pco_iut->duration / 1000)) > 1)
             WARN("Duration of sendfile() processing is not within "
                  "requested interval in msec: requested=%d, actually=%d",
                  sndtimeo, pco_iut->duration / 1000);
