@@ -156,10 +156,10 @@ main(int argc, char *argv[])
     af.cpu_ids = cpu_mask;
     af.cpu_ids_len = TE_ARRAY_LEN(cpu_mask);
 
-    sched_param[0].type = TAPI_JOB_SCHED_AFFINITY;
+    sched_param[0].type = TAPI_JOB_EXEC_AFFINITY;
     sched_param[0].data = &af;
 
-    sched_param[1].type = TAPI_JOB_SCHED_END;
+    sched_param[1].type = TAPI_JOB_EXEC_END;
 
     CHECK_RC(tapi_netperf_client_add_sched_param(netperf, sched_param));
 
