@@ -2,7 +2,7 @@
 /* (c) Copyright 2004 - 2022 Xilinx, Inc. All rights reserved. */
 /*
  * Socket API Test Suite
- * /
+ */
 
 /** @page usecases-multi_clients_handler Usage of fork() functionality to manage multiple connections
  *
