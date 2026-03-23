@@ -268,7 +268,7 @@ main(int argc, char *argv[])
         snprintf(name, sizeof(name), "iut_handler_%d", i);
         rcf_rpc_server_thread_create(pco_iut, name, &sock[i].pco_iut);
 
-        create_listener(sock + i, same_tst && i > 0 || i > 1);
+        create_listener(sock + i, (same_tst && i > 0) || i > 1);
 
         if (!late_iomux)
         {
