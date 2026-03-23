@@ -953,6 +953,8 @@ main(int argc, char *argv[])
             case tst_accept:
                 if (rc >= 0)
                     iut_fd = rc;
+                /* Fallthrough */
+
             case tst_connect:
                 if (rc < 0)
                     iut_fd = -1;
@@ -985,9 +987,13 @@ main(int argc, char *argv[])
             case tst_accept:
                 if (rc >= 0)
                     iut_fd = rc;
+                /* Fallthrough */
+
             case tst_connect:
                 if (rc < 0)
                     iut_fd = -1;
+                /* Fallthrough */
+
             case tst_write:
             case tst_writev:
             case tst_send:
