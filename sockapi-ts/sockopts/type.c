@@ -63,7 +63,7 @@ main(int argc, char *argv[])
     {
         TEST_FAIL("Value of %s socket option is %s on socket of type %s",
                   sockopt_rpc2str(opt_name), proto_rpc2str(opt_val),
-                  proto_rpc2str(sock_type));
+                  socktype_rpc2str(sock_type));
     }
 
     RPC_AWAIT_IUT_ERROR(pco_iut);
