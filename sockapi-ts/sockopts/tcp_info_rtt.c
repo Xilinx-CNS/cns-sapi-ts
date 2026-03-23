@@ -50,7 +50,8 @@ get_rtt(rcf_rpc_server *pco, int sock, uint32_t *rtt, uint32_t *rttvar)
 
 static void
 tcp_conn_and_send(rcf_rpc_server *pco_iut, rcf_rpc_server *pco_tst,
-                  struct sockaddr *iut_addr, struct sockaddr *tst_addr,
+                  const struct sockaddr *iut_addr,
+                  const struct sockaddr *tst_addr,
                   int *iut_s_p, int *tst_s_p)
 {
     sockts_connection(pco_iut, pco_tst, iut_addr, tst_addr,
@@ -63,7 +64,8 @@ tcp_conn_and_send(rcf_rpc_server *pco_iut, rcf_rpc_server *pco_tst,
 
 static void
 close_sockets(rcf_rpc_server *pco_iut, rcf_rpc_server *pco_tst,
-              struct sockaddr *iut_addr, struct sockaddr *tst_addr,
+              const struct sockaddr *iut_addr,
+              const struct sockaddr *tst_addr,
               int iut_s, int tst_s)
 {
     tapi_allocate_set_port(pco_iut, iut_addr);
