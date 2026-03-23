@@ -318,17 +318,17 @@ main(int argc, char *argv[])
         case RPC_TCP_LAST_ACK:
             break;
 
-        TEST_STEP("Reply ACK packet from tester to move IUT socket in "
-                  "TCP_FIN_WAIT2 state.");
         case RPC_TCP_FIN_WAIT2:
+            TEST_STEP("Reply ACK packet from tester to move IUT socket in "
+                      "TCP_FIN_WAIT2 state.");
             CHECK_RC(tapi_tcp_wait_packet(ss.state.csap.csap_tst_s, 1000));
             CHECK_RC(tapi_tcp_send_ack(csap_tst_s,
                                        tapi_tcp_next_ackn(csap_tst_s)));
             break;
 
-        TEST_STEP("Reply FIN-ACK packet from tester to move IUT socket in "
-                  "TCP_CLOSING state.");
         case RPC_TCP_CLOSING:
+            TEST_STEP("Reply FIN-ACK packet from tester to move IUT socket in "
+                      "TCP_CLOSING state.");
             CHECK_RC(tapi_tcp_wait_packet(ss.state.csap.csap_tst_s, 1000));
             CHECK_RC(tapi_tcp_send_fin(csap_tst_s, 1000));
             break;
