@@ -72,7 +72,7 @@ main(int argc, char *argv[])
               "to it @c MSG_PEEK flag.");
     pco_iut->op = RCF_RPC_CALL;
     len = recv_by_func(func, pco_iut, iut_s, rx_buf, sizeof(rx_buf),
-                       MSG_PEEK);
+                       RPC_MSG_PEEK);
 
     TEST_STEP("Wait for a while and check that it still hangs blocked.");
     TAPI_WAIT_NETWORK;
@@ -81,7 +81,7 @@ main(int argc, char *argv[])
     {
         RPC_AWAIT_ERROR(pco_iut);
         rc = recv_by_func(func, pco_iut, iut_s, rx_buf, sizeof(rx_buf),
-                          MSG_PEEK);
+                          RPC_MSG_PEEK);
         if (rc < 0)
         {
             TEST_VERDICT("Receive function called with MSG_PEEK failed: %r",
@@ -102,7 +102,7 @@ main(int argc, char *argv[])
               "returns data sent from Tester.");
     RPC_AWAIT_ERROR(pco_iut);
     len = recv_by_func(func, pco_iut, iut_s, rx_buf, sizeof(rx_buf),
-                       MSG_PEEK);
+                       RPC_MSG_PEEK);
     if (len < 0)
     {
         TEST_VERDICT("Receive function called with MSG_PEEK unblocked "
