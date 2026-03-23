@@ -231,7 +231,9 @@ check_msg_more(sockts_send_func func,
         data_sent = rpc_send_msg_more_ext(pco_iut, iut_s,
                                           send_buf_off->base,
                                           sz_first, sz_last,
-                                          func, func, FALSE);
+                                          sockts_send_func2tarpc_send(func),
+                                          sockts_send_func2tarpc_send(func),
+                                          FALSE);
     }
 
     if (data_sent < 0)
