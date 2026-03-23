@@ -191,6 +191,9 @@ main(int argc, char *argv[])
                           test_name_enum2str(test_name), payload,
                           report.rr.trps);
             break;
+
+        default:
+            TEST_FAIL("There ia an incorrect netperf test type %d", report.tst_type);
     }
 
     tapi_netperf_mi_report(&report);
