@@ -207,10 +207,10 @@ main(int argc, char *argv[])
                 TEST_FAIL("It's impossible to get instance of "
                           "ip4_rt_default_if");
 
-            snprintf(oid_str, 128, "/agent:%s/interface:%s",
-                     pco_iut->ta, def_ifname);
-            snprintf(val_str, 128,  "/agent:%s/rsrc:%s",
-                     pco_iut->ta, def_ifname);
+            TE_SPRINTF(oid_str, "/agent:%s/interface:%s",
+                       pco_iut->ta, def_ifname);
+            TE_SPRINTF(val_str, "/agent:%s/rsrc:%s",
+                       pco_iut->ta, def_ifname);
             /* Reserve interface used by default route for test purposes */
             if (cfg_add_instance_fmt(NULL, val_type, oid_str, val_str) != 0)
                 TEST_FAIL("It's impossible to reserve %s resource on %s",
