@@ -258,7 +258,8 @@ main(int argc, char *argv[])
     {
         rc = rpc_send_msg_more_ext(pco_iut, iut_s, send_buf_ptr,
                                    first_len, second_len,
-                                   func, func, TRUE);
+                                   sockts_send_func2tarpc_send(func),
+                                   sockts_send_func2tarpc_send(func), TRUE);
     }
     if (rc < 0)
     {
