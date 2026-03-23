@@ -84,7 +84,7 @@ main(int argc, char *argv[])
     sockts_make_txrx_msghdr(&tx_msghdr, &rx_msghdr, &rrx_msghdr,
                             iut_addr, TST_VEC);
 
-    GEN_DGRAM_CONN_WILD(pco_iut, pco_tst, RPC_SOCK_DGRAM, iut_addr,
+    GEN_DGRAM_CONN_WILD(pco_iut, pco_tst, RPC_IPPROTO_IP, iut_addr,
                         tst_addr, &iut_s, &tst_s, FALSE, FALSE, TRUE);
 
     pco_iut->op = RCF_RPC_CALL;
