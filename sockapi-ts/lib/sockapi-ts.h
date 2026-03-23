@@ -3759,6 +3759,42 @@ typedef enum {
     SOCKTS_SENDF_OD_SEND_RAW, /**< od_send_raw() */
 } sockts_send_func;
 
+/**
+ * Convert a value of type sockts_send_func to tarpc_send_function.
+ *
+ * @param func    tapi_iomux_type value representing the iomux function.
+ *
+ * @return Corresponding sockts_send_func value.
+ */
+static inline tarpc_send_function
+sockts_send_func2tarpc_send(sockts_send_func func)
+{
+#define SOCKTS_2_TARPC_CASE(_func) \
+        case SOCKTS_SENDF_##_func: \
+            return TARPC_SEND_FUNC_##_func
+
+    switch (func)
+    {
+        SOCKTS_2_TARPC_CASE(WRITE);
+        SOCKTS_2_TARPC_CASE(WRITEV);
+        SOCKTS_2_TARPC_CASE(SEND);
+        SOCKTS_2_TARPC_CASE(SENDTO);
+        SOCKTS_2_TARPC_CASE(SENDMSG);
+        SOCKTS_2_TARPC_CASE(SENDMMSG);
+
+        default:
+        {
+            TEST_VERDICT("sockts_send_func type value %d "
+                         "couldn't be converted to tarpc_send_function", func);
+        }
+
+        /* No one can reach this return. */
+        return TARPC_SEND_FUNC_MAX;
+    }
+#undef SOCKTS_2_TARPC_CASE
+}
+
+
 /** List of sending functions for TEST_GET_ENUM_PARAM() */
 #define SOCKTS_SENDF_LIST \
     { "write", SOCKTS_SENDF_WRITE },                          \
