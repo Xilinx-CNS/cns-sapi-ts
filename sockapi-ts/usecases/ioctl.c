@@ -83,7 +83,7 @@ main(int argc, char *argv[])
     tx_buf = sockts_make_buf_dgram(&tx_buf_len);
     rx_buf = te_make_buf_min(tx_buf_len, &rx_buf_len);
 
-    GEN_DGRAM_CONN_WILD(pco_iut, pco_tst, RPC_SOCK_DGRAM, iut_addr,
+    GEN_DGRAM_CONN_WILD(pco_iut, pco_tst, RPC_IPPROTO_IP, iut_addr,
                         tst_addr, &iut_s, &tst_s, FALSE, FALSE, TRUE);
 
     intval = TST_OPTION_ON;
