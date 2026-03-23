@@ -179,7 +179,7 @@ main(int argc, char *argv[])
     CHECK_RC(sockts_wait_for_if_up(pco_iut, bond_ifname));
 
     iut_s = sockts_socket(sock_func, pco_iut,
-                          rpc_socket_domain_by_addr(bond_addr), SOCK_DGRAM,
+                          rpc_socket_domain_by_addr(bond_addr), RPC_SOCK_DGRAM,
                           RPC_PROTO_DEF);
     memcpy(&bind_addr, mcast_addr, sizeof(bind_addr));
     te_sockaddr_set_wildcard(&bind_addr);
@@ -188,7 +188,7 @@ main(int argc, char *argv[])
     rpc_getsockname(pco_iut, iut_s, bond_addr, &namelen);
 
     tst_s = rpc_socket(pco_tst,
-                       rpc_socket_domain_by_addr(tst1_addr), SOCK_DGRAM,
+                       rpc_socket_domain_by_addr(tst1_addr), RPC_SOCK_DGRAM,
                        RPC_PROTO_DEF);
     if (strcmp(mode, "team4") == 0)
         rpc_bind(pco_tst, tst_s, bond_aux_addr);
