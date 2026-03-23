@@ -231,7 +231,7 @@ IPRNT("\n*** OVERFLOW:%s step:%d, prev_len:%d, buf_len:%d, abs(%d)\n",
       (overflow ? "TRUE" : "FALSE"), step, prev_buf_len, buf_len,
       abs(prev_buf_len - buf_len));
 
-        if (abs(prev_buf_len - buf_len) == 0)
+        if (prev_buf_len - buf_len == 0)
         {
             dgram_len = buf_len;
             break;
