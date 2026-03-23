@@ -633,9 +633,9 @@ main(int argc, char *argv[])
 cleanup:
     CLEANUP_RPC_CLOSE(pco_iut, iut_s);
     CLEANUP_RPC_CLOSE(pco_tst, tst_s);
-    if (csap != CFG_HANDLE_INVALID)
+    if (csap != CSAP_INVALID_HANDLE)
         CLEANUP_CHECK_RC(tapi_tad_csap_destroy(pco_iut->ta, sid, csap));
-    if (csap6 != CFG_HANDLE_INVALID)
+    if (csap6 != CSAP_INVALID_HANDLE)
         CLEANUP_CHECK_RC(tapi_tad_csap_destroy(pco_iut->ta, sid6, csap6));
     free(tx_buf);
     free(rx_buf);
