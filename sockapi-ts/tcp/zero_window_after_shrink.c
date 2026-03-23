@@ -183,7 +183,7 @@ main(int argc, char *argv[])
         CHECK_RC(tapi_tcp_recv_msg(csap_tst_s, SLEEP_SEC, TAPI_TCP_QUIET,
                                    recv_buf, &recv_len, &recv_seqn,
                                    NULL, 0));
-        if ((int)recv_seqn + recv_len - 1 <= old_ackn + acked_data_len ||
+        if ((int)(recv_seqn + recv_len - 1) <= old_ackn + acked_data_len ||
             (int)recv_seqn > old_ackn + acked_data_len)
         {
             RING("Retransmit message info: seq %u, len %d;"
