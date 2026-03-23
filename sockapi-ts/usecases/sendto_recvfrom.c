@@ -76,7 +76,7 @@ main(int argc, char *argv[])
     TEST_GET_ADDR(pco_iut, iut_addr);
     TEST_GET_ADDR(pco_tst, tst_addr);
 
-    GEN_DGRAM_CONN_WILD(pco_iut, pco_tst, RPC_SOCK_DGRAM, iut_addr,
+    GEN_DGRAM_CONN_WILD(pco_iut, pco_tst, RPC_IPPROTO_IP, iut_addr,
                         tst_addr, &iut_s, &tst_s, FALSE, FALSE, TRUE);
 
     sockts_ip6_get_ll_remote_addr(iut_addr, tst_addr,
