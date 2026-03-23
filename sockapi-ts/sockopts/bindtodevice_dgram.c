@@ -119,7 +119,7 @@
 
 /* Empty string */
 #define EMPTY_STRING ""
-#define GARBAGE_STRING "BEEFBEEFBEEFBEEF"
+#define GARBAGE_STRING "BEEFBEEFBEEFBEE"
 
 int
 main(int argc, char *argv[])
