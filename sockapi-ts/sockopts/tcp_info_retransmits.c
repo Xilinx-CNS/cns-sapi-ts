@@ -39,6 +39,9 @@ get_tcpi_field_by_str(struct rpc_tcp_info *tcpi, char *field_name)
         return tcpi->tcpi_rto;
     else
         TEST_FAIL("Test does not support field %s", field_name);
+
+    /* No one can reach this return. */
+    return 0;
 }
 
 static te_bool
