@@ -8,6 +8,9 @@
     <author mailto="Damir.Mansurov@oktetlabs.ru"/>
 
     <req id="BPF" sticky="true"/>
+    <!-- ON-16789: BPF testing is disabled on X4 until bpf/xdp_actions
+         is fixed. -->
+    <req id="X4_BROKEN" sticky="true"/>
 
     <session track_conf="nohistory">
 
