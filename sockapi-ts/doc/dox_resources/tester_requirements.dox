@@ -22,6 +22,11 @@
                             should not be run in night testing (in comments
                             Bug ID registered for the problem
                             should be mentioned)
+@table_2c_first X4_BROKEN
+@table_2c_second            Tests which are currenty broken on X4 NICs and
+                            should not be run in night testing (in comments
+                            Bug ID registered for the problem
+                            should be mentioned)
 @table_2c_first TIME_CONSUMING
 @table_2c_second        Time consuming tests, useful for manual runs
 @table_2c_first TEST_HARNESS_SANITY
