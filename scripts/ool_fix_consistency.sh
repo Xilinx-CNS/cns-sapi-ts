@@ -241,6 +241,17 @@ function x3_fix()
     fi
 }
 
+function x4_fix()
+{
+    if [[ "$iut_dut" == "x4" ]] ; then
+        if ool_contains "*scalable*" ; then
+            # ON-17443: express datapath doesn't support scalable filters now
+            ool_replace "rx_dp_express" "rx_dp_enterprise" \
+                "$info/ON-17443: express datapath doesn't support scalable filters now"
+        fi
+    fi
+}
+
 function build_ulhelper_fix()
 {
     local info="ulhelper_fix"
@@ -721,6 +732,7 @@ zf_shim_fix
 syscall_fix
 ef100soc_fix
 x3_fix
+x4_fix
 build_ulhelper_fix
 aggregation_fix
 af_xdp_fix
