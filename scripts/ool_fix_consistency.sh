@@ -248,6 +248,17 @@ function x4_fix()
             # ON-17443: express datapath doesn't support scalable filters now
             ool_replace "rx_dp_express" "rx_dp_enterprise" \
                 "$info/ON-17443: express datapath doesn't support scalable filters now"
+            if ool_contains "rx_dp_both" ; then
+                # ON-17106: X4 VLAN RX_DATAPATH both testings on X4 fails with scalable filters
+                ool_remove "vlan" \
+                    "$info/ON-17106: X4 VLAN RX_DATAPATH both testings on X4 fails with scalable filters"
+                # ON-17106: X4 bond1 RX_DATAPATH both testings on X4 fails with scalable filters
+                ool_remove "bond1" \
+                    "$info/ON-17106: X4 bond1 RX_DATAPATH both testings on X4 fails with scalable filters"
+                # ON-17106: X4 bond4 RX_DATAPATH both testings on X4 fails with scalable filters
+                ool_remove "bond4" \
+                    "$info/ON-17106: X4 bond4 RX_DATAPATH both testings on X4 fails with scalable filters"
+            fi
         fi
     fi
 }
