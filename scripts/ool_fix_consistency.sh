@@ -260,6 +260,11 @@ function x4_fix()
                     "$info/ON-17106: X4 bond4 RX_DATAPATH both testings on X4 fails with scalable filters"
             fi
         fi
+        if ool_contains "build_cloud" ; then
+            # ON-17445: X4 RX_DATAPATH express doesn't support IPv6
+            ool_replace "rx_dp_express" "rx_dp_enterprise" \
+                "$info/ON-17445: X4 RX_DATAPATH express doesn't support IPv6"
+        fi
     fi
 }
 
