@@ -241,6 +241,18 @@ function x3_fix()
     fi
 }
 
+function non_x4_fix()
+{
+    if [[ "$iut_dut" != "x4" ]] ; then
+        # remove X4 specific OOLs
+        ool_remove "rx_dp_both" "$info/remove X4 specific OOLs"
+        ool_remove "rx_dp_enterprise" "$info/remove X4 specific OOLs"
+        ool_remove "rx_dp_express" "$info/remove X4 specific OOLs"
+        ool_remove "tx_dp_enterprise" "$info/remove X4 specific OOLs"
+        ool_remove "tx_dp_express" "$info/remove X4 specific OOLs"
+    fi
+}
+
 function x4_fix()
 {
     if [[ "$iut_dut" == "x4" ]] ; then
@@ -748,6 +760,7 @@ zf_shim_fix
 syscall_fix
 ef100soc_fix
 x3_fix
+non_x4_fix
 x4_fix
 build_ulhelper_fix
 aggregation_fix
