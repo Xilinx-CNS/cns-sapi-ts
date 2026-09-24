@@ -1107,6 +1107,8 @@ main(int argc, char **argv)
     TEST_STEP("Add TRC tags");
     CHECK_RC(trc_tags_add(pco_iut, iut_if->if_name));
 
+    CHECK_RC(tapi_tags_add_linux_mm(pco_tst->ta, "tst-"));
+
     CHECK_RC(rc = cfg_tree_print(NULL, TE_LL_RING, "/:"));
 
     TEST_SUCCESS;
