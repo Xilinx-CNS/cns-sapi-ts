@@ -131,9 +131,9 @@ main(int argc, char *argv[])
 
     if (addrlen != sizeof(addr))
     {
-        TEST_FAIL("getpeername() called on IUT with NULL as the value "
-                  "of adress parameter and correct addr_lenth "
-                  "returned -1 but changed the addr_length", rc);
+        RING_VERDICT("getpeername() called on IUT with NULL as the value "
+                     "of adress parameter and correct addr_lenth "
+                     "returned -1 but changed the addr_length", rc);
 
     }
 
@@ -200,9 +200,9 @@ main(int argc, char *argv[])
     }
     if (addrlen != sizeof(addr))
     {
-        TEST_FAIL("getsockname() called on IUT with NULL as the value "
-                  "of adress parameter and correct addr_lenth "
-                  "returned -1 but changed the addr_length", rc);
+        RING_VERDICT("getsockname() called on IUT with NULL as the value "
+                     "of adress parameter and correct addr_lenth "
+                     "returned -1 but changed the addr_length", rc);
 
     }
 
@@ -246,10 +246,10 @@ main(int argc, char *argv[])
 
     if (addrlen != sizeof(addr))
     {
-        TEST_FAIL("getpeername() called on TESTER on accepted socket "
-                  "with NULL as the value "
-                  "of adress parameter and correct addr_lenth "
-                  "returned -1 but changed the addr_length", rc);
+        RING_VERDICT("getpeername() called on TESTER on accepted socket "
+                     "with NULL as the value "
+                     "of adress parameter and correct addr_lenth "
+                     "returned -1 but changed the addr_length", rc);
 
     }
 
@@ -287,10 +287,10 @@ main(int argc, char *argv[])
     }
     if (addrlen != sizeof(addr))
     {
-        TEST_FAIL("getsockname() called on TESTER on accepted socket "
-                  "with NULL as the value "
-                  "of adress parameter and correct addr_lenth "
-                  "returned -1 but changed the addr_length", rc);
+        RING_VERDICT("getsockname() called on TESTER on accepted socket "
+                     "with NULL as the value "
+                     "of adress parameter and correct addr_lenth "
+                     "returned -1 but changed the addr_length", rc);
 
     }
 
