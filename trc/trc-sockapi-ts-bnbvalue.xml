@@ -4287,12 +4287,176 @@
     <test name="func_getname_addr_null_stream" type="script">
       <objective>Check that getpeername() and getsockname() functions correctly handle situation with passing NULL pointer as the value of address or address_len parameters.</objective>
       <iter result="PASSED">
-        <arg name="env"/>
+        <arg name="env">VAR.env.peer2peer</arg>
         <notes/>
-        <results tags="linux">
+        <results tags="linux&amp;(linux&lt;6|linux-6&lt;18)&amp;tst-linux-mm&lt;618" key="ST-2771">
           <result value="PASSED">
             <verdict>getpeername() called on not connected stream socket with NULL as the value of address parameter and positive address length failed with errno ENOTCONN</verdict>
             <verdict>getpeername() called on not connected stream socket with not NULL as the value of address parameter and NULL address length location failed with errno ENOTCONN</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;(linux&lt;6|linux-6&lt;18)&amp;tst-linux-mm&gt;=618" key="ST-2771">
+          <result value="PASSED">
+            <verdict>getpeername() called on not connected stream socket with NULL as the value of address parameter and positive address length failed with errno ENOTCONN</verdict>
+            <verdict>getpeername() called on not connected stream socket with not NULL as the value of address parameter and NULL address length location failed with errno ENOTCONN</verdict>
+            <verdict>getpeername() called on TESTER on accepted socket with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
+            <verdict>getsockname() called on TESTER on accepted socket with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;(linux&gt;6|linux-6&gt;=18)&amp;tst-linux-mm&lt;618" key="ST-2771">
+          <result value="PASSED">
+            <verdict>getpeername() called on not connected stream socket with NULL as the value of address parameter and positive address length failed with errno ENOTCONN</verdict>
+            <verdict>getpeername() called on not connected stream socket with not NULL as the value of address parameter and NULL address length location failed with errno ENOTCONN</verdict>
+            <verdict>getsockname() called on IUT with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;(linux&gt;6|linux-6&gt;=18)&amp;tst-linux-mm&gt;=618" key="ST-2771">
+          <result value="PASSED">
+            <verdict>getpeername() called on not connected stream socket with NULL as the value of address parameter and positive address length failed with errno ENOTCONN</verdict>
+            <verdict>getpeername() called on not connected stream socket with not NULL as the value of address parameter and NULL address length location failed with errno ENOTCONN</verdict>
+            <verdict>getsockname() called on IUT with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
+            <verdict>getpeername() called on TESTER on accepted socket with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
+            <verdict>getsockname() called on TESTER on accepted socket with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_ipv6</arg>
+        <notes/>
+        <results tags="linux&amp;(linux&lt;6|linux-6&lt;18)&amp;tst-linux-mm&lt;618" key="ST-2771">
+          <result value="PASSED">
+            <verdict>getpeername() called on not connected stream socket with NULL as the value of address parameter and positive address length failed with errno ENOTCONN</verdict>
+            <verdict>getpeername() called on not connected stream socket with not NULL as the value of address parameter and NULL address length location failed with errno ENOTCONN</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;(linux&lt;6|linux-6&lt;18)&amp;tst-linux-mm&gt;=618" key="ST-2771">
+          <result value="PASSED">
+            <verdict>getpeername() called on not connected stream socket with NULL as the value of address parameter and positive address length failed with errno ENOTCONN</verdict>
+            <verdict>getpeername() called on not connected stream socket with not NULL as the value of address parameter and NULL address length location failed with errno ENOTCONN</verdict>
+            <verdict>getpeername() called on TESTER on accepted socket with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
+            <verdict>getsockname() called on TESTER on accepted socket with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;(linux&gt;6|linux-6&gt;=18)&amp;tst-linux-mm&lt;618" key="ST-2771">
+          <result value="PASSED">
+            <verdict>getpeername() called on not connected stream socket with NULL as the value of address parameter and positive address length failed with errno ENOTCONN</verdict>
+            <verdict>getpeername() called on not connected stream socket with not NULL as the value of address parameter and NULL address length location failed with errno ENOTCONN</verdict>
+            <verdict>getsockname() called on IUT with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;(linux&gt;6|linux-6&gt;=18)&amp;tst-linux-mm&gt;=618" key="ST-2771">
+          <result value="PASSED">
+            <verdict>getpeername() called on not connected stream socket with NULL as the value of address parameter and positive address length failed with errno ENOTCONN</verdict>
+            <verdict>getpeername() called on not connected stream socket with not NULL as the value of address parameter and NULL address length location failed with errno ENOTCONN</verdict>
+            <verdict>getsockname() called on IUT with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
+            <verdict>getpeername() called on TESTER on accepted socket with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
+            <verdict>getsockname() called on TESTER on accepted socket with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo</arg>
+        <notes/>
+        <results tags="linux&amp;(linux&lt;6|linux-6&lt;18)" key="ST-2771">
+          <result value="PASSED">
+            <verdict>getpeername() called on not connected stream socket with NULL as the value of address parameter and positive address length failed with errno ENOTCONN</verdict>
+            <verdict>getpeername() called on not connected stream socket with not NULL as the value of address parameter and NULL address length location failed with errno ENOTCONN</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;(linux&gt;6|linux-6&gt;=18)" key="ST-2771">
+          <result value="PASSED">
+            <verdict>getpeername() called on not connected stream socket with NULL as the value of address parameter and positive address length failed with errno ENOTCONN</verdict>
+            <verdict>getpeername() called on not connected stream socket with not NULL as the value of address parameter and NULL address length location failed with errno ENOTCONN</verdict>
+            <verdict>getsockname() called on IUT with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
+            <verdict>getpeername() called on TESTER on accepted socket with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
+            <verdict>getsockname() called on TESTER on accepted socket with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_lo_ipv6</arg>
+        <notes/>
+        <results tags="linux&amp;(linux&lt;6|linux-6&lt;18)" key="ST-2771">
+          <result value="PASSED">
+            <verdict>getpeername() called on not connected stream socket with NULL as the value of address parameter and positive address length failed with errno ENOTCONN</verdict>
+            <verdict>getpeername() called on not connected stream socket with not NULL as the value of address parameter and NULL address length location failed with errno ENOTCONN</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;(linux&gt;6|linux-6&gt;=18)" key="ST-2771">
+          <result value="PASSED">
+            <verdict>getpeername() called on not connected stream socket with NULL as the value of address parameter and positive address length failed with errno ENOTCONN</verdict>
+            <verdict>getpeername() called on not connected stream socket with not NULL as the value of address parameter and NULL address length location failed with errno ENOTCONN</verdict>
+            <verdict>getsockname() called on IUT with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
+            <verdict>getpeername() called on TESTER on accepted socket with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
+            <verdict>getsockname() called on TESTER on accepted socket with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst</arg>
+        <notes/>
+        <results tags="linux&amp;(linux&lt;6|linux-6&lt;18)&amp;tst-linux-mm&lt;618" key="ST-2771">
+          <result value="PASSED">
+            <verdict>getpeername() called on not connected stream socket with NULL as the value of address parameter and positive address length failed with errno ENOTCONN</verdict>
+            <verdict>getpeername() called on not connected stream socket with not NULL as the value of address parameter and NULL address length location failed with errno ENOTCONN</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;(linux&lt;6|linux-6&lt;18)&amp;tst-linux-mm&gt;=618" key="ST-2771">
+          <result value="PASSED">
+            <verdict>getpeername() called on not connected stream socket with NULL as the value of address parameter and positive address length failed with errno ENOTCONN</verdict>
+            <verdict>getpeername() called on not connected stream socket with not NULL as the value of address parameter and NULL address length location failed with errno ENOTCONN</verdict>
+            <verdict>getpeername() called on TESTER on accepted socket with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
+            <verdict>getsockname() called on TESTER on accepted socket with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;(linux&gt;6|linux-6&gt;=18)&amp;tst-linux-mm&lt;618" key="ST-2771">
+          <result value="PASSED">
+            <verdict>getpeername() called on not connected stream socket with NULL as the value of address parameter and positive address length failed with errno ENOTCONN</verdict>
+            <verdict>getpeername() called on not connected stream socket with not NULL as the value of address parameter and NULL address length location failed with errno ENOTCONN</verdict>
+            <verdict>getsockname() called on IUT with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;(linux&gt;6|linux-6&gt;=18)&amp;tst-linux-mm&gt;=618" key="ST-2771">
+          <result value="PASSED">
+            <verdict>getpeername() called on not connected stream socket with NULL as the value of address parameter and positive address length failed with errno ENOTCONN</verdict>
+            <verdict>getpeername() called on not connected stream socket with not NULL as the value of address parameter and NULL address length location failed with errno ENOTCONN</verdict>
+            <verdict>getsockname() called on IUT with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
+            <verdict>getpeername() called on TESTER on accepted socket with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
+            <verdict>getsockname() called on TESTER on accepted socket with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_ipv6</arg>
+        <notes/>
+        <results tags="linux&amp;(linux&lt;6|linux-6&lt;18)&amp;tst-linux-mm&lt;618" key="ST-2771">
+          <result value="PASSED">
+            <verdict>getpeername() called on not connected stream socket with NULL as the value of address parameter and positive address length failed with errno ENOTCONN</verdict>
+            <verdict>getpeername() called on not connected stream socket with not NULL as the value of address parameter and NULL address length location failed with errno ENOTCONN</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;(linux&lt;6|linux-6&lt;18)&amp;tst-linux-mm&gt;=618" key="ST-2771">
+          <result value="PASSED">
+            <verdict>getpeername() called on not connected stream socket with NULL as the value of address parameter and positive address length failed with errno ENOTCONN</verdict>
+            <verdict>getpeername() called on not connected stream socket with not NULL as the value of address parameter and NULL address length location failed with errno ENOTCONN</verdict>
+            <verdict>getpeername() called on TESTER on accepted socket with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
+            <verdict>getsockname() called on TESTER on accepted socket with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;(linux&gt;6|linux-6&gt;=18)&amp;tst-linux-mm&lt;618" key="ST-2771">
+          <result value="PASSED">
+            <verdict>getpeername() called on not connected stream socket with NULL as the value of address parameter and positive address length failed with errno ENOTCONN</verdict>
+            <verdict>getpeername() called on not connected stream socket with not NULL as the value of address parameter and NULL address length location failed with errno ENOTCONN</verdict>
+            <verdict>getsockname() called on IUT with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;(linux&gt;6|linux-6&gt;=18)&amp;tst-linux-mm&gt;=618" key="ST-2771">
+          <result value="PASSED">
+            <verdict>getpeername() called on not connected stream socket with NULL as the value of address parameter and positive address length failed with errno ENOTCONN</verdict>
+            <verdict>getpeername() called on not connected stream socket with not NULL as the value of address parameter and NULL address length location failed with errno ENOTCONN</verdict>
+            <verdict>getsockname() called on IUT with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
+            <verdict>getpeername() called on TESTER on accepted socket with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
+            <verdict>getsockname() called on TESTER on accepted socket with NULL as the value of adress parameter and correct addr_lenth returned -1 but changed the addr_length</verdict>
           </result>
         </results>
       </iter>
