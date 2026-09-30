@@ -2215,7 +2215,7 @@
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_tst_gw</arg>
-        <arg name="iut_send_before"/>
+        <arg name="iut_send_before">TRUE</arg>
         <arg name="loopback"/>
         <arg name="shutdown_how">SHUT_WR</arg>
         <arg name="tcp_state">TCP_SYN_RECV</arg>
@@ -2228,6 +2228,33 @@
             <verdict>shutdown() successed</verdict>
             <verdict>After shutdown() call TCP state is TCP_FIN_WAIT1</verdict>
             <verdict>send() failed with errno EPIPE</verdict>
+            <verdict>recv() failed with errno EAGAIN</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_gw</arg>
+        <arg name="iut_send_before">FALSE</arg>
+        <arg name="loopback"/>
+        <arg name="shutdown_how">SHUT_WR</arg>
+        <arg name="tcp_state">TCP_SYN_RECV</arg>
+        <arg name="tst_send_after"/>
+        <arg name="tst_send_before"/>
+        <arg name="tst_type"/>
+        <notes/>
+        <results tags="linux&amp;(linux&lt;6|linux-6&lt;9)" key="ST-2772">
+          <result value="PASSED">
+            <verdict>shutdown() successed</verdict>
+            <verdict>After shutdown() call TCP state is TCP_FIN_WAIT1</verdict>
+            <verdict>send() failed with errno EPIPE</verdict>
+            <verdict>recv() failed with errno EAGAIN</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;(linux&gt;6|linux-6&gt;=9)" key="ST-2772">
+          <result value="PASSED">
+            <verdict>shutdown() successed</verdict>
+            <verdict>After shutdown() call TCP state is TCP_SYN_RECV</verdict>
+            <verdict>send() failed with errno EAGAIN</verdict>
             <verdict>recv() failed with errno EAGAIN</verdict>
           </result>
         </results>
@@ -2310,7 +2337,7 @@
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_tst_gw_ipv6</arg>
-        <arg name="iut_send_before"/>
+        <arg name="iut_send_before">TRUE</arg>
         <arg name="loopback"/>
         <arg name="shutdown_how">SHUT_WR</arg>
         <arg name="tcp_state">TCP_SYN_RECV</arg>
@@ -2323,6 +2350,33 @@
             <verdict>shutdown() successed</verdict>
             <verdict>After shutdown() call TCP state is TCP_FIN_WAIT1</verdict>
             <verdict>send() failed with errno EPIPE</verdict>
+            <verdict>recv() failed with errno EAGAIN</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_tst_gw_ipv6</arg>
+        <arg name="iut_send_before">FALSE</arg>
+        <arg name="loopback"/>
+        <arg name="shutdown_how">SHUT_WR</arg>
+        <arg name="tcp_state">TCP_SYN_RECV</arg>
+        <arg name="tst_send_after"/>
+        <arg name="tst_send_before"/>
+        <arg name="tst_type"/>
+        <notes/>
+        <results tags="linux&amp;(linux&lt;6|linux-6&lt;9)" key="ST-2772">
+          <result value="PASSED">
+            <verdict>shutdown() successed</verdict>
+            <verdict>After shutdown() call TCP state is TCP_FIN_WAIT1</verdict>
+            <verdict>send() failed with errno EPIPE</verdict>
+            <verdict>recv() failed with errno EAGAIN</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;(linux&gt;6|linux-6&gt;=9)" key="ST-2772">
+          <result value="PASSED">
+            <verdict>shutdown() successed</verdict>
+            <verdict>After shutdown() call TCP state is TCP_SYN_RECV</verdict>
+            <verdict>send() failed with errno EAGAIN</verdict>
             <verdict>recv() failed with errno EAGAIN</verdict>
           </result>
         </results>
@@ -2443,7 +2497,7 @@
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_gw</arg>
-        <arg name="iut_send_before"/>
+        <arg name="iut_send_before">TRUE</arg>
         <arg name="loopback"/>
         <arg name="shutdown_how">SHUT_WR</arg>
         <arg name="tcp_state">TCP_SYN_RECV</arg>
@@ -2456,6 +2510,38 @@
             <verdict>shutdown() successed</verdict>
             <verdict>After shutdown() call TCP state is TCP_FIN_WAIT1</verdict>
             <verdict>send() failed with errno EPIPE</verdict>
+            <verdict>recv() failed with errno EAGAIN</verdict>
+          </result>
+        </results>
+        <results tags="v5" key="ON-1362">
+          <result value="FAILED">
+            <verdict>TCP_SYN_RECV was not achieved</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_gw</arg>
+        <arg name="iut_send_before">FALSE</arg>
+        <arg name="loopback"/>
+        <arg name="shutdown_how">SHUT_WR</arg>
+        <arg name="tcp_state">TCP_SYN_RECV</arg>
+        <arg name="tst_send_after"/>
+        <arg name="tst_send_before"/>
+        <arg name="tst_type"/>
+        <notes/>
+        <results tags="linux&amp;(linux&lt;6|linux-6&lt;9)" key="ST-2772">
+          <result value="PASSED">
+            <verdict>shutdown() successed</verdict>
+            <verdict>After shutdown() call TCP state is TCP_FIN_WAIT1</verdict>
+            <verdict>send() failed with errno EPIPE</verdict>
+            <verdict>recv() failed with errno EAGAIN</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;(linux&gt;6|linux-6&gt;=9)" key="ST-2772">
+          <result value="PASSED">
+            <verdict>shutdown() successed</verdict>
+            <verdict>After shutdown() call TCP state is TCP_SYN_RECV</verdict>
+            <verdict>send() failed with errno EAGAIN</verdict>
             <verdict>recv() failed with errno EAGAIN</verdict>
           </result>
         </results>
@@ -2496,7 +2582,7 @@
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_gw_ipv6</arg>
-        <arg name="iut_send_before"/>
+        <arg name="iut_send_before">TRUE</arg>
         <arg name="loopback"/>
         <arg name="shutdown_how">SHUT_WR</arg>
         <arg name="tcp_state">TCP_SYN_RECV</arg>
@@ -2509,6 +2595,38 @@
             <verdict>shutdown() successed</verdict>
             <verdict>After shutdown() call TCP state is TCP_FIN_WAIT1</verdict>
             <verdict>send() failed with errno EPIPE</verdict>
+            <verdict>recv() failed with errno EAGAIN</verdict>
+          </result>
+        </results>
+        <results tags="v5" key="ON-1362">
+          <result value="FAILED">
+            <verdict>TCP_SYN_RECV was not achieved</verdict>
+          </result>
+        </results>
+      </iter>
+      <iter result="PASSED">
+        <arg name="env">VAR.env.peer2peer_gw_ipv6</arg>
+        <arg name="iut_send_before">FALSE</arg>
+        <arg name="loopback"/>
+        <arg name="shutdown_how">SHUT_WR</arg>
+        <arg name="tcp_state">TCP_SYN_RECV</arg>
+        <arg name="tst_send_after"/>
+        <arg name="tst_send_before"/>
+        <arg name="tst_type"/>
+        <notes/>
+        <results tags="linux&amp;(linux&lt;6|linux-6&lt;9)" key="ST-2772">
+          <result value="PASSED">
+            <verdict>shutdown() successed</verdict>
+            <verdict>After shutdown() call TCP state is TCP_FIN_WAIT1</verdict>
+            <verdict>send() failed with errno EPIPE</verdict>
+            <verdict>recv() failed with errno EAGAIN</verdict>
+          </result>
+        </results>
+        <results tags="linux&amp;(linux&gt;6|linux-6&gt;=9)" key="ST-2772">
+          <result value="PASSED">
+            <verdict>shutdown() successed</verdict>
+            <verdict>After shutdown() call TCP state is TCP_SYN_RECV</verdict>
+            <verdict>send() failed with errno EAGAIN</verdict>
             <verdict>recv() failed with errno EAGAIN</verdict>
           </result>
         </results>
