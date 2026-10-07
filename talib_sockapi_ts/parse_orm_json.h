@@ -56,11 +56,7 @@ rpc_tcp_state ci_tcp_state_2_rpc_tcp_state(int state_i);
  *
  * @return Status code.
  */
-static inline te_errno
-ta_read_cmd(const char *cmd, te_string *str)
-{
-    return ta_read_cmd_fmt(str, "%s", cmd);
-}
+te_errno ta_read_cmd(const char *cmd, te_string *str);
 
 /**
  * Get TCP state from an orm_json tool's output.

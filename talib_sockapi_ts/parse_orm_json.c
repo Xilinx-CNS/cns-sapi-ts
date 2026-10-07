@@ -104,6 +104,56 @@ rpc_tcp_state ci_tcp_state_2_rpc_tcp_state(int state_i)
   return state_strs[state_i];
 }
 
+/* See the description in parse_orm_json.h */
+te_errno
+ta_read_cmd(const char *cmd, te_string *str)
+{
+    FILE *f = NULL;
+    char buf[FREAD_BUF_LEN];
+    size_t sys_rc;
+    te_errno rc;
+    pid_t cmd_pid;
+
+    rc = ta_popen_r(cmd, &cmd_pid, &f);
+    if (rc != 0)
+    {
+        ERROR("%s(): ta_popen_r() failed with '%s', rc=%r", __FUNCTION__, cmd,
+              rc);
+        goto cleanup;
+    }
+    while (!feof(f))
+    {
+        sys_rc = fread(buf, 1, FREAD_BUF_LEN - 1, f);
+        if (ferror(f) != 0)
+        {
+            ERROR("%s(): failed to read pipe with output of '%s'",
+                  __FUNCTION__, cmd);
+            rc = TE_RC(TE_TAPI, TE_EFAIL);
+            goto cleanup;
+        }
+        buf[sys_rc] = '\0';
+
+        te_string_append(str, "%s", buf);
+    }
+
+cleanup:
+
+    if (f != NULL)
+    {
+        te_errno rc2;
+
+        rc2 = ta_pclose_r(cmd_pid, f);
+        if (rc2 != 0)
+        {
+            ERROR("ta_pclose_r() failed, %r", rc);
+            if (rc == 0)
+                rc = rc2;
+        }
+    }
+
+    return rc;
+}
+
 /**
  * Check if struct sockaddr address @p addr has provided IP address and port.
  * Port is checked only if @p check_port is @c TRUE.
