@@ -72,7 +72,7 @@
 #include "onload.h"
 
 /** Default ID for a new user created on TA */
-#define SOCKTS_DEF_UID 21123
+#define SOCKTS_DEF_UID 24123
 
 /** Serial logs parser agent name */
 #define SERIAL_LOG_PARSER_AGENT "LogListener"
