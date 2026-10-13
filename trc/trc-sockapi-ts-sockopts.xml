@@ -10866,6 +10866,11 @@
             <verdict>TCP_SYN_SENT -&gt; TCP_SYN_RECV failed with rc ETIMEDOUT in TAPI. Socket in TCP_SYN_SENT instead</verdict>
           </result>
         </results>
+        <results tags="!v5&amp;linux&amp;(linux&gt;6|linux-6&gt;=9)" key="ST-2773">
+          <result value="FAILED">
+            <verdict>TCP_SYN_RECV -> TCP_FIN_WAIT1 failed with rc EFAIL in TAPI. Socket in TCP_SYN_RECV instead</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer_tst</arg>
@@ -10873,6 +10878,11 @@
         <arg name="tcp_state_seq">TCP_SYN_SENT-&gt;TCP_SYN_RECV-&gt;TCP_FIN_WAIT1</arg>
         <arg name="tst_type"/>
         <notes/>
+        <results tags="linux&amp;(linux&gt;6|linux-6&gt;=9)" key="ST-2773">
+          <result value="FAILED">
+            <verdict>TCP_SYN_RECV -> TCP_FIN_WAIT1 failed with rc EFAIL in TAPI. Socket in TCP_SYN_RECV instead</verdict>
+          </result>
+        </results>
       </iter>
       <iter result="PASSED">
         <arg name="env">VAR.env.peer2peer</arg>
